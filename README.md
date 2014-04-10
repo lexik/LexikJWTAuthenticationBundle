@@ -56,6 +56,12 @@ Then in your `config.yml` :
 Usage
 -----
 
+First of all, you need to authenticate the user using its credentials. You can do that using its username and passord, with a form login or http basic. Set the provided service `lexik_jwt_authentication.handler.authentication_success` as success handler, it will send the generated JWT as a response.
+
+You can then store it in your client application (cookie, localstorage or other - the token is encrypted). You only have to pass it as an Authorization header on each future request. 
+
+When the token ttl has expired, redo the authentication process.
+
 Example of possible `security.yml` :
 
     firewalls:
