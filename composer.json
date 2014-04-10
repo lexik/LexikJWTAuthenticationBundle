@@ -1,0 +1,35 @@
+{
+    "name": "lexik/jwt-authentication-bundle",
+    "type": "symfony-bundle",
+    "description": "This Symfony2 bundle provide JWT authentication services",
+    "keywords": ["Symfony2", "bundle", "jwt", "jws", "authentication"],
+    "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeremy Barthe",
+            "email": "j.barthe@lexik.fr"
+        },
+        {
+            "name": "Nicolas Cabot",
+            "email": "n.cabot@lexik.fr"
+        },
+        {
+            "name": "Cedric Girard",
+            "email": "c.girard@lexik.fr"
+        },
+        {
+            "name": "Dev Lexik",
+            "email": "dev@lexik.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "~2.4",
+        "namshi/jose": "~1.0"
+    },
+    "autoload": {
+        "psr-0": { "Lexik\\Bundle\\JWTAuthenticationBundle": "" }
+    },
+    "target-dir": "Lexik/Bundle/JWTAuthenticationBundle"
+}
