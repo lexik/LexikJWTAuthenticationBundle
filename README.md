@@ -56,13 +56,15 @@ Then in your `config.yml` :
 Usage
 -----
 
-First of all, you need to authenticate the user using its credentials. You can do that using its username and passord, with a form login or http basic. Set the provided service `lexik_jwt_authentication.handler.authentication_success` as success handler, it will send the generated JWT as a response.
+First of all, you need to authenticate the user using its credentials through form login or http basic. Set the `lexik_jwt_authentication.handler.authentication_success` service as success handler, which will generate the JWT token and send it as the body of a JsonResponse (along with some non-encrypted optionnal data, see example below).
 
-You can then store it in your client application (cookie, localstorage or other - the token is encrypted). You only have to pass it as an Authorization header on each future request. 
+Store the token in your client application (using cookie, localstorage or wathever - the token is encrypted). 
 
-When the token ttl has expired, redo the authentication process.
+Now, you only need to pass it as an Authorization header on each future request. If it results in a 401 response, your token is invalid (most likely its ttl has expired - 86400 seconds by default). 
 
-Example of possible `security.yml` :
+Redo the authentication process to get a fresh token.
+
+### Example of possible `security.yml` :
 
     firewalls:
         # used to authenticate the user the first time with its username and password, using form login or http basic
@@ -75,8 +77,8 @@ Example of possible `security.yml` :
                 require_previous_session: false
                 username_parameter: username
                 password_parameter: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success # sends the token with some extra data on authentication success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                success_handler: lexik_jwt_authentication.handler.authentication_success # sends a 200 response with the token and optionnal extra data as body               
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure # sends a 401 response
 
         # protected firewall, where a user will be authenticated by its jwt token (passed as an authorization header)
         api:
@@ -89,14 +91,74 @@ Example of possible `security.yml` :
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: ROLE_USER }
 
-TODO (documentation)
---------------------
+### Add extra data to response (example)
 
-* Add functionnal tests usage doc
-* Add a sample listener to add data to the authentication success response
+If you need to send some extra data (not encrypted) to your client, let's say the user roles or name, you can do that by listenig to the lexik_jwt_authentication.on_authentication_success event.
 
-TODO (code)
------------
+For example :
+
+In your `services.yml` :
+
+    acme_user.event.authentication_success_listener:
+        class: Acme\Bundle\UserBundle\EventListener\AuthenticationSuccessListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccess }
+            
+In your `AuthenticationSuccessListener.php` :
+
+    /**
+     * @param AuthenticationSuccessEvent $event
+     */
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
+    {
+        $data = $event->getData();
+        $user = $event->getUser();
+
+        if (!$user instanceof Acme\Bundle\UserBundle\Entity\User) {
+            return;
+        }
+
+        $data['profile'] = [
+            'firstname' => $user->getFirstName(),
+            'lastname'  => $user->getLastName(),
+            'roles'     => $user->getRoles(),
+        ];
+
+        $event->setData($data);
+    }
+
+### Functionnal tests (example)
+
+Generate some test specific keys, for example :
+
+    $ openssl genrsa -out app/cache/test/jwt/private.pem -aes256 4096
+    $ openssl rsa -pubout -in app/cache/test/jwt/private.pem -out app/cache/test/jwt/public.pem
+
+Override the bundle configuration in your `config_test.yml` :
+
+    lexik_jwt_authentication:
+        private_key_path:   %kernel.cache_dir%/jwt/private.pem
+        public_key_path:    %kernel.cache_dir%/jwt/jwt/public.pem
+        pass_phrase:        'test'
+        
+In your functionnal tests, create an authenticated client :
+
+    protected function createAuthenticatedClient($username = 'admin@acme.tld')
+    {
+        $client = static::createClient();
+
+        $jwt = $client->getContainer()->get('lexik_jwt_authentication.jwt_encoder')->encode([
+            'username' => $username,
+        ]);
+
+        $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $jwt->getTokenString()));
+
+        return $client;
+    }
+
+
+TODO
+----
 
 * Add the authorization header key to config instead of joker ?
 * Add the possibility to use the token as a query string parameter, or cookie...
