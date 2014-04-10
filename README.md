@@ -1,8 +1,11 @@
 LexikJWTAuthenticationBundle
 ============================
 
-This Symfony2 bundle provides JWT (Json Web Token) services to authenticate users against your application using the `namshi/jose` library.
-Typical use case is a Symfony2 API with a (or several) Single Page App (angularJS, ember.js... or a mobile application).
+This bundle provides JWT (Json Web Token) services to authenticate users against your Symfony2 application using the great [namshi/jose](https://github.com/namshi/jose) library.
+
+A typical use case for this would be a single page app (AngularJS, Ember.js, mobile app) with a Symfony2 API backend. 
+
+Please note that this bundle is currently only compatible >= sf2.4, but a PR for sf2.3 is welcome.
 
 Installation
 ------------
@@ -35,24 +38,27 @@ public function registerBundles()
 Configuration
 -------------
 
-`config.yml`
+Please read the namshi/jose library first.
+
+Generate the keys used by the namshi/jose library to generate the token :
+
+    $ openssl genrsa -out app/var/jwt/private.pem -aes256 4096
+    $ openssl rsa -pubout -in app/var/jwt/private.pem -out app/var/jwt/public.pem
+
+Then in your `config.yml` :
 
     lexik_jwt_authentication:
-        private_key_path:   %private_key_path%
-        public_key_path:    %public_key_path%
-        pass_phrase:        %pass_phrase%
-        token_ttl:          %token_ttl%
+        private_key_path:   'app/var/jwt/private.pem'   # path to the private key
+        public_key_path:    'app/var/jwt/public.pem'    # path to the public key
+        pass_phrase:        ''                          # pass phrase, defaults to ''
+        token_ttl:          86400                       # token ttl in seconds, defaults to 86400
 
 Usage
 -----
 
-`security.yml` example
+Example of possible `security.yml` :
 
     firewalls:
-        dev:
-            pattern:  ^/api/(_(profiler|wdt|doc))/
-            security: false
-
         # used to authenticate the user the first time with its username and password, using form login or http basic
         login:
             pattern:  ^/api/login
@@ -63,11 +69,10 @@ Usage
                 require_previous_session: false
                 username_parameter: username
                 password_parameter: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
+                success_handler: lexik_jwt_authentication.handler.authentication_success # sends the token with some extra data on authentication success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-        # main firewall, where user is authticated by its jwt token
-        # (configure your client to send the token as an authorization header on each request on this firewall)
+        # main firewall, where user will be authenticated by its jwt token (usually as an authorization header)
         api:
             pattern:  ^/api
             stateless: true
@@ -78,9 +83,13 @@ Usage
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: ROLE_USER }
 
-TODO
-----
+TODO (documentation)
+--------------------
 
 * Add functionnal tests usage doc
 * Add a sample listener to add data to the authentication success response
+
+TODO (code)
+-----------
+
 * Add the authorization header key to config instead of joker ?
