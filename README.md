@@ -3,7 +3,7 @@ LexikJWTAuthenticationBundle
 
 This bundle provides JWT (Json Web Token) services to authenticate users against your Symfony2 application using the great [namshi/jose](https://github.com/namshi/jose) library.
 
-A typical use case for this would be a single page app (AngularJS, Ember.js, mobile app) with a Symfony2 API backend. 
+A typical use case for this would be a single page app (AngularJS, Ember.js, mobile app) using a Symfony2 API as backend. 
 
 Please note that this bundle is currently only compatible >= sf2.4, but a PR for sf2.3 is welcome.
 
@@ -38,9 +38,9 @@ public function registerBundles()
 Configuration
 -------------
 
-Please read the namshi/jose library first.
+Please read the [namshi/jose library](https://github.com/namshi/jose) documentation first.
 
-Generate the keys used by the namshi/jose library to generate the token :
+First, generate the keys used for token generation (for example) :
 
     $ openssl genrsa -out app/var/jwt/private.pem -aes256 4096
     $ openssl rsa -pubout -in app/var/jwt/private.pem -out app/var/jwt/public.pem
@@ -72,7 +72,7 @@ Example of possible `security.yml` :
                 success_handler: lexik_jwt_authentication.handler.authentication_success # sends the token with some extra data on authentication success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-        # main firewall, where user will be authenticated by its jwt token (usually as an authorization header)
+        # protected firewall, where a user will be authenticated by its jwt token (passed as an authorization header)
         api:
             pattern:  ^/api
             stateless: true
@@ -93,3 +93,4 @@ TODO (code)
 -----------
 
 * Add the authorization header key to config instead of joker ?
+* Add the possibility to use the token as a query string parameter, or cookie...
