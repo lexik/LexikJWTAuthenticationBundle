@@ -58,7 +58,7 @@ Usage
 
 First of all, you need to authenticate the user using its credentials through form login or http basic. Set the `lexik_jwt_authentication.handler.authentication_success` service as success handler, which will generate the JWT token and send it as the body of a JsonResponse (along with some non-encrypted optionnal data, see example below).
 
-Store the token in your client application (using cookie, localstorage or wathever - the token is encrypted). 
+Store the token in your client application (using cookie, localstorage or whatever - the token is encrypted). 
 
 Now, you only need to pass it as an Authorization header on each future request. If it results in a 401 response, your token is invalid (most likely its ttl has expired - 86400 seconds by default). 
 
@@ -93,7 +93,7 @@ Redo the authentication process to get a fresh token.
 
 ### Add extra data to response (example)
 
-If you need to send some extra data (not encrypted) to your client, let's say the user roles or name, you can do that by listenig to the lexik_jwt_authentication.on_authentication_success event.
+If you need to send some extra data (not encrypted) to your client, let's say the user roles or name, you can do that by listening to the lexik_jwt_authentication.on_authentication_success event.
 
 For example :
 
