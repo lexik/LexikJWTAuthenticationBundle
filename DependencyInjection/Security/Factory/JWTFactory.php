@@ -26,7 +26,7 @@ class JWTFactory implements SecurityFactoryInterface
             ->replaceArgument(0, new Reference($userProvider));
 
         $listenerId = 'security.authentication.listener.jwt.'.$id;
-        $listener = $container->setDefinition($listenerId, new DefinitionDecorator('jwt.security.authentication.listener'));
+        $container->setDefinition($listenerId, new DefinitionDecorator('jwt.security.authentication.listener'));
 
         return array($providerId, $listenerId, $defaultEntryPoint);
     }
