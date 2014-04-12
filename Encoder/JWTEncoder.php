@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Security;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
 use Namshi\JOSE\JWS;
 
@@ -61,7 +61,12 @@ class JWTEncoder
      */
     public function decode($token)
     {
-        $jws       = JWS::load($token);
+        try {
+            $jws = JWS::load($token);
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
+
         $publicKey = openssl_pkey_get_public('file://' . $this->publicKey);
 
         if ($jws->isValid($publicKey)) {

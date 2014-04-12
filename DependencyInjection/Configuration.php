@@ -38,6 +38,10 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(86400)
                     ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('header_prefix')
+                    ->defaultValue('Bearer')
+                    ->cannotBeEmpty()
+                ->end()
             ->end();
 
         return $treeBuilder;

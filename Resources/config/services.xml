@@ -5,21 +5,21 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="lexik_jwt_authentication.jwt_encoder.class">Lexik\Bundle\JWTAuthenticationBundle\Security\JWTEncoder</parameter>
-        <parameter key="lexik_jwt_authentication.jwt_authenticator.class">Lexik\Bundle\JWTAuthenticationBundle\Security\JWTAuthenticator</parameter>
+        <parameter key="lexik_jwt_authentication.jwt_encoder.class">Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_success.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
+        <parameter key="jwt.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
+        <parameter key="jwt.security.authentication.listener.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener</parameter>
     </parameters>
 
     <services>
+        <!-- JWT Encoder / Decoder -->
         <service id="lexik_jwt_authentication.jwt_encoder" class="%lexik_jwt_authentication.jwt_encoder.class%">
             <argument>%lexik_jwt_authentication.private_key_path%</argument>
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <service id="lexik_jwt_authentication.jwt_authenticator" class="%lexik_jwt_authentication.jwt_authenticator.class%">
-            <argument type="service" id="lexik_jwt_authentication.jwt_encoder"/>
-        </service>
+        <!-- JWT Authentication response interceptor  -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
             <argument type="service" id="lexik_jwt_authentication.jwt_encoder"/>
             <argument type="service" id="event_dispatcher"/>
@@ -28,6 +28,17 @@
         </service>
         <service id="lexik_jwt_authentication.handler.authentication_failure" class="%lexik_jwt_authentication.handler.authentication_failure.class%">
             <tag name="monolog.logger" channel="security"></tag>
+        </service>
+        <!-- JWT Security Authentication Provider -->
+        <service id="jwt.security.authentication.provider" class="%jwt.security.authentication.provider.class%" public="false">
+            <argument /> <!-- User Provider -->
+            <argument type="service" id="lexik_jwt_authentication.jwt_encoder" />
+        </service>
+        <!-- JWT Security Authentication Listener -->
+        <service id="jwt.security.authentication.listener" class="%jwt.security.authentication.listener.class%" public="false">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager" />
+            <argument>%lexik_jwt_authentication.header_prefix%</argument>
         </service>
     </services>
 

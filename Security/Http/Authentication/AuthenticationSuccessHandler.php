@@ -4,7 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\JWTEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
