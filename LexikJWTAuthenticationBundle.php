@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle;
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -20,6 +21,7 @@ class LexikJWTAuthenticationBundle extends Bundle
     {
         parent::build($container);
 
+        /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new JWTFactory());
     }

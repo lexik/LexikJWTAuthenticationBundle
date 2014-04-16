@@ -10,6 +10,8 @@
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
         <parameter key="jwt.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
         <parameter key="jwt.security.authentication.listener.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener</parameter>
+        <parameter key="lexik_jwt.extractor.authorization_header_extractor.class">Lexik\Bundle\JWTAuthenticationBundle\Extractor\AuthorizationHeaderExtractor</parameter>
+        <parameter key="lexik_jwt.extractor.query_parameter_extractor.class">Lexik\Bundle\JWTAuthenticationBundle\Extractor\QueryParameterExtractor</parameter>
     </parameters>
 
     <services>
@@ -38,7 +40,16 @@
         <service id="jwt.security.authentication.listener" class="%jwt.security.authentication.listener.class%" public="false">
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
-            <argument>%lexik_jwt_authentication.header_prefix%</argument>
+            <argument /> <!-- Authorization Header Extractor -->
+            <argument /> <!-- Query Parameter Extractor -->
+        </service>
+        <!-- Authorization Header Token Extractor -->
+        <service id="lexik_jwt.extractor.authorization_header_extractor" class="%lexik_jwt.extractor.authorization_header_extractor.class%" public="false">
+            <argument /> <!-- Header Value Prefix -->
+        </service>
+        <!-- Query Parameter Token Extractor -->
+        <service id="lexik_jwt.extractor.query_parameter_extractor" class="%lexik_jwt.extractor.query_parameter_extractor.class%" public="false">
+            <argument /> <!-- Parameter Name -->
         </service>
     </services>
 
