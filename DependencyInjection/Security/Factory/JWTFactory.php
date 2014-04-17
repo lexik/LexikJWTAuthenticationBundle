@@ -22,36 +22,36 @@ class JWTFactory implements SecurityFactoryInterface
     {
         $providerId = 'security.authentication.provider.jwt.' . $id;
         $container
-            ->setDefinition($providerId, new DefinitionDecorator('jwt.security.authentication.provider'))
+            ->setDefinition($providerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.provider'))
             ->replaceArgument(0, new Reference($userProvider));
 
         $listenerId = 'security.authentication.listener.jwt.' . $id;
         $container
-            ->setDefinition($listenerId, new DefinitionDecorator('jwt.security.authentication.listener'));
+            ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'));
 
         if ($config['authorization_header']['enabled']) {
 
-            $authorizationHeaderExtractorId = 'lexik_jwt.extractor.authorization_header_extractor.' . $id;
+            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.' . $id;
             $container
-                ->setDefinition($authorizationHeaderExtractorId, new DefinitionDecorator('lexik_jwt.extractor.authorization_header_extractor'))
+                ->setDefinition($authorizationHeaderExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.authorization_header_extractor'))
                 ->replaceArgument(0, $config['authorization_header']['prefix']);
 
             $container
                 ->getDefinition($listenerId)
-                ->addMethodCall('addRequestTokenExtractor', array(new Reference($authorizationHeaderExtractorId)));
+                ->addMethodCall('addTokenExtractor', array(new Reference($authorizationHeaderExtractorId)));
 
         }
 
         if ($config['query_parameter']['enabled']) {
 
-            $queryParameterExtractorId = 'lexik_jwt.extractor.query_parameter_extractor.' . $id;
+            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.' . $id;
             $container
-                ->setDefinition($queryParameterExtractorId, new DefinitionDecorator('lexik_jwt.extractor.query_parameter_extractor'))
+                ->setDefinition($queryParameterExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.query_parameter_extractor'))
                 ->replaceArgument(0, $config['query_parameter']['name']);
 
             $container
                 ->getDefinition($listenerId)
-                ->addMethodCall('addRequestTokenExtractor', array(new Reference($queryParameterExtractorId)));
+                ->addMethodCall('addTokenExtractor', array(new Reference($queryParameterExtractorId)));
 
         }
 
@@ -71,7 +71,7 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function getKey()
     {
-        return 'jwt';
+        return 'lexik_jwt';
     }
 
     /**

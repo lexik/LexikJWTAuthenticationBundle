@@ -1,15 +1,15 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Extractor;
+namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * AuthorizationHeaderExtractor
+ * AuthorizationHeaderTokenExtractor
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class AuthorizationHeaderExtractor implements RequestTokenExtractorInterface
+class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ class AuthorizationHeaderExtractor implements RequestTokenExtractorInterface
      *
      * @return string
      */
-    public function getRequestToken(Request $request)
+    public function extract(Request $request)
     {
         if (!$request->headers->has('Authorization')) {
             return false;

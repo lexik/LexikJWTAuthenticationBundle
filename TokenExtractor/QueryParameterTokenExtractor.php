@@ -1,15 +1,15 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Extractor;
+namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * QueryParameterExtractor
+ * QueryParameterTokenExtractor
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class QueryParameterExtractor implements RequestTokenExtractorInterface
+class QueryParameterTokenExtractor implements TokenExtractorInterface
 {
     /**
      * @var string
@@ -29,7 +29,7 @@ class QueryParameterExtractor implements RequestTokenExtractorInterface
      *
      * @return string
      */
-    public function getRequestToken(Request $request)
+    public function extract(Request $request)
     {
         return $request->query->get($this->parameterName, false);
     }

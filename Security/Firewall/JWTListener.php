@@ -2,9 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Extractor\AuthorizationHeaderExtractor;
-use Lexik\Bundle\JWTAuthenticationBundle\Extractor\QueryParameterExtractor;
-use Lexik\Bundle\JWTAuthenticationBundle\Extractor\RequestTokenExtractorInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +32,7 @@ class JWTListener implements ListenerInterface
     /**
      * @var array
      */
-    protected $extractors;
+    protected $tokenExtractors;
 
     /**
      * @param SecurityContextInterface       $securityContext
@@ -44,7 +42,7 @@ class JWTListener implements ListenerInterface
     {
         $this->securityContext       = $securityContext;
         $this->authenticationManager = $authenticationManager;
-        $this->extractors            = array();
+        $this->tokenExtractors       = array();
     }
 
     /**
@@ -76,11 +74,11 @@ class JWTListener implements ListenerInterface
     }
 
     /**
-     * @param RequestTokenExtractorInterface $extractor
+     * @param TokenExtractorInterface $extractor
      */
-    public function addRequestTokenExtractor(RequestTokenExtractorInterface $extractor)
+    public function addTokenExtractor(TokenExtractorInterface $extractor)
     {
-        $this->extractors[] = $extractor;
+        $this->tokenExtractors[] = $extractor;
     }
 
     /**
@@ -90,9 +88,9 @@ class JWTListener implements ListenerInterface
      */
     protected function getRequestToken(Request $request)
     {
-        /** @var RequestTokenExtractorInterface $extractor */
-        foreach ($this->extractors as $extractor) {
-            if (($token = $extractor->getRequestToken($request))) {
+        /** @var TokenExtractorInterface $tokenExtractor */
+        foreach ($this->tokenExtractors as $tokenExtractor) {
+            if (($token = $tokenExtractor->extract($request))) {
                 return $token;
             }
         }

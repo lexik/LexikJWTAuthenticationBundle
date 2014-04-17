@@ -1,20 +1,20 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Extractor;
+namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * RequestTokenExtractor
+ * TokenExtractorInterface
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-interface RequestTokenExtractorInterface
+interface TokenExtractorInterface
 {
     /**
      * @param Request $request
      *
      * @return string
      */
-    public function getRequestToken(Request $request);
+    public function extract(Request $request);
 }
