@@ -40,8 +40,6 @@
         <service id="jwt.security.authentication.listener" class="%jwt.security.authentication.listener.class%" public="false">
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager" />
-            <argument /> <!-- Authorization Header Extractor -->
-            <argument /> <!-- Query Parameter Extractor -->
         </service>
         <!-- Authorization Header Token Extractor -->
         <service id="lexik_jwt.extractor.authorization_header_extractor" class="%lexik_jwt.extractor.authorization_header_extractor.class%" public="false">
