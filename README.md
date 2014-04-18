@@ -12,7 +12,7 @@ Installation with composer:
 
 ``` json
 "require": {
-    "lexik/jwt-authentication-bundle": "dev-master"
+    "lexik/jwt-authentication-bundle": "1.0.*@dev"
 }
 ```
 
