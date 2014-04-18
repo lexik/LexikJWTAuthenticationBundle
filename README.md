@@ -47,20 +47,20 @@ Then in your `config.yml` :
 lexik_jwt_authentication:
     private_key_path:   'app/var/jwt/private.pem'   # path to the private key
     public_key_path:    'app/var/jwt/public.pem'    # path to the public key
-    pass_phrase:        ''                          # pass phrase, defaults to ''
-    token_ttl:          86400                       # token ttl in seconds, defaults to 86400
-    header_prefix:      'Bearer'                    # authorization header value prefix, defaults to 'Bearer'
+    pass_phrase:        ''                          # optional - pass phrase, defaults to ''
+    token_ttl:          86400                       # optional - token ttl, defaults to 86400
 ```
 
 Usage
 -----
 
-First of all, you need to authenticate the user using its credentials through form login or http basic. Set the `lexik_jwt_authentication.handler.authentication_success` service as success handler, which will generate the JWT token and send it as the body of a JsonResponse (along with some non-encrypted optionnal data, see example below).
+First of all, you need to authenticate the user using its credentials through form login or http basic.
+Set the `lexik_jwt_authentication.handler.authentication_success` service as success handler, which will generate the JWT token and send it as the body of a JsonResponse.
 
 Store the token in your client application (using cookie, localstorage or whatever - the token is encrypted).
+Now, you only need to pass the token on each future request, either as an authorization header or as a query string parameter.
 
-Now, you only need to pass it as an Authorization header on each future request. If it results in a 401 response, your token is invalid (most likely its ttl has expired - 86400 seconds by default).
-
+If it results in a 401 response, your token is invalid (most likely its ttl has expired - 86400 seconds by default).
 Redo the authentication process to get a fresh token.
 
 ### Example of possible `security.yml` :
@@ -77,14 +77,25 @@ firewalls:
             require_previous_session: false
             username_parameter: username
             password_parameter: password
-            success_handler: lexik_jwt_authentication.handler.authentication_success # sends a 200 response with the token and optionnal extra data as body
-            failure_handler: lexik_jwt_authentication.handler.authentication_failure # sends a 401 response
+            success_handler: lexik_jwt_authentication.handler.authentication_success # generate the jwt token and send it as 200 response body
+            failure_handler: lexik_jwt_authentication.handler.authentication_failure # send a 401 response
 
-    # protected firewall, where a user will be authenticated by its jwt token (passed as an authorization header)
+    # protected firewall, where a user will be authenticated by its jwt token
     api:
         pattern:   ^/api
         stateless: true
-        jwt:       true
+
+        # default configuration
+        lexik_jwt: ~ # check token in Authorization Header, with a value prefix of 'Bearer'
+
+        # advanced configuration
+        lexik_jwt:
+            authorization_header: # check token in Authorization Header
+                enabled: true
+                prefix:  Bearer
+            query_parameter:      # check token in query string parameter
+                enabled: true
+                name:    bearer
 
 access_control:
     - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -131,7 +142,7 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
 }
 ```
 
-### Functionnal tests (example)
+### Using jwt authentication in functional tests
 
 Generate some test specific keys, for example :
 
@@ -146,13 +157,12 @@ Override the bundle configuration in your `config_test.yml` :
 lexik_jwt_authentication:
     private_key_path:   %kernel.cache_dir%/jwt/private.pem
     public_key_path:    %kernel.cache_dir%/jwt/jwt/public.pem
-    pass_phrase:        'test'
 ```
 
-In your functionnal tests, create an authenticated client :
+In your functional tests, create an authenticated client :
 
 ``` php
-protected function createAuthenticatedClient($username = 'admin@acme.tld')
+protected function createAuthenticatedClient($username = 'user@acme.tld')
 {
     $client = static::createClient();
 
@@ -169,5 +179,5 @@ protected function createAuthenticatedClient($username = 'admin@acme.tld')
 TODO
 ----
 
-* Add the possibility to get the token from query string parameter
-* Add an optionnal IP restriction
+* Add IP to encrypted paypload ?
+* Add encryption algorithm option ?
