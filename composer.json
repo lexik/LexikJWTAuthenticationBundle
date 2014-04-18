@@ -32,5 +32,10 @@
     "autoload": {
         "psr-0": { "Lexik\\Bundle\\JWTAuthenticationBundle": "" }
     },
-    "target-dir": "Lexik/Bundle/JWTAuthenticationBundle"
+    "target-dir": "Lexik/Bundle/JWTAuthenticationBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
 }
