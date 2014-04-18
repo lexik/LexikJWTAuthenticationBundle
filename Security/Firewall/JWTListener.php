@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall;
 
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,20 +30,19 @@ class JWTListener implements ListenerInterface
     protected $authenticationManager;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $headerPrefix;
+    protected $tokenExtractors;
 
     /**
      * @param SecurityContextInterface       $securityContext
      * @param AuthenticationManagerInterface $authenticationManager
-     * @param string                         $headerPrefix
      */
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $headerPrefix)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
     {
         $this->securityContext       = $securityContext;
         $this->authenticationManager = $authenticationManager;
-        $this->headerPrefix          = $headerPrefix;
+        $this->tokenExtractors       = array();
     }
 
     /**
@@ -50,12 +50,12 @@ class JWTListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
-        if (!($raw = $this->getRawTokenFromRequest($event->getRequest()))) {
+        if (!($requestToken = $this->getRequestToken($event->getRequest()))) {
             return;
         }
 
         $token = new JWTUserToken();
-        $token->setRawToken($raw);
+        $token->setRawToken($requestToken);
 
         try {
 
@@ -74,22 +74,27 @@ class JWTListener implements ListenerInterface
     }
 
     /**
+     * @param TokenExtractorInterface $extractor
+     */
+    public function addTokenExtractor(TokenExtractorInterface $extractor)
+    {
+        $this->tokenExtractors[] = $extractor;
+    }
+
+    /**
      * @param Request $request
      *
      * @return boolean|string
      */
-    protected function getRawTokenFromRequest(Request $request)
+    protected function getRequestToken(Request $request)
     {
-        if (!$request->headers->has('Authorization')) {
-            return false;
+        /** @var TokenExtractorInterface $tokenExtractor */
+        foreach ($this->tokenExtractors as $tokenExtractor) {
+            if (($token = $tokenExtractor->extract($request))) {
+                return $token;
+            }
         }
 
-        $headerParts = explode(' ', $request->headers->get('Authorization'));
-
-        if (!(count($headerParts) === 2 && $headerParts[0] === $this->headerPrefix)) {
-            return false;
-        }
-
-        return $headerParts[1];
+        return false;
     }
 }
