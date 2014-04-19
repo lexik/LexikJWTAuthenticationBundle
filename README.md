@@ -1,6 +1,8 @@
 LexikJWTAuthenticationBundle
 ============================
 
+[![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
+
 This bundle provides JWT (Json Web Token) services to authenticate users against your Symfony2 application using the great [namshi/jose](https://github.com/namshi/jose) library.
 
 A typical use case for this would be a single page app (AngularJS, Ember.js, mobile app) using a Symfony2 API as backend.
