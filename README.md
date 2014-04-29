@@ -2,6 +2,7 @@ LexikJWTAuthenticationBundle
 ============================
 
 [![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/small.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 
 This bundle provides JWT (Json Web Token) services to authenticate users against your Symfony2 application using the great [namshi/jose](https://github.com/namshi/jose) library.
 
@@ -181,5 +182,5 @@ protected function createAuthenticatedClient($username = 'user@acme.tld')
 TODO
 ----
 
-* Add IP to encrypted paypload ?
+* Add IP to encrypted payload ?
 * Add encryption algorithm option ?
