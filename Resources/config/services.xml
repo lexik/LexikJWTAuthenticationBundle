@@ -10,6 +10,7 @@
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.listener.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener</parameter>
+        <parameter key="lexik_jwt_authentication.security.authentication.entry_point.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint</parameter>
         <parameter key="lexik_jwt_authentication.extractor.authorization_header_extractor.class">Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor</parameter>
         <parameter key="lexik_jwt_authentication.extractor.query_parameter_extractor.class">Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\QueryParameterTokenExtractor</parameter>
     </parameters>
@@ -49,6 +50,8 @@
         <service id="lexik_jwt_authentication.extractor.query_parameter_extractor" class="%lexik_jwt_authentication.extractor.query_parameter_extractor.class%" public="false">
             <argument /> <!-- Parameter Name -->
         </service>
+        <!-- JWT Security Authentication Entry Point -->
+        <service id="lexik_jwt_authentication.security.authentication.entry_point" class="%lexik_jwt_authentication.security.authentication.entry_point.class%" public="false"></service>
     </services>
 
 </container>
