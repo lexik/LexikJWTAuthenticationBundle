@@ -29,6 +29,9 @@ class JWTFactory implements SecurityFactoryInterface
         $container
             ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'));
 
+        // entry point
+        $entryPointId = $this->createEntryPoint($container, $id, $defaultEntryPoint);
+
         if ($config['authorization_header']['enabled']) {
 
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.' . $id;
@@ -55,7 +58,7 @@ class JWTFactory implements SecurityFactoryInterface
 
         }
 
-        return array($providerId, $listenerId, $defaultEntryPoint);
+        return array($providerId, $listenerId, $entryPointId);
     }
 
     /**
@@ -104,5 +107,17 @@ class JWTFactory implements SecurityFactoryInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    protected function createEntryPoint($container, $id, $defaultEntryPoint)
+    {
+        if (null !== $defaultEntryPoint) {
+            return $defaultEntryPoint;
+        }
+
+        $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.'.$id;
+        $container->setDefinition($entryPointId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.entry_point'));
+
+        return $entryPointId;
     }
 }

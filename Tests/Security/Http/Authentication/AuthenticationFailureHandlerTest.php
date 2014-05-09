@@ -12,7 +12,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\Authentica
 class AuthenticationFailureHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test onAuthenticationSuccess method
+     * test onAuthenticationFailure method
      */
     public function testOnAuthenticationFailure()
     {
