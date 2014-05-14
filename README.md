@@ -57,7 +57,7 @@ lexik_jwt_authentication:
 Usage
 -----
 
-First of all, you need to authenticate the user using its credentials through form login or http basic.
+First of all, you need to authenticate the user using its credentials through form login.
 Set the `lexik_jwt_authentication.handler.authentication_success` service as success handler, which will generate the JWT token and send it as the body of a JsonResponse.
 
 Store the token in your client application (using cookie, localstorage or whatever - the token is encrypted).
@@ -70,7 +70,7 @@ Redo the authentication process to get a fresh token.
 
 ``` yaml
 firewalls:
-    # used to authenticate the user the first time with its username and password, using form login or http basic
+    # used to authenticate the user the first time with its username and password, using form login
     login:
         pattern:  ^/api/login
         stateless: true
