@@ -27,10 +27,15 @@ class JWTFactory implements SecurityFactoryInterface
 
         $listenerId = 'security.authentication.listener.jwt.' . $id;
         $container
-            ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'));
+            ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'))
+            ->replaceArgument(2, $config)
+        ;
 
-        // entry point
-        $entryPointId = $this->createEntryPoint($container, $id, $defaultEntryPoint);
+        $entryPointId = $defaultEntryPoint;
+
+        if ($config['create_entry_point']) {
+            $entryPointId = $this->createEntryPoint($container, $id, $defaultEntryPoint);
+        }
 
         if ($config['authorization_header']['enabled']) {
 
@@ -106,15 +111,25 @@ class JWTFactory implements SecurityFactoryInterface
                         ->end()
                     ->end()
                 ->end()
+                ->booleanNode('throw_exceptions')
+                    ->defaultFalse()
+                ->end()
+                ->booleanNode('create_entry_point')
+                    ->defaultTrue()
+                ->end()
             ->end();
     }
 
+    /**
+     * Create an entry point, by default it sends a 401 header and ends the request
+     *
+     * @param $container
+     * @param $id
+     * @param $defaultEntryPoint
+     * @return string
+     */
     protected function createEntryPoint($container, $id, $defaultEntryPoint)
     {
-        if (null !== $defaultEntryPoint) {
-            return $defaultEntryPoint;
-        }
-
         $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.'.$id;
         $container->setDefinition($entryPointId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.entry_point'));
 

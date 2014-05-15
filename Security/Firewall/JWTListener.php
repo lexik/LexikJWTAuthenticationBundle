@@ -29,6 +29,8 @@ class JWTListener implements ListenerInterface
      */
     protected $authenticationManager;
 
+    protected $config;
+
     /**
      * @var array
      */
@@ -37,11 +39,16 @@ class JWTListener implements ListenerInterface
     /**
      * @param SecurityContextInterface       $securityContext
      * @param AuthenticationManagerInterface $authenticationManager
+     * @param array                          $config
      */
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, array $config = array())
     {
         $this->securityContext       = $securityContext;
         $this->authenticationManager = $authenticationManager;
+        $this->config                = array_merge(
+            array('throw_exceptions' => false),
+            $config
+        );
         $this->tokenExtractors       = array();
     }
 
@@ -65,11 +72,13 @@ class JWTListener implements ListenerInterface
             return;
 
         } catch (AuthenticationException $failed) {
+            if ($this->config['throw_exceptions']) {
+                throw $failed;
+            }
 
             $response = new Response();
             $response->setStatusCode(401);
             $event->setResponse($response);
-
         }
     }
 
