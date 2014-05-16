@@ -99,6 +99,8 @@ firewalls:
             query_parameter:      # check token in query string parameter
                 enabled: true
                 name:    bearer
+            throw_exceptions: false     # When an authentication failure occurs, return a 401 response immediately
+            create_entry_point: true    # When no authentication details are provided, create a default entry point that returns a 401 response
 
 access_control:
     - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
