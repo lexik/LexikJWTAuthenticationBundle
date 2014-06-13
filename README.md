@@ -15,7 +15,7 @@ Installation with composer:
 
 ``` json
 "require": {
-    "lexik/jwt-authentication-bundle": "1.0.*@dev"
+    "lexik/jwt-authentication-bundle": "v1.0.0" // check packagist.org for more tags
 }
 ```
 
