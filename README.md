@@ -119,7 +119,7 @@ In your `services.yml` :
     acme_user.event.authentication_success_listener:
         class: Acme\Bundle\UserBundle\EventListener\AuthenticationSuccessListener
         tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccess }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 ```
 
 In your `AuthenticationSuccessListener.php` :
@@ -133,7 +133,7 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
     $data = $event->getData();
     $user = $event->getUser();
 
-    if (!$user instanceof Acme\Bundle\UserBundle\Entity\User) {
+    if (!$user instanceof \Acme\Bundle\UserBundle\Entity\User) {
         return;
     }
 
