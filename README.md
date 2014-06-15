@@ -48,10 +48,10 @@ Then in your `config.yml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    private_key_path:   'app/var/jwt/private.pem'   # path to the private key
-    public_key_path:    'app/var/jwt/public.pem'    # path to the public key
-    pass_phrase:        ''                          # optional - pass phrase, defaults to ''
-    token_ttl:          86400                       # optional - token ttl, defaults to 86400
+    private_key_path:   %kernel.root_dir%/var/jwt/private.pem   # path to the private key
+    public_key_path:    %kernel.root_dir%/var/jwt/public.pem    # path to the public key
+    pass_phrase:        ''                                      # optional - pass phrase, defaults to ''
+    token_ttl:          86400                                   # optional - token ttl, defaults to 86400
 ```
 
 Usage
