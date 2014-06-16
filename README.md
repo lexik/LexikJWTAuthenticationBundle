@@ -48,10 +48,10 @@ Then in your `config.yml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    private_key_path:   'app/var/jwt/private.pem'   # path to the private key
-    public_key_path:    'app/var/jwt/public.pem'    # path to the public key
-    pass_phrase:        ''                          # optional - pass phrase, defaults to ''
-    token_ttl:          86400                       # optional - token ttl, defaults to 86400
+    private_key_path:   %kernel.root_dir%/var/jwt/private.pem   # path to the private key
+    public_key_path:    %kernel.root_dir%/var/jwt/public.pem    # path to the public key
+    pass_phrase:        ''                                      # optional - pass phrase, defaults to ''
+    token_ttl:          86400                                   # optional - token ttl, defaults to 86400
 ```
 
 Usage
@@ -119,7 +119,7 @@ In your `services.yml` :
     acme_user.event.authentication_success_listener:
         class: Acme\Bundle\UserBundle\EventListener\AuthenticationSuccessListener
         tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccess }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 ```
 
 In your `AuthenticationSuccessListener.php` :
@@ -133,7 +133,7 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
     $data = $event->getData();
     $user = $event->getUser();
 
-    if (!$user instanceof Acme\Bundle\UserBundle\Entity\User) {
+    if (!$user instanceof \Acme\Bundle\UserBundle\Entity\User) {
         return;
     }
 
