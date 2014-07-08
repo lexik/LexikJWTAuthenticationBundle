@@ -2,32 +2,37 @@ LexikJWTAuthenticationBundle
 ============================
 
 [![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/small.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 
-This bundle provides JWT (Json Web Token) services to authenticate users against your Symfony2 application using the great [namshi/jose](https://github.com/namshi/jose) library.
-
-A typical use case for this would be a single page app (AngularJS, Ember.js, mobile app) using a Symfony2 API as backend.
+This bundles provides JWT (Json Web Token) authentication for your Symfony2 REST API using the great [`namshi/jose`](https://github.com/namshi/jose) library.
 
 Installation
 ------------
 
-Installation with composer:
+Require [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
+into your `composer.json` file:
 
 ``` json
-"require": {
-    "lexik/jwt-authentication-bundle": "v1.0.0" // check packagist.org for more tags
+{
+    "require": {
+        "lexik/jwt-authentication-bundle": "@stable"
+    }
 }
 ```
 
-Next, be sure to enable the bundle in your `app/AppKernel.php` file:
+**Protip:** you should browse the
+[`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
+page to choose a stable version to use, avoid the `@stable` meta constraint.
+
+Register the bundle in `app/AppKernel.php`:
 
 ``` php
+// app/AppKernel.php
 public function registerBundles()
 {
     return array(
         // ...
         new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
-        // ...
     );
 }
 ```
@@ -180,9 +185,3 @@ protected function createAuthenticatedClient($username = 'user@acme.tld')
     return $client;
 }
 ```
-
-TODO
-----
-
-* Add IP to encrypted payload ?
-* Add encryption algorithm option ?
