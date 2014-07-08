@@ -185,3 +185,14 @@ protected function createAuthenticatedClient($username = 'user@acme.tld')
     return $client;
 }
 ```
+
+### Server configuration
+
+Required by Symfony 2.3 or newer.
+
+Add the following lines to the `.htaccess` right after `RewriteEngine On`:
+
+```
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_Authorization:%1]
+```
