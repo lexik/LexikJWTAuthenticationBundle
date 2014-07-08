@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * AuthenticationFailureHandlerTest
@@ -39,9 +40,6 @@ class AuthenticationFailureHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected function getAuthenticationException()
     {
-        return $this
-            ->getMockBuilder('Symfony\Component\Security\Core\Exception\AuthenticationException')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return new AuthenticationException();
     }
 }
