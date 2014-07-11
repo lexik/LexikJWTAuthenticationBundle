@@ -2,7 +2,9 @@ LexikJWTAuthenticationBundle
 ============================
 
 [![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
+[![Latest Stable Version](https://poser.pugx.org/lexik/jwt-authentication-bundle/v/stable.svg)](https://packagist.org/packages/lexik/jwt-authentication-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
+
 
 This bundles provides JWT (Json Web Token) authentication for your Symfony2 REST API using the great [`namshi/jose`](https://github.com/namshi/jose) library.
 
