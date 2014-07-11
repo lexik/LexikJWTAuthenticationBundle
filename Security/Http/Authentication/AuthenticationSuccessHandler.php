@@ -4,7 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +19,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     /**
-     * @var JWTEncoder
+     * @var JWTCreator
      */
-    protected $encoder;
+    protected $jwtCreator;
 
     /**
      * @var EventDispatcherInterface
@@ -29,20 +29,13 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     protected $dispatcher;
 
     /**
-     * @var int
-     */
-    protected $ttl;
-
-    /**
-     * @param JWTEncoder               $encoder
+     * @param JWTCreator $jwtCreator
      * @param EventDispatcherInterface $dispatcher
-     * @param int                      $ttl
      */
-    public function __construct(JWTEncoder $encoder, EventDispatcherInterface $dispatcher, $ttl)
+    public function __construct(JWTCreator $jwtCreator, EventDispatcherInterface $dispatcher)
     {
-        $this->encoder    = $encoder;
+        $this->jwtCreator = $jwtCreator;
         $this->dispatcher = $dispatcher;
-        $this->ttl        = $ttl;
     }
 
     /**
@@ -52,11 +45,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     {
         $user = $token->getUser();
 
-        $payload             = array();
-        $payload['exp']      = time() + $this->ttl;
-        $payload['username'] = $user->getUsername();
-
-        $jwt = $this->encoder->encode($payload)->getTokenString();
+        $jwt = $this->jwtCreator->create($user);
 
         $event = new AuthenticationSuccessEvent(array('token' => $jwt), $user);
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);

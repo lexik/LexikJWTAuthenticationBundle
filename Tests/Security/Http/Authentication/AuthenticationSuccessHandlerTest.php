@@ -43,20 +43,20 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getTokenString')
             ->will($this->returnValue('tokenstring'));
 
-        $encoder = $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder')
+        $creator = $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $encoder
+        $creator
             ->expects($this->any())
-            ->method('encode')
-            ->will($this->returnValue($jws));
+            ->method('create')
+            ->will($this->returnValue($jws->getTokenString()));
 
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
             ->disableOriginalConstructor()
             ->getMock();
 
-        return new AuthenticationSuccessHandler($encoder, $dispatcher, 3600);
+        return new AuthenticationSuccessHandler($creator, $dispatcher);
     }
 
     /**
