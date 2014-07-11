@@ -6,7 +6,7 @@ LexikJWTAuthenticationBundle
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 
 
-This bundles provides JWT (Json Web Token) authentication for your Symfony2 REST API using the great [`namshi/jose`](https://github.com/namshi/jose) library.
+This bundle provides JWT (Json Web Token) authentication for your Symfony2 REST API using the great [`namshi/jose`](https://github.com/namshi/jose) library.
 
 Installation
 ------------
