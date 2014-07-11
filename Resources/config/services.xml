@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="lexik_jwt_authentication.jwt_encoder.class">Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder</parameter>
+        <parameter key="lexik_jwt_authentication.jwt_creator.class">Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_success.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
@@ -22,11 +23,16 @@
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <!-- JWT Authentication response interceptor  -->
-        <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
+        <!-- JWT Creator -->
+        <service id="lexik_jwt_authentication.jwt_creator" class="%lexik_jwt_authentication.jwt_creator.class%">
             <argument type="service" id="lexik_jwt_authentication.jwt_encoder"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
+        </service>
+        <!-- JWT Authentication response interceptor  -->
+        <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
+            <argument type="service" id="lexik_jwt_authentication.jwt_creator"/>
+            <argument type="service" id="event_dispatcher"/>
             <tag name="monolog.logger" channel="security"></tag>
         </service>
         <service id="lexik_jwt_authentication.handler.authentication_failure" class="%lexik_jwt_authentication.handler.authentication_failure.class%">

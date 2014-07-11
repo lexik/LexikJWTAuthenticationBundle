@@ -14,4 +14,9 @@ final class Events
      * on the authentication success response
      */
     const AUTHENTICATION_SUCCESS = 'lexik_jwt_authentication.on_authentication_success';
+
+    /**
+     * Dispatched token payload is created to allow for extra fields
+     */
+    const JWT_CREATED = 'lexik_jwt_authentication.on_jwt_created';
 }
