@@ -28,8 +28,7 @@ class JWTFactory implements SecurityFactoryInterface
         $listenerId = 'security.authentication.listener.jwt.' . $id;
         $container
             ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'))
-            ->replaceArgument(2, $config)
-        ;
+            ->replaceArgument(2, $config);
 
         $entryPointId = $defaultEntryPoint;
 
@@ -123,12 +122,13 @@ class JWTFactory implements SecurityFactoryInterface
     /**
      * Create an entry point, by default it sends a 401 header and ends the request
      *
-     * @param $container
-     * @param $id
-     * @param $defaultEntryPoint
+     * @param ContainerBuilder $container
+     * @param string           $id
+     * @param mixed            $defaultEntryPoint
+     *
      * @return string
      */
-    protected function createEntryPoint($container, $id, $defaultEntryPoint)
+    protected function createEntryPoint(ContainerBuilder $container, $id, $defaultEntryPoint)
     {
         $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.'.$id;
         $container->setDefinition($entryPointId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.entry_point'));

@@ -4,7 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +19,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     /**
-     * @var JWTCreator
+     * @var JWTManager
      */
-    protected $jwtCreator;
+    protected $jwtManager;
 
     /**
      * @var EventDispatcherInterface
@@ -29,12 +29,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     protected $dispatcher;
 
     /**
-     * @param JWTCreator $jwtCreator
+     * @param JWTManager               $jwtManager
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(JWTCreator $jwtCreator, EventDispatcherInterface $dispatcher)
+    public function __construct(JWTManager $jwtManager, EventDispatcherInterface $dispatcher)
     {
-        $this->jwtCreator = $jwtCreator;
+        $this->jwtManager = $jwtManager;
         $this->dispatcher = $dispatcher;
     }
 
@@ -44,10 +44,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $token->getUser();
+        $jwt  = $this->jwtManager->create($user);
 
-        $jwt = $this->jwtCreator->create($user);
-
-        $event = new AuthenticationSuccessEvent(array('token' => $jwt), $user);
+        $event = new AuthenticationSuccessEvent(array('token' => $jwt), $user, $request);
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);
 
         return new JsonResponse($event->getData());

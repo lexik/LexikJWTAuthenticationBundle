@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -22,18 +22,18 @@ class JWTProvider implements AuthenticationProviderInterface
     private $userProvider;
 
     /**
-     * @var JWTEncoder
+     * @var JWTManager
      */
-    private $encoder;
+    private $jwtManager;
 
     /**
      * @param UserProviderInterface $userProvider
-     * @param JWTEncoder            $encoder
+     * @param JWTManager            $jwtManager
      */
-    public function __construct(UserProviderInterface $userProvider, JWTEncoder $encoder)
+    public function __construct(UserProviderInterface $userProvider, JWTManager $jwtManager)
     {
         $this->userProvider = $userProvider;
-        $this->encoder      = $encoder;
+        $this->jwtManager   = $jwtManager;
     }
 
     /**
@@ -41,14 +41,18 @@ class JWTProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
-        $jwt = $this->encoder->decode($token->getCredentials());
+        $payload = $this->jwtManager->decode($token);
 
-        if (!($jwt && isset($jwt['username']))) {
+        if (!$payload) {
             throw new AuthenticationException('Invalid JWT Token');
         }
 
-        if (!($user = $this->userProvider->loadUserByUsername($jwt['username']))) {
-            throw new AuthenticationException('User "' . $jwt['username'] . '" could not be found.');
+        if (!isset($payload['username'])) {
+            throw new AuthenticationException('No username found in token.');
+        }
+
+        if (!($user = $this->userProvider->loadUserByUsername($payload['username']))) {
+            throw new AuthenticationException('User "' . $payload['username'] . '" could not be found.');
         }
 
         $authToken = new JWTUserToken($user->getRoles());

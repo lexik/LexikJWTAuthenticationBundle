@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="lexik_jwt_authentication.jwt_encoder.class">Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder</parameter>
-        <parameter key="lexik_jwt_authentication.jwt_creator.class">Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator</parameter>
+        <parameter key="lexik_jwt_authentication.jwt_manager.class">Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_success.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
@@ -24,14 +24,17 @@
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
         <!-- JWT Creator -->
-        <service id="lexik_jwt_authentication.jwt_creator" class="%lexik_jwt_authentication.jwt_creator.class%">
+        <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
             <argument type="service" id="lexik_jwt_authentication.jwt_encoder"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
+            <call method="setRequest">
+                <argument type="service" id="request" on-invalid="null" strict="false" />
+            </call>
         </service>
         <!-- JWT Authentication response interceptor  -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
-            <argument type="service" id="lexik_jwt_authentication.jwt_creator"/>
+            <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <tag name="monolog.logger" channel="security"></tag>
         </service>
@@ -41,7 +44,7 @@
         <!-- JWT Security Authentication Provider -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="%lexik_jwt_authentication.security.authentication.provider.class%" public="false">
             <argument /> <!-- User Provider -->
-            <argument type="service" id="lexik_jwt_authentication.jwt_encoder" />
+            <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
         </service>
         <!-- JWT Security Authentication Listener -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="%lexik_jwt_authentication.security.authentication.listener.class%" public="false">

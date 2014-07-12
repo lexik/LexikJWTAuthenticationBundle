@@ -45,11 +45,9 @@ class JWTEncoder
      */
     public function encode(array $data)
     {
-        $privateKey = openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase);
-
         $jws = new JWS('RS256');
         $jws->setPayload($data);
-        $jws->sign($privateKey);
+        $jws->sign($this->getPrivateKey());
 
         return $jws;
     }
@@ -57,22 +55,37 @@ class JWTEncoder
     /**
      * @param string $token
      *
-     * @return string
+     * @return array
      */
     public function decode($token)
     {
         try {
+            /** @var JWS $jws */
             $jws = JWS::load($token);
         } catch (\InvalidArgumentException $e) {
             return false;
         }
 
-        $publicKey = openssl_pkey_get_public('file://' . $this->publicKey);
-
-        if ($jws->isValid($publicKey)) {
-            return $jws->getPayload();
+        if (!$jws->isValid($this->getPublicKey())) {
+            return false;
         }
 
-        return false;
+        return $jws->getPayload();
+    }
+
+    /**
+     * @return bool|resource
+     */
+    protected function getPrivateKey()
+    {
+        return openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase);
+    }
+
+    /**
+     * @return resource
+     */
+    protected function getPublicKey()
+    {
+        return openssl_pkey_get_public('file://' . $this->publicKey);
     }
 }
