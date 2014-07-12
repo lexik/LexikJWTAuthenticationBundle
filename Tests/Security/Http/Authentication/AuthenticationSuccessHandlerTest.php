@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authentication;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 
 /**
@@ -25,7 +26,7 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
-        $this->assertEquals('tokenstring', $content['token']);
+        $this->assertEquals('secrettoken', $content['token']);
     }
 
     /**
@@ -33,30 +34,28 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected function getHandler()
     {
-        $jws = $this
-            ->getMockBuilder('Namshi\JOSE\JWS')
+        $jwtManager = $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $jws
-            ->expects($this->any())
-            ->method('getTokenString')
-            ->will($this->returnValue('tokenstring'));
-
-        $creator = $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTCreator')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $creator
+        $jwtManager
             ->expects($this->any())
             ->method('create')
-            ->will($this->returnValue($jws->getTokenString()));
+            ->will($this->returnValue('secrettoken'));
 
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
             ->disableOriginalConstructor()
             ->getMock();
 
-        return new AuthenticationSuccessHandler($creator, $dispatcher);
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(Events::AUTHENTICATION_SUCCESS),
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent')
+            );
+
+        return new AuthenticationSuccessHandler($jwtManager, $dispatcher);
     }
 
     /**

@@ -120,4 +120,4 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
 
         return $event;
     }
-} 
+}

@@ -67,10 +67,7 @@ class JWTManager
         $event = new JWTCreatedEvent($payload, $user, $this->request);
         $this->dispatcher->dispatch(Events::JWT_CREATED, $event);
 
-        return $this
-            ->jwtEncoder
-            ->encode($event->getData())
-            ->getTokenString();
+        return $this->jwtEncoder->encode($event->getData());
     }
 
     /**

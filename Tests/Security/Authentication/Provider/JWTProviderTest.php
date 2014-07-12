@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Pro
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * JWTProviderTest
@@ -17,7 +18,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupports()
     {
-        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTEncoderMock());
+        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock());
 
         /** @var TokenInterface $usernamePasswordToken */
         $usernamePasswordToken = $this
@@ -38,6 +39,73 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * test authenticate method
+     *
+     * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
+     */
+    public function testAuthenticateWithInvalidJWT()
+    {
+        /** @var TokenInterface $jwtUserToken */
+        $jwtUserToken = $this
+            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $userProvider = $this->getUserProviderMock();
+
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(false));
+
+        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider->authenticate($jwtUserToken);
+    }
+
+    /**
+     * test authenticate method
+     *
+     * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
+     */
+    public function testAuthenticateWithoutUsername()
+    {
+        /** @var TokenInterface $jwtUserToken */
+        $jwtUserToken = $this
+            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $userProvider = $this->getUserProviderMock();
+
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('foo' => 'bar')));
+
+        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider->authenticate($jwtUserToken);
+    }
+
+    /**
+     * test authenticate method
+     *
+     * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     */
+    public function testAuthenticateWithNotExistingUser()
+    {
+        /** @var TokenInterface $jwtUserToken */
+        $jwtUserToken = $this
+            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $userProvider = $this->getUserProviderMock();
+        $userProvider->expects($this->any())->method('loadUserByUsername')->willThrowException(new UsernameNotFoundException());
+
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
+
+        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider->authenticate($jwtUserToken);
+    }
+
+    /**
+     * test authenticate method
      */
     public function testAuthenticate()
     {
@@ -46,9 +114,6 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
             ->disableOriginalConstructor()
             ->getMock();
-
-        $jwtEncoder = $this->getJWTEncoderMock();
-        $jwtEncoder->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
 
         $user = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')
@@ -59,12 +124,25 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider->expects($this->any())->method('loadUserByUsername')->will($this->returnValue($user));
 
-        $provider = new JWTProvider($userProvider, $jwtEncoder);
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
+
+        $provider = new JWTProvider($userProvider, $jwtManager);
 
         $this->assertInstanceOf(
             'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
             $provider->authenticate($jwtUserToken)
         );
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getJWTManagerMock()
+    {
+        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**

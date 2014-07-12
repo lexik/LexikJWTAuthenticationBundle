@@ -41,7 +41,7 @@ class JWTEncoder
     /**
      * @param array $data
      *
-     * @return JWS
+     * @return string the token
      */
     public function encode(array $data)
     {
@@ -49,7 +49,7 @@ class JWTEncoder
         $jws->setPayload($data);
         $jws->sign($this->getPrivateKey());
 
-        return $jws;
+        return $jws->getTokenString();
     }
 
     /**

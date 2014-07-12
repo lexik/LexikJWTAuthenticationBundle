@@ -174,15 +174,31 @@ lexik_jwt_authentication:
 In your functional tests, create an authenticated client :
 
 ``` php
-protected function createAuthenticatedClient($username = 'user@acme.tld')
+/**
+ * Create a client with a default Authorization header.
+ *
+ * @param string $username
+ * @param string $password
+ *
+ * @return \Symfony\Bundle\FrameworkBundle\Client
+ */
+protected function createAuthenticatedClient($username = 'user', $password = 'password')
 {
     $client = static::createClient();
+    $client->request(
+        'POST',
+        '/login_check',
+        array(
+            'username' => $username,
+            'password' => $password,
+        )
+    );
 
-    $jwt = $client->getContainer()->get('lexik_jwt_authentication.jwt_encoder')->encode([
-        'username' => $username,
-    ]);
+    $response = $client->getResponse();
+    $data     = json_decode($response->getContent(), true);
 
-    $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $jwt->getTokenString()));
+    $client = static::createClient();
+    $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
 
     return $client;
 }

@@ -20,6 +20,9 @@ class AuthorizationHeaderTokenExtractorTest extends \PHPUnit_Framework_TestCase
         $extractor = new AuthorizationHeaderTokenExtractor('Bearer');
 
         $request = new Request();
+        $this->assertFalse($extractor->extract($request));
+
+        $request = new Request();
         $request->headers->set('Authorization', 'Bear testtoken');
         $this->assertFalse($extractor->extract($request));
 

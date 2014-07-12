@@ -43,17 +43,11 @@ class JWTProvider implements AuthenticationProviderInterface
     {
         $payload = $this->jwtManager->decode($token);
 
-        if (!$payload) {
+        if (!$payload || !isset($payload['username'])) {
             throw new AuthenticationException('Invalid JWT Token');
         }
 
-        if (!isset($payload['username'])) {
-            throw new AuthenticationException('No username found in token.');
-        }
-
-        if (!($user = $this->userProvider->loadUserByUsername($payload['username']))) {
-            throw new AuthenticationException('User "' . $payload['username'] . '" could not be found.');
-        }
+        $user = $this->userProvider->loadUserByUsername($payload['username']);
 
         $authToken = new JWTUserToken($user->getRoles());
         $authToken->setUser($user);
