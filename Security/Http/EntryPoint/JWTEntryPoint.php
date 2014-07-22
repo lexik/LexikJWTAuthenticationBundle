@@ -19,6 +19,13 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new JsonResponse('invalid credentials', 401);
+        $statusCode = 401;
+
+        $data = array(
+            'code' => $statusCode,
+            'message' => 'Invalid credentials',
+        );
+
+        return new JsonResponse($data, $statusCode);
     }
 }

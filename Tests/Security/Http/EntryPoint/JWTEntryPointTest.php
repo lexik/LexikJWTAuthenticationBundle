@@ -21,6 +21,10 @@ class JWTEntryPointTest extends \PHPUnit_Framework_TestCase
         $response = $entryPoint->start($this->getRequest());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(401, $response->getStatusCode(), 'status code should be 401');
+
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals($data['code'], '401');
+        $this->assertEquals($data['message'], 'Invalid credentials');
     }
 
     /**
