@@ -48,9 +48,15 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         // todo : move that dispatch to the jwt manager
 
+        $response = new JsonResponse();
+
         $event = new AuthenticationSuccessEvent(array('token' => $jwt), $user, $request);
+        $event->setResponse($response);
+
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);
 
-        return new JsonResponse($event->getData());
+        $response->setData($event->getData());
+
+        return $response;
     }
 }

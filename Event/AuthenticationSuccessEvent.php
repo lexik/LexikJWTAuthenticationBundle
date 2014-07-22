@@ -3,8 +3,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
-class AuthenticationSuccessEvent extends Event
+class AuthenticationSuccessEvent extends GetResponseEvent
 {
     /**
      * @var array
