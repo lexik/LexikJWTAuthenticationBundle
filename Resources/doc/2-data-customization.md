@@ -15,7 +15,7 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 ```
 
-Example : add client ip to the encoded payload
+Example 1 : add client ip to the encoded payload
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\JWTCreatedListener.php
@@ -40,6 +40,30 @@ class JWTCreatedListener
 }
 ```
 
+Example 2 : override token expiration date calcul to be more flexikble
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\JWTCreatedListener.php
+class JWTCreatedListener
+{
+    /**
+     * @param JWTCreatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTCreated(JWTCreatedEvent $event)
+    {
+        $expiration = new \DateTime('+1 day');
+        $expiration->setTime(2, 0, 0);
+
+        $payload        = $event->getData();
+        $payload['exp'] = $expiration->getTimestamp();
+
+        $event->setData($payload);
+    }
+}
+```
+
 #### Events::JWT_DECODED - validate data in the JWT payload
 
 You can access the jwt payload once it has been decoded to perform you own additional validation. 
@@ -53,7 +77,7 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
 ```
 
-Example : check client ip the decoded payload
+Example 3 : check client ip the decoded payload (from example 1)
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\JWTDecodedListener.php
@@ -93,7 +117,7 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 ```
 
-Example : add user roles to the response
+Example 4 : add user roles to the response
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\AuthenticationSuccessListener.php
