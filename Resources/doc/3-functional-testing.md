@@ -1,4 +1,4 @@
-Functionnally testing a JWT protected api
+Functionally testing a JWT protected api
 =========================================
 
 Configuration
