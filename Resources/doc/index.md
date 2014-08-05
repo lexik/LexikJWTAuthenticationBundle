@@ -105,7 +105,7 @@ See [configuration reference](1-configuration-reference.md) document to enable q
 
 #### Examples
 
-See [Functionnally testing a JWT protected api](3-functionnal-testing.md) document
+See [Functionally testing a JWT protected api](3-functional-testing.md) document
 or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox).
 
 #### About token expiration
@@ -120,4 +120,4 @@ The following documents are available:
 
 - [Configuration reference](1-configuration-reference.md)
 - [Data customization and validation](2-data-customization.md)
-- [Functionnally testing a JWT protected api](3-functionnal-testing.md)
+- [Functionally testing a JWT protected api](3-functional-testing.md)
