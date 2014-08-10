@@ -106,12 +106,17 @@ See [configuration reference](1-configuration-reference.md) document to enable q
 #### Examples
 
 See [Functionally testing a JWT protected api](3-functional-testing.md) document
-or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox).
+or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox) for a fully working example.
 
 #### About token expiration
 
 Each request after token expiration will result in a 401 response.
 Redo the authentication process to obtain a new token.
+
+### Working with CORS requests
+
+This is more of a Symfony2 related topic, but see [Working with CORS requests](4-cors-requests.md) document
+to get a quick explanation on handling CORS requests.
 
 Next steps
 ----------
@@ -121,3 +126,4 @@ The following documents are available:
 - [Configuration reference](1-configuration-reference.md)
 - [Data customization and validation](2-data-customization.md)
 - [Functionally testing a JWT protected api](3-functional-testing.md)
+- [Working with CORS requests](4-cors-requests.md)

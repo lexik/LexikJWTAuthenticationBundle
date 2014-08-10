@@ -25,7 +25,7 @@ Setup the test suite using [Composer](http://getcomposer.org/):
 
 Run it using PHPUnit:
 
-    $ bin/phpunit
+    $ vendor/bin/phpunit
 
 Contributing
 ------------
