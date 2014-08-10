@@ -113,7 +113,7 @@ or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationB
 Each request after token expiration will result in a 401 response.
 Redo the authentication process to obtain a new token.
 
-### Working with CORS requests
+#### Working with CORS requests
 
 This is more of a Symfony2 related topic, but see [Working with CORS requests](4-cors-requests.md) document
 to get a quick explanation on handling CORS requests.
