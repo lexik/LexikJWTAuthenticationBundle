@@ -81,6 +81,18 @@ access_control:
     - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
+#### Important note for Apache users
+
+As stated in [this link](http://stackoverflow.com/questions/11990388/request-headers-bag-is-missing-authorization-header-in-symfony-2) and [this one](http://stackoverflow.com/questions/19443718/symfony-2-3-getrequest-headers-not-showing-authorization-bearer-token/19445020), Apache server will strip any `Authorization header` not in a valid HTTP BASIC AUTH format. 
+
+If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
+
+```apache
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+```
+
 Usage
 -----
 
