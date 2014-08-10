@@ -108,6 +108,9 @@ See [configuration reference](1-configuration-reference.md) document to enable q
 See [Functionally testing a JWT protected api](3-functional-testing.md) document
 or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox) for a fully working example.
 
+Notes
+-----
+
 #### About token expiration
 
 Each request after token expiration will result in a 401 response.
@@ -118,8 +121,14 @@ Redo the authentication process to obtain a new token.
 This is more of a Symfony2 related topic, but see [Working with CORS requests](4-cors-requests.md) document
 to get a quick explanation on handling CORS requests.
 
-Next steps
-----------
+#### A stateless form_login replacement
+
+Using form_login security factory is very straightforward but it involves cookies exchange, even if the stateless parameter is set to true.
+
+This may not be a problem depending on the system that makes calls to your API (like a typical SPA). But if it is, take a look at the [GfreeauGetJWTBundle](https://github.com/gfreeau/GfreeauGetJWTBundle), which provides a stateless replacement for form_login.
+
+Further documentation
+---------------------
 
 The following documents are available:
 
