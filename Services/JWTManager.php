@@ -2,14 +2,14 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
 /**
  * JWTManager
@@ -19,7 +19,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 class JWTManager
 {
     /**
-     * @var JWTEncoder
+     * @var JWTEncoderInterface
      */
     protected $jwtEncoder;
 
@@ -34,13 +34,13 @@ class JWTManager
     private $request;
 
     /**
-     * @param JWTEncoder               $jwtEncoder
+     * @param JWTEncoderInterface      $encoder
      * @param EventDispatcherInterface $dispatcher
      * @param int                      $ttl
      */
-    public function __construct(JWTEncoder $jwtEncoder, EventDispatcherInterface $dispatcher, $ttl)
+    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $ttl)
     {
-        $this->jwtEncoder = $jwtEncoder;
+        $this->jwtEncoder = $encoder;
         $this->dispatcher = $dispatcher;
         $this->ttl        = $ttl;
     }

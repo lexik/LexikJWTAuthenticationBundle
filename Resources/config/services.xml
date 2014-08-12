@@ -23,9 +23,9 @@
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <!-- JWT Creator -->
+        <!-- JWT Manager -->
         <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
-            <argument type="service" id="lexik_jwt_authentication.jwt_encoder"/>
+            <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
             <call method="setRequest">
