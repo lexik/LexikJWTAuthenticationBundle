@@ -148,3 +148,4 @@ The following documents are available:
 - [Data customization and validation](2-data-customization.md)
 - [Functionally testing a JWT protected api](3-functional-testing.md)
 - [Working with CORS requests](4-cors-requests.md)
+- [JWT encoder service customization](5-encoder-service.md)
