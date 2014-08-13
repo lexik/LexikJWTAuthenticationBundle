@@ -9,7 +9,7 @@ use Namshi\JOSE\JWS;
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
-class JWTEncoder
+class JWTEncoder implements JWTEncoderInterface
 {
     /**
      * @var string
@@ -39,9 +39,7 @@ class JWTEncoder
     }
 
     /**
-     * @param array $data
-     *
-     * @return string the token
+     * {@inheritdoc}
      */
     public function encode(array $data)
     {
@@ -53,9 +51,7 @@ class JWTEncoder
     }
 
     /**
-     * @param string $token
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function decode($token)
     {

@@ -16,13 +16,13 @@ final class Events
     const AUTHENTICATION_SUCCESS = 'lexik_jwt_authentication.on_authentication_success';
 
     /**
-     * Dispatched before the token payload is encoded by the JWTEncoder.
+     * Dispatched before the token payload is encoded by the configured encoder (JWTEncoder by default).
      * Hook into this event to add extra fields to the payload.
      */
     const JWT_CREATED = 'lexik_jwt_authentication.on_jwt_created';
 
     /**
-     * Dispatched after the token payload has been decoded by the JWTEncoder.
+     * Dispatched after the token payload has been decoded by the configured encoder (JWTEncoder by default).
      * Hook into this event to perform additional validation on the received payload.
      */
     const JWT_DECODED = 'lexik_jwt_authentication.on_jwt_decoded';

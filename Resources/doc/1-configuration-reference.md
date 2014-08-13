@@ -1,9 +1,25 @@
 Configuration reference
 =======================
 
+### Configuration reference
+
+``` yaml
+# app/config/config.yml
+# ...
+lexik_jwt_authentication:
+    private_key_path: %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
+    public_key_path:  %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
+    pass_phrase:      ''                                      # ssh key pass phrase
+    token_ttl:        86400                                   # token ttl - defaults to 86400
+    encoder_service:  lexik_jwt_authentication.jwt_encoder    # token encoder / decoder service - defaults to the jwt encoder (based on the namshi/jose library)
+```
+
+### Security reference
+
 #### Simplest configuration
 
 ``` yaml
+# app/config/security.yml
 # ...
 firewalls:
     # ...
@@ -15,6 +31,7 @@ firewalls:
 #### Full configuration
 
 ``` yaml
+# app/config/security.yml
 # ...
 firewalls:
     # ...

@@ -38,6 +38,9 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(86400)
                     ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('encoder_service')
+                    ->defaultValue('lexik_jwt_authentication.jwt_encoder')
+                ->end()
             ->end();
 
         return $treeBuilder;
