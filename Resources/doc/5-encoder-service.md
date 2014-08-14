@@ -55,7 +55,7 @@ class NixillaJWTEncoder implements JWTEncoderInterface
 }
 ```
 
-### Make it as a service
+### Declare it as a service
 
 ``` yaml
 # services.yml
@@ -64,7 +64,7 @@ services:
         class: Acme\Bundle\ApiBundle\Encoder\NixillaJWTEncoder
 ```
 
-### Set is as the encoder_service in the bundle configuration
+### Set it as the encoder_service in the bundle configuration
 
 ``` yaml
 # config.yml
