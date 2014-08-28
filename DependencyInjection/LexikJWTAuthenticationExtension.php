@@ -37,16 +37,15 @@ class LexikJWTAuthenticationExtension extends Extension
     }
 
     /**
-     * Checks that configured keys exists and are readable
-     * and that private key can be parsed using the passphrase
+     * Checks that configured keys exists and private key can be parsed using the passphrase
      *
      * @param string $privateKey
-     * @param string $publickKey
+     * @param string $publicKey
      * @param string $passphrase
      *
      * @throws \RuntimeException
      */
-    public function checkOpenSSLConfig($privateKey, $publickKey, $passphrase)
+    public function checkOpenSSLConfig($privateKey, $publicKey, $passphrase)
     {
         if (!file_exists($privateKey)) {
             throw new \RuntimeException(sprintf(
@@ -55,16 +54,16 @@ class LexikJWTAuthenticationExtension extends Extension
             ));
         }
 
-        if (!file_exists($publickKey)) {
+        if (!file_exists($publicKey)) {
             throw new \RuntimeException(sprintf(
                 'Public key "%s" doesn\'t exist.',
-                $publickKey
+                $publicKey
             ));
         }
 
         if (!openssl_pkey_get_private('file://' . $privateKey, $passphrase)) {
             throw new \RuntimeException(sprintf(
-                'Cannot open private key "%s". Did you correctly configure the corresponding passphrase ?',
+                'Failed to open private key "%s". Did you correctly configure the corresponding passphrase?',
                 $privateKey
             ));
         }
