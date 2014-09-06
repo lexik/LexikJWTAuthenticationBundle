@@ -1,6 +1,8 @@
 Data customization and validation
 =================================
 
+**Careful**: Before you add your own custom data, know that the **JWT payload is not encrypted, it is only base64 encoded**. The token signature ensures its integrity (meaning it cannot be modified), but anyone can read its content (try it using a simple tool like [http://jwt.io/](http://jwt.io/)).
+
 #### Events::JWT_CREATED - add data to the JWT payload
 
 By default the JWT payload will contain the username and the token TTL,
