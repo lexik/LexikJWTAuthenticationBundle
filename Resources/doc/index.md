@@ -4,7 +4,9 @@ Getting started
 Prerequisites
 -------------
 
-This bundle requires Symfony 2.3+ and the OpenSSL library.
+This bundle requires Symfony 2.3+ (and the OpenSSL library if you intend to use the default provided encoder).
+
+**Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS. 
 
 Installation
 ------------
