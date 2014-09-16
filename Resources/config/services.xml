@@ -40,6 +40,7 @@
         </service>
         <service id="lexik_jwt_authentication.handler.authentication_failure" class="%lexik_jwt_authentication.handler.authentication_failure.class%">
             <tag name="monolog.logger" channel="security"></tag>
+            <argument type="service" id="event_dispatcher"/>
         </service>
         <!-- JWT Security Authentication Provider -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="%lexik_jwt_authentication.security.authentication.provider.class%" public="false">
