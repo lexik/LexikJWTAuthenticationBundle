@@ -17,8 +17,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
  */
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
 
+    /**
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;

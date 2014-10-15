@@ -56,7 +56,6 @@ class JWTEncoder implements JWTEncoderInterface
     public function decode($token)
     {
         try {
-            /** @var JWS $jws */
             $jws = JWS::load($token);
         } catch (\InvalidArgumentException $e) {
             return false;

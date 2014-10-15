@@ -22,7 +22,7 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
         $statusCode = 401;
 
         $data = array(
-            'code' => $statusCode,
+            'code'    => $statusCode,
             'message' => 'Invalid credentials',
         );
 

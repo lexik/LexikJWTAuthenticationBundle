@@ -45,7 +45,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->will($this->throwException(new \Symfony\Component\Security\Core\Exception\AuthenticationException));
+            ->will($this->throwException(new \Symfony\Component\Security\Core\Exception\AuthenticationException()));
 
         $listener = new JWTListener($this->getSecurityContextMock(), $authenticationManager);
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
