@@ -17,6 +17,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
  */
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
+    const RESPONSE_CODE    = 401;
+    const RESPONSE_MESSAGE = 'Bad credentials';
+
     /**
      * @var EventDispatcherInterface
      */
@@ -35,17 +38,13 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $statusCode = 401;
-
         $data = array(
-            'code' => $statusCode,
-            'message' => 'Bad credentials',
+            'code'    => self::RESPONSE_CODE,
+            'message' => self::RESPONSE_MESSAGE,
         );
 
-        $response = new JsonResponse($data, $statusCode);
-
         $event = new AuthenticationFailureEvent($request);
-        $event->setResponse($response);
+        $event->setResponse(new JsonResponse($data, self::RESPONSE_CODE));
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);
 

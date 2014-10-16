@@ -17,13 +17,13 @@
     </parameters>
 
     <services>
-        <!-- JWT Encoder / Decoder -->
+        <!-- JWT Encoder / Decoder / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_encoder" class="%lexik_jwt_authentication.jwt_encoder.class%">
             <argument>%lexik_jwt_authentication.private_key_path%</argument>
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <!-- JWT Manager -->
+        <!-- JWT Manager / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
             <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
@@ -32,7 +32,7 @@
                 <argument type="service" id="request" on-invalid="null" strict="false" />
             </call>
         </service>
-        <!-- JWT Authentication response interceptor  -->
+        <!-- JWT Authentication response interceptor -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
             <argument type="service" id="event_dispatcher"/>

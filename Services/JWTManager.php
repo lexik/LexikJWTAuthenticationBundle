@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTManager
+class JWTManager implements JWTManagerInterface
 {
     /**
      * @var JWTEncoderInterface
@@ -31,7 +31,7 @@ class JWTManager
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * @param JWTEncoderInterface      $encoder
@@ -54,15 +54,15 @@ class JWTManager
     }
 
     /**
-     * @param UserInterface $user
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function create(UserInterface $user)
     {
-        $payload             = array();
-        $payload['exp']      = time() + $this->ttl;
-        $payload['username'] = $user->getUsername();
+        $payload = array(
+            'exp' => time() + $this->ttl
+        );
+
+        $this->addUserIdentityToPayload($user, $payload);
 
         $event = new JWTCreatedEvent($payload, $user, $this->request);
         $this->dispatcher->dispatch(Events::JWT_CREATED, $event);
@@ -71,9 +71,19 @@ class JWTManager
     }
 
     /**
-     * @param TokenInterface $token
+     * Add user identity to payload, username by default.
+     * Override this if you need to identify it by another property.
      *
-     * @return bool|string
+     * @param UserInterface $user
+     * @param array         $payload
+     */
+    protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
+    {
+        $payload['username'] = $user->getUsername();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function decode(TokenInterface $token)
     {

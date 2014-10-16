@@ -14,17 +14,17 @@ class JWTEncoder implements JWTEncoderInterface
     /**
      * @var string
      */
-    private $privateKey;
+    protected $privateKey;
 
     /**
      * @var string
      */
-    private $publicKey;
+    protected $publicKey;
 
     /**
      * @var string
      */
-    private $passPhrase;
+    protected $passPhrase;
 
     /**
      * @param string $privateKey
