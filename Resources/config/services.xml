@@ -31,6 +31,9 @@
             <call method="setRequest">
                 <argument type="service" id="request" on-invalid="null" strict="false" />
             </call>
+            <call method="setUserIdentityField">
+                <argument>%lexik_jwt_authentication.user_identity_field%</argument>
+            </call>
         </service>
         <!-- JWT Authentication response interceptor -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="%lexik_jwt_authentication.handler.authentication_success.class%">
@@ -46,6 +49,9 @@
         <service id="lexik_jwt_authentication.security.authentication.provider" class="%lexik_jwt_authentication.security.authentication.provider.class%" public="false">
             <argument /> <!-- User Provider -->
             <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
+            <call method="setUserIdentityField">
+                <argument>%lexik_jwt_authentication.user_identity_field%</argument>
+            </call>
         </service>
         <!-- JWT Security Authentication Listener -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="%lexik_jwt_authentication.security.authentication.listener.class%" public="false">

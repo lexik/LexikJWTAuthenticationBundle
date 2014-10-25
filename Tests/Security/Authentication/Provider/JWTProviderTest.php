@@ -133,6 +133,19 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
             $provider->authenticate($jwtUserToken)
         );
+
+        // test changing user identity field
+
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('uid' => 'user')));
+
+        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider->setUserIdentityField('uid');
+
+        $this->assertInstanceOf(
+            'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
+            $provider->authenticate($jwtUserToken)
+        );
     }
 
     /**

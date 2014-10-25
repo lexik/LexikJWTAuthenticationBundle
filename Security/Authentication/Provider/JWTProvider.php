@@ -29,7 +29,7 @@ class JWTProvider implements AuthenticationProviderInterface
     /**
      * @var string
      */
-    protected $userIdentityField = 'username';
+    protected $userIdentityField;
 
     /**
      * @param UserProviderInterface $userProvider
@@ -37,8 +37,9 @@ class JWTProvider implements AuthenticationProviderInterface
      */
     public function __construct(UserProviderInterface $userProvider, JWTManagerInterface $jwtManager)
     {
-        $this->userProvider = $userProvider;
-        $this->jwtManager   = $jwtManager;
+        $this->userProvider      = $userProvider;
+        $this->jwtManager        = $jwtManager;
+        $this->userIdentityField = 'username';
     }
 
     /**
@@ -81,5 +82,21 @@ class JWTProvider implements AuthenticationProviderInterface
     public function supports(TokenInterface $token)
     {
         return $token instanceof JWTUserToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdentityField()
+    {
+        return $this->userIdentityField;
+    }
+
+    /**
+     * @param string $userIdentityField
+     */
+    public function setUserIdentityField($userIdentityField)
+    {
+        $this->userIdentityField = $userIdentityField;
     }
 }
