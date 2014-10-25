@@ -29,6 +29,16 @@ class JWTManager implements JWTManagerInterface
     protected $dispatcher;
 
     /**
+     * @var integer
+     */
+    protected $ttl;
+
+    /**
+     * @var string
+     */
+    protected $userIdentityField = 'username';
+
+    /**
      * @var Request
      */
     protected $request;
@@ -43,14 +53,6 @@ class JWTManager implements JWTManagerInterface
         $this->jwtEncoder = $encoder;
         $this->dispatcher = $dispatcher;
         $this->ttl        = $ttl;
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
     }
 
     /**
@@ -71,18 +73,6 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
-     * Add user identity to payload, username by default.
-     * Override this if you need to identify it by another property.
-     *
-     * @param UserInterface $user
-     * @param array         $payload
-     */
-    protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
-    {
-        $payload['username'] = $user->getUsername();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function decode(TokenInterface $token)
@@ -99,5 +89,35 @@ class JWTManager implements JWTManagerInterface
         }
 
         return $payload;
+    }
+
+    /**
+     * Add user identity to payload, username by default.
+     * Override this if you need to identify it by another property.
+     *
+     * @param UserInterface $user
+     * @param array         $payload
+     */
+    protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
+    {
+        $payload[$this->userIdentityField] = $user->getUsername();
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Get request
+     *
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 }
