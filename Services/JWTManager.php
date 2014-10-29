@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTManager
+class JWTManager implements JWTManagerInterface
 {
     /**
      * @var JWTEncoderInterface
@@ -29,9 +29,19 @@ class JWTManager
     protected $dispatcher;
 
     /**
+     * @var integer
+     */
+    protected $ttl;
+
+    /**
+     * @var string
+     */
+    protected $userIdentityField;
+
+    /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * @param JWTEncoderInterface      $encoder
@@ -40,29 +50,22 @@ class JWTManager
      */
     public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $ttl)
     {
-        $this->jwtEncoder = $encoder;
-        $this->dispatcher = $dispatcher;
-        $this->ttl        = $ttl;
+        $this->jwtEncoder        = $encoder;
+        $this->dispatcher        = $dispatcher;
+        $this->ttl               = $ttl;
+        $this->userIdentityField = 'username';
     }
 
     /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @param UserInterface $user
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function create(UserInterface $user)
     {
-        $payload             = array();
-        $payload['exp']      = time() + $this->ttl;
-        $payload['username'] = $user->getUsername();
+        $payload = array(
+            'exp' => time() + $this->ttl
+        );
+
+        $this->addUserIdentityToPayload($user, $payload);
 
         $event = new JWTCreatedEvent($payload, $user, $this->request);
         $this->dispatcher->dispatch(Events::JWT_CREATED, $event);
@@ -71,9 +74,7 @@ class JWTManager
     }
 
     /**
-     * @param TokenInterface $token
-     *
-     * @return bool|string
+     * {@inheritdoc}
      */
     public function decode(TokenInterface $token)
     {
@@ -89,5 +90,51 @@ class JWTManager
         }
 
         return $payload;
+    }
+
+    /**
+     * Add user identity to payload, username by default.
+     * Override this if you need to identify it by another property.
+     *
+     * @param UserInterface $user
+     * @param array         $payload
+     */
+    protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
+    {
+        $payload[$this->userIdentityField] = $user->getUsername();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdentityField()
+    {
+        return $this->userIdentityField;
+    }
+
+    /**
+     * @param string $userIdentityField
+     */
+    public function setUserIdentityField($userIdentityField)
+    {
+        $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Get request
+     *
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 }
