@@ -5,6 +5,7 @@ namespace Services;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\Security\Core\User\User;
+use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 
 /**
  * JWTManagerTest
@@ -60,6 +61,33 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new JWTManager($encoder, $dispatcher, 3600);
         $this->assertEquals(array('foo' => 'bar'), $manager->decode($this->getJWTUserTokenMock()));
     }
+
+    /**
+     * test identity field
+     */
+    public function testIdentityField()
+    {
+        
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(Events::JWT_CREATED),
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
+            );
+
+        $encoder = $this->getJWTEncoderMock();
+        $encoder
+            ->expects($this->once())
+            ->method('encode')
+            ->willReturn('secrettoken');
+
+        $manager = new JWTManager($encoder, $dispatcher, 3600);
+        $manager->setUserIdentityField("email");
+        $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password','victuxbb@gmail.com')));
+    }
+
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject

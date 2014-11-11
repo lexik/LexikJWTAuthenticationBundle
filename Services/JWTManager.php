@@ -101,7 +101,10 @@ class JWTManager implements JWTManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $payload[$this->userIdentityField] = $user->getUsername();
+        $reflectionClass = new \ReflectionClass($user);
+        $reflectionProperty = $reflectionClass->getProperty($this->userIdentityField);
+        $reflectionProperty->setAccessible(true);
+        $payload[$this->userIdentityField] = $reflectionProperty->getValue($user);
     }
 
     /**
