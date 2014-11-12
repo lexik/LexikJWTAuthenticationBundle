@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\PropertyAccess\PropertyAccess;
 /**
  * JWTManager
  *
@@ -101,10 +101,8 @@ class JWTManager implements JWTManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $reflectionClass = new \ReflectionClass($user);
-        $reflectionProperty = $reflectionClass->getProperty($this->userIdentityField);
-        $reflectionProperty->setAccessible(true);
-        $payload[$this->userIdentityField] = $reflectionProperty->getValue($user);
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $payload[$this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
     }
 
     /**
