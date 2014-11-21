@@ -43,7 +43,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
             'message' => self::RESPONSE_MESSAGE,
         );
 
-        $event = new AuthenticationFailureEvent($request);
+        $event = new AuthenticationFailureEvent($request, $exception);
         $event->setResponse(new JsonResponse($data, self::RESPONSE_CODE));
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);
