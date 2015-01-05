@@ -67,7 +67,6 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIdentityField()
     {
-        
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
             ->expects($this->once())
@@ -113,7 +112,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
     protected function getJWTEncoderMock()
     {
         return $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder')
+            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface')
             ->disableOriginalConstructor()
             ->getMock();
     }

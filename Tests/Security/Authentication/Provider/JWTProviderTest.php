@@ -163,7 +163,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getJWTEncoderMock()
     {
-        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder')
+        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface')
             ->disableOriginalConstructor()
             ->getMock();
     }
