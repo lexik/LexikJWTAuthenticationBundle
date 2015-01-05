@@ -8,72 +8,80 @@ Installation
 ------------
 
 1. Require [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle) into your `composer.json` file:
-``` json
-{
-    "require": {
-        "lexik/jwt-authentication-bundle": "@stable"
-    },
-}
-```
-**Protip:** you should browse the [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle) page to choose a stable version to use, avoid the `@stable` meta constraint.
+
+    ``` json
+    {
+        "require": {
+            "lexik/jwt-authentication-bundle": "@stable"
+        },
+    }
+    ```
+
+    **Protip:** you should browse the [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle) page to choose a stable version to use, avoid the `@stable` meta constraint.
 
 2. Register the bundle in `app/AppKernel.php`:
-``` php
-public function registerBundles()
-{
-    return array(
-        // ...
-        new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
-    );
-}
-```
+
+    ``` php
+    public function registerBundles()
+    {
+        return array(
+            // ...
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+        );
+    }
+    ```
 
 Configuration
 -------------
 
 1. Configure the encoder service in your `config.yml`.
-``` yaml
-services:
-    lexik_jwt_encoder:
-        class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\SharedKeyJWTEncoder
-        arguments: [ %shared_key_algorithm%, %shared_key% ]
-```
-For more information about encoders, see [encoders documentation](5-encoder-service).
+
+    ``` yaml
+    services:
+        lexik_jwt_encoder:
+            class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\SharedKeyJWTEncoder
+            arguments: [ %shared_key_algorithm%, %shared_key% ]
+    ```
+
+    For more information about encoders, see [encoders documentation](5-encoder-service).
 
 1. Configure the JWT authentication in your `config.yml`:
-``` yaml
-lexik_jwt_authentication:
-    token_ttl:       86400             # token ttl - defaults to 86400
-    encoder_service: lexik_jwt_encoder # encoder/decoder service
-```
+
+    ``` yaml
+    lexik_jwt_authentication:
+        token_ttl:       86400             # token ttl - defaults to 86400
+        encoder_service: lexik_jwt_encoder # encoder/decoder service
+    ```
 
 1. Configure the firewalls in your `security.yml`:
-``` yaml
-firewalls:
-    login:
-        pattern:  ^/api/login
-        stateless: true
-        anonymous: true
-        form_login:
-            check_path:               /api/login_check
-            success_handler:          lexik_jwt_authentication.handler.authentication_success
-            failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-            require_previous_session: false
-    api:
-        pattern:   ^/api
-        stateless: true
-        lexik_jwt: ~
 
-access_control:
-    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-```
+    ``` yaml
+    firewalls:
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+        api:
+            pattern:   ^/api
+            stateless: true
+            lexik_jwt: ~
+
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+    ```
 
 1. Configure your `routing.yml`:
-``` yaml
-api_login_check:
-   path: /api/login_check
-```
+
+    ``` yaml
+    api_login_check:
+       path: /api/login_check
+    ```
 
 Usage
 -----
