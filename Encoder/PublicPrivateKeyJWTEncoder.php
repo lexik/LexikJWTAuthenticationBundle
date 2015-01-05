@@ -9,7 +9,7 @@ use Namshi\JOSE\JWS;
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
-class JWTEncoder implements JWTEncoderInterface
+class PublicPrivateKeyJWTEncoder implements JWTEncoderInterface
 {
     /**
      * @var string
@@ -27,15 +27,19 @@ class JWTEncoder implements JWTEncoderInterface
     protected $passPhrase;
 
     /**
+     * @param string $algorithm
      * @param string $privateKey
      * @param string $publicKey
      * @param string $passPhrase
      */
-    public function __construct($privateKey, $publicKey, $passPhrase)
+    public function __construct($algorithm, $privateKey, $publicKey, $passPhrase)
     {
+        $this->algorithm  = $algorithm;
         $this->privateKey = $privateKey;
         $this->publicKey  = $publicKey;
         $this->passPhrase = $passPhrase;
+
+        $this->checkOpenSSLConfig();
     }
 
     /**
@@ -43,7 +47,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new JWS('RS256');
+        $jws = new JWS($this->algorithm);
         $jws->setPayload($data);
         $jws->sign($this->getPrivateKey());
 
@@ -66,6 +70,35 @@ class JWTEncoder implements JWTEncoderInterface
         }
 
         return $jws->getPayload();
+    }
+
+    /**
+     * Checks that configured keys exists and private key can be parsed using the passphrase
+     *
+     * @throws \RuntimeException
+     */
+    public function checkOpenSSLConfig()
+    {
+        if (!file_exists($this->privateKey)) {
+            throw new \RuntimeException(sprintf(
+                'Private key "%s" doesn\'t exist.',
+                $this->privateKey
+            ));
+        }
+
+        if (!file_exists($this->publicKey)) {
+            throw new \RuntimeException(sprintf(
+                'Public key "%s" doesn\'t exist.',
+                $this->publicKey
+            ));
+        }
+
+        if (!openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase)) {
+            throw new \RuntimeException(sprintf(
+                'Failed to open private key "%s". Did you correctly configure the corresponding passphrase?',
+                $this->privateKey
+            ));
+        }
     }
 
     /**
