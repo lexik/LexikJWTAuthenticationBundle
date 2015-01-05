@@ -2,26 +2,49 @@ Configuration reference
 =======================
 
 ### Configuration reference
-
 ``` yaml
 # app/config/config.yml
-# ...
+
+services:
+    lexik_jwt_shared_key_encoder:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\SharedKeyJWTEncoder
+        arguments: [ %shared_key_algorithm%, %shared_key% ]
+
+    lexik_jwt_public_private_key_encoder:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\PublicPrivateKeyJWTEncoder
+        arguments: [ %public_private_key_algorithm%, %private_key_path%, %public_key_path%, %pass_phrase% ]
+
 lexik_jwt_authentication:
-    private_key_path:    %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
-    public_key_path:     %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
-    pass_phrase:         ''                                      # ssh key pass phrase
-    token_ttl:           86400                                   # token ttl - defaults to 86400
-    encoder_service:     lexik_jwt_authentication.jwt_encoder    # token encoder / decoder service - defaults to the jwt encoder (based on the namshi/jose library)
-    user_identity_field: username                                # key under which the user identity will be stored in the token payload - defaults to username
+    token_ttl:           86400                        # token ttl - defaults to 86400
+    encoder_service:     lexik_jwt_shared_key_encoder # token encoder/decoder service
+    user_identity_field: username                     # key under which the user identity will be stored in the token payload - defaults to username
 ```
+
+### Parameters reference
+``` yaml
+# app/config/parameters.yml
+
+parameters:
+    # Parameters for PublicPrivateKeyJWTEncoder
+    public_private_key_algorithm: RS256
+    public_key_path:              /path/to/keys/public.pem
+    private_key_path:             /path/to/keys/private.pem
+    pass_phrase:                  YourPassPhrase
+
+    # Parameters for SharedKeyJWTEncoder
+    shared_key_algorithm: HS512
+    shared_key:           YourSharedKey
+```
+
 
 ### Security reference
 
 #### Simplest configuration
+You can start using the JWTAuthentication by enabling the default configuration.
 
 ``` yaml
 # app/config/security.yml
-# ...
+
 firewalls:
     # ...
     api:
