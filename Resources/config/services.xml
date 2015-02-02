@@ -55,7 +55,7 @@
         </service>
         <!-- JWT Security Authentication Listener -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="%lexik_jwt_authentication.security.authentication.listener.class%" public="false">
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authentication.manager" />
             <argument /> <!-- Options -->
         </service>
