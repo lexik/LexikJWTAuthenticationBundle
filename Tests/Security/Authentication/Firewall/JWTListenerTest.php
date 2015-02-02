@@ -18,12 +18,12 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
     {
         // no token extractor : should return void
 
-        $listener = new JWTListener($this->getSecurityContextMock(), $this->getAuthenticationManagerMock());
+        $listener = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
         $this->assertNull($listener->handle($this->getEvent()));
 
         // one token extractor with no result : should return void
 
-        $listener = new JWTListener($this->getSecurityContextMock(), $this->getAuthenticationManagerMock());
+        $listener = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock(false));
         $this->assertNull($listener->handle($this->getEvent()));
 
@@ -32,7 +32,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $authenticationManager = $this->getAuthenticationManagerMock();
         $authenticationManager->expects($this->once())->method('authenticate');
 
-        $listener = new JWTListener($this->getSecurityContextMock(), $authenticationManager);
+        $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
         $listener->handle($this->getEvent());
 
@@ -47,7 +47,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
             ->method('authenticate')
             ->will($this->throwException(new \Symfony\Component\Security\Core\Exception\AuthenticationException()));
 
-        $listener = new JWTListener($this->getSecurityContextMock(), $authenticationManager);
+        $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
 
         $event = $this->getEvent();
@@ -70,10 +70,10 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    public function getSecurityContextMock()
+    public function getTokenStorageMock()
     {
         return $this
-            ->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage')
             ->disableOriginalConstructor()
             ->getMock();
     }
