@@ -29,45 +29,9 @@ class LexikJWTAuthenticationExtension extends Extension
             $this->checkOpenSSLConfig($config['private_key_path'], $config['public_key_path'], $config['pass_phrase']);
         }
 
-        $container->setParameter('lexik_jwt_authentication.private_key_path', $config['private_key_path']);
-        $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key_path']);
-        $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
 
         $container->setAlias('lexik_jwt_authentication.encoder', $config['encoder_service']);
-    }
-
-    /**
-     * Checks that configured keys exists and private key can be parsed using the passphrase
-     *
-     * @param string $privateKey
-     * @param string $publicKey
-     * @param string $passphrase
-     *
-     * @throws \RuntimeException
-     */
-    public function checkOpenSSLConfig($privateKey, $publicKey, $passphrase)
-    {
-        if (!file_exists($privateKey)) {
-            throw new \RuntimeException(sprintf(
-                'Private key "%s" doesn\'t exist.',
-                $privateKey
-            ));
-        }
-
-        if (!file_exists($publicKey)) {
-            throw new \RuntimeException(sprintf(
-                'Public key "%s" doesn\'t exist.',
-                $publicKey
-            ));
-        }
-
-        if (!openssl_pkey_get_private('file://' . $privateKey, $passphrase)) {
-            throw new \RuntimeException(sprintf(
-                'Failed to open private key "%s". Did you correctly configure the corresponding passphrase?',
-                $privateKey
-            ));
-        }
     }
 }

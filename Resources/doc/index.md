@@ -1,106 +1,87 @@
 Getting started
 ===============
-
-Prerequisites
--------------
-
 This bundle requires Symfony 2.3+ (and the OpenSSL library if you intend to use the default provided encoder).
 
-**Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS. 
+**Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS.
 
 Installation
 ------------
 
-Require [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
-into your `composer.json` file:
+1. Require [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle) into your `composer.json` file:
 
-``` json
-{
-    "require": {
-        "lexik/jwt-authentication-bundle": "@stable"
+    ``` json
+    {
+        "require": {
+            "lexik/jwt-authentication-bundle": "@stable"
+        },
     }
-}
-```
+    ```
 
-**Protip:** you should browse the
-[`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
-page to choose a stable version to use, avoid the `@stable` meta constraint.
+    **Protip:** you should browse the [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle) page to choose a stable version to use, avoid the `@stable` meta constraint.
 
-Register the bundle in `app/AppKernel.php`:
+2. Register the bundle in `app/AppKernel.php`:
 
-``` php
-public function registerBundles()
-{
-    return array(
-        // ...
-        new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
-    );
-}
-```
-
-Generate the SSH keys :
-
-``` bash
-$ openssl genrsa -out app/var/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in app/var/jwt/private.pem -out app/var/jwt/public.pem
-```
+    ``` php
+    public function registerBundles()
+    {
+        return array(
+            // ...
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+        );
+    }
+    ```
 
 Configuration
 -------------
 
-Configure the SSH keys path in your `config.yml` :
+1. Configure the encoder service in your `config.yml`.
 
-``` yaml
-lexik_jwt_authentication:
-    private_key_path: %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
-    public_key_path:  %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
-    pass_phrase:      ''                                      # ssh key pass phrase
-    token_ttl:        86400                                   # token ttl - defaults to 86400
-```
+    ``` yaml
+    services:
+        lexik_jwt_encoder:
+            class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\SharedKeyJWTEncoder
+            arguments: [ %shared_key_algorithm%, %shared_key% ]
+    ```
 
-Confgure your `security.yml` :
+    For more information about encoders, see [encoders documentation](5-encoder-service).
 
-``` yaml
-firewalls:
+1. Configure the JWT authentication in your `config.yml`:
 
-    login:
-        pattern:  ^/api/login
-        stateless: true
-        anonymous: true
-        form_login:
-            check_path:               /api/login_check
-            success_handler:          lexik_jwt_authentication.handler.authentication_success
-            failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-            require_previous_session: false
-            
-    api:
-        pattern:   ^/api
-        stateless: true
-        lexik_jwt: ~
+    ``` yaml
+    lexik_jwt_authentication:
+        token_ttl:       86400             # token ttl - defaults to 86400
+        encoder_service: lexik_jwt_encoder # encoder/decoder service
+    ```
 
-access_control:
-    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-```
+1. Configure the firewalls in your `security.yml`:
 
-Confgure your `routing.yml` :
+    ``` yaml
+    firewalls:
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+        api:
+            pattern:   ^/api
+            stateless: true
+            lexik_jwt: ~
 
-``` yaml
-api_login_check:
-   path: /api/login_check
-```
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+    ```
 
-#### Important note for Apache users
+1. Configure your `routing.yml`:
 
-As stated in [this link](http://stackoverflow.com/questions/11990388/request-headers-bag-is-missing-authorization-header-in-symfony-2) and [this one](http://stackoverflow.com/questions/19443718/symfony-2-3-getrequest-headers-not-showing-authorization-bearer-token/19445020), Apache server will strip any `Authorization header` not in a valid HTTP BASIC AUTH format. 
-
-If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
-
-```apache
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
-```
+    ``` yaml
+    api_login_check:
+       path: /api/login_check
+    ```
 
 Usage
 -----
@@ -118,7 +99,7 @@ Store it (client side), the JWT is reusable until its ttl has expired (86400 sec
 ### 2. Use the token
 
 Simply pass the JWT on each request to the protected firewall, either as an authorization header
-or as a query parameter. 
+or as a query parameter.
 
 By default only the authorization header mode is enabled : `Authorization: Bearer {token}`
 
@@ -131,6 +112,17 @@ or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationB
 
 Notes
 -----
+#### Important note for Apache users
+
+As stated in [this link](http://stackoverflow.com/questions/11990388/request-headers-bag-is-missing-authorization-header-in-symfony-2) and [this one](http://stackoverflow.com/questions/19443718/symfony-2-3-getrequest-headers-not-showing-authorization-bearer-token/19445020), Apache server will strip any `Authorization header` not in a valid HTTP BASIC AUTH format.
+
+If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
+
+```apache
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+```
 
 #### About token expiration
 
