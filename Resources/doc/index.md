@@ -11,20 +11,10 @@ This bundle requires Symfony 2.3+ (and the OpenSSL library if you intend to use 
 Installation
 ------------
 
-Require [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
-into your `composer.json` file:
+Add [`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
+to your `composer.json` file:
 
-``` json
-{
-    "require": {
-        "lexik/jwt-authentication-bundle": "@stable"
-    }
-}
-```
-
-**Protip:** you should browse the
-[`lexik/jwt-authentication-bundle`](https://packagist.org/packages/lexik/jwt-authentication-bundle)
-page to choose a stable version to use, avoid the `@stable` meta constraint.
+    php composer.phar require "lexik/jwt-authentication-bundle"
 
 Register the bundle in `app/AppKernel.php`:
 
