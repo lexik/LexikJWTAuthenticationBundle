@@ -11,6 +11,8 @@ use Namshi\JOSE\JWS;
  */
 class JWTEncoder implements JWTEncoderInterface
 {
+    const ALGORYTHM = 'RS256';
+
     /**
      * @var string
      */
@@ -43,7 +45,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new JWS('RS256');
+        $jws = new JWS(self::ALGORYTHM);
         $jws->setPayload($data);
         $jws->sign($this->getPrivateKey());
 
@@ -61,7 +63,7 @@ class JWTEncoder implements JWTEncoderInterface
             return false;
         }
 
-        if (!$jws->isValid($this->getPublicKey())) {
+        if (!$jws->isValid($this->getPublicKey(), self::ALGORYTHM)) {
             return false;
         }
 
