@@ -27,7 +27,7 @@
         "php": ">=5.3.3",
         "symfony/symfony": "~2.3",
         "symfony/framework-bundle": "~2.3",
-        "namshi/jose": "~1.2"
+        "namshi/jose": "~2.2"
     },
     "autoload": {
         "psr-0": { "Lexik\\Bundle\\JWTAuthenticationBundle": "" }
