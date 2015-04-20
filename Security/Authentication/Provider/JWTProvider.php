@@ -55,6 +55,7 @@ class JWTProvider implements AuthenticationProviderInterface
 
         $authToken = new JWTUserToken($user->getRoles());
         $authToken->setUser($user);
+        $authToken->setRawToken($token->getCredentials());
 
         return $authToken;
     }
