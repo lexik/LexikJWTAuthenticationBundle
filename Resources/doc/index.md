@@ -42,10 +42,19 @@ Configure the SSH keys path in your `config.yml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    private_key_path: %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
-    public_key_path:  %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
-    pass_phrase:      ''                                      # ssh key pass phrase
-    token_ttl:        86400                                   # token ttl - defaults to 86400
+    private_key_path: %jwt_private_key_path%
+    public_key_path:  %jwt_public_key_path%
+    pass_phrase:      %jwt_key_pass_phrase%
+    token_ttl:        %jwt_token_ttl%
+```
+
+Configure your `parameters.yml.dist` :
+
+``` yaml
+    jwt_private_key_path: %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
+    jwt_public_key_path:  %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
+    jwt_key_pass_phrase:  ''                                      # ssh key pass phrase
+    jwt_token_ttl:        86400
 ```
 
 Confgure your `security.yml` :
