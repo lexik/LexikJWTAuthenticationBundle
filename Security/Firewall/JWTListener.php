@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
@@ -22,7 +22,7 @@ class JWTListener implements ListenerInterface
     /**
      * @var SecurityContextInterface
      */
-    protected $securityContext;
+    protected $tokenStorage;
 
     /**
      * @var AuthenticationManagerInterface
@@ -40,13 +40,13 @@ class JWTListener implements ListenerInterface
     protected $tokenExtractors;
 
     /**
-     * @param SecurityContextInterface       $securityContext
+     * @param TokenStorageIterface           $tokenStorage
      * @param AuthenticationManagerInterface $authenticationManager
      * @param array                          $config
      */
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, array $config = array())
+    public function __construct(TokenStorageInterface  $tokenStorage, AuthenticationManagerInterface $authenticationManager, array $config = array())
     {
-        $this->securityContext       = $securityContext;
+        $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
         $this->config                = array_merge(array('throw_exceptions' => false), $config);
         $this->tokenExtractors       = array();
@@ -67,7 +67,7 @@ class JWTListener implements ListenerInterface
         try {
 
             $authToken = $this->authenticationManager->authenticate($token);
-            $this->securityContext->setToken($authToken);
+            $this->tokenStorage->setToken($authToken);
 
             return;
 
