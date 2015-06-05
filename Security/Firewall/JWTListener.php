@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -20,9 +21,9 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 class JWTListener implements ListenerInterface
 {
     /**
-     * @var SecurityContextInterface
+     * @var SecurityContextInterface|TokenStorageInterface
      */
-    protected $securityContext;
+    protected $tokenStorage;
 
     /**
      * @var AuthenticationManagerInterface
@@ -40,13 +41,17 @@ class JWTListener implements ListenerInterface
     protected $tokenExtractors;
 
     /**
-     * @param SecurityContextInterface       $securityContext
-     * @param AuthenticationManagerInterface $authenticationManager
-     * @param array                          $config
+     * @param SecurityContextInterface|TokenStorageInterface $tokenStorage
+     * @param AuthenticationManagerInterface                 $authenticationManager
+     * @param array                                          $config
      */
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, array $config = array())
+    public function __construct($tokenStorage, AuthenticationManagerInterface $authenticationManager, array $config = array())
     {
-        $this->securityContext       = $securityContext;
+        if (!$tokenStorage instanceof TokenStorageInterface && !$tokenStorage instanceof SecurityContextInterface) {
+            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface or Symfony\Component\Security\Core\SecurityContextInterface');
+        }
+
+        $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
         $this->config                = array_merge(array('throw_exceptions' => false), $config);
         $this->tokenExtractors       = array();
@@ -67,7 +72,7 @@ class JWTListener implements ListenerInterface
         try {
 
             $authToken = $this->authenticationManager->authenticate($token);
-            $this->securityContext->setToken($authToken);
+            $this->tokenStorage->setToken($authToken);
 
             return;
 
