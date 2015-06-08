@@ -52,6 +52,7 @@
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>
+            <argument type="service" id="event_dispatcher"/>
         </service>
         <!-- JWT Security Authentication Listener -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="%lexik_jwt_authentication.security.authentication.listener.class%" public="false">

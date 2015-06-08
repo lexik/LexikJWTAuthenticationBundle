@@ -68,7 +68,7 @@ class JWTCreatedListener
 
 #### Events::JWT_DECODED - validate data in the JWT payload
 
-You can access the jwt payload once it has been decoded to perform you own additional validation. 
+You can access the jwt payload once it has been decoded to perform you own additional validation.
 
 ``` yaml
 # services.yml
@@ -106,6 +106,40 @@ class JWTDecodedListener
 }
 ```
 
+#### Events::JWT_AUTHENTICATED - customize your authenticated token
+
+You can add attributes to the token once it has been authenticated to allow JWT properties to be used by your application.
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.jwt_authenticated_listener:
+        class: Acme\Bundle\ApiBundle\EventListener\JWTAuthenticatedListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_authenticated, method: onJWTAuthenticated }
+```
+
+Example 4 : Keep a UUID that was set into the JWT in the authenticated token
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\JWTAuthenticatedListener.php
+class JWTAuthenticatedListener
+{
+    /**
+     * @param JWTAuthenticatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTAuthenticated(JWTAuthenticatedEvent $event)
+    {
+        $token = $event->getToken();
+        $payload = $event->getPayload();
+
+        $token->setAttribute('uuid', $payload['uuid']);
+    }
+}
+```
+
 #### Events::AUTHENTICATION_SUCCESS - add public data to the JWT response
 
 By default, the authentication response is just a json containing the JWT but you can add your own public data to it.
@@ -119,7 +153,7 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 ```
 
-Example 4 : add user roles to the response
+Example 5 : add user roles to the response
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\AuthenticationSuccessListener.php

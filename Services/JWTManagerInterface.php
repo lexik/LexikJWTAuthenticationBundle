@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-interface JWTManagerInterface 
+interface JWTManagerInterface
 {
     /**
      * @param UserInterface $user
@@ -22,7 +22,7 @@ interface JWTManagerInterface
     /**
      * @param TokenInterface $token
      *
-     * @return bool|string
+     * @return bool|array
      */
     public function decode(TokenInterface $token);
 }

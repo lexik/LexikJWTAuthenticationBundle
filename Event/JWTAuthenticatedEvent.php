@@ -1,0 +1,65 @@
+<?php
+
+
+namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
+
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
+/**
+ * JWTCreatedEvent
+ */
+class JWTAuthenticatedEvent extends Event
+{
+    /**
+     * @var array
+     */
+    protected $payload;
+
+    /**
+     * @var TokenInterface
+     */
+    protected $token;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @param array          $payload
+     * @param TokenInterface $token
+     */
+    public function __construct(array $payload, TokenInterface $token)
+    {
+        $this->payload = $payload;
+        $this->token   = $token;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPayload()
+    {
+        return $this->payload;
+    }
+
+    /**
+     * @param array $payload
+     */
+    public function setPayload(array $payload)
+    {
+        $this->payload = $payload;
+    }
+
+    /**
+     * Get token
+     *
+     * @return TokenInterface
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+}

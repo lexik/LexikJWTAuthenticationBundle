@@ -31,4 +31,10 @@ final class Events
      * Hook into this event to perform additional validation on the received payload.
      */
     const JWT_DECODED = 'lexik_jwt_authentication.on_jwt_decoded';
+
+    /**
+     * Dispatched after the token payload has been authenticated by the provider.
+     * Hook into this event to perform additional modification to the authenticated token using the payload.
+     */
+    const JWT_AUTHENTICATED = 'lexik_jwt_authentication.on_jwt_authenticated';
 }

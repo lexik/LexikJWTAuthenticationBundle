@@ -4,10 +4,13 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTProvider
@@ -27,6 +30,11 @@ class JWTProvider implements AuthenticationProviderInterface
     protected $jwtManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
      * @var string
      */
     protected $userIdentityField;
@@ -35,10 +43,11 @@ class JWTProvider implements AuthenticationProviderInterface
      * @param UserProviderInterface $userProvider
      * @param JWTManagerInterface   $jwtManager
      */
-    public function __construct(UserProviderInterface $userProvider, JWTManagerInterface $jwtManager)
+    public function __construct(UserProviderInterface $userProvider, JWTManagerInterface $jwtManager, EventDispatcherInterface $dispatcher)
     {
         $this->userProvider      = $userProvider;
         $this->jwtManager        = $jwtManager;
+        $this->dispatcher        = $dispatcher;
         $this->userIdentityField = 'username';
     }
 
@@ -56,6 +65,9 @@ class JWTProvider implements AuthenticationProviderInterface
         $authToken = new JWTUserToken($user->getRoles());
         $authToken->setUser($user);
         $authToken->setRawToken($token->getCredentials());
+
+        $event = new JWTAuthenticatedEvent($payload, $authToken);
+        $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, $event);
 
         return $authToken;
     }

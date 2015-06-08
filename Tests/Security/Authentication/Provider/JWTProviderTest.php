@@ -18,7 +18,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupports()
     {
-        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock());
+        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock(), $this->getEventDispatcherMock());
 
         /** @var TokenInterface $usernamePasswordToken */
         $usernamePasswordToken = $this
@@ -51,11 +51,12 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $userProvider = $this->getUserProviderMock();
+        $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(false));
 
-        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->authenticate($jwtUserToken);
     }
 
@@ -73,11 +74,12 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $userProvider = $this->getUserProviderMock();
+        $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('foo' => 'bar')));
 
-        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->authenticate($jwtUserToken);
     }
 
@@ -97,10 +99,12 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider->expects($this->any())->method('loadUserByUsername')->willThrowException(new UsernameNotFoundException());
 
+        $eventDispatcher = $this->getEventDispatcherMock();
+
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
 
-        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->authenticate($jwtUserToken);
     }
 
@@ -124,10 +128,12 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider->expects($this->any())->method('loadUserByUsername')->will($this->returnValue($user));
 
+        $eventDispatcher = $this->getEventDispatcherMock();
+
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
 
-        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
 
         $this->assertInstanceOf(
             'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
@@ -139,7 +145,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('uid' => 'user')));
 
-        $provider = new JWTProvider($userProvider, $jwtManager);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->setUserIdentityField('uid');
 
         $this->assertInstanceOf(
@@ -174,6 +180,16 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     protected function getUserProviderMock()
     {
         return $this->getMockBuilder('Symfony\Component\Security\Core\User\InMemoryUserProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getEventDispatcherMock()
+    {
+        return $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
             ->disableOriginalConstructor()
             ->getMock();
     }
