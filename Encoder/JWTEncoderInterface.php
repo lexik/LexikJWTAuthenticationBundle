@@ -19,7 +19,7 @@ interface JWTEncoderInterface
     /**
      * @param string $token
      *
-     * @return array
+     * @return bool|array
      */
     public function decode($token);
 }
