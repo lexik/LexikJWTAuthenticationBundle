@@ -8,7 +8,7 @@ LexikJWTAuthenticationBundle
 
 This bundle provides JWT (Json Web Token) authentication for your Symfony2 REST API using the [`namshi/jose`](https://github.com/namshi/jose) library.
 
-It has been tested using PHP5.3 to PHP5.6 and HHVM, and Symfony2.3 to Symfony2.6.
+It has been tested using PHP5.3 to PHP5.6 and HHVM, and Symfony2.3 to Symfony2.7.
 
 Documentation
 -------------
