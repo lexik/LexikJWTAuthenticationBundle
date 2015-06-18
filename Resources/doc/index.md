@@ -114,6 +114,20 @@ generate the token and send it as part of a json response body.
 
 Store it (client side), the JWT is reusable until its ttl has expired (86400 seconds by default).
 
+Note: You can test getting the token with a simple curl command like this:
+
+```bash
+curl -X POST http://localhost:8000/jwt/login_check -d _username=johndoe -d _password=test
+```
+
+If it works, you will receive something like this:
+
+```json
+{
+   "token" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXUyJ9.eyJleHAiOjE0MzQ3Mjc1MzYsInVzZXJuYW1lIjoia29ybGVvbiIsImlhdCI6IjE0MzQ2NDExMzYifQ.nh0L_wuJy6ZKIQWh6OrW5hdLkviTs1_bau2GqYdDCB0Yqy_RplkFghsuqMpsFls8zKEErdX5TYCOR7muX0aQvQxGQ4mpBkvMDhJ4-pE4ct2obeMTr_s4X8nC00rBYPofrOONUOR4utbzvbd4d2xT_tj4TdR_0tsr91Y7VskCRFnoXAnNT-qQb7ci7HIBTbutb9zVStOFejrb4aLbr7Fl4byeIEYgp2Gd7gY"
+}
+```
+
 ### 2. Use the token
 
 Simply pass the JWT on each request to the protected firewall, either as an authorization header
