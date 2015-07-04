@@ -27,6 +27,12 @@ final class Events
     const JWT_CREATED = 'lexik_jwt_authentication.on_jwt_created';
 
     /**
+     * Dispatched right after token string is created.
+     * Hook into this event to get token representation itself.
+     */
+    const JWT_ENCODED = 'lexik_jwt_authentication.on_jwt_encoded';
+
+    /**
      * Dispatched after the token payload has been decoded by the configured encoder (JWTEncoder by default).
      * Hook into this event to perform additional validation on the received payload.
      */

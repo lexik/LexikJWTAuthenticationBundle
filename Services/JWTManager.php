@@ -5,12 +5,14 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+
 /**
  * JWTManager
  *
@@ -67,10 +69,15 @@ class JWTManager implements JWTManagerInterface
 
         $this->addUserIdentityToPayload($user, $payload);
 
-        $event = new JWTCreatedEvent($payload, $user, $this->request);
-        $this->dispatcher->dispatch(Events::JWT_CREATED, $event);
+        $jwtCreatedEvent = new JWTCreatedEvent($payload, $user, $this->request);
+        $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
 
-        return $this->jwtEncoder->encode($event->getData());
+        $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
+
+        $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
+        $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
+
+        return $jwtString;
     }
 
     /**
