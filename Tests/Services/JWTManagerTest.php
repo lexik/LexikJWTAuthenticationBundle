@@ -21,11 +21,19 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
-            ->expects($this->once())
+            ->expects($this->at(0))
             ->method('dispatch')
             ->with(
                 $this->equalTo(Events::JWT_CREATED),
                 $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
+            );
+
+        $dispatcher
+            ->expects($this->at(1))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(Events::JWT_ENCODED),
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
             );
 
         $encoder = $this->getJWTEncoderMock();
@@ -70,11 +78,19 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
         
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
-            ->expects($this->once())
+            ->expects($this->at(0))
             ->method('dispatch')
             ->with(
                 $this->equalTo(Events::JWT_CREATED),
                 $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
+            );
+
+        $dispatcher
+            ->expects($this->at(1))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(Events::JWT_ENCODED),
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
             );
 
         $encoder = $this->getJWTEncoderMock();

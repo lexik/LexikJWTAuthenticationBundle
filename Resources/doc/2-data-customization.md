@@ -178,3 +178,20 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
     $event->setData($data);
 }
 ```
+#### Events::JWT_ENCODED - get JWT string
+
+You may need to get JWT after its creation.
+
+Example 6: obtain JWT string
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\OnJwtEncoded.php
+
+/**
+ * @param JWTEncodedEvent $event
+ */
+public function onJwtEncoded(JWTEncodedEvent $event)
+{
+    $token = $event->getJWTString();
+}
+```
