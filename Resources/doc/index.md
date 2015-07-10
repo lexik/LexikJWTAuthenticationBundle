@@ -117,7 +117,7 @@ Store it (client side), the JWT is reusable until its ttl has expired (86400 sec
 Note: You can test getting the token with a simple curl command like this:
 
 ```bash
-curl -X POST http://localhost:8000/jwt/login_check -d _username=johndoe -d _password=test
+curl -X POST http://localhost:8000/api/login_check -d _username=johndoe -d _password=test
 ```
 
 If it works, you will receive something like this:
