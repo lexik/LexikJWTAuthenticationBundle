@@ -1,0 +1,33 @@
+<?php
+
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\TokenExtractor;
+
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * CookieTokenExtractorTest
+ *
+ * @author Nicolas Cabot <n.cabot@lexik.fr>
+ */
+class CookieTokenExtractorTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * test getRequestToken
+     */
+    public function testGetTokenRequest()
+    {
+        $extractor = new CookieTokenExtractor('BEARER');
+
+        $request = new Request();
+        $this->assertFalse($extractor->extract($request));
+
+        $request = new Request();
+        $request->cookies->add(array('BEAR' => 'testtoken'));
+        $this->assertFalse($extractor->extract($request));
+
+        $request = new Request();
+        $request->cookies->add(array('BEARER' => 'testtoken'));
+        $this->assertEquals('testtoken', $extractor->extract($request));
+    }
+}

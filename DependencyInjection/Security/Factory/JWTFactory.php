@@ -62,6 +62,19 @@ class JWTFactory implements SecurityFactoryInterface
 
         }
 
+        if ($config['cookie']['enabled']) {
+
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.' . $id;
+            $container
+                ->setDefinition($cookieExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.cookie_extractor'))
+                ->replaceArgument(0, $config['cookie']['name']);
+
+            $container
+                ->getDefinition($listenerId)
+                ->addMethodCall('addTokenExtractor', array(new Reference($cookieExtractorId)));
+
+        }
+
         return array($providerId, $listenerId, $entryPointId);
     }
 
@@ -96,6 +109,17 @@ class JWTFactory implements SecurityFactoryInterface
                         ->end()
                         ->scalarNode('prefix')
                             ->defaultValue('Bearer')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('cookie')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('BEARER')
                         ->end()
                     ->end()
                 ->end()
