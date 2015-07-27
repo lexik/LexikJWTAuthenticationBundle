@@ -5,19 +5,17 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class JWTEncodedEvent
- * @package Lexik\Bundle\JWTAuthenticationBundle\Event
+ * JWTEncodedEvent
  */
 class JWTEncodedEvent extends Event
 {
-
     /**
-     * @var $jwtString
+     * @var string
      */
     private $jwtString;
 
     /**
-     * @param $jwtString
+     * @param string
      */
     public function __construct($jwtString)
     {
@@ -25,7 +23,7 @@ class JWTEncodedEvent extends Event
     }
 
     /**
-     * @return $jwtString
+     * @return string
      */
     public function getJWTString()
     {
