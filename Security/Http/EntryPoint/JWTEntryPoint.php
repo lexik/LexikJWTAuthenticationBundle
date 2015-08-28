@@ -26,6 +26,9 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
             'message' => 'Invalid credentials',
         );
 
-        return new JsonResponse($data, $statusCode);
+        $response = new JsonResponse($data, $statusCode);
+        $response->headers->set('WWW-Authenticate', 'Bearer');
+
+        return $response;
     }
 }
