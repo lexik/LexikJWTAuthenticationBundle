@@ -83,6 +83,7 @@ class JWTListener implements ListenerInterface
 
             $response = new Response();
             $response->setStatusCode(401);
+            $response->headers->set('WWW-Authenticate', 'Bearer');
             $event->setResponse($response);
         }
     }
