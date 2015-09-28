@@ -3,8 +3,9 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
-class AuthenticationSuccessEvent extends GetResponseEvent
+class AuthenticationSuccessEvent extends Event
 {
     /**
      * @var array
@@ -30,15 +31,22 @@ class AuthenticationSuccessEvent extends GetResponseEvent
     protected $request;
 
     /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
      * @param array         $data
      * @param UserInterface $user
      * @param Request       $request
+     * @param Response      $response
      */
-    public function __construct(array $data, UserInterface $user, Request $request)
+    public function __construct(array $data, UserInterface $user, Request $request, Response $response)
     {
-        $this->data    = $data;
-        $this->user    = $user;
+        $this->data = $data;
+        $this->user = $user;
         $this->request = $request;
+        $this->response = $response;
     }
 
     /**
@@ -73,5 +81,13 @@ class AuthenticationSuccessEvent extends GetResponseEvent
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
