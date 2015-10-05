@@ -29,6 +29,9 @@
         "symfony/framework-bundle": "~2.3",
         "namshi/jose": "~2.2"
     },
+    "suggest": {
+        "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony"
+    },
     "autoload": {
         "psr-0": { "Lexik\\Bundle\\JWTAuthenticationBundle": "" }
     },
