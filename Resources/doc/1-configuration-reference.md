@@ -43,6 +43,7 @@ firewalls:
             authorization_header: # check token in Authorization Header
                 enabled: true
                 prefix:  Bearer
+                name:    Authorization
             cookie:               # check token in a cookie
                 enabled: false
                 name:    BEARER

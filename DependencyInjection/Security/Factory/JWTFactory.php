@@ -41,7 +41,8 @@ class JWTFactory implements SecurityFactoryInterface
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.' . $id;
             $container
                 ->setDefinition($authorizationHeaderExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.authorization_header_extractor'))
-                ->replaceArgument(0, $config['authorization_header']['prefix']);
+                ->replaceArgument(0, $config['authorization_header']['prefix'])
+                ->replaceArgument(1, $config['authorization_header']['name']);
 
             $container
                 ->getDefinition($listenerId)
@@ -109,6 +110,9 @@ class JWTFactory implements SecurityFactoryInterface
                         ->end()
                         ->scalarNode('prefix')
                             ->defaultValue('Bearer')
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('Authorization')
                         ->end()
                     ->end()
                 ->end()
