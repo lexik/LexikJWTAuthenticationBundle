@@ -27,7 +27,7 @@ class JWTFactory implements SecurityFactoryInterface
 
         $listenerId = 'security.authentication.listener.jwt.' . $id;
         $container
-            ->setDefinition($listenerId, new DefinitionDecorator('lexik_jwt_authentication.security.authentication.listener'))
+            ->setDefinition($listenerId, new DefinitionDecorator($config['authentication_listener']))
             ->replaceArgument(2, $config);
 
         $entryPointId = $defaultEntryPoint;
@@ -142,6 +142,8 @@ class JWTFactory implements SecurityFactoryInterface
                 ->end()
                 ->scalarNode('authentication_provider')
                     ->defaultValue('lexik_jwt_authentication.security.authentication.provider')
+                ->scalarNode('authentication_listener')
+                    ->defaultValue('lexik_jwt_authentication.security.authentication.listener')
                 ->end()
             ->end();
     }
