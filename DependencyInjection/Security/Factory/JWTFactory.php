@@ -142,6 +142,7 @@ class JWTFactory implements SecurityFactoryInterface
                 ->end()
                 ->scalarNode('authentication_provider')
                     ->defaultValue('lexik_jwt_authentication.security.authentication.provider')
+                ->end()
                 ->scalarNode('authentication_listener')
                     ->defaultValue('lexik_jwt_authentication.security.authentication.listener')
                 ->end()
