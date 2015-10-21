@@ -52,4 +52,5 @@ firewalls:
             throw_exceptions:        false     # When an authentication failure occurs, return a 401 response immediately
             create_entry_point:      true      # When no authentication details are provided, create a default entry point that returns a 401 response
             authentication_provider: lexik_jwt_authentication.security.authentication.provider
+            authentication_listener: lexik_jwt_authentication.security.authentication.listener
 ```
