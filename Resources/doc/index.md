@@ -87,7 +87,7 @@ Confgure your `routing.yml` :
 
 ``` yaml
 api_login_check:
-   path: /api/login_check
+    path: /api/login_check
 ```
 
 #### Important note for Apache users
