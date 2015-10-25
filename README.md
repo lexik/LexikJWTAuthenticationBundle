@@ -22,7 +22,7 @@ Testing
 
 Setup the test suite using [Composer](http://getcomposer.org/):
 
-    $ composer install --dev
+    $ composer install
 
 Run it using PHPUnit:
 
