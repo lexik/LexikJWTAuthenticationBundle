@@ -58,7 +58,7 @@ Configure your `parameters.yml.dist` :
     jwt_token_ttl:        86400
 ```
 
-Confgure your `security.yml` :
+Configure your `security.yml` :
 
 ``` yaml
 firewalls:
@@ -83,7 +83,7 @@ access_control:
     - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
-Confgure your `routing.yml` :
+Configure your `routing.yml` :
 
 ``` yaml
 api_login_check:
