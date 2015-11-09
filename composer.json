@@ -24,10 +24,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4.0",
         "symfony/symfony": "~2.3",
         "symfony/framework-bundle": "~2.3",
-        "namshi/jose": "~2.2"
+        "namshi/jose": "~6.0"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony"
