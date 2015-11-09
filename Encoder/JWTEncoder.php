@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
-use Namshi\JOSE\JWS;
+use InvalidArgumentException;
+use Namshi\JOSE\SimpleJWS;
 
 /**
  * JWTEncoder
@@ -45,7 +46,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new JWS(self::ALGORYTHM);
+        $jws = new SimpleJWS(array('alg' => self::ALGORYTHM));
         $jws->setPayload($data);
         $jws->sign($this->getPrivateKey());
 
@@ -58,8 +59,8 @@ class JWTEncoder implements JWTEncoderInterface
     public function decode($token)
     {
         try {
-            $jws = JWS::load($token);
-        } catch (\InvalidArgumentException $e) {
+            $jws = SimpleJWS::load($token);
+        } catch (InvalidArgumentException $e) {
             return false;
         }
 
