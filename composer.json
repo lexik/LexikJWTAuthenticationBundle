@@ -24,9 +24,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4.8",
         "symfony/symfony": "~2.3|~3.0",
-        "namshi/jose": "~2.2"
+        "symfony/framework-bundle": "~2.3",
+        "namshi/jose": "~6.0"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony"
@@ -37,7 +38,7 @@
     "target-dir": "Lexik/Bundle/JWTAuthenticationBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "2.0.x-dev"
         }
     },
     "require-dev": {
