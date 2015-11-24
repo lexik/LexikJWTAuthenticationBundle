@@ -64,6 +64,7 @@
         <!-- Authorization Header Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="%lexik_jwt_authentication.extractor.authorization_header_extractor.class%" public="false">
             <argument /> <!-- Header Value Prefix -->
+            <argument /> <!-- Header Value Name -->
         </service>
         <!-- Query Parameter Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.query_parameter_extractor" class="%lexik_jwt_authentication.extractor.query_parameter_extractor.class%" public="false">

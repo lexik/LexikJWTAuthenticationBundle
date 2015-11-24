@@ -17,11 +17,18 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
     protected $prefix;
 
     /**
-     * @param string $prefix
+     * @var string
      */
-    public function __construct($prefix)
+    protected $name;
+
+    /**
+     * @param string $prefix
+     * @param string $name
+     */
+    public function __construct($prefix, $name)
     {
         $this->prefix = $prefix;
+        $this->name = $name;
     }
 
     /**
@@ -31,11 +38,11 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
      */
     public function extract(Request $request)
     {
-        if (!$request->headers->has('Authorization')) {
+        if (!$request->headers->has($this->name)) {
             return false;
         }
 
-        $headerParts = explode(' ', $request->headers->get('Authorization'));
+        $headerParts = explode(' ', $request->headers->get($this->name));
 
         if (!(count($headerParts) === 2 && $headerParts[0] === $this->prefix)) {
             return false;
