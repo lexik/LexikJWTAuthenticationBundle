@@ -25,8 +25,7 @@
     ],
     "require": {
         "php": ">=5.4.8",
-        "symfony/symfony": "~2.3|~3.0",
-        "symfony/framework-bundle": "~2.3",
+        "symfony/framework-bundle": "~2.3|~3.0",
         "namshi/jose": "~6.0"
     },
     "suggest": {
