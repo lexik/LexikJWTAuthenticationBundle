@@ -63,9 +63,11 @@ class JWTManager implements JWTManagerInterface
      */
     public function create(UserInterface $user)
     {
-        $payload = array(
-            'exp' => time() + $this->ttl
-        );
+        $payload = array();
+
+        if(is_numeric($this->ttl)) {
+            $payload['exp'] = time() + $this->ttl;
+        }
 
         $this->addUserIdentityToPayload($user, $payload);
 

@@ -36,7 +36,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('token_ttl')
                     ->defaultValue(86400)
-                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('encoder_service')
                     ->defaultValue('lexik_jwt_authentication.jwt_encoder')
