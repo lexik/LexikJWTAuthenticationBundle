@@ -8,7 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -133,9 +133,9 @@ class JWTManager implements JWTManagerInterface
     /**
      * @param Request $request
      */
-    public function setRequest(Request $request = null)
+    public function setRequest(RequestStack $requestStack = null)
     {
-        $this->request = $request;
+        $this->request = $requestStack ? $requestStack->getCurrentRequest() : null;
     }
 
     /**
