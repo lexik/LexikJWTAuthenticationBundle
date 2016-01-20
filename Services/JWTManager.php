@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -131,11 +132,17 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
-     * @param RequestStack $requestStack
+     * @param RequestStack|Request $requestStack
      */
-    public function setRequest(RequestStack $requestStack = null)
+    public function setRequest($requestStack = null)
     {
-        $this->request = $requestStack ? $requestStack->getCurrentRequest() : null;
+        if (!$requestStack instanceof Request && !$requestStack instanceof RequestStack) {
+            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\HttpFoundation\RequestStack or Symfony\Component\HttpFoundation\Request');
+        } else {
+            if($requestStack instanceof RequestStack) {
+                $this->request = $requestStack instanceof RequestStack ? $requestStack->getCurrentRequest() : $requestStack;
+            }
+        }
     }
 
     /**
