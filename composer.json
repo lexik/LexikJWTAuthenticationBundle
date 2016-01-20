@@ -1,8 +1,8 @@
 {
     "name": "lexik/jwt-authentication-bundle",
     "type": "symfony-bundle",
-    "description": "This bundle provides JWT authentication for your Symfony2 REST API",
-    "keywords": ["Symfony2", "bundle", "jwt", "jws", "authentication", "api", "rest"],
+    "description": "This bundle provides JWT authentication for your Symfony REST API",
+    "keywords": ["Symfony", "bundle", "jwt", "jws", "authentication", "api", "rest"],
     "homepage": "https://github.com/lexik/LexikJWTAuthenticationBundle",
     "license": "MIT",
     "authors": [
