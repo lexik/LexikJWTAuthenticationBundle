@@ -46,19 +46,5 @@ class LexikJWTAuthenticationExtension extends Extension
             ->getDefinition('lexik_jwt_authentication.security.authentication.listener')
             ->replaceArgument(0, $tokenStorageReference)
         ;
-
-        // Call setRequest on jwt_manager with correct request service
-        if(class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            $requestStackReference = new Reference('request_stack');
-        } else {
-            $requestStackReference = new Reference('request');
-        }
-
-        $container
-            ->getDefinition('lexik_jwt_authentication.jwt_manager')
-            ->removeMethodCall('setRequest')
-            ->addMethodCall('setRequest', array($requestStackReference))
-        ;
-
     }
 }
