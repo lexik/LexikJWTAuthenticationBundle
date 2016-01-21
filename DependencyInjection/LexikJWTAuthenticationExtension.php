@@ -44,7 +44,6 @@ class LexikJWTAuthenticationExtension extends Extension
 
         $container
             ->getDefinition('lexik_jwt_authentication.security.authentication.listener')
-            ->replaceArgument(0, $tokenStorageReference)
-        ;
+            ->replaceArgument(0, $tokenStorageReference);
     }
 }

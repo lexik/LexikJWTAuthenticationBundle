@@ -46,7 +46,7 @@ class JWTFactory implements SecurityFactoryInterface
 
             $container
                 ->getDefinition($listenerId)
-                ->addMethodCall('addTokenExtractor', array(new Reference($authorizationHeaderExtractorId)));
+                ->addMethodCall('addTokenExtractor', [new Reference($authorizationHeaderExtractorId)]);
 
         }
 
@@ -59,7 +59,7 @@ class JWTFactory implements SecurityFactoryInterface
 
             $container
                 ->getDefinition($listenerId)
-                ->addMethodCall('addTokenExtractor', array(new Reference($queryParameterExtractorId)));
+                ->addMethodCall('addTokenExtractor', [new Reference($queryParameterExtractorId)]);
 
         }
 
@@ -72,11 +72,11 @@ class JWTFactory implements SecurityFactoryInterface
 
             $container
                 ->getDefinition($listenerId)
-                ->addMethodCall('addTokenExtractor', array(new Reference($cookieExtractorId)));
+                ->addMethodCall('addTokenExtractor', [new Reference($cookieExtractorId)]);
 
         }
 
-        return array($providerId, $listenerId, $entryPointId);
+        return [$providerId, $listenerId, $entryPointId];
     }
 
     /**

@@ -15,7 +15,7 @@ class JWTEncodedEvent extends Event
     private $jwtString;
 
     /**
-     * @param string
+     * @param string $jwtString
      */
     public function __construct($jwtString)
     {

@@ -64,9 +64,9 @@ class JWTManager implements JWTManagerInterface
      */
     public function create(UserInterface $user)
     {
-        $payload = array();
+        $payload = [];
 
-        if(is_numeric($this->ttl)) {
+        if (is_numeric($this->ttl)) {
             $payload['exp'] = time() + $this->ttl;
         }
 
@@ -107,7 +107,7 @@ class JWTManager implements JWTManagerInterface
      * Override this if you need to identify it by another property.
      *
      * @param UserInterface $user
-     * @param array         $payload
+     * @param array         &$payload
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
@@ -140,14 +140,10 @@ class JWTManager implements JWTManagerInterface
             $this->request = $requestStack;
         } elseif ($requestStack instanceof RequestStack) {
             $this->request = $requestStack->getCurrentRequest();
-        } else {
-            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\HttpFoundation\RequestStack or Symfony\Component\HttpFoundation\Request');
         }
     }
 
     /**
-     * Get request
-     *
      * @return Request
      */
     public function getRequest()

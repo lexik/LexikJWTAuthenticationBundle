@@ -26,6 +26,7 @@ class CookieTokenExtractor implements TokenExtractorInterface
 
     /**
      * @param Request $request
+     *
      * @return string
      */
     public function extract(Request $request)

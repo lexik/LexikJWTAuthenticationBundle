@@ -40,14 +40,19 @@ class JWTProvider implements AuthenticationProviderInterface
     protected $userIdentityField;
 
     /**
-     * @param UserProviderInterface $userProvider
-     * @param JWTManagerInterface   $jwtManager
+     * @param UserProviderInterface    $userProvider
+     * @param JWTManagerInterface      $jwtManager
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(UserProviderInterface $userProvider, JWTManagerInterface $jwtManager, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        UserProviderInterface $userProvider,
+        JWTManagerInterface $jwtManager,
+        EventDispatcherInterface $dispatcher
+    )
     {
-        $this->userProvider      = $userProvider;
-        $this->jwtManager        = $jwtManager;
-        $this->dispatcher        = $dispatcher;
+        $this->userProvider = $userProvider;
+        $this->jwtManager = $jwtManager;
+        $this->dispatcher = $dispatcher;
         $this->userIdentityField = 'username';
     }
 

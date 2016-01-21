@@ -66,8 +66,6 @@ class AuthenticationSuccessEvent extends Event
     }
 
     /**
-     * Get user
-     *
      * @return UserInterface
      */
     public function getUser()

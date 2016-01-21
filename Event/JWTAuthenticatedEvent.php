@@ -54,8 +54,6 @@ class JWTAuthenticatedEvent extends Event
     }
 
     /**
-     * Get token
-     *
      * @return TokenInterface
      */
     public function getToken()

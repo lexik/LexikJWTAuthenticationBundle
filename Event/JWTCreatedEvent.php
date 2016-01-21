@@ -56,8 +56,6 @@ class JWTCreatedEvent extends Event
     }
 
     /**
-     * Get user
-     *
      * @return UserInterface
      */
     public function getUser()
@@ -66,8 +64,6 @@ class JWTCreatedEvent extends Event
     }
 
     /**
-     * Get request
-     *
      * @return Request
      */
     public function getRequest()

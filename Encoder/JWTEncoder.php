@@ -46,7 +46,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new SimpleJWS(array('alg' => self::ALGORYTHM));
+        $jws = new SimpleJWS(['alg' => self::ALGORYTHM]);
         $jws->setPayload($data);
         $jws->sign($this->getPrivateKey());
 
@@ -59,6 +59,7 @@ class JWTEncoder implements JWTEncoderInterface
     public function decode($token)
     {
         try {
+            /** @var SimpleJWS $jws */
             $jws = SimpleJWS::load($token);
         } catch (InvalidArgumentException $e) {
             return false;
