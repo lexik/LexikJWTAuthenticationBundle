@@ -134,14 +134,14 @@ class JWTManager implements JWTManagerInterface
     /**
      * @param RequestStack|Request $requestStack
      */
-    public function setRequest($requestStack = null)
+    public function setRequest($requestStack)
     {
-        if (!$requestStack instanceof Request && !$requestStack instanceof RequestStack) {
-            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\HttpFoundation\RequestStack or Symfony\Component\HttpFoundation\Request');
+        if ($requestStack instanceof Request) {
+            $this->request = $requestStack;
+        } elseif ($requestStack instanceof RequestStack) {
+            $this->request = $requestStack->getCurrentRequest();
         } else {
-            if($requestStack instanceof RequestStack) {
-                $this->request = $requestStack instanceof RequestStack ? $requestStack->getCurrentRequest() : $requestStack;
-            }
+            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\HttpFoundation\RequestStack or Symfony\Component\HttpFoundation\Request');
         }
     }
 
