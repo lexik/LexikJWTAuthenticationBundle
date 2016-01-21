@@ -29,9 +29,6 @@
             <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
-            <call method="setRequest">
-                <argument type="service" id="request" on-invalid="null" strict="false" />
-            </call>
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>
