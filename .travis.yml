@@ -11,20 +11,25 @@ matrix:
   fast_finish: true
   include:
     - php: 5.4
-      env: COMPOSER_FLAGS="--prefer-lowest"
+      env: SYMFONY_VERSION=2.3.*
+    - php: 5.5
+      env: SYMFONY_VERSION=2.3.*
     - php: 5.6
       env: SYMFONY_VERSION=2.3.*
     - php: 5.6
       env: SYMFONY_VERSION=2.7.*
+    - php: 7.0
+      env: SYMFONY_VERSION=2.7.*
     - php: 5.6
+      env: SYMFONY_VERSION=2.8.*
+    - php: 7.0
       env: SYMFONY_VERSION=2.8.*
     - php: 5.6
       env: SYMFONY_VERSION=3.0.*
     - php: 7.0
+      env: SYMFONY_VERSION=3.0.*
   allow_failures:
     - php: hhvm
-
-sudo: false
 
 cache:
   directories:
