@@ -139,7 +139,7 @@ class JWTManager implements JWTManagerInterface
         if ($requestStack instanceof Request) {
             $this->request = $requestStack;
         } elseif ($requestStack instanceof RequestStack) {
-            $this->request = $requestStack->getCurrentRequest();
+            $this->request = $requestStack->getMasterRequest();
         }
     }
 
