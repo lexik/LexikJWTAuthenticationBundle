@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
  * JWTListenerTest
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
+ * @author Robin Chalas <robin.chalas@gmail.com>
  */
 class JWTListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,6 +39,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
 
         // request token found : authentication fail
 
+        $invalidTokenException = new \Symfony\Component\Security\Core\Exception\AuthenticationException('Invalid JWT Token');
         $authenticationManager = $this->getAuthenticationManagerMock();
         $authenticationManager
             ->expects($this->once())
@@ -45,13 +47,19 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $authenticationManager
             ->expects($this->once())
             ->method('authenticate')
-            ->will($this->throwException(new \Symfony\Component\Security\Core\Exception\AuthenticationException()));
+            ->will($this->throwException($invalidTokenException));
 
         $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
 
         $event = $this->getEvent();
-        $event->expects($this->once())->method('setResponse');
+        $event
+            ->expects($this->once())
+            ->method('setResponse')
+            ->with(new \Symfony\Component\HttpFoundation\JsonResponse([
+                'code'    => 401,
+                'message' => $invalidTokenException->getMessage(),
+            ], 401, ['WWW-Authenticate' => 'Bearer']));
 
         $listener->handle($event);
     }
