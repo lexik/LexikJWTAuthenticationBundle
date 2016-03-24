@@ -77,7 +77,13 @@ class JWTEncoder implements JWTEncoderInterface
      */
     protected function getPrivateKey()
     {
-        return openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase);
+        $key = openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase);
+
+        if(!$key) {
+            throw new \RuntimeException('The public key cannot be loaded, have you set the %lexik_jwt_authentication.public_key_path% parameter ?');
+        }
+
+        return $key;
     }
 
     /**
@@ -85,6 +91,12 @@ class JWTEncoder implements JWTEncoderInterface
      */
     protected function getPublicKey()
     {
-        return openssl_pkey_get_public('file://' . $this->publicKey);
+        $key = openssl_pkey_get_public('file://' . $this->publicKey);
+
+        if(!$key) {
+            throw new \RuntimeException('The public key cannot be loaded, have you set the %lexik_jwt_authentication.public_key_path% parameter ?');
+        }
+
+        return $key;
     }
 }
