@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * JWTCreatedEvent
+ * JWTAuthenticatedEvent
  */
 class JWTAuthenticatedEvent extends Event
 {
