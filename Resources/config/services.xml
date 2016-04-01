@@ -9,6 +9,7 @@
         <parameter key="lexik_jwt_authentication.jwt_manager.class">Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_success.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler</parameter>
         <parameter key="lexik_jwt_authentication.handler.authentication_failure.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler</parameter>
+        <parameter key="lexik_jwt_authentication.openssl_key_loader.class">Lexik\Bundle\JWTAuthenticationBundle\Services\OpenSSLKeyLoader</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.provider.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.listener.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener</parameter>
         <parameter key="lexik_jwt_authentication.security.authentication.entry_point.class">Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint</parameter>
@@ -20,9 +21,7 @@
     <services>
         <!-- JWT Encoder / Decoder / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_encoder" class="%lexik_jwt_authentication.jwt_encoder.class%">
-            <argument>%lexik_jwt_authentication.private_key_path%</argument>
-            <argument>%lexik_jwt_authentication.public_key_path%</argument>
-            <argument>%lexik_jwt_authentication.pass_phrase%</argument>
+            <argument type="service" id="lexik_jwt_authentication.openssl_key_loader"/>
         </service>
         <!-- JWT Manager / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
@@ -42,6 +41,12 @@
         <service id="lexik_jwt_authentication.handler.authentication_failure" class="%lexik_jwt_authentication.handler.authentication_failure.class%">
             <tag name="monolog.logger" channel="security"></tag>
             <argument type="service" id="event_dispatcher"/>
+        </service>
+        <!-- OpenSSL Key Loader -->
+        <service id="lexik_jwt_authentication.openssl_key_loader" class="%lexik_jwt_authentication.openssl_key_loader.class%">
+          <argument>%lexik_jwt_authentication.private_key_path%</argument>
+          <argument>%lexik_jwt_authentication.public_key_path%</argument>
+          <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
         <!-- JWT Security Authentication Provider -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="%lexik_jwt_authentication.security.authentication.provider.class%" public="false">

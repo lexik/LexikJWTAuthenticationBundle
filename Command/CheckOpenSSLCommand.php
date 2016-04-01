@@ -28,51 +28,17 @@ class CheckOpenSSLCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $keyLoader = $this->getContainer()->get('lexik_jwt_authentication.openssl_key_loader');
+
         try {
-            $this->checkOpenSSLConfig(
-                $this->getContainer()->getParameter('lexik_jwt_authentication.private_key_path'),
-                $this->getContainer()->getParameter('lexik_jwt_authentication.public_key_path'),
-                $this->getContainer()->getParameter('lexik_jwt_authentication.pass_phrase')
-            );
+            $keyLoader->checkOpenSSLConfig();
         } catch (\RuntimeException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return 1;
         }
 
         $output->writeln('<info>OpenSSL configuration seems correct.</info>');
+
         return 0;
-    }
-
-    /**
-     * Checks that configured keys exists and private key can be parsed using the passphrase
-     *
-     * @param string $privateKey
-     * @param string $publicKey
-     * @param string $passphrase
-     *
-     * @throws \RuntimeException
-     */
-    public function checkOpenSSLConfig($privateKey, $publicKey, $passphrase)
-    {
-        if (!file_exists($privateKey) || !is_readable($privateKey)) {
-            throw new \RuntimeException(sprintf(
-                'Private key "%s" does not exist or is not readable.',
-                $privateKey
-            ));
-        }
-
-        if (!file_exists($publicKey) || !is_readable($publicKey)) {
-            throw new \RuntimeException(sprintf(
-                'Public key "%s" does not exist or is not readable.',
-                $publicKey
-            ));
-        }
-
-        if (!openssl_pkey_get_private('file://' . $privateKey, $passphrase)) {
-            throw new \RuntimeException(sprintf(
-                'Failed to open private key "%s". Did you correctly configure the corresponding passphrase?',
-                $privateKey
-            ));
-        }
     }
 }

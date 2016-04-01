@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
 use InvalidArgumentException;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\OpenSSLKeyLoader;
 use Namshi\JOSE\SimpleJWS;
 
 /**
@@ -15,30 +16,16 @@ class JWTEncoder implements JWTEncoderInterface
     const ALGORYTHM = 'RS256';
 
     /**
-     * @var string
+     * @var OpenSSLKeyLoader
      */
-    protected $privateKey;
+    protected $keyLoader;
 
     /**
-     * @var string
+     * @param OpenSSLKeyLoader $keyLoader
      */
-    protected $publicKey;
-
-    /**
-     * @var string
-     */
-    protected $passPhrase;
-
-    /**
-     * @param string $privateKey
-     * @param string $publicKey
-     * @param string $passPhrase
-     */
-    public function __construct($privateKey, $publicKey, $passPhrase)
+    public function __construct(OpenSSLKeyLoader $keyLoader)
     {
-        $this->privateKey = $privateKey;
-        $this->publicKey  = $publicKey;
-        $this->passPhrase = $passPhrase;
+        $this->keyLoader = $keyLoader;
     }
 
     /**
@@ -48,7 +35,7 @@ class JWTEncoder implements JWTEncoderInterface
     {
         $jws = new SimpleJWS(['alg' => self::ALGORYTHM]);
         $jws->setPayload($data);
-        $jws->sign($this->getPrivateKey());
+        $jws->sign($this->keyLoader->loadKey('private'));
 
         return $jws->getTokenString();
     }
@@ -65,38 +52,10 @@ class JWTEncoder implements JWTEncoderInterface
             return false;
         }
 
-        if (!$jws->isValid($this->getPublicKey(), self::ALGORYTHM)) {
+        if (!$jws->isValid($this->keyLoader->loadKey('public'), self::ALGORYTHM)) {
             return false;
         }
 
         return $jws->getPayload();
-    }
-
-    /**
-     * @return bool|resource
-     */
-    protected function getPrivateKey()
-    {
-        $key = openssl_pkey_get_private('file://' . $this->privateKey, $this->passPhrase);
-
-        if(!$key) {
-            throw new \RuntimeException('The public key cannot be loaded, have you set the %lexik_jwt_authentication.public_key_path% parameter ?');
-        }
-
-        return $key;
-    }
-
-    /**
-     * @return resource
-     */
-    protected function getPublicKey()
-    {
-        $key = openssl_pkey_get_public('file://' . $this->publicKey);
-
-        if(!$key) {
-            throw new \RuntimeException('The public key cannot be loaded, have you set the %lexik_jwt_authentication.public_key_path% parameter ?');
-        }
-
-        return $key;
     }
 }
