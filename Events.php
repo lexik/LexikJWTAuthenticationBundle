@@ -16,7 +16,8 @@ final class Events
     const AUTHENTICATION_SUCCESS = 'lexik_jwt_authentication.on_authentication_success';
 
     /**
-     * Dispatched after an authentication failure
+     * Dispatched after an authentication failure.
+     * Hook into this event to add a custom error message in the response body.
      */
     const AUTHENTICATION_FAILURE = 'lexik_jwt_authentication.on_authentication_failure';
 
@@ -43,4 +44,10 @@ final class Events
      * Hook into this event to perform additional modification to the authenticated token using the payload.
      */
     const JWT_AUTHENTICATED = 'lexik_jwt_authentication.on_jwt_authenticated';
+
+    /**
+     * Dispatched after the token has been invalidated by the provider.
+     * Hook into this event to add a custom error message in the response body.
+     */
+    const JWT_INVALID = 'lexik_jwt_authentication.on_jwt_invalid';
 }

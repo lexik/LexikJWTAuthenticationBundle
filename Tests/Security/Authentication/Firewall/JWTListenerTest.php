@@ -20,11 +20,13 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         // no token extractor : should return void
 
         $listener = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
+        $listener->setDispatcher($this->getEventDispatcherMock());
         $this->assertNull($listener->handle($this->getEvent()));
 
         // one token extractor with no result : should return void
 
         $listener = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
+        $listener->setDispatcher($this->getEventDispatcherMock());
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock(false));
         $this->assertNull($listener->handle($this->getEvent()));
 
@@ -34,6 +36,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $authenticationManager->expects($this->once())->method('authenticate');
 
         $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
+        $listener->setDispatcher($this->getEventDispatcherMock());
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
         $listener->handle($this->getEvent());
 
@@ -50,6 +53,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException($invalidTokenException));
 
         $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
+        $listener->setDispatcher($this->getEventDispatcherMock());
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock('token'));
 
         $event = $this->getEvent();
@@ -133,5 +137,15 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($request));
 
         return $event;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getEventDispatcherMock()
+    {
+        return $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }

@@ -62,6 +62,9 @@
             <argument /> <!-- security.token_storage or security.context for Symfony <2.6 -->
             <argument type="service" id="security.authentication.manager" />
             <argument /> <!-- Options -->
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
         </service>
         <!-- Authorization Header Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="%lexik_jwt_authentication.extractor.authorization_header_extractor.class%" public="false">
