@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  * AuthenticationFailureEvent
  *
  * @author Emmanuel Vella <vella.emmanuel@gmail.com>
+ * @author Robin Chalas   <robin.chalas@gmail.com>
  */
 class AuthenticationFailureEvent extends Event
 {
@@ -36,9 +37,9 @@ class AuthenticationFailureEvent extends Event
      */
     public function __construct(Request $request, AuthenticationException $exception, Response $response)
     {
-        $this->request = $request;
+        $this->request   = $request;
         $this->exception = $exception;
-        $this->response = $response;
+        $this->response  = $response;
     }
 
     /**
@@ -63,5 +64,13 @@ class AuthenticationFailureEvent extends Event
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
     }
 }

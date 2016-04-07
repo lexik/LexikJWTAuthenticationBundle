@@ -178,6 +178,7 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
     $event->setData($data);
 }
 ```
+
 #### Events::JWT_ENCODED - get JWT string
 
 You may need to get JWT after its creation.
@@ -195,3 +196,71 @@ public function onJwtEncoded(JWTEncodedEvent $event)
     $token = $event->getJWTString();
 }
 ```
+
+#### Events::AUTHENTICATION_FAILURE - customize the failure response
+
+By default, the response in case of failed authentication is just a json containing a "Bad credentials" message and a 401 status code, but you can set a custom response.
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.authentication_failure_listener:
+        class: Acme\Bundle\ApiBundle\EventListener\AuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+```
+
+Example 7: set a custom response on authentication failure
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\AuthenticationFailureListener.php
+/**
+ * @param AuthenticationFailureEvent $event
+ */
+public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event)
+{
+    $data = [
+        'status'  => '401 Unauthorized',
+        'message' => 'Bad credentials, please verify that your username/password are correctly set',
+    ];
+
+    $response = new JsonResponse($data, 401);
+
+    $event->setResponse($response);
+}
+```
+
+#### Events::JWT_INVALID - customize the invalid token response
+
+By default, if the token is invalid or not set, the response is just a json containing the corresponding error message and a 401 status code, but you can set a custom response.
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.jwt_invalid_listener:
+        class: Acme\Bundle\ApiBundle\EventListener\JWTInvalidListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
+```
+
+Example 8: set a custom response message on invalid token
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\JWTInvalidListener.php
+/**
+ * @param JWTInvalidEvent $event
+ */
+public function onJWTInvalid(JWTInvalidEvent $event)
+{
+    $data = [
+        'status'  => '403 Forbidden',
+        'message' => 'Your token is invalid, please login again to get a new one',
+    ];
+
+    $response = new JsonResponse($data, 403);
+
+    $event->setResponse($response);
+}
+```
+
+__Note:__ This feature is not available if the `throw_exceptions` firewall option is set to `true`.
