@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -74,9 +73,11 @@ class JWTListener implements ListenerInterface
     {
         $request = $event->getRequest();
 
-        try {
+        if (!$requestToken = $this->getRequestToken($request)) {
+            return;
+        }
 
-            $requestToken = $this->getRequestToken($request);
+        try {
 
             $token = new JWTUserToken();
             $token->setRawToken($requestToken);
@@ -137,6 +138,6 @@ class JWTListener implements ListenerInterface
             }
         }
 
-        throw new AuthenticationCredentialsNotFoundException('No JWT token found');
+        return false;
     }
 }
