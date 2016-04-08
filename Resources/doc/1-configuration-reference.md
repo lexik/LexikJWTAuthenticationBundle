@@ -1,23 +1,58 @@
 Configuration reference
 =======================
 
-### Configuration reference
+Configuration reference
+------------------------
+
+### Full default configuration
 
 ``` yaml
 # app/config/config.yml
 # ...
 lexik_jwt_authentication:
-    private_key_path:    %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
-    public_key_path:     %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
-    pass_phrase:         ''                                      # ssh key pass phrase
-    token_ttl:           86400                                   # token ttl - defaults to 86400
-    encoder_service:     lexik_jwt_authentication.jwt_encoder    # token encoder / decoder service - defaults to the jwt encoder (based on the namshi/jose library)
-    user_identity_field: username                                # key under which the user identity will be stored in the token payload - defaults to username
+    # ssh private key path
+    private_key_path:    %kernel.root_dir%/var/jwt/private.pem     
+    # ssh public key path
+    public_key_path:     %kernel.root_dir%/var/jwt/public.pem
+    # ssh key pass phrase
+    pass_phrase:         ''
+    # token ttl
+    token_ttl:           86400
+    # key under which the user identity will be stored in the token payload
+    user_identity_field: username
+
+    encoder:
+        # token encoder/decoder service - default implementation based on the namshi/jose library
+        service:               lexik_jwt_authentication.encoder.default
+        # encryption engine used by the encoder service
+        encryption_engine:     openssl
+        # encryption algorithm used by the encoder service
+        encryption_algorithm:  RS256                                  
 ```
 
-### Security reference
+### Encoder configuration
 
-#### Simplest configuration
+#### encryption_engine
+
+One of `openssl` and `phpseclib`, the encryption engines supported by the default token encoder service.  
+See the [OpenSSL](https://github.com/openssl/openssl) and [phpseclib](https://github.com/phpseclib/phpseclib) documentations for more information.
+
+#### encryption_algorithm
+
+One of the algorithms supported by the default encoder for the configured [encryption engine](#encryption_engine).
+
+__Supported algorithms for OpenSSL:__
+- RS256, RS384, RS512 (RSA)
+- ES256, ES384, ES512 (ECDSA)
+- HS256, HS384, HS512 (HMAC)
+
+__Supported algorithms for phpseclib:__
+- RS256, RS384, RS512 (RSA)
+
+Security reference
+-------------------
+
+### Simplest configuration
 
 ``` yaml
 # app/config/security.yml
@@ -29,7 +64,7 @@ firewalls:
         lexik_jwt: ~ # check token in Authorization Header, with a value prefix of 'Bearer'
 ```
 
-#### Full configuration
+### Full default configuration
 
 ``` yaml
 # app/config/security.yml

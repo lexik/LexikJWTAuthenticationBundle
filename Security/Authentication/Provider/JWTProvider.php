@@ -6,10 +6,13 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -60,8 +63,12 @@ class JWTProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
-        if (!($payload = $this->jwtManager->decode($token))) {
-            throw new AuthenticationException('Invalid JWT Token');
+        try {
+            if (!$payload = $this->jwtManager->decode($token)) {
+                throw $this->createInvalidJWTException();
+            }
+        } catch (JWTDecodeFailureException $e) {
+            throw $this->createInvalidJWTException($e);
         }
 
         $user = $this->getUserFromPayload($payload);
@@ -87,7 +94,7 @@ class JWTProvider implements AuthenticationProviderInterface
     protected function getUserFromPayload(array $payload)
     {
         if (!isset($payload[$this->userIdentityField])) {
-            throw new AuthenticationException('Invalid JWT Token');
+            throw $this->createInvalidJWTException();
         }
 
         return $this->userProvider->loadUserByUsername($payload[$this->userIdentityField]);
@@ -115,5 +122,17 @@ class JWTProvider implements AuthenticationProviderInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * @param JWTDecodeFailureException $previous
+     *
+     * @return AuthenticationException
+     */
+    private function createInvalidJWTException(JWTDecodeFailureException $previous = null, $message = 'Invalid JWT Token')
+    {
+        $message = (null === $previous) ? $message :  $previous->getMessage();
+
+        return new AuthenticationException($message, 401, $previous);
     }
 }
