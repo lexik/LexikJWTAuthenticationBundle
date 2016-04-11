@@ -21,18 +21,12 @@ final class RequestCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->getDefinition('lexik_jwt_authentication.jwt_manager');
+        $serviceName = $container->hasDefinition('request_stack') ? 'request_stack' : 'request';
 
-        if ($container->hasDefinition('request_stack')) {
-            $definition->addMethodCall(
-                'setRequest',
-                [new Reference('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE, false)]
-            );
-        } else {
-            $definition->addMethodCall(
-                'setRequest',
-                [new Reference('request', ContainerInterface::NULL_ON_INVALID_REFERENCE, false)]
-            );
-        }
+        $definition = $container->getDefinition('lexik_jwt_authentication.jwt_manager');
+        $definition->addMethodCall(
+            'setRequest',
+            [new Reference($serviceName, ContainerInterface::NULL_ON_INVALID_REFERENCE)]
+        );
     }
 }
