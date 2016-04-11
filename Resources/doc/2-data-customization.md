@@ -232,7 +232,7 @@ public function onAuthenticationFailureResponse(AuthenticationFailureEvent $even
 
 #### Events::JWT_INVALID - customize the invalid token response
 
-By default, if the token is invalid or not set, the response is just a json containing the corresponding error message and a 401 status code, but you can set a custom response.
+By default, if the token is invalid, the response is just a json containing the corresponding error message and a 401 status code, but you can set a custom response.
 
 ``` yaml
 # services.yml
