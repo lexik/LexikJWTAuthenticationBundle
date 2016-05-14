@@ -34,9 +34,8 @@
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony"
     },
     "autoload": {
-        "psr-0": { "Lexik\\Bundle\\JWTAuthenticationBundle": "" }
+        "psr-4": { "Lexik\\Bundle\\JWTAuthenticationBundle\\": "" }
     },
-    "target-dir": "Lexik/Bundle/JWTAuthenticationBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
