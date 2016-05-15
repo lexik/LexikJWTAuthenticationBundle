@@ -27,6 +27,7 @@
         <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
             <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="request_stack"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
@@ -59,8 +60,8 @@
         </service>
         <!-- JWT Security Authentication Listener -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="%lexik_jwt_authentication.security.authentication.listener.class%" public="false">
-            <argument /> <!-- security.token_storage or security.context for Symfony <2.6 -->
-            <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authentication.manager"/>
             <argument /> <!-- Options -->
             <call method="setDispatcher">
                 <argument type="service" id="event_dispatcher"/>

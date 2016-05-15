@@ -11,6 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
  * JWTManagerTest
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
+ * @author Robin Chalas <robin.chalas@gmail.com>
  */
 class JWTManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,7 +43,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
             ->method('encode')
             ->willReturn('secrettoken');
 
-        $manager = new JWTManager($encoder, $dispatcher, 3600);
+        $manager = new JWTManager($encoder, $dispatcher, $this->getMockedRequestStack(), 3600);
         $this->assertEquals('secrettoken', $manager->create(new User('user', 'password')));
     }
 
@@ -66,7 +67,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
             ->method('decode')
             ->willReturn(array('foo' => 'bar'));
 
-        $manager = new JWTManager($encoder, $dispatcher, 3600);
+        $manager = new JWTManager($encoder, $dispatcher, $this->getMockedRequestStack(), 3600);
         $this->assertEquals(array('foo' => 'bar'), $manager->decode($this->getJWTUserTokenMock()));
     }
 
@@ -75,7 +76,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIdentityField()
     {
-        
+
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
             ->expects($this->at(0))
@@ -99,7 +100,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
             ->method('encode')
             ->willReturn('secrettoken');
 
-        $manager = new JWTManager($encoder, $dispatcher, 3600);
+        $manager = new JWTManager($encoder, $dispatcher, $this->getMockedRequestStack(), 3600);
         $manager->setUserIdentityField("email");
         $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password','victuxbb@gmail.com')));
     }
@@ -143,5 +144,19 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockedRequestStack()
+    {
+        $requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack', []);
+        $requestStack
+            ->expects($this->any())
+            ->method('getMasterRequest')
+            ->willReturn($this->getMock('Symfony\Component\HttpFoundation\Request'));
+
+        return $requestStack;
     }
 }

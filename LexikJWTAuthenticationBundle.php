@@ -6,7 +6,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JW
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\RequestCompilerPass;
 
 /**
  * LexikJWTAuthenticationBundle
@@ -25,7 +24,5 @@ class LexikJWTAuthenticationBundle extends Bundle
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new JWTFactory());
-
-        $container->addCompilerPass(new RequestCompilerPass());
     }
 }
