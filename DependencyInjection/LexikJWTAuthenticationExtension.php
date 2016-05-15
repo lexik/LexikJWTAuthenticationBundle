@@ -33,17 +33,5 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
 
         $container->setAlias('lexik_jwt_authentication.encoder', $config['encoder_service']);
-
-        // thanks https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/DependencyInjection/FOSUserExtension.php
-
-        if (interface_exists('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')) {
-            $tokenStorageReference = new Reference('security.token_storage');
-        } else {
-            $tokenStorageReference = new Reference('security.context');
-        }
-
-        $container
-            ->getDefinition('lexik_jwt_authentication.security.authentication.listener')
-            ->replaceArgument(0, $tokenStorageReference);
     }
 }
