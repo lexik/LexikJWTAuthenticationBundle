@@ -33,7 +33,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new SimpleJWS(['alg' => self::ALGORYTHM]);
+        $jws = new SimpleJWS(array('alg' => self::ALGORYTHM));
         $jws->setPayload($data);
         $jws->sign($this->keyLoader->loadKey('private'));
 

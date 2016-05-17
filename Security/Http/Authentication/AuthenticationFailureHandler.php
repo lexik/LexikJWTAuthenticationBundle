@@ -38,10 +38,10 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $data = [
+        $data = array(
             'code'    => self::RESPONSE_CODE,
             'message' => self::RESPONSE_MESSAGE,
-        ];
+        );
 
         $response = new JsonResponse($data, self::RESPONSE_CODE);
         $event = new AuthenticationFailureEvent($request, $exception, $response);

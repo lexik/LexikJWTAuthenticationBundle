@@ -60,10 +60,10 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $event
             ->expects($this->once())
             ->method('setResponse')
-            ->with(new \Symfony\Component\HttpFoundation\JsonResponse([
+            ->with(new \Symfony\Component\HttpFoundation\JsonResponse(array(
                 'code'    => 401,
                 'message' => $invalidTokenException->getMessage(),
-            ], 401, ['WWW-Authenticate' => 'Bearer']));
+            ), 401, array('WWW-Authenticate' => 'Bearer')));
 
         $listener->handle($event);
     }

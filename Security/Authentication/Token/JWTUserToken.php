@@ -19,7 +19,7 @@ class JWTUserToken extends AbstractToken
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $roles = [])
+    public function __construct(array $roles = array())
     {
         parent::__construct($roles);
 

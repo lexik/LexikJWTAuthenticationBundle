@@ -21,10 +21,10 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
     {
         $statusCode = 401;
 
-        $data = [
+        $data = array(
             'code'    => $statusCode,
             'message' => 'Invalid credentials',
-        ];
+        );
 
         $response = new JsonResponse($data, $statusCode);
         $response->headers->set('WWW-Authenticate', 'Bearer');
