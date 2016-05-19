@@ -24,7 +24,7 @@ class JWTEntryPointTest extends \PHPUnit_Framework_TestCase
 
         $data = json_decode($response->getContent(), true);
         $this->assertEquals($data['code'], '401');
-        $this->assertEquals($data['message'], 'Invalid credentials');
+        $this->assertEquals($data['message'], 'Bad credentials');
     }
 
     /**

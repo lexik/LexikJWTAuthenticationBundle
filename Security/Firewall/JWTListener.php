@@ -6,8 +6,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -91,13 +91,7 @@ class JWTListener implements ListenerInterface
                 throw $failed;
             }
 
-            $data = [
-                'code'    => 401,
-                'message' => $failed->getMessage(),
-            ];
-
-            $response = new JsonResponse($data, $data['code']);
-            $response->headers->set('WWW-Authenticate', 'Bearer');
+            $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
             $jwtInvalidEvent = new JWTInvalidEvent($request, $failed, $response);
             $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);

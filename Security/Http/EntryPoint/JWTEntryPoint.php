@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
@@ -19,15 +19,7 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $statusCode = 401;
-
-        $data = [
-            'code'    => $statusCode,
-            'message' => 'Invalid credentials',
-        ];
-
-        $response = new JsonResponse($data, $statusCode);
-        $response->headers->set('WWW-Authenticate', 'Bearer');
+        $response = new JWTAuthenticationFailureResponse();
 
         return $response;
     }

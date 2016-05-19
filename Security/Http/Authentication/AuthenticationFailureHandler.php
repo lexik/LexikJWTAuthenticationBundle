@@ -4,8 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -17,9 +17,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
  */
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
-    const RESPONSE_CODE    = 401;
-    const RESPONSE_MESSAGE = 'Bad credentials';
-
     /**
      * @var EventDispatcherInterface
      */
@@ -38,13 +35,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $data = [
-            'code'    => self::RESPONSE_CODE,
-            'message' => self::RESPONSE_MESSAGE,
-        ];
-
-        $response = new JsonResponse($data, self::RESPONSE_CODE);
-        $event = new AuthenticationFailureEvent($request, $exception, $response);
+        $event = new AuthenticationFailureEvent($request, $exception, new JWTAuthenticationFailureResponse());
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);
 
