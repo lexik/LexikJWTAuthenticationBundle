@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -25,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class JWTListener implements ListenerInterface
 {
     /**
-     * @var SecurityContextInterface|TokenStorageInterface
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
@@ -50,16 +49,15 @@ class JWTListener implements ListenerInterface
     protected $tokenExtractors;
 
     /**
-     * @param SecurityContextInterface|TokenStorageInterface $tokenStorage
-     * @param AuthenticationManagerInterface                 $authenticationManager
-     * @param array                                          $config
+     * @param TokenStorageInterface          $tokenStorage
+     * @param AuthenticationManagerInterface $authenticationManager
+     * @param array                          $config
      */
-    public function __construct($tokenStorage, AuthenticationManagerInterface $authenticationManager, array $config = [])
-    {
-        if (!$tokenStorage instanceof TokenStorageInterface && !$tokenStorage instanceof SecurityContextInterface) {
-            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface or Symfony\Component\Security\Core\SecurityContextInterface');
-        }
-
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthenticationManagerInterface $authenticationManager,
+        array $config = []
+    ) {
         $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
         $this->config                = array_merge(['throw_exceptions' => false], $config);
