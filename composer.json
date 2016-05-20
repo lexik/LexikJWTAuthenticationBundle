@@ -28,7 +28,9 @@
         "symfony/framework-bundle": "~2.3|~3.0",
         "symfony/security-bundle": "~2.3|~3.0",
         "symfony/console": "~2.3|~3.0",
-        "namshi/jose": "~6.0"
+        "namshi/jose": "~6.0",
+        "gesdinet/jwt-refresh-token-bundle": "^0.1.7"
+
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony"
@@ -43,6 +45,13 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.1|^5.0"
-    }
+        "phpunit/phpunit": "^4.1|^5.0",
+        "symfony/phpunit-bridge": "~2.7|~3.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:ODANDB/JWTRefreshTokenBundle.git"
+        }
+    ]
 }
