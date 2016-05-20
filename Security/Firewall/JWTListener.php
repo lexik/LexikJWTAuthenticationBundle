@@ -54,7 +54,7 @@ class JWTListener implements ListenerInterface
      * @param AuthenticationManagerInterface                 $authenticationManager
      * @param array                                          $config
      */
-    public function __construct($tokenStorage, AuthenticationManagerInterface $authenticationManager, array $config = [])
+    public function __construct($tokenStorage, AuthenticationManagerInterface $authenticationManager, array $config = array())
     {
         if (!$tokenStorage instanceof TokenStorageInterface && !$tokenStorage instanceof SecurityContextInterface) {
             throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface or Symfony\Component\Security\Core\SecurityContextInterface');
@@ -62,8 +62,8 @@ class JWTListener implements ListenerInterface
 
         $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->config                = array_merge(['throw_exceptions' => false], $config);
-        $this->tokenExtractors       = [];
+        $this->config                = array_merge(array('throw_exceptions' => false), $config);
+        $this->tokenExtractors       = array();
     }
 
     /**
@@ -93,10 +93,10 @@ class JWTListener implements ListenerInterface
                 throw $failed;
             }
 
-            $data = [
+            $data = array(
                 'code'    => 401,
                 'message' => $failed->getMessage(),
-            ];
+            );
 
             $response = new JsonResponse($data, $data['code']);
             $response->headers->set('WWW-Authenticate', 'Bearer');

@@ -26,12 +26,12 @@ final class RequestCompilerPass implements CompilerPassInterface
         if ($container->hasDefinition('request_stack')) {
             $definition->addMethodCall(
                 'setRequest',
-                [new Reference('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE, false)]
+                array(new Reference('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE, false))
             );
         } else {
             $definition->addMethodCall(
                 'setRequest',
-                [new Reference('request', ContainerInterface::NULL_ON_INVALID_REFERENCE, false)]
+                array(new Reference('request', ContainerInterface::NULL_ON_INVALID_REFERENCE, false))
             );
         }
     }

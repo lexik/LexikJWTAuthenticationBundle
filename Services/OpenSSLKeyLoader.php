@@ -73,7 +73,7 @@ class OpenSSLKeyLoader
         $loadPath = 'file://' . $path;
         $key = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
-            $type == 'private' ? [$loadPath, $this->passphrase] : [$loadPath]
+            $type == 'private' ? array($loadPath, $this->passphrase) : array($loadPath)
         );
 
         if (!$key) {
