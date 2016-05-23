@@ -3,6 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Namshi\JOSE\JWS;
 
 /**
@@ -18,27 +20,17 @@ class JWSProvider implements JWSProviderInterface
     /**
      * @var KeyLoaderInterface
      */
-    protected $keyLoader;
+    private $keyLoader;
 
     /**
      * @var string
      */
-    protected $encryptionEngine;
+    private $encryptionEngine;
 
     /**
      * @var string
      */
-    protected $encryptionAlgorithm;
-
-    /**
-     * @var JWS
-     */
-    protected $jws;
-
-    /**
-     * @var string
-     */
-    protected $status;
+    private $encryptionAlgorithm;
 
     /**
      * @param KeyLoaderInterface $keyLoader
@@ -65,114 +57,30 @@ class JWSProvider implements JWSProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function createSignedToken(array $payload)
+    public function create(array $payload)
     {
-        $this->jws = new JWS(['alg' => $this->encryptionAlgorithm], $this->encryptionEngine);
-        $this->jws->setPayload($payload);
-        $this->sign();
+        $jws = new JWS(['alg' => $this->encryptionAlgorithm], $this->encryptionEngine);
 
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadSignature($token)
-    {
-        $this->jws = JWS::load($token, false, null, $this->encryptionEngine);
-        $this->verify();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
-    {
-        if (self::SIGNED !== $this->status) {
-            return;
-        }
-
-        return $this->getJWS()->getTokenString();
-    }
-
-    /**
-     * @return array $payload
-     */
-    public function getPayload()
-    {
-        return $this->getJWS()->getPayload();
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @link \Namshi\JOSE\SimpleJWS::isExpired()
-     *
-     * @return bool
-     */
-    public function isExpired()
-    {
-        $payload = $this->getJWS()->getPayload();
-
-        if (isset($payload['exp']) && is_numeric($payload['exp'])) {
-            $now = new \DateTime('now');
-
-            return ($now->format('U') - $payload['exp']) > 0;
-        }
-
-        return false;
-    }
-
-    /**
-     * Signs the created JWS signature.
-     */
-    protected function sign()
-    {
-        $this->getJWS()->sign(
+        $jws->setPayload($payload);
+        $jws->sign(
             $this->keyLoader->loadKey('private'),
             $this->keyLoader->getPassphrase()
         );
 
-        if (true === $this->getJWS()->isSigned()) {
-            $this->status = self::SIGNED;
-        }
+        return new CreatedJWS($jws->getTokenString(), $jws->isSigned());
     }
 
     /**
-     * Verifies the loaded JWS signature.
+     * {@inheritdoc}
      */
-    protected function verify()
+    public function load($token)
     {
-        $verified = $this->getJWS()->verify(
-            $this->keyLoader->loadKey('public'),
-            $this->encryptionAlgorithm
+        $jws = JWS::load($token, false, null, $this->encryptionEngine);
+
+        return new LoadedJWS(
+            $jws->getPayload(),
+            $jws->verify($this->keyLoader->loadKey('public'), $this->encryptionAlgorithm)
         );
-
-        if (true === $verified) {
-            $this->status = self::VERIFIED;
-        }
-    }
-
-    /**
-     * @return JWS
-     *
-     * @throws \LogicException If there is no JWS instance defined.
-     */
-    protected function getJWS()
-    {
-        if (null === $this->jws) {
-            throw new \LogicException('There is no JWS instance defined. Did you forget to call %s::createSignedToken() or %s::loadSignature()?', get_class($this));
-        }
-
-        return $this->jws;
     }
 
     /**
@@ -181,7 +89,7 @@ class JWSProvider implements JWSProviderInterface
      *
      * @return bool
      */
-    protected function isAlgorithmSupportedForEngine($encryptionEngine, $encryptionAlgorithm)
+    private function isAlgorithmSupportedForEngine($encryptionEngine, $encryptionAlgorithm)
     {
         $signerClass = sprintf('Namshi\\JOSE\\Signer\\%s\\%s', $encryptionEngine, $encryptionAlgorithm);
 

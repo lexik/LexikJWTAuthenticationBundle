@@ -12,17 +12,17 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     /**
      * @var string
      */
-    protected $privateKey;
+    private $privateKey;
 
     /**
      * @var string
      */
-    protected $publicKey;
+    private $publicKey;
 
     /**
      * @var string
      */
-    protected $passphrase;
+    private $passphrase;
 
     /**
      * Constructor.
@@ -55,13 +55,15 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
      */
     protected function getKeyPath($type)
     {
-        $property = $type . 'Key';
-
-        if (!property_exists(get_class($this), $property)) {
-            throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
+        if ($type === 'public') {
+            return $this->publicKey;
         }
 
-        return $this->$property;
+        if ($type === 'private') {
+            return $this->privateKey;
+        }
+
+        throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
     }
 
     /**

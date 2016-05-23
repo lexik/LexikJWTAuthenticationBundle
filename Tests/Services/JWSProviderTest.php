@@ -3,6 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Namshi\JOSE\JWS;
 
 /**
@@ -15,7 +17,7 @@ class JWSProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests to create a signed JWT Token.
      */
-    public function testCreateSignedToken()
+    public function testCreate()
     {
         $privateKey = '
 -----BEGIN RSA PRIVATE KEY-----
@@ -64,27 +66,18 @@ bEAuSwGVWIItASovCtEat2aQVOBcKFj5f66SJU9N9uVsdQmcug453lOBpdG1U2p4
         $payload = ['username' => 'chalasr'];
         $jwsProvider = new JWSProvider($keyLoaderMock, 'openssl', 'RS384');
 
-        $jwsProvider->createSignedToken($payload);
-        $this->assertAttributeInstanceOf('Namshi\JOSE\JWS', 'jws', $jwsProvider);
+        $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
-        $this->assertEquals($payload, $jwsProvider->getPayload());
-        $this->assertSame(JWSProvider::SIGNED, $jwsProvider->getStatus());
-
-        $jwt = $jwsProvider->getToken();
-        $this->assertNotEmpty($jwt);
-        $this->assertInternalType('string', $jwt);
-
-        return $jwt;
+        return $created->getToken();
     }
 
     /**
      * Tests to verify the signature of a valid given JWT Token.
      *
-     * @depends testCreateSignedToken
+     * @depends testCreate
      */
-    public function testLoadSignature($token)
+    public function testLoad($jwt)
     {
-
         $publicKey = '
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx590gReUdr72YYb03uem
@@ -105,9 +98,7 @@ vwIDAQAB
             ->willReturn($publicKey);
 
         $jwsProvider = new JWSProvider($keyLoaderMock, 'openssl', 'RS384');
-        $jwsProvider->loadSignature($token);
-
-        $this->assertSame(JWSProvider::VERIFIED, $jwsProvider->getStatus());
+        $this->assertInstanceOf(LoadedJWS::class, $jwsProvider->load($jwt));
     }
 
     /**

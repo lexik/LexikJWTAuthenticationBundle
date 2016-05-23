@@ -15,7 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTE
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DefaultEncoder
+class DefaultEncoder implements JWTEncoderInterface
 {
     /**
      * @var JWSProviderInterface
@@ -32,47 +32,41 @@ class DefaultEncoder
 
     /**
      * {@inheritdoc}
-     *
-     * @throws UnsignedJWTEncodeFailureException
      */
-    public function encode(array $data)
+    public function encode(array $payload)
     {
         try {
-            $this->jwsProvider->createSignedToken($data);
+            $jws = $this->jwsProvider->create($payload);
         } catch (InvalidArgumentException $e) {
             throw new JWTEncodeFailureException('An error occurred while trying to encode the JWT token.', $e);
         }
 
-        if (JWSProviderInterface::SIGNED !== $this->jwsProvider->getStatus()) {
+        if (!$jws->isSigned()) {
             throw new UnsignedJWTEncodeFailureException();
         }
 
-        return $this->jwsProvider->getToken();
+        return $jws->getToken();
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws JWTDecodeFailureException           If the signature cannot be loaded
-     * @throws UnverifiedJWTDecodeFailureException If the signature cannot be verified
-     * @throws ExpiredJWTDecodeFailureException    If the token is expired
      */
     public function decode($token)
     {
         try {
-            $this->jwsProvider->loadSignature($token);
+            $jws = $this->jwsProvider->load($token);
         } catch (InvalidArgumentException $e) {
             throw new JWTDecodeFailureException('Invalid JWT Token', $e);
         }
 
-        if (JWSProviderInterface::VERIFIED !== $this->jwsProvider->getStatus()) {
-            throw new UnverifiedJWTDecodeFailureException();
-        }
-
-        if ($this->jwsProvider->isExpired()) {
+        if ($jws->isExpired()) {
             throw new ExpiredJWTDecodeFailureException();
         }
 
-        return $this->jwsProvider->getPayload();
+        if (!$jws->isVerified()) {
+            throw new UnverifiedJWTDecodeFailureException();
+        }
+
+        return $jws->getPayload();
     }
 }

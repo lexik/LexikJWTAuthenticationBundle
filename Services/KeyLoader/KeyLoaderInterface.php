@@ -12,7 +12,7 @@ interface KeyLoaderInterface
     /**
      * Loads a key from a given type (public or private).
      *
-     * @param string
+     * @param resource|string
      *
      * @return resource|string
      */

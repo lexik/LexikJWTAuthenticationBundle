@@ -65,10 +65,10 @@ class JWTProvider implements AuthenticationProviderInterface
     {
         try {
             if (!$payload = $this->jwtManager->decode($token)) {
-                throw $this->createInvalidJWTException();
+                throw $this->createAuthenticationException();
             }
         } catch (JWTDecodeFailureException $e) {
-            throw $this->createInvalidJWTException($e);
+            throw $this->createAuthenticationException($e);
         }
 
         $user = $this->getUserFromPayload($payload);
@@ -94,7 +94,7 @@ class JWTProvider implements AuthenticationProviderInterface
     protected function getUserFromPayload(array $payload)
     {
         if (!isset($payload[$this->userIdentityField])) {
-            throw $this->createInvalidJWTException();
+            throw $this->createAuthenticationException();
         }
 
         return $this->userProvider->loadUserByUsername($payload[$this->userIdentityField]);
@@ -129,9 +129,9 @@ class JWTProvider implements AuthenticationProviderInterface
      *
      * @return AuthenticationException
      */
-    private function createInvalidJWTException(JWTDecodeFailureException $previous = null, $message = 'Invalid JWT Token')
+    private function createAuthenticationException(JWTDecodeFailureException $previous = null)
     {
-        $message = (null === $previous) ? $message :  $previous->getMessage();
+        $message = (null === $previous) ? 'Invalid JWT Token' : $previous->getMessage();
 
         return new AuthenticationException($message, 401, $previous);
     }

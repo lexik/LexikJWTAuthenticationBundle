@@ -23,8 +23,8 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
         $container = $kernel->getContainer();
         $encoderNamespace = 'lexik_jwt_authentication.encoder';
-        $encryptionEngine = $container->getParameter($encoderNamespace . '.encryption_engine');
-        $encryptionAlgorithm = $container->getParameter($encoderNamespace . '.encryption_algorithm');
+        $encryptionEngine = $container->getParameter($encoderNamespace.'.encryption_engine');
+        $encryptionAlgorithm = $container->getParameter($encoderNamespace.'.encryption_algorithm');
 
         /** @var PHPUnit_Framework_MockObject_MockObject */
         $jwsProviderMock = $this
@@ -36,11 +36,6 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
             ])
             ->getMock();
 
-        // The alias is linked to the configured encoder service (default)
-        $this->assertEquals(
-            $container->get($encoderNamespace),
-            $container->get($encoderNamespace.'.default')
-        );
         $this->assertInstanceOf(
             'Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder',
             $container->get($encoderNamespace)
