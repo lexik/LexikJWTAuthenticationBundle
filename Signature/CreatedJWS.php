@@ -9,8 +9,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class CreatedJWS
 {
-    const SIGNED  = 'signed';
-    const INVALID = 'invalid';
+    const SIGNED = 'signed';
 
     /**
      * The JSON Web Token
@@ -24,7 +23,7 @@ final class CreatedJWS
      */
     private $state;
 
-    /**g
+    /**
      * @param string $token
      * @param bool   $isSigned
      */

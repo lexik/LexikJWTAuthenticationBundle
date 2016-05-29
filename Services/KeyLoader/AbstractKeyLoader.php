@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
 /**
- * Load configuration keys.
+ * Abstract class for key loaders.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
@@ -55,11 +55,11 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
      */
     protected function getKeyPath($type)
     {
-        if ($type === 'public') {
+        if ('public' === $type) {
             return $this->publicKey;
         }
 
-        if ($type === 'private') {
+        if ('private' === $type) {
             return $this->privateKey;
         }
 

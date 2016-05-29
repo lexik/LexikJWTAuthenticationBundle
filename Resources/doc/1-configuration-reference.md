@@ -32,6 +32,11 @@ lexik_jwt_authentication:
 
 ### Encoder configuration
 
+#### service
+
+Default based on the [Namshi/JOSE](https://github.com/namshi/jose) library.  
+To create your own encoder service, see the [JWT encoder service customization chapter](5-encoder-service.md).
+
 #### encryption_engine
 
 One of `openssl` and `phpseclib`, the encryption engines supported by the default token encoder service.  

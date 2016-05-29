@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
 /**
- * KeyLoaderInterface.
+ * Interface for classes that are able to load SSL encryption keys.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
