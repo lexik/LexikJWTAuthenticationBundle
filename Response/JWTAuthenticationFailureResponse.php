@@ -25,16 +25,11 @@ final class JWTAuthenticationFailureResponse extends JsonResponse
     /**
      * @param string $message A failure message passed in the response body
      */
-    public function __construct($message = 'Bad credentials')
+    public function __construct($message = 'Bad credentials', $statusCode = JsonResponse::HTTP_UNAUTHORIZED)
     {
         $this->message = $message;
 
-        parent::__construct(null, self::HTTP_UNAUTHORIZED, ['WWW-Authenticate' => 'Bearer']);
-
-        $this->setData([
-            'code'    => $this->statusCode,
-            'message' => $this->message,
-        ]);
+        parent::__construct(null, $statusCode, ['WWW-Authenticate' => 'Bearer']);
     }
 
     /**
@@ -48,6 +43,8 @@ final class JWTAuthenticationFailureResponse extends JsonResponse
     {
         $this->message = $message;
 
+        $this->setData();
+
         return $this;
     }
 
@@ -59,5 +56,15 @@ final class JWTAuthenticationFailureResponse extends JsonResponse
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * Sets the response data with the statusCode & message included.
+     *
+     * {@inheritdoc}
+     */
+    public function setData($data = [])
+    {
+        parent::setData(['code' => $this->statusCode, 'message' => $this->message] + (array) $data);
     }
 }

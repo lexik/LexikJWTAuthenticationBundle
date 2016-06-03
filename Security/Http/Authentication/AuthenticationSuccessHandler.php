@@ -49,7 +49,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $request, $response);
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);
-        $response->setExtraData($event->getData());
+        $response->setData($event->getData());
 
         return $response;
     }

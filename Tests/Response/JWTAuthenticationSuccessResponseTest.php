@@ -13,18 +13,14 @@ final class JWTAuthenticationSuccessResponseTest extends \PHPUnit_Framework_Test
 {
     public function testResponse()
     {
-        $extraData = [
+        $data = [
             'username' => 'foobar',
             'email'    => 'dev@lexik.fr'
         ];
-        $expected = ['token' => 'jwt'] + $extraData;
+        $expected = ['token' => 'jwt'] + $data;
+        $response = new JWTAuthenticationSuccessResponse($expected['token'], $data);
 
-        $response = new JWTAuthenticationSuccessResponse($expected['token'], $extraData);
-
-        $this->assertSame($expected['token'], $response->getToken());
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame($extraData, $response->getExtraData());
-
         $this->assertSame(json_encode($expected), $response->getContent());
 
         return $response;
@@ -40,9 +36,7 @@ final class JWTAuthenticationSuccessResponseTest extends \PHPUnit_Framework_Test
 
         // Test that the previous method call has no effect on the original body
         $this->assertNotEquals(json_encode($replacementData), $response->getContent());
-        $this->assertSame(
-            json_encode(['token' => $response->getToken()] + $response->getExtraData()),
-            $response->getContent()
-        );
+        $this->assertAttributeSame($replacementData['foo'], 'foo', json_decode($response->getContent()));
+        $this->assertAttributeNotEmpty('token', json_decode($response->getContent()));
     }
 }

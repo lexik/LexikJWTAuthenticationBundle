@@ -27,4 +27,19 @@ final class JWTAuthenticationFailureResponseTest extends \PHPUnit_Framework_Test
 
         return $response;
     }
+
+    /**
+     * @depends testResponse
+     */
+    public function testSetMessage(JWTAuthenticationFailureResponse $response)
+    {
+        $newMessage = 'new message';
+        $response->setMessage($newMessage);
+
+        $responseBody = json_decode($response->getContent());
+
+        $this->assertSame($response->getStatusCode(), $responseBody->code);
+        $this->assertSame($newMessage, $response->getMessage());
+        $this->assertSame($newMessage, $responseBody->message);
+    }
 }
