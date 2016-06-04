@@ -6,14 +6,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\Authentica
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * AuthenticationFailureHandlerTest
+ * AuthenticationFailureHandlerTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class AuthenticationFailureHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test onAuthenticationFailure method
+     * test onAuthenticationFailure method.
      */
     public function testOnAuthenticationFailure()
     {

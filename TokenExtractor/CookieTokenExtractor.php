@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * CookieTokenExtractor
+ * CookieTokenExtractor.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

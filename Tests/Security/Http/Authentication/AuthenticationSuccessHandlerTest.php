@@ -6,14 +6,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 
 /**
- * AuthenticationSuccessHandlerTest
+ * AuthenticationSuccessHandlerTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test onAuthenticationSuccess method
+     * test onAuthenticationSuccess method.
      */
     public function testOnAuthenticationSuccess()
     {

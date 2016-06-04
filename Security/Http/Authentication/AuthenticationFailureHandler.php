@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 /**
- * AuthenticationFailureHandler
+ * AuthenticationFailureHandler.
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
@@ -31,7 +31,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {

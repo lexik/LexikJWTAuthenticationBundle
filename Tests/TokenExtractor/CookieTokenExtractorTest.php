@@ -6,14 +6,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * CookieTokenExtractorTest
+ * CookieTokenExtractorTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class CookieTokenExtractorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test getRequestToken
+     * test getRequestToken.
      */
     public function testGetTokenRequest()
     {
@@ -23,11 +23,11 @@ class CookieTokenExtractorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($extractor->extract($request));
 
         $request = new Request();
-        $request->cookies->add(array('BEAR' => 'testtoken'));
+        $request->cookies->add(['BEAR' => 'testtoken']);
         $this->assertFalse($extractor->extract($request));
 
         $request = new Request();
-        $request->cookies->add(array('BEARER' => 'testtoken'));
+        $request->cookies->add(['BEARER' => 'testtoken']);
         $this->assertEquals('testtoken', $extractor->extract($request));
     }
 }

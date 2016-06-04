@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -8,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * JWTCreatedEvent
+ * JWTCreatedEvent.
  */
 class JWTCreatedEvent extends Event
 {
@@ -34,8 +33,8 @@ class JWTCreatedEvent extends Event
      */
     public function __construct(array $data, UserInterface $user, Request $request = null)
     {
-        $this->data    = $data;
-        $this->user    = $user;
+        $this->data = $data;
+        $this->user = $user;
         $this->request = $request;
     }
 

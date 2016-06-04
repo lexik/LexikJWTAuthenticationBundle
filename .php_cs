@@ -7,7 +7,6 @@ $finder = Symfony\CS\Finder\DefaultFinder::create()
 return Symfony\CS\Config\Config::create()
     ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
     ->fixers(array(
-        '-phpdoc_short_description',
         '-phpdoc_scalar',
         '-extra_empty_lines',
         'single_blank_line_before_namespace',

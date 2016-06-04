@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * LexikJWTAuthenticationBundle
+ * LexikJWTAuthenticationBundle.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

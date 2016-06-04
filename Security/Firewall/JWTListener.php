@@ -2,21 +2,21 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall;
 
-use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * JWTListener
+ * JWTListener.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas  <robin.chalas@gmail.com>
@@ -58,10 +58,10 @@ class JWTListener implements ListenerInterface
         AuthenticationManagerInterface $authenticationManager,
         array $config = []
     ) {
-        $this->tokenStorage          = $tokenStorage;
+        $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->config                = array_merge(['throw_exceptions' => false], $config);
-        $this->tokenExtractors       = [];
+        $this->config = array_merge(['throw_exceptions' => false], $config);
+        $this->tokenExtractors = [];
     }
 
     /**
@@ -76,7 +76,6 @@ class JWTListener implements ListenerInterface
         }
 
         try {
-
             $token = new JWTUserToken();
             $token->setRawToken($requestToken);
 
@@ -84,9 +83,7 @@ class JWTListener implements ListenerInterface
             $this->tokenStorage->setToken($authToken);
 
             return;
-
         } catch (AuthenticationException $failed) {
-
             if ($this->config['throw_exceptions']) {
                 throw $failed;
             }

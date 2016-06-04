@@ -6,14 +6,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderToken
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * AuthorizationHeaderTokenExtractorTest
+ * AuthorizationHeaderTokenExtractorTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class AuthorizationHeaderTokenExtractorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test getRequestToken
+     * test getRequestToken.
      */
     public function testGetTokenRequest()
     {

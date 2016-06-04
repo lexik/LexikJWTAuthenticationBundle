@@ -4,11 +4,11 @@ namespace Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
-use Symfony\Component\Security\Core\User\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
+use Symfony\Component\Security\Core\User\User;
 
 /**
- * JWTManagerTest
+ * JWTManagerTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
@@ -16,7 +16,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 class JWTManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test create
+     * test create.
      */
     public function testCreate()
     {
@@ -48,7 +48,7 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test decode
+     * test decode.
      */
     public function testDecode()
     {
@@ -65,18 +65,17 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
         $encoder
             ->expects($this->once())
             ->method('decode')
-            ->willReturn(array('foo' => 'bar'));
+            ->willReturn(['foo' => 'bar']);
 
         $manager = new JWTManager($encoder, $dispatcher, $this->getMockedRequestStack(), 3600);
-        $this->assertEquals(array('foo' => 'bar'), $manager->decode($this->getJWTUserTokenMock()));
+        $this->assertEquals(['foo' => 'bar'], $manager->decode($this->getJWTUserTokenMock()));
     }
 
     /**
-     * test identity field
+     * test identity field.
      */
     public function testIdentityField()
     {
-
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
             ->expects($this->at(0))
@@ -101,8 +100,8 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn('secrettoken');
 
         $manager = new JWTManager($encoder, $dispatcher, $this->getMockedRequestStack(), 3600);
-        $manager->setUserIdentityField("email");
-        $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password','victuxbb@gmail.com')));
+        $manager->setUserIdentityField('email');
+        $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password', 'victuxbb@gmail.com')));
     }
 
 

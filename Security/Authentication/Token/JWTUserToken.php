@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 /**
- * JWTUserToken
+ * JWTUserToken.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

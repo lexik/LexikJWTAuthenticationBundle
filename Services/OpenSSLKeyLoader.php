@@ -34,12 +34,12 @@ class OpenSSLKeyLoader
     public function __construct($privateKey, $publicKey, $passphrase)
     {
         $this->privateKey = $privateKey;
-        $this->publicKey  = $publicKey;
+        $this->publicKey = $publicKey;
         $this->passphrase = $passphrase;
     }
 
     /**
-     * Checks that configured keys exists and private key can be parsed using the passphrase
+     * Checks that configured keys exists and private key can be parsed using the passphrase.
      */
     public function checkOpenSSLConfig()
     {
@@ -58,7 +58,7 @@ class OpenSSLKeyLoader
      */
     public function loadKey($type)
     {
-        $property = $type . 'Key';
+        $property = $type.'Key';
         $path = $this->$property;
 
         if (!file_exists($path) || !is_readable($path)) {
@@ -70,7 +70,7 @@ class OpenSSLKeyLoader
             ));
         }
 
-        $loadPath = 'file://' . $path;
+        $loadPath = 'file://'.$path;
         $key = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
             $type == 'private' ? [$loadPath, $this->passphrase] : [$loadPath]

@@ -2,11 +2,11 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Firewall;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
 
 /**
- * JWTListenerTest
+ * JWTListenerTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
@@ -14,7 +14,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 class JWTListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test handle method
+     * test handle method.
      */
     public function testHandle()
     {

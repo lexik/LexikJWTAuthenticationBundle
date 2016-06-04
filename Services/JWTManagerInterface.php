@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * JWTManagerInterface
+ * JWTManagerInterface.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

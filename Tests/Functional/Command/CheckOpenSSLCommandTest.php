@@ -7,14 +7,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * CheckOpenSSLCommandTest
+ * CheckOpenSSLCommandTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class CheckOpenSSLCommandTest extends TestCase
 {
     /**
-     * Test command
+     * Test command.
      */
     public function testCheckOpenSSLCommand()
     {
@@ -25,9 +25,9 @@ class CheckOpenSSLCommandTest extends TestCase
         $command->setContainer($kernel->getContainer());
 
         $tester = new CommandTester($command);
-        $result = $tester->execute(array());
+        $result = $tester->execute([]);
 
         $this->assertEquals(0, $result);
-        $this->assertEquals('OpenSSL configuration seems correct.' . PHP_EOL, $tester->getDisplay());
+        $this->assertEquals('OpenSSL configuration seems correct.'.PHP_EOL, $tester->getDisplay());
     }
 }

@@ -6,14 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * TestCase
+ * TestCase.
  */
 abstract class TestCase extends WebTestCase
 {
     /**
      * {@inheritdoc}
      */
-    protected static function createKernel(array $options = array())
+    protected static function createKernel(array $options = [])
     {
         return new AppKernel('test', true);
     }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -8,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * JWTAuthenticatedEvent
+ * JWTAuthenticatedEvent.
  */
 class JWTAuthenticatedEvent extends Event
 {
@@ -34,7 +33,7 @@ class JWTAuthenticatedEvent extends Event
     public function __construct(array $payload, TokenInterface $token)
     {
         $this->payload = $payload;
-        $this->token   = $token;
+        $this->token = $token;
     }
 
     /**

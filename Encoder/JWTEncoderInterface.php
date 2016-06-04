@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
 /**
- * JWTEncoderInterface
+ * JWTEncoderInterface.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

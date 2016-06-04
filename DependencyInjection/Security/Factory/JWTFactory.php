@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * JWTFactory
+ * JWTFactory.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
@@ -20,12 +20,12 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = 'security.authentication.provider.jwt.' . $id;
+        $providerId = 'security.authentication.provider.jwt.'.$id;
         $container
             ->setDefinition($providerId, new DefinitionDecorator($config['authentication_provider']))
             ->replaceArgument(0, new Reference($userProvider));
 
-        $listenerId = 'security.authentication.listener.jwt.' . $id;
+        $listenerId = 'security.authentication.listener.jwt.'.$id;
         $container
             ->setDefinition($listenerId, new DefinitionDecorator($config['authentication_listener']))
             ->replaceArgument(2, $config);
@@ -37,8 +37,7 @@ class JWTFactory implements SecurityFactoryInterface
         }
 
         if ($config['authorization_header']['enabled']) {
-
-            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.' . $id;
+            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.'.$id;
             $container
                 ->setDefinition($authorizationHeaderExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.authorization_header_extractor'))
                 ->replaceArgument(0, $config['authorization_header']['prefix'])
@@ -47,12 +46,10 @@ class JWTFactory implements SecurityFactoryInterface
             $container
                 ->getDefinition($listenerId)
                 ->addMethodCall('addTokenExtractor', [new Reference($authorizationHeaderExtractorId)]);
-
         }
 
         if ($config['query_parameter']['enabled']) {
-
-            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.' . $id;
+            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.'.$id;
             $container
                 ->setDefinition($queryParameterExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.query_parameter_extractor'))
                 ->replaceArgument(0, $config['query_parameter']['name']);
@@ -60,12 +57,10 @@ class JWTFactory implements SecurityFactoryInterface
             $container
                 ->getDefinition($listenerId)
                 ->addMethodCall('addTokenExtractor', [new Reference($queryParameterExtractorId)]);
-
         }
 
         if ($config['cookie']['enabled']) {
-
-            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.' . $id;
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.'.$id;
             $container
                 ->setDefinition($cookieExtractorId, new DefinitionDecorator('lexik_jwt_authentication.extractor.cookie_extractor'))
                 ->replaceArgument(0, $config['cookie']['name']);
@@ -73,7 +68,6 @@ class JWTFactory implements SecurityFactoryInterface
             $container
                 ->getDefinition($listenerId)
                 ->addMethodCall('addTokenExtractor', [new Reference($cookieExtractorId)]);
-
         }
 
         return [$providerId, $listenerId, $entryPointId];
@@ -154,7 +148,7 @@ class JWTFactory implements SecurityFactoryInterface
     }
 
     /**
-     * Create an entry point, by default it sends a 401 header and ends the request
+     * Create an entry point, by default it sends a 401 header and ends the request.
      *
      * @param ContainerBuilder $container
      * @param string           $id
