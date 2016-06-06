@@ -169,8 +169,6 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
         return;
     }
 
-    // $data['token'] contains the JWT
-
     $data['data'] = array(
         'roles' => $user->getRoles(),
     );
@@ -199,7 +197,7 @@ public function onJwtEncoded(JWTEncodedEvent $event)
 
 #### Events::AUTHENTICATION_FAILURE - customize the failure response
 
-By default, the response in case of failed authentication is just a json containing a "Bad credentials" message and a 401 status code, but you can set a custom response.
+By default, the response in case of failed authentication is just a json containing a failure message and a 401 status code, but you can set a custom response.
 
 ``` yaml
 # services.yml
@@ -214,6 +212,9 @@ Example 7: set a custom response on authentication failure
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\AuthenticationFailureListener.php
+
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+
 /**
  * @param AuthenticationFailureEvent $event
  */
@@ -224,7 +225,7 @@ public function onAuthenticationFailureResponse(AuthenticationFailureEvent $even
         'message' => 'Bad credentials, please verify that your username/password are correctly set',
     ];
 
-    $response = new JsonResponse($data, 401);
+    $response = new JWTAuthenticationFailureResponse($data);
 
     $event->setResponse($response);
 }
@@ -243,21 +244,19 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
 ```
 
-Example 8: set a custom response message on invalid token
+Example 8: set a custom response message and status code on invalid token
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\JWTInvalidListener.php
+
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+
 /**
  * @param JWTInvalidEvent $event
  */
 public function onJWTInvalid(JWTInvalidEvent $event)
 {
-    $data = [
-        'status'  => '403 Forbidden',
-        'message' => 'Your token is invalid, please login again to get a new one',
-    ];
-
-    $response = new JsonResponse($data, 403);
+    $response = new JWTAuthenticationFailureResponse('Your token is invalid, please login again to get a new one', 403);
 
     $event->setResponse($response);
 }

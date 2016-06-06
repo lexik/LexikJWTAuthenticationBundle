@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Firewall;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
 /**
  * JWTListenerTest
@@ -60,10 +61,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
         $event
             ->expects($this->once())
             ->method('setResponse')
-            ->with(new \Symfony\Component\HttpFoundation\JsonResponse([
-                'code'    => 401,
-                'message' => $invalidTokenException->getMessage(),
-            ], 401, ['WWW-Authenticate' => 'Bearer']));
+            ->with(new JWTAuthenticationFailureResponse($invalidTokenException->getMessage()));
 
         $listener->handle($event);
     }
