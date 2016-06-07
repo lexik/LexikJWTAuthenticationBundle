@@ -3,6 +3,12 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.5.0
 
+## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
+
+* [\#175](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/175) Stop ensuring support for PHP versions smaller than 5.0 ([chalasr](https://github.com/chalasr))
+
+* [\#167](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/167) and [\#169](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/169) Stop ensuring support Symfony versions smaller than 2.8 ([chalasr](https://github.com/chalasr))
+
 ## [v1.5.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.5.1) (2016-04-11)
 
 * bug [\#159](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/159) Fix anonymous access by removing the AuthenticationCredentialsNotFoundException  ([chalasr](https://github.com/chalasr))

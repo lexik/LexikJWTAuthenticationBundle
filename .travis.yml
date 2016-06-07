@@ -17,6 +17,10 @@ matrix:
       env: SYMFONY_VERSION=3.0.*
     - php: 7.0
       env: SYMFONY_VERSION=3.0.*
+    - php: 5.6
+      env: SYMFONY_VERSION=3.1.*
+    - php: 7.0
+      env: SYMFONY_VERSION=3.1.*
   allow_failures:
     - php: hhvm
 
