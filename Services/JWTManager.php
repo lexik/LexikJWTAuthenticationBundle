@@ -9,12 +9,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * JWTManager
+ * JWTManager.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
@@ -113,7 +113,7 @@ class JWTManager implements JWTManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor = PropertyAccess::createPropertyAccessor();
+        $accessor                          = PropertyAccess::createPropertyAccessor();
         $payload[$this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
     }
 

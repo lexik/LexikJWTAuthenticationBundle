@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -9,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * AuthenticationSuccessEvent
+ * AuthenticationSuccessEvent.
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
@@ -43,9 +42,9 @@ class AuthenticationSuccessEvent extends Event
      */
     public function __construct(array $data, UserInterface $user, Request $request, Response $response)
     {
-        $this->data = $data;
-        $this->user = $user;
-        $this->request = $request;
+        $this->data     = $data;
+        $this->user     = $user;
+        $this->request  = $request;
         $this->response = $response;
     }
 

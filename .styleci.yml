@@ -1,0 +1,19 @@
+preset: symfony
+
+enabled:
+  - ordered_imports
+  - short_array_syntax
+  - align_equals
+  - align_double_arrow
+
+disabled:
+  - phpdoc_scalar
+  - extra_empty_lines
+  - unalign_double_arrow
+  - unalign_equals
+
+finder:
+  not-path:
+    - "Tests/Stubs/"
+  name:
+    - "*.php"

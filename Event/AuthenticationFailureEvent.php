@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * AuthenticationFailureEvent
+ * AuthenticationFailureEvent.
  *
  * @author Emmanuel Vella <vella.emmanuel@gmail.com>
  * @author Robin Chalas   <robin.chalas@gmail.com>

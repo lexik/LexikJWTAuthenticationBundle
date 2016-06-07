@@ -4,15 +4,15 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 /**
- * AuthenticationSuccessHandler
+ * AuthenticationSuccessHandler.
  *
  * @author Dev Lexik <dev@lexik.fr>
  */
@@ -39,7 +39,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {

@@ -7,7 +7,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\OpenSSLKeyLoader;
 use Namshi\JOSE\SimpleJWS;
 
 /**
- * JWTEncoder
+ * JWTEncoder.
  *
  * @author Dev Lexik <dev@lexik.fr>
  */

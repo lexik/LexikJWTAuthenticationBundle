@@ -1,17 +1,18 @@
 <?php
+
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\EntryPoint;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint;
 
 /**
- * JWTEntryPointTest
+ * JWTEntryPointTest.
  *
  * @author Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
  */
 class JWTEntryPointTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test start method
+     * test start method.
      */
     public function testStart()
     {

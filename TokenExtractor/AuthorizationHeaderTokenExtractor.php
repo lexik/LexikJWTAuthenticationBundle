@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * AuthorizationHeaderTokenExtractor
+ * AuthorizationHeaderTokenExtractor.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
@@ -28,7 +28,7 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
     public function __construct($prefix, $name)
     {
         $this->prefix = $prefix;
-        $this->name = $name;
+        $this->name   = $name;
     }
 
     /**

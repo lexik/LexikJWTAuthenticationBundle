@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * JWTEncodedEvent
+ * JWTEncodedEvent.
  */
 class JWTEncodedEvent extends Event
 {

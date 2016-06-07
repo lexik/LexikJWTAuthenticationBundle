@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * CheckOpenSSLCommand
+ * CheckOpenSSLCommand.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
@@ -33,7 +33,8 @@ class CheckOpenSSLCommand extends ContainerAwareCommand
         try {
             $keyLoader->checkOpenSSLConfig();
         } catch (\RuntimeException $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<error>'.$e->getMessage().'</error>');
+
             return 1;
         }
 

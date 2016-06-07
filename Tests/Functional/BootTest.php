@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 /**
- * BootTest
+ * BootTest.
  *
  * @see https://github.com/FriendsOfSymfony/FOSRestBundle/tree/master/Tests/Functional
  */

@@ -2,18 +2,18 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * JWTProvider
+ * JWTProvider.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
@@ -48,11 +48,10 @@ class JWTProvider implements AuthenticationProviderInterface
         UserProviderInterface $userProvider,
         JWTManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher
-    )
-    {
-        $this->userProvider = $userProvider;
-        $this->jwtManager = $jwtManager;
-        $this->dispatcher = $dispatcher;
+    ) {
+        $this->userProvider      = $userProvider;
+        $this->jwtManager        = $jwtManager;
+        $this->dispatcher        = $dispatcher;
         $this->userIdentityField = 'username';
     }
 

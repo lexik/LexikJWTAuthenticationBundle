@@ -15,7 +15,7 @@ final class JWTAuthenticationSuccessResponseTest extends \PHPUnit_Framework_Test
     {
         $data = [
             'username' => 'foobar',
-            'email'    => 'dev@lexik.fr'
+            'email'    => 'dev@lexik.fr',
         ];
         $expected = ['token' => 'jwt'] + $data;
         $response = new JWTAuthenticationSuccessResponse($expected['token'], $data);

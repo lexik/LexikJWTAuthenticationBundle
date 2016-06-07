@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Response;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
 /**
- * Tests the JWTAuthenticationFailureResponse
+ * Tests the JWTAuthenticationFailureResponse.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */

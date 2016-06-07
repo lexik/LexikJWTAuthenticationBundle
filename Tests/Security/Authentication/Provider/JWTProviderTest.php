@@ -7,14 +7,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
- * JWTProviderTest
+ * JWTProviderTest.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class JWTProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test supports method
+     * test supports method.
      */
     public function testSupports()
     {
@@ -38,7 +38,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test authenticate method
+     * test authenticate method.
      *
      * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
      */
@@ -50,7 +50,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $userProvider = $this->getUserProviderMock();
+        $userProvider    = $this->getUserProviderMock();
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
@@ -61,7 +61,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test authenticate method
+     * test authenticate method.
      *
      * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
      */
@@ -73,18 +73,18 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $userProvider = $this->getUserProviderMock();
+        $userProvider    = $this->getUserProviderMock();
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('foo' => 'bar')));
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['foo' => 'bar']));
 
         $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->authenticate($jwtUserToken);
     }
 
     /**
-     * test authenticate method
+     * test authenticate method.
      *
      * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
@@ -102,14 +102,14 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['username' => 'user']));
 
         $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->authenticate($jwtUserToken);
     }
 
     /**
-     * test authenticate method
+     * test authenticate method.
      */
     public function testAuthenticate()
     {
@@ -123,7 +123,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')
             ->getMock();
 
-        $user->expects($this->any())->method('getRoles')->will($this->returnValue(array()));
+        $user->expects($this->any())->method('getRoles')->will($this->returnValue([]));
 
         $userProvider = $this->getUserProviderMock();
         $userProvider->expects($this->any())->method('loadUserByUsername')->will($this->returnValue($user));
@@ -131,7 +131,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('username' => 'user')));
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['username' => 'user']));
 
         $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
 
@@ -143,7 +143,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
         // test changing user identity field
 
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(array('uid' => 'user')));
+        $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['uid' => 'user']));
 
         $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
         $provider->setUserIdentityField('uid');

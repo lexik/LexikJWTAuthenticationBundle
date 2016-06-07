@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 /**
- * JWTInvalidEvent
+ * JWTInvalidEvent.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */

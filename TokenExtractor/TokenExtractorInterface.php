@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * TokenExtractorInterface
+ * TokenExtractorInterface.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

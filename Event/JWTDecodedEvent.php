@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * JWTDecodedEvent
+ * JWTDecodedEvent.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
@@ -55,7 +55,7 @@ class JWTDecodedEvent extends Event
     }
 
     /**
-     * Mark payload as invalid
+     * Mark payload as invalid.
      */
     public function markAsInvalid()
     {
