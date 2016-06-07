@@ -19,9 +19,9 @@ class AuthenticationFailureHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
 
-        $handler = new AuthenticationFailureHandler($dispatcher);
+        $handler  = new AuthenticationFailureHandler($dispatcher);
         $response = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException());
-        $content = json_decode($response->getContent(), true);
+        $content  = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals(401, $response->getStatusCode());

@@ -42,9 +42,9 @@ class AuthenticationSuccessEvent extends Event
      */
     public function __construct(array $data, UserInterface $user, Request $request, Response $response)
     {
-        $this->data = $data;
-        $this->user = $user;
-        $this->request = $request;
+        $this->data     = $data;
+        $this->user     = $user;
+        $this->request  = $request;
         $this->response = $response;
     }
 

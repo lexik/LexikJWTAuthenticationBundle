@@ -33,7 +33,7 @@ class JWTAuthenticatedEvent extends Event
     public function __construct(array $payload, TokenInterface $token)
     {
         $this->payload = $payload;
-        $this->token = $token;
+        $this->token   = $token;
     }
 
     /**

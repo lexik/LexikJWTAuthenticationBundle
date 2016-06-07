@@ -37,9 +37,9 @@ class AuthenticationFailureEvent extends Event
      */
     public function __construct(Request $request, AuthenticationException $exception, Response $response)
     {
-        $this->request = $request;
+        $this->request   = $request;
         $this->exception = $exception;
-        $this->response = $response;
+        $this->response  = $response;
     }
 
     /**

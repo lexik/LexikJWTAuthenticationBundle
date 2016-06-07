@@ -54,10 +54,10 @@ class JWTManager implements JWTManagerInterface
      */
     public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, RequestStack $requestStack, $ttl)
     {
-        $this->jwtEncoder = $encoder;
-        $this->dispatcher = $dispatcher;
-        $this->requestStack = $requestStack;
-        $this->ttl = $ttl;
+        $this->jwtEncoder        = $encoder;
+        $this->dispatcher        = $dispatcher;
+        $this->requestStack      = $requestStack;
+        $this->ttl               = $ttl;
         $this->userIdentityField = 'username';
     }
 
@@ -113,7 +113,7 @@ class JWTManager implements JWTManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor = PropertyAccess::createPropertyAccessor();
+        $accessor                          = PropertyAccess::createPropertyAccessor();
         $payload[$this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
     }
 

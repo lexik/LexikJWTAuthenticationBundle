@@ -33,8 +33,8 @@ class JWTCreatedEvent extends Event
      */
     public function __construct(array $data, UserInterface $user, Request $request = null)
     {
-        $this->data = $data;
-        $this->user = $user;
+        $this->data    = $data;
+        $this->user    = $user;
         $this->request = $request;
     }
 

@@ -49,9 +49,9 @@ class JWTProvider implements AuthenticationProviderInterface
         JWTManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher
     ) {
-        $this->userProvider = $userProvider;
-        $this->jwtManager = $jwtManager;
-        $this->dispatcher = $dispatcher;
+        $this->userProvider      = $userProvider;
+        $this->jwtManager        = $jwtManager;
+        $this->dispatcher        = $dispatcher;
         $this->userIdentityField = 'username';
     }
 

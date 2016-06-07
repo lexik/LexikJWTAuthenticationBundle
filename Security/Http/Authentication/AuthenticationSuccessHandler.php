@@ -43,10 +43,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        $user = $token->getUser();
-        $jwt = $this->jwtManager->create($user);
+        $user     = $token->getUser();
+        $jwt      = $this->jwtManager->create($user);
         $response = new JWTAuthenticationSuccessResponse($jwt);
-        $event = new AuthenticationSuccessEvent(['token' => $jwt], $user, $request, $response);
+        $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $request, $response);
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);
         $response->setData($event->getData());

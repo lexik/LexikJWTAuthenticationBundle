@@ -9,9 +9,7 @@ return Symfony\CS\Config\Config::create()
     ->fixers(array(
         '-phpdoc_scalar',
         '-extra_empty_lines',
-        'single_blank_line_before_namespace',
-        'unalign_double_arrow',
-        'unalign_equals',
+        'align_equals',
         'align_double_arrow',
         'newline_after_open_tag',
         'ordered_use',

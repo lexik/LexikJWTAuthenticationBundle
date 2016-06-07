@@ -34,7 +34,7 @@ class OpenSSLKeyLoader
     public function __construct($privateKey, $publicKey, $passphrase)
     {
         $this->privateKey = $privateKey;
-        $this->publicKey = $publicKey;
+        $this->publicKey  = $publicKey;
         $this->passphrase = $passphrase;
     }
 
@@ -59,7 +59,7 @@ class OpenSSLKeyLoader
     public function loadKey($type)
     {
         $property = $type.'Key';
-        $path = $this->$property;
+        $path     = $this->$property;
 
         if (!file_exists($path) || !is_readable($path)) {
             throw new \RuntimeException(sprintf(
@@ -71,7 +71,7 @@ class OpenSSLKeyLoader
         }
 
         $loadPath = 'file://'.$path;
-        $key = call_user_func_array(
+        $key      = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
             $type == 'private' ? [$loadPath, $this->passphrase] : [$loadPath]
         );

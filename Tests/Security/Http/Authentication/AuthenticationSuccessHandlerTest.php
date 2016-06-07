@@ -18,7 +18,7 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
     public function testOnAuthenticationSuccess()
     {
         $request = $this->getRequest();
-        $token = $this->getToken();
+        $token   = $this->getToken();
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);

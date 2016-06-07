@@ -76,7 +76,7 @@ class OpenSSLKeyLoaderTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $privateKey = 'private.pem';
-        $publicKey = 'public.pem';
+        $publicKey  = 'public.pem';
 
         if (file_exists($publicKey)) {
             unlink($publicKey);

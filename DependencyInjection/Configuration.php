@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('lexik_jwt_authentication');
+        $rootNode    = $treeBuilder->root('lexik_jwt_authentication');
 
         $rootNode
             ->addDefaultsIfNotSet()

@@ -58,10 +58,10 @@ class JWTListener implements ListenerInterface
         AuthenticationManagerInterface $authenticationManager,
         array $config = []
     ) {
-        $this->tokenStorage = $tokenStorage;
+        $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->config = array_merge(['throw_exceptions' => false], $config);
-        $this->tokenExtractors = [];
+        $this->config                = array_merge(['throw_exceptions' => false], $config);
+        $this->tokenExtractors       = [];
     }
 
     /**

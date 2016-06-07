@@ -104,7 +104,6 @@ class JWTManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password', 'victuxbb@gmail.com')));
     }
 
-
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
