@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -10,12 +11,48 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 abstract class TestCase extends WebTestCase
 {
+    protected static $client;
+
     /**
      * {@inheritdoc}
      */
     protected static function createKernel(array $options = [])
     {
+        require_once __DIR__.'/app/AppKernel.php';
+
         return new AppKernel('test', true);
+    }
+
+    protected static function createAuthenticatedClient($token = null)
+    {
+        if (null === static::$kernel) {
+            static::bootKernel();
+        }
+
+        $client = static::$kernel->getContainer()->get('test.client');
+        $token  = null === $token ? self::getAuthenticatedToken() : $token;
+
+        if (null === $token) {
+            throw new \LogicException('Unable to create an authenticated client from a null JWT token');
+        }
+
+        $client->setServerParameter('HTTP_AUTHORIZATION', sprintf('Bearer %s', $token));
+
+        return $client;
+    }
+
+    protected static function getAuthenticatedToken()
+    {
+        $client = static::$client ?: static::$kernel->getContainer()->get('test.client');
+
+        $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        $responseBody = json_decode($client->getResponse()->getContent(), true);
+
+        if (!isset($responseBody['token'])) {
+            throw new \LogicException('Unable to get a JWT Token through the "/login_check" route.');
+        }
+
+        return $responseBody['token'];
     }
 
     /**

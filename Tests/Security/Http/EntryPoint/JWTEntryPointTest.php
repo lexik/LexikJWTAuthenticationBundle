@@ -7,6 +7,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint;
 /**
  * JWTEntryPointTest.
  *
+ * @group legacy
+ *
  * @author Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
  */
 class JWTEntryPointTest extends \PHPUnit_Framework_TestCase

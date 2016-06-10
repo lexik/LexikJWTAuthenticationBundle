@@ -6,6 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -17,6 +18,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * JWTProvider.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
+ *
+ * @deprecated since 2.0, will be removed in 3.0. See
+ *             {@link JWTTokenAuthenticator} instead
  */
 class JWTProvider implements AuthenticationProviderInterface
 {
@@ -50,6 +54,8 @@ class JWTProvider implements AuthenticationProviderInterface
         JWTManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher
     ) {
+        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
+
         $this->userProvider      = $userProvider;
         $this->jwtManager        = $jwtManager;
         $this->dispatcher        = $dispatcher;

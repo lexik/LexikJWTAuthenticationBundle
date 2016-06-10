@@ -1,0 +1,57 @@
+framework:
+    secret: test
+    router:
+        resource: '%kernel.root_dir%/config/routing.yml'
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+
+lexik_jwt_authentication:
+    private_key_path:   '%kernel.root_dir%/../var/jwt/private.pem'
+    public_key_path:    '%kernel.root_dir%/../var/jwt/public.pem'
+    pass_phrase:        testing
+
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    providers:
+        in_memory:
+            memory:
+                users:
+                    lexik:
+                        password: dummy
+                        roles: ROLE_USER
+
+    firewalls:
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path: /login_check
+                require_previous_session: false
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:  ^/api
+            stateless: true
+            anonymous: false
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+services:
+    lexik_jwt_authentication.test.exp_aware_jwt_encoder.wrapper:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils\ExpAwareJWTEncoderWrapper
+        arguments: [ '@lexik_jwt_authentication.encoder.default' ]
+
+    lexik_jwt_authentication.test.jwt_event_subscriber:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils\CallableEventSubscriber
+        shared: true
+        tags:
+            - { name: kernel.event_subscriber }

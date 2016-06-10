@@ -24,7 +24,7 @@ interface JWTEncoderInterface
     /**
      * @param string $token
      *
-     * @return false|array
+     * @return array
      *
      * @throws JWTDecodeFailureException If an error occurred during the loading of the token (invalid signature, expired token...)
      */
