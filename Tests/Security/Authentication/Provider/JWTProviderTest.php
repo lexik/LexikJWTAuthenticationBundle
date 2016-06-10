@@ -38,7 +38,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test authenticate method with an invalid token
+     * test authenticate method with an invalid token.
      *
      * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
      * @expectedExceptionMessage Invalid JWT Token

@@ -3,12 +3,12 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
 use InvalidArgumentException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\UnverifiedJWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProviderInterface;
 
 /**
  * Default Json Web Token encoder/decoder.

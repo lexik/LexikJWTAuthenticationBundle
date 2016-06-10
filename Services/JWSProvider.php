@@ -3,8 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Namshi\JOSE\JWS;
 
 /**

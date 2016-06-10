@@ -73,7 +73,7 @@ class LoadedJWS
             return $this->state = null;
         }
 
-        if (0 <= (new \DateTime)->format('U') - $this->payload['exp']) {
+        if (0 <= (new \DateTime())->format('U') - $this->payload['exp']) {
             $this->state = self::EXPIRED;
         }
     }

@@ -12,7 +12,7 @@ final class CreatedJWS
     const SIGNED = 'signed';
 
     /**
-     * The JSON Web Token
+     * The JSON Web Token.
      *
      * @var string
      */

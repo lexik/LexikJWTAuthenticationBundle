@@ -18,7 +18,7 @@ final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
     {
         $this->goodPayload = [
             'username' => 'chalasr',
-            'exp'      => (int) (new \DateTime('now'))->format('U') + 86400
+            'exp'      => (int) (new \DateTime('now'))->format('U') + 86400,
         ];
     }
 

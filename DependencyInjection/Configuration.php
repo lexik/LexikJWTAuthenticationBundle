@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
                             ->cannotBeEmpty()
                         ->end()
                         ->enumNode('encryption_engine')
-                            ->values(array('openssl', 'phpseclib'))
+                            ->values(['openssl', 'phpseclib'])
                             ->defaultValue('openssl')
                         ->end()
                     ->end()

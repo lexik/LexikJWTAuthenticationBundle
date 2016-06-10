@@ -16,17 +16,17 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
      */
     public function testEncoderConfiguration()
     {
-        /** @var \Symfony\Component\HttpKernel\KernelInterface */
+        /* @var \Symfony\Component\HttpKernel\KernelInterface */
         $kernel = $this->createKernel();
         $kernel->boot();
 
-        /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
-        $container = $kernel->getContainer();
-        $encoderNamespace = 'lexik_jwt_authentication.encoder';
-        $encryptionEngine = $container->getParameter($encoderNamespace.'.encryption_engine');
+        /* @var \Symfony\Component\DependencyInjection\ContainerInterface */
+        $container           = $kernel->getContainer();
+        $encoderNamespace    = 'lexik_jwt_authentication.encoder';
+        $encryptionEngine    = $container->getParameter($encoderNamespace.'.encryption_engine');
         $encryptionAlgorithm = $container->getParameter($encoderNamespace.'.encryption_algorithm');
 
-        /** @var PHPUnit_Framework_MockObject_MockObject */
+        /* @var PHPUnit_Framework_MockObject_MockObject */
         $jwsProviderMock = $this
             ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider')
             ->setConstructorArgs([

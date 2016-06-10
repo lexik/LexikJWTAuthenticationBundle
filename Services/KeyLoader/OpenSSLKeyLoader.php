@@ -24,7 +24,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader
         }
 
         $encryptedKey = file_get_contents($path);
-        $key = call_user_func_array(
+        $key          = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
             $type == 'private' ? [$encryptedKey, $this->getPassphrase()] : [$encryptedKey]
         );

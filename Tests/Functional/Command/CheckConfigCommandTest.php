@@ -11,7 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class CheckEncoderConfigCommandTest extends TestCase
+class CheckConfigCommandTest extends TestCase
 {
     /**
      * Test command.
@@ -25,7 +25,7 @@ class CheckEncoderConfigCommandTest extends TestCase
         $command->setContainer($kernel->getContainer());
 
         $tester = new CommandTester($command);
-        $this->assertEquals(0, $tester->execute(array()));
+        $this->assertEquals(0, $tester->execute([]));
         $this->assertContains('The configuration seems correct.', $tester->getDisplay());
     }
 }

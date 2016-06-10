@@ -3,9 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
-use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
-use Namshi\JOSE\JWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
 /**
  * Tests the JWSProvider.
@@ -63,7 +62,7 @@ bEAuSwGVWIItASovCtEat2aQVOBcKFj5f66SJU9N9uVsdQmcug453lOBpdG1U2p4
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload = ['username' => 'chalasr'];
+        $payload     = ['username' => 'chalasr'];
         $jwsProvider = new JWSProvider($keyLoaderMock, 'openssl', 'RS384');
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));

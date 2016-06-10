@@ -3,9 +3,9 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Encoder;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
-use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
-use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
 /**
  * Tests the DefaultEncoder.
@@ -19,7 +19,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeValidSignature()
     {
-        $payload = ['username' => 'chalasr'];
+        $payload   = ['username' => 'chalasr'];
         $loadedJWS = $this->getLoadedJWSMock();
         $loadedJWS
             ->expects($this->once())
