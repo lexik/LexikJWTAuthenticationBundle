@@ -1,0 +1,9 @@
+login_check:
+    path:     /login_check
+    defaults:  { _controller: Bundle:Test:loginCheck }
+    methods:  [POST]
+
+secured:
+    path:     /api/secured
+    defaults:  { _controller: Bundle:Test:secured }
+    methods:  [GET]

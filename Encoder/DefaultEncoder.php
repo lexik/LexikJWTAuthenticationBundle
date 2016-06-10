@@ -57,7 +57,7 @@ class DefaultEncoder implements JWTEncoderInterface
         }
 
         if ($jws->isExpired()) {
-            throw new JWTDecodeFailureException('Expired JWT token');
+            throw new JWTDecodeFailureException('Expired JWT Token');
         }
 
         if (!$jws->isVerified()) {

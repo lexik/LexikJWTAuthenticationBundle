@@ -18,6 +18,23 @@
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>
         </service>
+        <!--  JWS Provider -->
+        <service id="lexik_jwt_authentication.jws_provider" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider" public="false">
+            <argument type="service" id="lexik_jwt_authentication.key_loader"/>
+            <argument>%lexik_jwt_authentication.encoder.encryption_engine%</argument>
+            <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
+        </service>
+
+        <!-- Abstract JWT Token Authenticator / Guard implementation -->
+        <service id="lexik_jwt_authentication.security.guard.jwt_token_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator" abstract="true">
+            <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
+            <argument type="string" /> <!-- Custom user identity field -->
+        </service>
+        <!-- Default JWT Token Authenticator -->
+        <service id="lexik_jwt_authentication.jwt_token_authenticator" parent="lexik_jwt_authentication.security.guard.jwt_token_authenticator" />
+
         <!-- JWT Authentication response interceptor -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
@@ -28,6 +45,7 @@
             <tag name="monolog.logger" channel="security" />
             <argument type="service" id="event_dispatcher"/>
         </service>
+
           <!-- OpenSSL Key Loader -->
         <service id="lexik_jwt_authentication.key_loader.openssl" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader" public="false">
             <argument>%lexik_jwt_authentication.private_key_path%</argument>
@@ -40,7 +58,8 @@
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <!-- JWT Security Authentication Provider -->
+
+        <!-- JWT Security Authentication Provider (Deprecated in 2.0) -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider" public="false">
             <argument /> <!-- User Provider -->
             <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
@@ -48,8 +67,9 @@
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>
             <argument type="service" id="event_dispatcher"/>
+            <deprecated>The "%service_id%" service is deprecated since LexikJWTAuthenticationBundle version 2.0 and will be removed in 3.0</deprecated>
         </service>
-        <!-- JWT Security Authentication Listener -->
+        <!-- JWT Security Authentication Listener (Deprecated in 2.0) -->
         <service id="lexik_jwt_authentication.security.authentication.listener" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener" public="false">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authentication.manager"/>
@@ -57,7 +77,11 @@
             <call method="setDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>
+            <deprecated>The "%service_id%" service is deprecated since LexikJWTAuthenticationBundle version 2.0 and will be removed in 3.0</deprecated>
         </service>
+        <!-- JWT Security Authentication Entry Point (Deprecated in 2.0) -->
+        <service id="lexik_jwt_authentication.security.authentication.entry_point" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint" public="false" />
+
         <!-- Token Extractor Map -->
         <service id="lexik_jwt_authentication.token_extractor_map" class="Lexik\Bundle\JWTAuthenticationBundle\Services\TokenExtractorMap" public="false">
             <argument type="collection" /> <!-- The extractor services -->
@@ -81,14 +105,6 @@
         <!-- Cookie Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor">
             <argument /> <!-- Name -->
-        </service>
-        <!-- JWT Security Authentication Entry Point -->
-        <service id="lexik_jwt_authentication.security.authentication.entry_point" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\EntryPoint\JWTEntryPoint" public="false" />
-        <!--  JWS Provider -->
-        <service id="lexik_jwt_authentication.jws_provider" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider" public="false">
-            <argument type="service" id="lexik_jwt_authentication.key_loader"/>
-            <argument>%lexik_jwt_authentication.encoder.encryption_engine%</argument>
-            <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
         </service>
     </services>
 

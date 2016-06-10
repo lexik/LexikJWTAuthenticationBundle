@@ -19,7 +19,13 @@ class AppKernel extends Kernel
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+            new \Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle(),
         ];
+    }
+
+    public function getRootDir()
+    {
+        return __DIR__;
     }
 
     /**
@@ -27,7 +33,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/';
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/cache';
     }
 
     /**
@@ -35,7 +41,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/';
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/logs';
     }
 
     /**

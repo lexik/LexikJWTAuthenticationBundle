@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 /**
  * JWTProviderTest.
  *
+ * @group legacy
+ *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class JWTProviderTest extends \PHPUnit_Framework_TestCase

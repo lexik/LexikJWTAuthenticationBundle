@@ -1,6 +1,56 @@
 UPGRADE FROM 1.x to 2.0
 =======================
 
+Configuration
+-------------
+
+* The JWT authentication system has been deprecated in favor of a Guard authenticator  
+  called `JWTTokenAuthenticator`.  
+  By the way, the security configuration has been simplified. Most of the options that was  
+  set from the JWT-secured firewall configuration have been moved to the bundle configuration,  
+  keeping the same names and default values.
+  
+  __Removed options__
+  - `create_entry_point`: The new authenticator being an entry point after all, this option doesn't bring any value anymore.  
+  If a firewall allows anonymous, the entry point will not be called at all, letting the request continue.  
+  If it doesn't, the entry point will dispatch a `on_jwt_not_found` event that can be subscribed to customize the default failure response that will be returned by the entry point.
+  - `throw_exceptions`: This option doesn't make sense anymore as the exceptions thrown during the authentication process are needed, involving call of the good method in the good time, dispatching the good events, so a custom response can be easily set, as its content no more depends on the exception thrown.
+  - `authentication_provider` and `authentication_listener`: It's now part of the authenticator role, simplifiying a lot the corresponding code that can now be found/overrided from one place.
+
+  __Before__
+
+  ```yaml
+  # app/config/security.yml
+  firewalls:
+      api:
+          lexik_jwt:
+              authorization_header: ~
+              cookie: ~
+              query_parameter: ~
+              throw_exceptions: false
+              create_entry_point: true
+              authentication_provider: lexik_jwt_authentication.security.authentication.provider
+              authentication_listener: lexik_jwt_authentication.security.authentication.listener
+  ```
+
+  __After__
+
+  ```yaml
+  # app/config/security.yml
+  firewalls:
+      api:
+          guard:
+              authenticators:
+                  - lexik_jwt_authentication.jwt_token_authenticator
+
+  # app/config/config.yml
+  lexik_jwt_authentication:
+      # ...
+      token_extractors:
+          authorization_header: ~
+          cookie: ~
+          query_parameter: ~
+  ```
 Events
 -------
 
@@ -95,3 +145,11 @@ Command
 
 * The `lexik:jwt:check-open-ssl` command has been renamed to `lexik:jwt:check-config`  
   as the bundle now supports several encryption engines.
+
+Security
+--------
+
+* The `JWTManagerInterface` has been deprecated in favor of a new `JWTTokenManagerInterface` 
+  implementing two new methods: `setUserIdentityField` and `getUserIdentityField`.
+  These methods were already implemented by the JWTManager class in 1.x but not guaranteed
+  by the old interface.

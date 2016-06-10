@@ -19,7 +19,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeFromValidJWS()
     {
-        $payload     = [
+        $payload = [
             'username' => 'chalasr',
             'exp'      => time() + 3600,
         ];
