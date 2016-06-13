@@ -8,7 +8,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class LoadedJWS
+final class LoadedJWS
 {
     const VERIFIED = 'verified';
     const EXPIRED  = 'expired';

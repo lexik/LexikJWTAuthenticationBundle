@@ -15,22 +15,16 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Tests calling DefaultEncoder::decode() with an invalid token.
+     * Tests calling DefaultEncoder::decode() with a valid signature and payload.
      */
-    public function testDecodeValidSignature()
+    public function testDecodeFromValidJWS()
     {
-        $payload   = ['username' => 'chalasr'];
-        $loadedJWS = $this->getLoadedJWSMock();
-        $loadedJWS
-            ->expects($this->once())
-            ->method('getPayload')
-            ->willReturn($payload);
+        $payload     = [
+            'username' => 'chalasr',
+            'exp'      => (new \DateTime('now'))->format('U') + 86400,
+        ];
 
-        $loadedJWS
-            ->expects($this->once())
-            ->method('isVerified')
-            ->willReturn(true); // Mark the signature as verified
-
+        $loadedJWS   = new LoadedJWS($payload, true);
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
             ->expects($this->once())
@@ -43,7 +37,24 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the failure on calling DefaultEncoder::encode() with an unsigned JWS.
+     * Tests calling DefaultEncoder::encode() with a signed token.
+     */
+    public function testEncodeFromValidJWS()
+    {
+        $createdJWS  = new CreatedJWS('jwt', true);
+        $jwsProvider = $this->getJWSProviderMock();
+        $jwsProvider
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($createdJWS);
+
+        $encoder = new DefaultEncoder($jwsProvider);
+
+        $this->assertSame('jwt', $encoder->encode([]));
+    }
+
+    /**
+     * Tests that calling DefaultEncoder::encode() with an unsigned JWS correctly fails.
      *
      * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException
      */
@@ -60,11 +71,11 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that the failure on calling DefaultEncoder::decode() with an invalid token.
+     * Tests that calling DefaultEncoder::decode() with an unverified signature correctly fails.
      *
      * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException
      */
-    public function testDecodeInvalidToken()
+    public function testDecodeFromUnverifiedJWS()
     {
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
@@ -77,21 +88,29 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * Tests that calling DefaultEncoder::decode() with an expired payload correctly fails.
+     *
+     * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException
      */
-    private function getJWSProviderMock()
+    public function testDecodeFromExpiredPayload()
     {
-        return $this->getMockBuilder(JWSProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $loadedJWS   = new LoadedJWS(['exp' => (new \DateTime('now'))->format('U') - 86400], true);
+        $jwsProvider = $this->getJWSProviderMock();
+        $jwsProvider
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn($loadedJWS);
+
+        $encoder = new DefaultEncoder($jwsProvider);
+        $encoder->decode('jwt');
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getLoadedJWSMock()
+    private function getJWSProviderMock()
     {
-        return $this->getMockBuilder(LoadedJWS::class)
+        return $this->getMockBuilder(JWSProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
