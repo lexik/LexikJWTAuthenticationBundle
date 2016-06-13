@@ -38,9 +38,10 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test authenticate method.
+     * test authenticate method with an invalid token.
      *
      * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedExceptionMessage Invalid JWT Token
      */
     public function testAuthenticateWithInvalidJWT()
     {
@@ -63,7 +64,8 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * test authenticate method.
      *
-     * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedException Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedExceptionMessage Invalid JWT Token
      */
     public function testAuthenticateWithoutUsername()
     {
@@ -169,7 +171,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getJWTEncoderMock()
     {
-        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder')
+        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface')
             ->disableOriginalConstructor()
             ->getMock();
     }

@@ -7,11 +7,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * CheckOpenSSLCommand.
+ * CheckConfigCommand.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class CheckOpenSSLCommand extends ContainerAwareCommand
+class CheckConfigCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -19,8 +19,8 @@ class CheckOpenSSLCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('lexik:jwt:check-open-ssl')
-            ->setDescription('Check JWT configuration is correct');
+            ->setName('lexik:jwt:check-config')
+            ->setDescription('Check JWT configuration');
     }
 
     /**
@@ -28,17 +28,18 @@ class CheckOpenSSLCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $keyLoader = $this->getContainer()->get('lexik_jwt_authentication.openssl_key_loader');
+        $keyLoader = $this->getContainer()->get('lexik_jwt_authentication.key_loader');
 
         try {
-            $keyLoader->checkOpenSSLConfig();
+            $keyLoader->loadKey('public');
+            $keyLoader->loadKey('private');
         } catch (\RuntimeException $e) {
             $output->writeln('<error>'.$e->getMessage().'</error>');
 
             return 1;
         }
 
-        $output->writeln('<info>OpenSSL configuration seems correct.</info>');
+        $output->writeln('<info>The configuration seems correct.</info>');
 
         return 0;
     }

@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -60,8 +61,12 @@ class JWTProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
-        if (!($payload = $this->jwtManager->decode($token))) {
-            throw new AuthenticationException('Invalid JWT Token');
+        try {
+            if (!$payload = $this->jwtManager->decode($token)) {
+                throw $this->createAuthenticationException();
+            }
+        } catch (JWTDecodeFailureException $e) {
+            throw $this->createAuthenticationException($e);
         }
 
         $user = $this->getUserFromPayload($payload);
@@ -87,7 +92,7 @@ class JWTProvider implements AuthenticationProviderInterface
     protected function getUserFromPayload(array $payload)
     {
         if (!isset($payload[$this->userIdentityField])) {
-            throw new AuthenticationException('Invalid JWT Token');
+            throw $this->createAuthenticationException();
         }
 
         return $this->userProvider->loadUserByUsername($payload[$this->userIdentityField]);
@@ -115,5 +120,17 @@ class JWTProvider implements AuthenticationProviderInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * @param JWTDecodeFailureException $previous
+     *
+     * @return AuthenticationException
+     */
+    private function createAuthenticationException(JWTDecodeFailureException $previous = null)
+    {
+        $message = (null === $previous) ? 'Invalid JWT Token' : $previous->getMessage();
+
+        return new AuthenticationException($message, 401, $previous);
     }
 }

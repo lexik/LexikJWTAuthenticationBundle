@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Command;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Command\CheckOpenSSLCommand;
+use Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class CheckOpenSSLCommandTest extends TestCase
+class CheckConfigCommandTest extends TestCase
 {
     /**
      * Test command.
@@ -21,13 +21,11 @@ class CheckOpenSSLCommandTest extends TestCase
         $kernel = $this->createKernel();
         $kernel->boot();
 
-        $command = new CheckOpenSSLCommand();
+        $command = new CheckConfigCommand();
         $command->setContainer($kernel->getContainer());
 
         $tester = new CommandTester($command);
-        $result = $tester->execute([]);
-
-        $this->assertEquals(0, $result);
-        $this->assertEquals('OpenSSL configuration seems correct.'.PHP_EOL, $tester->getDisplay());
+        $this->assertEquals(0, $tester->execute([]));
+        $this->assertContains('The configuration seems correct.', $tester->getDisplay());
     }
 }
