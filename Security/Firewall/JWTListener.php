@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -74,6 +75,13 @@ class JWTListener implements ListenerInterface
         $request = $event->getRequest();
 
         if (!$requestToken = $this->getRequestToken($request)) {
+            $jwtNotFoundEvent = new JWTNotFoundEvent($request);
+            $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
+
+            if ($response = $jwtNotFoundEvent->getResponse()) {
+                $event->setResponse($response);
+            }
+            
             return;
         }
 

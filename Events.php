@@ -50,4 +50,10 @@ final class Events
      * Hook into this event to add a custom error message in the response body.
      */
     const JWT_INVALID = 'lexik_jwt_authentication.on_jwt_invalid';
+
+    /**
+     * Dispatched when no token can be found in a request.
+     * Hook into this event to set a custom response.
+     */
+    const JWT_NOT_FOUND = 'lexik_jwt_authentication.on_jwt_not_found';
 }

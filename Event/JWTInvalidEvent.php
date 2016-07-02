@@ -7,6 +7,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTInvalidEvent extends AuthenticationFailureEvent
+class JWTInvalidEvent extends AuthenticationFailureEvent implements JWTFailureEventInterface
 {
 }

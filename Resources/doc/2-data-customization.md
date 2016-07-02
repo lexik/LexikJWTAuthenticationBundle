@@ -264,3 +264,44 @@ public function onJWTInvalid(JWTInvalidEvent $event)
 ```
 
 __Note:__ This feature is not available if the `throw_exceptions` firewall option is set to `true`.
+
+#### Events::JWT_NOT_FOUND - customize the response on token not found
+
+By default, if no token is found in a request, the authentication listener will either call the entry point that returns a unauthorized (401) json response, or (if the firewall allows anonymous requests), just let the request continue.  
+Thanks to this event, you can set a custom response.
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.jwt_invalid_listener:
+        class: Acme\Bundle\ApiBundle\EventListener\JWTInvalidListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+```
+
+Example 8: set a custom response message on token not found
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\JWTNotFoundListener.php
+
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
+
+/**
+ * @param JWTNotFoundEvent $event
+ */
+public function onJWTNotFound(JWTNotFoundEvent $event)
+{
+    $data = [
+        'status'  => '403 Forbidden',
+        'message' => 'Missing token',
+    ];
+
+    $response = new JsonResponse($data, 403);
+
+    $event->setResponse($response);
+}
+```
+
+__Protip:__ You might want to use the same method for customizing the response on both `JWT_INVALID` and `JWT_NOT_FOUND` events. 
+For that, use the `Event\JWTFailureEventInterface` interface to typehint the event argument of your listener's method, rather than 
+a specific event class (i.e. `JWTNotFoundEvent` or `JWTInvalidEvent`).
