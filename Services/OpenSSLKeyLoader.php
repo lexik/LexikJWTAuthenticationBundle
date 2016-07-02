@@ -70,10 +70,10 @@ class OpenSSLKeyLoader
             ));
         }
 
-        $loadPath = 'file://' . $path;
+        $encryptedKey = file_get_contents($path);
         $key = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
-            $type == 'private' ? [$loadPath, $this->passphrase] : [$loadPath]
+            $type == 'private' ? [$encryptedKey, $this->passphrase] : [$encryptedKey]
         );
 
         if (!$key) {
