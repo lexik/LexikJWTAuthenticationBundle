@@ -1,11 +1,11 @@
 framework:
     secret: test
     router:
-        resource: %kernel.root_dir%/config/routing.yml
+        resource: '%kernel.root_dir%/config/routing.yml'
 
 lexik_jwt_authentication:
-    private_key_path:   %kernel.root_dir%/var/private.pem
-    public_key_path:    %kernel.root_dir%/var/public.pem
+    private_key_path:   '%kernel.root_dir%/var/private.pem'
+    public_key_path:    '%kernel.root_dir%/var/public.pem'
     pass_phrase:        testing
 
 security:
