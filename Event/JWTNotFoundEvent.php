@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * JWTNotFoundEvent event is dispatched when a JWT cannot be found in a request 
+ * JWTNotFoundEvent event is dispatched when a JWT cannot be found in a request
  * covered by a firewall secured via lexik_jwt.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>

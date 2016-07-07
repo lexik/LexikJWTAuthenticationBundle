@@ -79,7 +79,7 @@ class JWTListener implements ListenerInterface
             if ($response = $jwtNotFoundEvent->getResponse()) {
                 $event->setResponse($response);
             }
-            
+
             return;
         }
 
