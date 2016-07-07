@@ -2,9 +2,9 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Firewall;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
-use Lexik\Bundle\JWTAuthenticationBundle\Events;
 
 /**
  * JWTListenerTest.
@@ -27,7 +27,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
 
         // one token extractor with no result : should return void
 
-        $listener = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
+        $listener   = new JWTListener($this->getTokenStorageMock(), $this->getAuthenticationManagerMock());
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
             ->expects($this->once())
@@ -36,7 +36,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo(Events::JWT_NOT_FOUND),
                 $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent')
             );
-        
+
         $listener->setDispatcher($dispatcher);
         $listener->addTokenExtractor($this->getAuthorizationHeaderTokenExtractorMock(false));
         $this->assertNull($listener->handle($this->getEvent()));
@@ -63,7 +63,7 @@ class JWTListenerTest extends \PHPUnit_Framework_TestCase
             ->method('authenticate')
             ->will($this->throwException($invalidTokenException));
 
-        $listener = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
+        $listener   = new JWTListener($this->getTokenStorageMock(), $authenticationManager);
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
             ->expects($this->once())
