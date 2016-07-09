@@ -24,10 +24,18 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('private_key_path')
-                    ->cannotBeEmpty()
+                    ->defaultNull()
+                    ->validate()
+                    ->ifString()
+                        ->then(self::validateKeyPath())
+                    ->end()
                 ->end()
                 ->scalarNode('public_key_path')
-                    ->cannotBeEmpty()
+                    ->defaultNull()
+                    ->validate()
+                    ->ifString()
+                        ->then(self::validateKeyPath())
+                    ->end()
                 ->end()
                 ->scalarNode('pass_phrase')
                     ->defaultValue('')
@@ -58,5 +66,16 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         return $treeBuilder;
+    }
+
+    private static function validateKeyPath()
+    {
+        return function ($path) {
+            if (!is_file($path) || !is_readable($path)) {
+                throw new \InvalidArgumentException(sprintf('The file "%s" doesn\'t exist or is not readable.%sIf the configured encoder doesn\'t need this to be configured, please don\'t set this option or leave it null.', $path, PHP_EOL));
+            }
+
+            return $path;
+        };
     }
 }

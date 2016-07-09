@@ -17,16 +17,11 @@ class OpenSSLKeyLoader extends AbstractKeyLoader
      */
     public function loadKey($type)
     {
-        $path = $this->getKeyPath($type);
-
-        if (!file_exists($path) || !is_readable($path)) {
-            throw $this->createUnreadableKeyException($type, $path);
-        }
-
+        $path         = $this->getKeyPath($type);
         $encryptedKey = file_get_contents($path);
         $key          = call_user_func_array(
             sprintf('openssl_pkey_get_%s', $type),
-            $type == 'private' ? [$encryptedKey, $this->getPassphrase()] : [$encryptedKey]
+            self::TYPE_PRIVATE == $type ? [$encryptedKey, $this->getPassphrase()] : [$encryptedKey]
         );
 
         if (!$key) {
