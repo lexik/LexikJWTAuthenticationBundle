@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('service')
                             ->defaultValue('lexik_jwt_authentication.encoder.default')
                         ->end()
-                        ->scalarNode('encryption_algorithm')
+                        ->scalarNode('signature_algorithm')
                             ->defaultValue('RS256')
                             ->cannotBeEmpty()
                         ->end()

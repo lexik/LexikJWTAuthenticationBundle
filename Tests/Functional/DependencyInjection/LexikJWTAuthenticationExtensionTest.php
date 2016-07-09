@@ -24,7 +24,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $container           = $kernel->getContainer();
         $encoderNamespace    = 'lexik_jwt_authentication.encoder';
         $encryptionEngine    = $container->getParameter($encoderNamespace.'.encryption_engine');
-        $encryptionAlgorithm = $container->getParameter($encoderNamespace.'.encryption_algorithm');
+        $encryptionAlgorithm = $container->getParameter($encoderNamespace.'.signature_algorithm');
 
         /* @var PHPUnit_Framework_MockObject_MockObject */
         $jwsProviderMock = $this
