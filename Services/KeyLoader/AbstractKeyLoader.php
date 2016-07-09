@@ -9,6 +9,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  */
 abstract class AbstractKeyLoader implements KeyLoaderInterface
 {
+    const TYPE_PUBLIC  = 'public';
+    const TYPE_PRIVATE = 'private';
+
     /**
      * @var string
      */
@@ -55,27 +58,26 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
      */
     protected function getKeyPath($type)
     {
-        if ('public' === $type) {
-            return $this->publicKey;
+        if (!in_array($type, [self::TYPE_PUBLIC, self::TYPE_PRIVATE])) {
+            throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
         }
 
-        if ('private' === $type) {
-            return $this->privateKey;
+        $path = null;
+
+        if (self::TYPE_PUBLIC === $type) {
+            $path = $this->publicKey;
         }
 
-        throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
-    }
+        if (self::TYPE_PRIVATE === $type) {
+            $path = $this->privateKey;
+        }
 
-    /**
-     * @param string $type The key type
-     * @param string $path The key path
-     *
-     * @throws \RuntimeException
-     */
-    protected function createUnreadableKeyException($type, $path)
-    {
-        return new \RuntimeException(
-            sprintf('%s key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.jwt_%s_key_path" config option?', ucfirst($type), $path, $type)
-        );
+        if (!is_file($path) || !is_readable($path)) {
+            throw new \RuntimeException(
+                sprintf('%s key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.jwt_%s_key_path" config option?', ucfirst($type), $path, $type)
+            );
+        }
+
+        return $path;
     }
 }

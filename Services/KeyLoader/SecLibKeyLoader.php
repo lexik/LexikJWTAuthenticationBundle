@@ -16,12 +16,6 @@ class SecLibKeyLoader extends AbstractKeyLoader
      */
     public function loadKey($type)
     {
-        $path = $this->getKeyPath($type);
-
-        if (!file_exists($path) || !is_readable($path)) {
-            throw $this->createUnreadableKeyException($type, $path);
-        }
-
-        return file_get_contents($path);
+        return file_get_contents($this->getKeyPath($type));
     }
 }
