@@ -31,9 +31,9 @@ public function registerBundles()
 Generate the SSH keys :
 
 ``` bash
-$ mkdir -p app/var/jwt
-$ openssl genrsa -out app/var/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in app/var/jwt/private.pem -out app/var/jwt/public.pem
+$ mkdir -p var/jwt # Symfony2
+$ openssl genrsa -out var/jwt/private.pem -aes256 4096
+$ openssl rsa -pubout -in var/jwt/private.pem -out app/var/jwt/public.pem
 ```
 
 Configuration
@@ -52,8 +52,8 @@ lexik_jwt_authentication:
 Configure your `parameters.yml.dist` :
 
 ``` yaml
-    jwt_private_key_path: %kernel.root_dir%/var/jwt/private.pem   # ssh private key path
-    jwt_public_key_path:  %kernel.root_dir%/var/jwt/public.pem    # ssh public key path
+    jwt_private_key_path: %kernel.root_dir%/../var/jwt/private.pem   # ssh private key path
+    jwt_public_key_path:  %kernel.root_dir%/../var/jwt/public.pem    # ssh public key path
     jwt_key_pass_phrase:  ''                                      # ssh key pass phrase
     jwt_token_ttl:        86400
 ```
