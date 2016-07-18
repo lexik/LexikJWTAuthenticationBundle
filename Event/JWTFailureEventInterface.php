@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Interface for event classes that are dispatched when a JWT cannot be authenticated.
- * 
+ *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
 interface JWTFailureEventInterface
@@ -19,6 +19,8 @@ interface JWTFailureEventInterface
     public function getResponse();
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @return Request
      */
     public function getRequest();

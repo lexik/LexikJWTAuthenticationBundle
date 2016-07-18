@@ -21,12 +21,7 @@ class JWTAuthenticatedEvent extends Event
      * @var TokenInterface
      */
     protected $token;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
+    
     /**
      * @param array          $payload
      * @param TokenInterface $token
