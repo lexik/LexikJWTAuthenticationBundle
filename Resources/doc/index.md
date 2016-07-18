@@ -33,7 +33,7 @@ Generate the SSH keys :
 ``` bash
 $ mkdir -p var/jwt # Symfony2
 $ openssl genrsa -out var/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in var/jwt/private.pem -out app/var/jwt/public.pem
+$ openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem
 ```
 
 Configuration
