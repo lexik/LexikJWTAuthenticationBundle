@@ -8,7 +8,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -42,21 +41,14 @@ class JWTManager implements JWTManagerInterface
     protected $userIdentityField;
 
     /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
      * @param JWTEncoderInterface      $encoder
      * @param EventDispatcherInterface $dispatcher
      * @param int                      $ttl
-     * @param RequestStack             $requestStack
      */
-    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, RequestStack $requestStack, $ttl)
+    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $ttl)
     {
         $this->jwtEncoder        = $encoder;
         $this->dispatcher        = $dispatcher;
-        $this->requestStack      = $requestStack;
         $this->ttl               = $ttl;
         $this->userIdentityField = 'username';
     }
@@ -74,12 +66,7 @@ class JWTManager implements JWTManagerInterface
 
         $this->addUserIdentityToPayload($user, $payload);
 
-        $jwtCreatedEvent = new JWTCreatedEvent(
-            $payload,
-            $user,
-            // Ensure backward compatibility for Symfony < 2.8
-            class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request
-        );
+        $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
         $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
 
         $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
@@ -99,7 +86,8 @@ class JWTManager implements JWTManagerInterface
             return false;
         }
 
-        $event = new JWTDecodedEvent($payload, class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request);
+        $event = new JWTDecodedEvent($payload);
+
         $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
 
         if (!$event->isValid()) {
@@ -136,21 +124,5 @@ class JWTManager implements JWTManagerInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
-    }
-
-    /**
-     * @internal
-     *
-     * @return \Symfony\Component\HttpFoundation\Request The master request
-     *
-     * @throws \RuntimeException If there is no request
-     */
-    protected function getRequest()
-    {
-        if (!$request = $this->requestStack->getMasterRequest()) {
-            throw new \RuntimeException('There is no request.');
-        }
-
-        return $request;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -14,23 +13,24 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 interface JWTFailureEventInterface
 {
     /**
+     * Gets the response that will be returned after dispatching a
+     * {@link JWTFailureEventInterface} implementation.
+     *
      * @return Response
      */
     public function getResponse();
 
     /**
-     * @deprecated since 1.7, removed in 2.0
+     * Gets the tied AuthenticationException object.
      *
-     * @return Request
-     */
-    public function getRequest();
-
-    /**
      * @return AuthenticationException
      */
     public function getException();
 
     /**
+     * Calling this allows to return a custom Response immediately after
+     * the corresponding implementation of this event is dispatched.
+     *
      * @param Response $response
      */
     public function setResponse(Response $response);
