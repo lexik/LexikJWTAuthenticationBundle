@@ -55,7 +55,7 @@ Configure your `parameters.yml.dist` :
 ``` yaml
     jwt_private_key_path: %kernel.root_dir%/../var/jwt/private.pem   # ssh private key path
     jwt_public_key_path:  %kernel.root_dir%/../var/jwt/public.pem    # ssh public key path
-    jwt_key_pass_phrase:  ''                                      # ssh key pass phrase
+    jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
     jwt_token_ttl:        86400
 ```
 
