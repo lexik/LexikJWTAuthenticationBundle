@@ -56,7 +56,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that calling DefaultEncoder::encode() with an unsigned JWS correctly fails.
      *
-     * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException
+     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
     public function testEncodeFromUnsignedJWS()
     {
@@ -73,7 +73,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that calling DefaultEncoder::decode() with an unverified signature correctly fails.
      *
-     * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException
+     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
      */
     public function testDecodeFromUnverifiedJWS()
     {
@@ -90,7 +90,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that calling DefaultEncoder::decode() with an expired payload correctly fails.
      *
-     * @expectedException Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException
+     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
      */
     public function testDecodeFromExpiredPayload()
     {
