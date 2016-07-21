@@ -42,7 +42,7 @@ class JWTCreatedListener
 }
 ```
 
-Example 2 : override token expiration date calcul to be more flexikble
+Example 2 : override token expiration date calcul to be more flexible
 
 ``` php
 // Acme\Bundle\ApiBundle\EventListener\JWTCreatedListener.php
