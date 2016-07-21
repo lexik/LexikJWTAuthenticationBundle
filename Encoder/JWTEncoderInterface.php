@@ -2,10 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\UnverifiedJWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 
 /**
  * JWTEncoderInterface.
@@ -19,7 +17,7 @@ interface JWTEncoderInterface
      *
      * @return string the encoded token string
      *
-     * @throws UnsignedJWTEncodeFailureException
+     * @throws JWTEncodeFailureException If an error occurred during the creation of the token (invalid configuration...)
      */
     public function encode(array $data);
 
@@ -28,9 +26,7 @@ interface JWTEncoderInterface
      *
      * @return false|array
      *
-     * @throws JWTDecodeFailureException           If the signature cannot be loaded
-     * @throws UnverifiedJWTDecodeFailureException If the signature cannot be verified
-     * @throws ExpiredJWTDecodeFailureException    If the token is expired
+     * @throws JWTDecodeFailureException If an error occurred during the loading of the token (invalid signature, expired token...)
      */
     public function decode($token);
 }

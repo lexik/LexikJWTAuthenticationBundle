@@ -3,11 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
 use InvalidArgumentException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\ExpiredJWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\UnverifiedJWTDecodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\JWTEncodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailure\UnsignedJWTEncodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProviderInterface;
 
 /**
@@ -42,7 +39,7 @@ class DefaultEncoder implements JWTEncoderInterface
         }
 
         if (!$jws->isSigned()) {
-            throw new UnsignedJWTEncodeFailureException();
+            throw new JWTEncodeFailureException('Unable to create a signed JWT from the given configuration.');
         }
 
         return $jws->getToken();
@@ -60,11 +57,11 @@ class DefaultEncoder implements JWTEncoderInterface
         }
 
         if ($jws->isExpired()) {
-            throw new ExpiredJWTDecodeFailureException();
+            throw new JWTDecodeFailureException('Expired JWT token');
         }
 
         if (!$jws->isVerified()) {
-            throw new UnverifiedJWTDecodeFailureException();
+            throw new JWTDecodeFailureException('Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }
 
         return $jws->getPayload();
