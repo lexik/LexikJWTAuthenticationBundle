@@ -124,7 +124,7 @@ class JWTListener implements ListenerInterface
     /**
      * @param Request $request
      *
-     * @return boolean|string
+     * @return string
      */
     protected function getRequestToken(Request $request)
     {
