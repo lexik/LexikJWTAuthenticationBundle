@@ -43,6 +43,8 @@ class JWTManager implements JWTManagerInterface
 
     /**
      * @var Request
+     *
+     * @deprecated since 1.7, removed in 2.0
      */
     protected $request;
 
@@ -72,7 +74,12 @@ class JWTManager implements JWTManagerInterface
 
         $this->addUserIdentityToPayload($user, $payload);
 
-        $jwtCreatedEvent = new JWTCreatedEvent($payload, $user, $this->request);
+        $jwtCreatedEvent = new JWTCreatedEvent(
+            $payload,
+            $user,
+            // Ensure backward compatibility for Symfony < 2.8
+            class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request
+        );
         $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
 
         $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
@@ -92,7 +99,7 @@ class JWTManager implements JWTManagerInterface
             return false;
         }
 
-        $event = new JWTDecodedEvent($payload, $this->request);
+        $event = new JWTDecodedEvent($payload, class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request);
         $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
 
         if (!$event->isValid()) {
@@ -132,10 +139,16 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @param RequestStack|Request $requestStack
      */
     public function setRequest($requestStack)
     {
+        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         if ($requestStack instanceof Request) {
             $this->request = $requestStack;
         } elseif ($requestStack instanceof RequestStack) {
@@ -144,10 +157,16 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @return Request
      */
     public function getRequest()
     {
+        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         return $this->request;
     }
 }
