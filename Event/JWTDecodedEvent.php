@@ -19,6 +19,8 @@ class JWTDecodedEvent extends Event
 
     /**
      * @var Request
+     *
+     * @deprecated since 1.7, removed in 2.0
      */
     protected $request;
 
@@ -28,13 +30,18 @@ class JWTDecodedEvent extends Event
     protected $isValid;
 
     /**
-     * @param array   $payload
-     * @param Request $request
+     * @param array        $payload
+     * @param Request|null $request Deprecated
      */
     public function __construct(array $payload, Request $request = null)
     {
+        if (null !== $request && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Passing a Request instance as first argument of %s() is deprecated since version 1.7 and will be removed in 2.0.%sInject the "@request_stack" service in your event listener instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
+
+            $this->request = $request;
+        }
+
         $this->payload = $payload;
-        $this->request = $request;
         $this->isValid = true;
     }
 
@@ -47,10 +54,16 @@ class JWTDecodedEvent extends Event
     }
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @return Request
      */
     public function getRequest()
     {
+        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.%sUse  Symfony\Component\HttpFoundation\RequestStack::getCurrentRequest() instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
+        }
+
         return $this->request;
     }
 

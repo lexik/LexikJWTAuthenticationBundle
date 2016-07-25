@@ -17,6 +17,8 @@ class AuthenticationFailureEvent extends Event
 {
     /**
      * @var Request
+     *
+     * @deprecated since 1.7, removed in 2.0
      */
     protected $request;
 
@@ -31,22 +33,33 @@ class AuthenticationFailureEvent extends Event
     protected $response;
 
     /**
-     * @param Request                 $request
+     * @param Request|null            $request   Deprecated
      * @param AuthenticationException $exception
      * @param Response                $response
      */
-    public function __construct(Request $request, AuthenticationException $exception, Response $response)
+    public function __construct(Request $request = null, AuthenticationException $exception, Response $response)
     {
-        $this->request   = $request;
+        if (null !== $request && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Passing a Request instance as first argument of %s() is deprecated since version 1.7 and will be removed in 2.0.%sInject the "@request_stack" service in your event listener instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
+
+            $this->request = $request;
+        }
+
         $this->exception = $exception;
         $this->response  = $response;
     }
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @return Request
      */
     public function getRequest()
     {
+        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.%sUse  Symfony\Component\HttpFoundation\RequestStack::getCurrentRequest() instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
+        }
+
         return $this->request;
     }
 

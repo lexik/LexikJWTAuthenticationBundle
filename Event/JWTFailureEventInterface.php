@@ -19,6 +19,8 @@ interface JWTFailureEventInterface
     public function getResponse();
 
     /**
+     * @deprecated since 1.7, removed in 2.0
+     *
      * @return Request
      */
     public function getRequest();

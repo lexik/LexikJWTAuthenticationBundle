@@ -70,10 +70,12 @@ class JWTListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
+        // Ensure backward compatibility for Symfony < 2.8
         $request = $event->getRequest();
+        $hasRequestStack = class_exists('Symfony\Component\HttpFoundation\RequestStack');
 
         if (!$requestToken = $this->getRequestToken($request)) {
-            $jwtNotFoundEvent = new JWTNotFoundEvent($request);
+            $jwtNotFoundEvent = new JWTNotFoundEvent($hasRequestStack ? null : $request);
             $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
 
             if ($response = $jwtNotFoundEvent->getResponse()) {
@@ -98,7 +100,7 @@ class JWTListener implements ListenerInterface
 
             $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
-            $jwtInvalidEvent = new JWTInvalidEvent($request, $failed, $response);
+            $jwtInvalidEvent = new JWTInvalidEvent($hasRequestStack ? null : $request, $failed, $response);
             $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);
 
             $event->setResponse($jwtInvalidEvent->getResponse());
