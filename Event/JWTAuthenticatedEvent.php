@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -20,7 +19,7 @@ class JWTAuthenticatedEvent extends Event
      * @var TokenInterface
      */
     protected $token;
-    
+
     /**
      * @param array          $payload
      * @param TokenInterface $token

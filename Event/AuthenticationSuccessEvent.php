@@ -39,7 +39,7 @@ class AuthenticationSuccessEvent extends Event
     /**
      * @param array         $data
      * @param UserInterface $user
-     * @param Request|null  $request Deprecated
+     * @param Request|null  $request  Deprecated
      * @param Response      $response
      */
     public function __construct(array $data, UserInterface $user, Request $request = null, Response $response)
@@ -50,9 +50,9 @@ class AuthenticationSuccessEvent extends Event
             $this->request = $request;
         }
 
-        $this->data = $data;
-        $this->user = $user;
-        $this->request = $request;
+        $this->data     = $data;
+        $this->user     = $user;
+        $this->request  = $request;
         $this->response = $response;
     }
 

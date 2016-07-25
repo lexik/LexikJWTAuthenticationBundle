@@ -12,8 +12,8 @@ class OpenSSLKeyLoader extends AbstractKeyLoader
     /**
      * {@inheritdoc}
      *
-     * @throws \RuntimeException If the key cannot be read.
-     * @throws \RuntimeException Either the key or the passphrase is not valid.
+     * @throws \RuntimeException If the key cannot be read
+     * @throws \RuntimeException Either the key or the passphrase is not valid
      */
     public function loadKey($type)
     {

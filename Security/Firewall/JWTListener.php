@@ -71,7 +71,7 @@ class JWTListener implements ListenerInterface
     public function handle(GetResponseEvent $event)
     {
         // Ensure backward compatibility for Symfony < 2.8
-        $request = $event->getRequest();
+        $request         = $event->getRequest();
         $hasRequestStack = class_exists('Symfony\Component\HttpFoundation\RequestStack');
 
         if (!$requestToken = $this->getRequestToken($request)) {

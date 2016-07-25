@@ -24,7 +24,7 @@ final class JWTAuthenticationSuccessResponse extends JsonResponse
 
     /**
      * @param string $token Json Web Token
-     * @param array  $data  Extra data passed to the response.
+     * @param array  $data  Extra data passed to the response
      */
     public function __construct($token, array $data = null)
     {
