@@ -1,6 +1,68 @@
 UPGRADE FROM 1.x to 2.0
 =======================
 
+Events
+-------
+
+* The ability of retrieving `Request` instances from `Event` classes has been removed,
+  as the current `Request` is no more injected into when they are dispatched.  
+  Being able to access them was mainly useful for doing stuff depending on informations 
+  retrieved from.  
+  Fortunately, you can reproduce the same behaviour in a more efficient way:
+
+  __Before__
+  
+  ```yaml
+  services:
+      jwt_event_listener:
+          class: AppBundle\EventListener\JWTCreatedListener
+          tags:
+              - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+  ```
+  
+  ```php
+  use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+  
+  class JWTCreatedListener
+  {
+      public function onJWTCreated(JWTCreatedEvent $event)
+      {
+          $request = $event->getRequest();
+      }
+  }
+  ```
+  
+  __After__
+  
+  ```yaml
+  services:
+      jwt_event_listener:
+          class: AppBundle\EventListener\JWTCreatedListener
+          arguments: [ '@request_stack' ]
+          tags:
+              - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+  ```
+  
+  ```php  
+  use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+  use Symfony\Component\HttpFoundation\RequestStack;
+
+  class JWTCreatedListener
+  {
+      private $requestStack;
+      
+      public function __construct(RequestStack $requestStack)
+      {
+          $this->requestStack = $requestStack;
+      }
+      
+      public function onJWTCreated(JWTCreatedEvent $event)
+      {
+          $request = $this->requestStack->getCurrentRequest();
+      }
+  }
+  ```
+
 Encoder
 -------
 
