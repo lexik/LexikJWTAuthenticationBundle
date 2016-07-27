@@ -18,6 +18,11 @@ The bulk of the documentation is stored in the `Resources/doc/index.md` file in 
 
 [Read the documentation](Resources/doc/index.md)
 
+Upgrading
+----------
+
+Please see the [UPGRADE](UPGRADE.md) file.
+
 Testing
 -------
 
