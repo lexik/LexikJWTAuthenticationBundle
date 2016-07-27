@@ -5,6 +5,7 @@ enabled:
   - short_array_syntax
   - align_equals
   - align_double_arrow
+  - phpdoc_annotation_without_dot
 
 disabled:
   - phpdoc_scalar
