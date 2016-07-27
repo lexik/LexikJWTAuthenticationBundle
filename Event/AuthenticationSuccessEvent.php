@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -25,13 +24,6 @@ class AuthenticationSuccessEvent extends Event
     protected $user;
 
     /**
-     * @var Request
-     *
-     * @deprecated since 1.7, removed in 2.0
-     */
-    protected $request;
-
-    /**
      * @var Response
      */
     protected $response;
@@ -39,20 +31,12 @@ class AuthenticationSuccessEvent extends Event
     /**
      * @param array         $data
      * @param UserInterface $user
-     * @param Request|null  $request  Deprecated
      * @param Response      $response
      */
-    public function __construct(array $data, UserInterface $user, Request $request = null, Response $response)
+    public function __construct(array $data, UserInterface $user, Response $response)
     {
-        if (null !== $request && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            @trigger_error(sprintf('Passing a Request instance as first argument of %s() is deprecated since version 1.7 and will be removed in 2.0.%sInject the "@request_stack" service in your event listener instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
-
-            $this->request = $request;
-        }
-
         $this->data     = $data;
         $this->user     = $user;
-        $this->request  = $request;
         $this->response = $response;
     }
 
@@ -78,20 +62,6 @@ class AuthenticationSuccessEvent extends Event
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * @deprecated since 1.7, removed in 2.0
-     *
-     * @return Request
-     */
-    public function getRequest()
-    {
-        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.%sUse  Symfony\Component\HttpFoundation\RequestStack::getCurrentRequest() instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
-        }
-
-        return $this->request;
     }
 
     /**

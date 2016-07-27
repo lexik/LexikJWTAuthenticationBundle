@@ -35,7 +35,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $event = new AuthenticationFailureEvent(null, $exception, new JWTAuthenticationFailureResponse());
+        $event = new AuthenticationFailureEvent($exception, new JWTAuthenticationFailureResponse());
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);
 
