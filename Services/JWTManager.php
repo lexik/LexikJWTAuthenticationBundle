@@ -141,9 +141,9 @@ class JWTManager implements JWTManagerInterface
     /**
      * @internal
      *
-     * @return \Symfony\Component\HttpFoundation\Request The master request.
+     * @return \Symfony\Component\HttpFoundation\Request The master request
      *
-     * @throws \RuntimeException If there is no request.
+     * @throws \RuntimeException If there is no request
      */
     protected function getRequest()
     {
