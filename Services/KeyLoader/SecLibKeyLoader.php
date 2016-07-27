@@ -12,7 +12,7 @@ class SecLibKeyLoader extends AbstractKeyLoader
     /**
      * {@inheritdoc}
      *
-     * @throws \RuntimeException If the key cannot be read.
+     * @throws \RuntimeException If the key cannot be read
      */
     public function loadKey($type)
     {

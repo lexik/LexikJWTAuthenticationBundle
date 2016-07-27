@@ -54,7 +54,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
      *
      * @return string The path of the key
      *
-     * @throws \InvalidArgumentException If the given type is not valid.
+     * @throws \InvalidArgumentException If the given type is not valid
      */
     protected function getKeyPath($type)
     {

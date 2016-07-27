@@ -37,7 +37,7 @@ class JWSProvider implements JWSProviderInterface
      * @param string             $encryptionEngine
      * @param string             $encryptionAlgorithm
      *
-     * @throws \InvalidArgumentException If the given algorithm is not supported.
+     * @throws \InvalidArgumentException If the given algorithm is not supported
      */
     public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $encryptionAlgorithm)
     {
