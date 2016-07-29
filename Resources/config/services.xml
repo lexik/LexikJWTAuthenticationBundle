@@ -13,7 +13,6 @@
         <service id="lexik_jwt_authentication.jwt_manager" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager">
             <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="request_stack"/>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
