@@ -1,9 +1,9 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.6.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.7.0
 
-## [1.x](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/master)
+## [1.7.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.7.0) (2016-08-06)
 
 * feature [\#200](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/200) Depreciate injection of Request instances ([chalasr](https://github.com/chalasr))
 
