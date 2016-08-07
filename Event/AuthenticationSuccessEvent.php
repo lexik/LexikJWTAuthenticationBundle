@@ -46,7 +46,7 @@ class AuthenticationSuccessEvent extends Event
     public function __construct(array $data, UserInterface $user, Request $request = null, Response $response)
     {
         if (null !== $request && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            @trigger_error(sprintf('Passing a Request instance as first argument of %s() is deprecated since version 1.7 and will be removed in 2.0.%sInject the "@request_stack" service in your event listener instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
+            @trigger_error(sprintf('Passing a Request instance as third argument of %s() is deprecated since version 1.7 and will be removed in 2.0.%sInject the "@request_stack" service in your event listener instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
 
             $this->request = $request;
         }
@@ -91,7 +91,7 @@ class AuthenticationSuccessEvent extends Event
         if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
             @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.%sUse  Symfony\Component\HttpFoundation\RequestStack::getCurrentRequest() instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
         }
-        
+
         return $this->request;
     }
 
