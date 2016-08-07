@@ -1,13 +1,21 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.5.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.7.0
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
 * [\#175](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/175) Stop ensuring support for PHP versions smaller than 5.0 ([chalasr](https://github.com/chalasr))
 
 * [\#167](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/167) and [\#169](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/169) Stop ensuring support Symfony versions smaller than 2.8 ([chalasr](https://github.com/chalasr))
+
+## [1.7.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.7.0) (2016-08-06)
+
+* feature [\#200](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/200) Depreciate injection of Request instances ([chalasr](https://github.com/chalasr))
+
+## [v1.6.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.6.0) (2016-07-07)
+
+* feature [\#188](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/188) Add JWTNotFoundEvent ([chalasr](https://github.com/chalasr))
 
 ## [v1.5.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.5.1) (2016-04-11)
 
