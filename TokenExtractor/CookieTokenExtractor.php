@@ -25,16 +25,10 @@ class CookieTokenExtractor implements TokenExtractorInterface
     }
 
     /**
-     * @param Request $request
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function extract(Request $request)
     {
-        if (!$request->cookies->has($this->name)) {
-            return false;
-        }
-
-        return $request->cookies->get($this->name);
+        return $request->cookies->get($this->name, false);
     }
 }

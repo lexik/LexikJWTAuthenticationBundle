@@ -25,9 +25,7 @@ class QueryParameterTokenExtractor implements TokenExtractorInterface
     }
 
     /**
-     * @param Request $request
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function extract(Request $request)
     {
