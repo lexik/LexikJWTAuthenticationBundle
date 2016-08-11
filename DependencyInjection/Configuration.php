@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -63,11 +64,72 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()
+                ->append(self::getTokenExtractorsNode())
             ->end();
 
         return $treeBuilder;
     }
 
+    public static function addTokenExtractors(ArrayNodeDefinition $node)
+    {
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('authorization_header')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->defaultTrue()
+                        ->end()
+                        ->scalarNode('prefix')
+                            ->defaultValue('Bearer')
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('Authorization')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('cookie')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('BEARER')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('query_parameter')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('bearer')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    /**
+     * @return TreeBuilder
+     */
+    private static function getTokenExtractorsNode()
+    {
+        $builder = new TreeBuilder();
+        $node    = $builder->root('token_extractors');
+        self::addTokenExtractors($node);
+
+        return $node;
+    }
+
+    /**
+     * @return \Closure
+     */
     private static function validateKeyPath()
     {
         return function ($path) {

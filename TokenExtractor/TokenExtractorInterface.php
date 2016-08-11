@@ -14,7 +14,7 @@ interface TokenExtractorInterface
     /**
      * @param Request $request
      *
-     * @return string
+     * @return string|false
      */
     public function extract(Request $request);
 }

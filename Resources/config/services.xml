@@ -58,17 +58,28 @@
                 <argument type="service" id="event_dispatcher"/>
             </call>
         </service>
+        <!-- Token Extractor Map -->
+        <service id="lexik_jwt_authentication.token_extractor_map" class="Lexik\Bundle\JWTAuthenticationBundle\Services\TokenExtractorMap" public="false">
+            <argument type="collection" /> <!-- The extractor services -->
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+        <!-- Chain Token Extractor -->
+        <service id="lexik_jwt_authentication.extractor.chain_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor" public="false">
+            <argument type="service" id="lexik_jwt_authentication.token_extractor_map" />
+        </service>
         <!-- Authorization Header Token Extractor -->
-        <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor" public="false">
+        <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor">
             <argument /> <!-- Header Value Prefix -->
             <argument /> <!-- Header Value Name -->
         </service>
         <!-- Query Parameter Token Extractor -->
-        <service id="lexik_jwt_authentication.extractor.query_parameter_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\QueryParameterTokenExtractor" public="false">
+        <service id="lexik_jwt_authentication.extractor.query_parameter_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\QueryParameterTokenExtractor">
             <argument /> <!-- Parameter Name -->
         </service>
         <!-- Cookie Token Extractor -->
-        <service id="lexik_jwt_authentication.extractor.cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor" public="false">
+        <service id="lexik_jwt_authentication.extractor.cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor">
             <argument /> <!-- Name -->
         </service>
         <!-- JWT Security Authentication Entry Point -->

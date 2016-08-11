@@ -4,7 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -22,7 +23,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $configuration = new Configuration();
         $config        = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
         $container->setParameter('lexik_jwt_authentication.private_key_path', $config['private_key_path']);
@@ -39,5 +40,49 @@ class LexikJWTAuthenticationExtension extends Extension
         );
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.encryption_engine', $encoderConfig['encryption_engine']);
+
+        $tokenExtractorMapId = 'lexik_jwt_authentication.token_extractor_map';
+        $container
+            ->getDefinition($tokenExtractorMapId)
+            ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
+
+        $container
+            ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
+            ->replaceArgument(0, new Reference($tokenExtractorMapId));
+    }
+
+    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
+    {
+        $map = [];
+
+        if ($tokenExtractorsConfig['authorization_header']['enabled']) {
+            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor';
+            $container
+                ->getDefinition($authorizationHeaderExtractorId)
+                ->replaceArgument(0, $tokenExtractorsConfig['authorization_header']['prefix'])
+                ->replaceArgument(1, $tokenExtractorsConfig['authorization_header']['name']);
+
+            $map[] = $authorizationHeaderExtractorId;
+        }
+
+        if ($tokenExtractorsConfig['query_parameter']['enabled']) {
+            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor';
+            $container
+                ->getDefinition($queryParameterExtractorId)
+                ->replaceArgument(0, $tokenExtractorsConfig['query_parameter']['name']);
+
+            $map[] = $queryParameterExtractorId;
+        }
+
+        if ($tokenExtractorsConfig['cookie']['enabled']) {
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor';
+            $container
+                ->getDefinition($cookieExtractorId)
+                ->replaceArgument(0, $tokenExtractorsConfig['cookie']['name']);
+
+            $map[] = $cookieExtractorId;
+        }
+
+        return $map;
     }
 }

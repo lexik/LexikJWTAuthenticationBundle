@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory;
 
+use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Configuration;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -94,44 +95,10 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        Configuration::addTokenExtractors($node);
+
         $node
             ->children()
-                ->arrayNode('authorization_header')
-                ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultTrue()
-                        ->end()
-                        ->scalarNode('prefix')
-                            ->defaultValue('Bearer')
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('Authorization')
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('cookie')
-                ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('BEARER')
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('query_parameter')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('bearer')
-                        ->end()
-                    ->end()
-                ->end()
                 ->booleanNode('throw_exceptions')
                     ->defaultFalse()
                 ->end()
