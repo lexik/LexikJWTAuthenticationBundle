@@ -6,9 +6,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * LexikJWTAuthenticationBundle Configuration.
  */
 class Configuration implements ConfigurationInterface
 {
@@ -63,7 +61,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()
-                ->append(self::getTokenExtractorsNode())
+                ->append($this->getTokenExtractorsNodeBuilder())
             ->end();
 
         return $treeBuilder;
@@ -72,7 +70,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return TreeBuilder
      */
-    private static function getTokenExtractorsNode()
+    private function getTokenExtractorsNodeBuilder()
     {
         $builder = new TreeBuilder();
         $node    = $builder->root('token_extractors');
@@ -82,10 +80,8 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('authorization_header')
                 ->addDefaultsIfNotSet()
+                ->canBeDisabled()
                     ->children()
-                        ->booleanNode('enabled')
-                            ->defaultTrue()
-                        ->end()
                         ->scalarNode('prefix')
                             ->defaultValue('Bearer')
                         ->end()
@@ -96,10 +92,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('cookie')
                 ->addDefaultsIfNotSet()
+                ->canBeEnabled()
                     ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
                         ->scalarNode('name')
                             ->defaultValue('BEARER')
                         ->end()
@@ -107,10 +101,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('query_parameter')
                     ->addDefaultsIfNotSet()
+                    ->canBeEnabled()
                     ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
                         ->scalarNode('name')
                             ->defaultValue('bearer')
                         ->end()
