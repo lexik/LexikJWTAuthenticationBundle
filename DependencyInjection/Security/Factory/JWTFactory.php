@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory;
 
-use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Configuration;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -95,10 +94,38 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
-        Configuration::addTokenExtractors($node);
-
         $node
             ->children()
+                ->arrayNode('authorization_header')
+                ->addDefaultsIfNotSet()
+                ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('prefix')
+                            ->defaultValue('Bearer')
+                        ->end()
+                        ->scalarNode('name')
+                            ->defaultValue('Authorization')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('cookie')
+                ->addDefaultsIfNotSet()
+                ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('name')
+                            ->defaultValue('BEARER')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('query_parameter')
+                ->canBeEnabled()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('name')
+                            ->defaultValue('bearer')
+                        ->end()
+                    ->end()
+                ->end()
                 ->booleanNode('throw_exceptions')
                     ->defaultFalse()
                 ->end()

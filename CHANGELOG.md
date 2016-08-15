@@ -5,6 +5,10 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
+* feature [\#218](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/218) Add more flexibility in token extractors configuration ([chalasr](https://github.com/chalasr))
+
+* feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loading for easy overriding ([chalasr](https://github.com/chalasr))
+
 * feature [\#202](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/202) Exceptions simplified ([Spomky](https://github.com/Spomky))
 
 * feature [\#201](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/201) Remove deprecated request injections ([chalasr](https://github.com/chalasr))
