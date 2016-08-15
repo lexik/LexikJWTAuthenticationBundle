@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()
-                ->append($this->getTokenExtractorsNodeBuilder())
+                ->append($this->getTokenExtractorsNode())
             ->end();
 
         return $treeBuilder;
@@ -70,7 +70,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return TreeBuilder
      */
-    private function getTokenExtractorsNodeBuilder()
+    private function getTokenExtractorsNode()
     {
         $builder = new TreeBuilder();
         $node    = $builder->root('token_extractors');
