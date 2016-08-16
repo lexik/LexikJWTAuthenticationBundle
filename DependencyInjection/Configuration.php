@@ -10,6 +10,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    const INVALID_KEY_PATH = "The file %s doesn't exist or is not readable.\nIf the configured encoder doesn't need this to be configured, please don't set this option or leave it null.";
+
     /**
      * {@inheritdoc}
      */
@@ -24,15 +26,15 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('private_key_path')
                     ->defaultNull()
                     ->validate()
-                    ->ifString()
-                        ->then(self::validateKeyPath())
+                    ->ifTrue($this->isPathInvalid())
+                        ->thenInvalid(self::INVALID_KEY_PATH)
                     ->end()
                 ->end()
                 ->scalarNode('public_key_path')
                     ->defaultNull()
                     ->validate()
-                    ->ifString()
-                        ->then(self::validateKeyPath())
+                    ->ifTrue($this->isPathInvalid())
+                        ->thenInvalid(self::INVALID_KEY_PATH)
                     ->end()
                 ->end()
                 ->scalarNode('pass_phrase')
@@ -117,14 +119,14 @@ class Configuration implements ConfigurationInterface
     /**
      * @return \Closure
      */
-    private static function validateKeyPath()
+    private function isPathInvalid()
     {
         return function ($path) {
-            if (!is_file($path) || !is_readable($path)) {
-                throw new \InvalidArgumentException(sprintf('The file "%s" doesn\'t exist or is not readable.%sIf the configured encoder doesn\'t need this to be configured, please don\'t set this option or leave it null.', $path, PHP_EOL));
+            if (null === $path) {
+                return;
             }
 
-            return $path;
+            return !is_file($path) || !is_readable($path);
         };
     }
 }

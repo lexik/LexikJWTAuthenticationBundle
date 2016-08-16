@@ -119,7 +119,7 @@ class JWTFactory implements SecurityFactoryInterface
                 ->end()
                 ->arrayNode('query_parameter')
                 ->canBeEnabled()
-                    ->addDefaultsIfNotSet()
+                ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('name')
                             ->defaultValue('bearer')
