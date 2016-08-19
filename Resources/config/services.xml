@@ -6,7 +6,7 @@
 
     <services>
         <!--  Default JWT Encoder / Decoder -->
-        <service id="lexik_jwt_authentication.encoder.default" class="Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder" public="false">
+        <service id="lexik_jwt_authentication.encoder.default" class="Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder">
             <argument type="service" id="lexik_jwt_authentication.jws_provider"/>
         </service>
         <!-- JWT Manager / Default implementation -->
