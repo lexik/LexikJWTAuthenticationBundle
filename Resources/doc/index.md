@@ -55,7 +55,7 @@ Configure your `parameters.yml.dist` :
     jwt_private_key_path: %kernel.root_dir%/../var/jwt/private.pem   # ssh private key path
     jwt_public_key_path:  %kernel.root_dir%/../var/jwt/public.pem    # ssh public key path
     jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
-    jwt_token_ttl:        86400
+    jwt_token_ttl:        3600
 ```
 
 Configure your `security.yml` :
@@ -113,7 +113,7 @@ A classical form_login on an anonymously accessible firewall will do perfect.
 Just set the provided `lexik_jwt_authentication.handler.authentication_success` service as success handler to
 generate the token and send it as part of a json response body.
 
-Store it (client side), the JWT is reusable until its ttl has expired (86400 seconds by default).
+Store it (client side), the JWT is reusable until its ttl has expired (3600 seconds by default).
 
 Note: You can test getting the token with a simple curl command like this:
 

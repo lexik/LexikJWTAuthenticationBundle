@@ -17,7 +17,7 @@ lexik_jwt_authentication:
     # ssh key pass phrase
     pass_phrase:         ''
     # token ttl
-    token_ttl:           86400
+    token_ttl:           3600
     # key under which the user identity will be stored in the token payload
     user_identity_field: username
 
