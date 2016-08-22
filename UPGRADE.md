@@ -113,6 +113,10 @@ Events
   }
   ```
 
+* Introduced JWTExpiredEvent
+  In 1.x, trying to authenticate an user with an expired token was causing a JWTInvalidEvent to be dispatched, 
+  as for several other mixed reasons. Now in 2.x, this failure reason has its own event on which you can listen on.
+  
 Encoder
 -------
 

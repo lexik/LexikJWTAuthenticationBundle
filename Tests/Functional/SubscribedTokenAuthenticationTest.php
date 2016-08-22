@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -75,9 +76,9 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
     /**
      * @group time-sensitive
      */
-    public function testAccessSecuredRouteWithExpiredToken()
+    public function testAccessSecuredRouteWithExpiredToken($fail = true)
     {
-        self::$subscriber->setListener(Events::JWT_INVALID, function (JWTInvalidEvent $e) {
+        self::$subscriber->setListener(Events::JWT_EXPIRED, function (JWTExpiredEvent $e) {
             $response = $e->getResponse();
 
             if ($response instanceof JWTAuthenticationFailureResponse) {
@@ -89,6 +90,6 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
 
         $this->assertSame('Custom JWT Expired Token message', $response['message']);
 
-        self::$subscriber->unsetListener(Events::JWT_INVALID);
+        self::$subscriber->unsetListener(Events::JWT_EXPIRED);
     }
 }

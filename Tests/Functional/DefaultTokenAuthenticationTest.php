@@ -26,7 +26,7 @@ class DefaultTokenAuthenticationTest extends CompleteTokenAuthenticationTest
     /**
      * @group time-sensitive
      */
-    public function testAccessSecuredRouteWithExpiredToken()
+    public function testAccessSecuredRouteWithExpiredToken($fail = true)
     {
         $response = parent::testAccessSecuredRouteWithExpiredToken();
 

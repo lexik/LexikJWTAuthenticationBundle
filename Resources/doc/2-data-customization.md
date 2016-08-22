@@ -287,8 +287,6 @@ public function onJWTInvalid(JWTInvalidEvent $event)
 }
 ```
 
-__Note:__ This feature is not available if the `throw_exceptions` firewall option is set to `true`.
-
 #### Events::JWT_NOT_FOUND - customize the response on token not found
 
 By default, if no token is found in a request, the authentication listener will either call the entry point that returns a unauthorized (401) json response, or (if the firewall allows anonymous requests), just let the request continue.  
@@ -326,6 +324,38 @@ public function onJWTNotFound(JWTNotFoundEvent $event)
 }
 ```
 
-__Protip:__ You might want to use the same method for customizing the response on both `JWT_INVALID` and `JWT_NOT_FOUND` events. 
-For that, use the `Event\JWTFailureEventInterface` interface to typehint the event argument of your listener's method, rather than 
-a specific event class (i.e. `JWTNotFoundEvent` or `JWTInvalidEvent`).
+#### Events::JWT_EXPIRED - customize the response message on expired token
+
+By default, if the token provided in the request is expired, the authentication listener will call the entry point returning an unauthorized (401) json response.
+Thanks to this event, you can set a custom response or simply change the response message.
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.jwt_expired_listener:
+        class: Acme\Bundle\ApiBundle\EventListener\JWTExpiredListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
+```
+
+Example 8: customize the response in case of expired token
+
+``` php
+// Acme\Bundle\ApiBundle\EventListener\JWTExpiredListener.php
+
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
+
+/**
+ * @param JWTExpiredEvent $event
+ */
+public function onJWTExpired(JWTExpiredEvent $event)
+{
+    /** @var \Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse */
+    $response = $event->getResponse();
+
+    $response->setMessage('Your token is expired, please renew it.');
+}
+```
+
+__Protip:__ You might want to use the same method for customizing the response on both `JWT_INVALID`, `JWT_NOT_FOUND` and/or `JWT_EXPIRED` events. 
+For that, use the `Event\JWTFailureEventInterface` interface to type-hint the event argument of your listener's method, rather the class corresponding to one of these specific events.

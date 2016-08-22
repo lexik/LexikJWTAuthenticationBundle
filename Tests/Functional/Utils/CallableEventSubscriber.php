@@ -6,6 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -22,6 +23,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
         Events::JWT_NOT_FOUND     => JWTNotFoundEvent::class,
         Events::JWT_ENCODED       => JWTEncodedEvent::class,
         Events::JWT_AUTHENTICATED => JWTAuthenticatedEvent::class,
+        Events::JWT_EXPIRED       => JWTExpiredEvent::class,
     ];
 
     public static function getSubscribedEvents()

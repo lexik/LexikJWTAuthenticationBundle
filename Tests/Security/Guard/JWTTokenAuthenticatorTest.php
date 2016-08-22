@@ -6,7 +6,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
@@ -51,7 +53,29 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         ))->getCredentials($this->getRequestMock());
     }
 
-    public function testGetCredentialsWithoutToken()
+    public function testGetCredentialsWithExpiredToken()
+    {
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager
+            ->expects($this->once())
+            ->method('decode')
+            ->with(new PreAuthenticationJWTUserToken('token'))
+            ->will($this->throwException(new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token')));
+
+        try {
+            (new JWTTokenAuthenticator(
+                $jwtManager,
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock('token')
+            ))->getCredentials($this->getRequestMock());
+
+            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', ExpiredTokenException::class));
+        } catch (ExpiredTokenException $e) {
+            $this->assertSame('Expired JWT Token', $e->getMessageKey());
+        }
+    }
+
+    public function testGetCredentialsReturnsNullWithoutToken()
     {
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
