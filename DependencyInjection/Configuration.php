@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('token_ttl')
-                    ->defaultValue(86400)
+                    ->defaultValue(3600)
                 ->end()
                 ->arrayNode('encoder')
                     ->addDefaultsIfNotSet()

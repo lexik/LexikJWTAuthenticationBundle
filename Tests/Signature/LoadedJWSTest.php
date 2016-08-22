@@ -18,7 +18,7 @@ final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
     {
         $this->goodPayload = [
             'username' => 'chalasr',
-            'exp'      => (int) (new \DateTime('now'))->format('U') + 86400,
+            'exp'      => time() + 3600,
         ];
     }
 
@@ -52,7 +52,7 @@ final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
     public function testVerifiedWithExpiredPayload()
     {
         $payload = $this->goodPayload;
-        $payload['exp'] -= 86400;
+        $payload['exp'] -= 3600;
 
         $jws = new LoadedJWS($payload, true);
 

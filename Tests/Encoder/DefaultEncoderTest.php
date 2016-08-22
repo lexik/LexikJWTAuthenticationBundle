@@ -21,7 +21,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $payload     = [
             'username' => 'chalasr',
-            'exp'      => (new \DateTime('now'))->format('U') + 86400,
+            'exp'      => time() + 3600,
         ];
 
         $loadedJWS   = new LoadedJWS($payload, true);
@@ -94,7 +94,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeFromExpiredPayload()
     {
-        $loadedJWS   = new LoadedJWS(['exp' => (new \DateTime('now'))->format('U') - 86400], true);
+        $loadedJWS   = new LoadedJWS(['exp' => time() - 3600], true);
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
             ->expects($this->once())
