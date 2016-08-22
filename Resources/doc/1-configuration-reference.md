@@ -13,6 +13,7 @@ lexik_jwt_authentication:
     token_ttl:           86400                                   # token ttl - defaults to 86400
     encoder_service:     lexik_jwt_authentication.jwt_encoder    # token encoder / decoder service - defaults to the jwt encoder (based on the namshi/jose library)
     user_identity_field: username                                # key under which the user identity will be stored in the token payload - defaults to username
+    encoder_algorithm:   RS256                                   # One of "HS256"; "HS384"; "HS512"; "RS256"; "RS384"; "RS512"; "ES256"; "ES384"; "ES512" (see Namshi\JOSE\Signer namespace)
 ```
 
 ### Security reference

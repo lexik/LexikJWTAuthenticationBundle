@@ -22,6 +22,7 @@
         <!-- JWT Encoder / Decoder / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_encoder" class="%lexik_jwt_authentication.jwt_encoder.class%">
             <argument type="service" id="lexik_jwt_authentication.openssl_key_loader"/>
+            <argument>%lexik_jwt_authentication.jwt_encoder.algo%</argument>
         </service>
         <!-- JWT Manager / Default implementation -->
         <service id="lexik_jwt_authentication.jwt_manager" class="%lexik_jwt_authentication.jwt_manager.class%">
