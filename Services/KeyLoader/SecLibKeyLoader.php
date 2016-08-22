@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
 /**
- * Load config keys for the phpseclib encryption engine.
+ * Load crypto keys for the phpseclib encryption engine.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */

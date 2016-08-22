@@ -30,28 +30,28 @@ class JWSProvider implements JWSProviderInterface
     /**
      * @var string
      */
-    private $encryptionAlgorithm;
+    private $signatureAlgorithm;
 
     /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $encryptionEngine
-     * @param string             $encryptionAlgorithm
+     * @param string             $signatureAlgorithm
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $encryptionAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $signatureAlgorithm)
     {
         $encryptionEngine = $encryptionEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
 
-        if (!$this->isAlgorithmSupportedForEngine($encryptionEngine, $encryptionAlgorithm)) {
+        if (!$this->isAlgorithmSupportedForEngine($encryptionEngine, $signatureAlgorithm)) {
             throw new \InvalidArgumentException(
-                sprintf('The algorithm "%s" is not supported for %s', $encryptionAlgorithm, $encryptionEngine)
+                sprintf('The algorithm "%s" is not supported for %s', $signatureAlgorithm, $encryptionEngine)
             );
         }
 
-        $this->keyLoader           = $keyLoader;
-        $this->encryptionEngine    = $encryptionEngine;
-        $this->encryptionAlgorithm = $encryptionAlgorithm;
+        $this->keyLoader          = $keyLoader;
+        $this->encryptionEngine   = $encryptionEngine;
+        $this->signatureAlgorithm = $signatureAlgorithm;
     }
 
     /**
@@ -59,7 +59,7 @@ class JWSProvider implements JWSProviderInterface
      */
     public function create(array $payload)
     {
-        $jws = new JWS(['alg' => $this->encryptionAlgorithm], $this->encryptionEngine);
+        $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->encryptionEngine);
 
         $jws->setPayload($payload);
         $jws->sign(
@@ -79,19 +79,19 @@ class JWSProvider implements JWSProviderInterface
 
         return new LoadedJWS(
             $jws->getPayload(),
-            $jws->verify($this->keyLoader->loadKey('public'), $this->encryptionAlgorithm)
+            $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm)
         );
     }
 
     /**
      * @param string $encryptionEngine
-     * @param string $encryptionAlgorithm
+     * @param string $signatureAlgorithm
      *
      * @return bool
      */
-    private function isAlgorithmSupportedForEngine($encryptionEngine, $encryptionAlgorithm)
+    private function isAlgorithmSupportedForEngine($encryptionEngine, $signatureAlgorithm)
     {
-        $signerClass = sprintf('Namshi\\JOSE\\Signer\\%s\\%s', $encryptionEngine, $encryptionAlgorithm);
+        $signerClass = sprintf('Namshi\\JOSE\\Signer\\%s\\%s', $encryptionEngine, $signatureAlgorithm);
 
         return class_exists($signerClass);
     }

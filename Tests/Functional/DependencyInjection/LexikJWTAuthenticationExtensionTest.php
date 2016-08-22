@@ -24,7 +24,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $container           = $kernel->getContainer();
         $encoderNamespace    = 'lexik_jwt_authentication.encoder';
         $encryptionEngine    = $container->getParameter($encoderNamespace.'.encryption_engine');
-        $encryptionAlgorithm = $container->getParameter($encoderNamespace.'.signature_algorithm');
+        $signatureAlgorithm  = $container->getParameter($encoderNamespace.'.signature_algorithm');
 
         /* @var PHPUnit_Framework_MockObject_MockObject */
         $jwsProviderMock = $this
@@ -32,7 +32,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
             ->setConstructorArgs([
                 $container->get('lexik_jwt_authentication.key_loader'),
                 $encryptionEngine,
-                $encryptionAlgorithm,
+                $signatureAlgorithm,
             ])
             ->getMock();
 
@@ -50,8 +50,8 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
 
         // The configured algorithm is the one used by the service
         $this->assertAttributeEquals(
-            $encryptionAlgorithm,
-            'encryptionAlgorithm',
+            $signatureAlgorithm,
+            'signatureAlgorithm',
             $jwsProviderMock
         );
     }

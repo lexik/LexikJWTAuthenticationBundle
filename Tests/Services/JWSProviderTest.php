@@ -104,7 +104,7 @@ vwIDAQAB
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage The algorithm "wrongAlgorithm" is not supported
      */
-    public function testInvalidEncryptionAlgorithm()
+    public function testInvalidsignatureAlgorithm()
     {
         new JWSProvider($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm');
     }
