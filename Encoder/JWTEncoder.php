@@ -13,7 +13,10 @@ use Namshi\JOSE\SimpleJWS;
  */
 class JWTEncoder implements JWTEncoderInterface
 {
-    const ALGORYTHM = 'RS256';
+    /**
+     * @var string
+     */
+    private $algorithm;
 
     /**
      * @var OpenSSLKeyLoader
@@ -23,9 +26,10 @@ class JWTEncoder implements JWTEncoderInterface
     /**
      * @param OpenSSLKeyLoader $keyLoader
      */
-    public function __construct(OpenSSLKeyLoader $keyLoader)
+    public function __construct(OpenSSLKeyLoader $keyLoader, $algorithm)
     {
         $this->keyLoader = $keyLoader;
+        $this->algorithm = $algorithm;
     }
 
     /**
@@ -33,7 +37,7 @@ class JWTEncoder implements JWTEncoderInterface
      */
     public function encode(array $data)
     {
-        $jws = new SimpleJWS(['alg' => self::ALGORYTHM]);
+        $jws = new SimpleJWS(['alg' => $this->algorithm]);
         $jws->setPayload($data);
         $jws->sign($this->keyLoader->loadKey('private'));
 
@@ -52,7 +56,7 @@ class JWTEncoder implements JWTEncoderInterface
             return false;
         }
 
-        if (!$jws->isValid($this->keyLoader->loadKey('public'), self::ALGORYTHM)) {
+        if (!$jws->isValid($this->keyLoader->loadKey('public'), $this->algorithm)) {
             return false;
         }
 
