@@ -56,4 +56,11 @@ final class Events
      * Hook into this event to set a custom response.
      */
     const JWT_NOT_FOUND = 'lexik_jwt_authentication.on_jwt_not_found';
+
+    /**
+     * Dispatched when the token is expired.
+     * The expired token's payload can be retrieved by hooking into this event, so you can set a different
+     * response.
+     */
+    const JWT_EXPIRED = 'lexik_jwt_authentication.on_jwt_expired';
 }

@@ -52,7 +52,7 @@ class CompleteTokenAuthenticationTest extends TestCase
     /**
      * @group time-sensitive
      */
-    public function testAccessSecuredRouteWithExpiredToken()
+    public function testAccessSecuredRouteWithExpiredToken($fail = true)
     {
         static::bootKernel();
 
@@ -64,7 +64,9 @@ class CompleteTokenAuthenticationTest extends TestCase
 
         $response = static::$client->getResponse();
 
-        $this->assertFailure($response);
+        if (true === $fail) {
+            $this->assertFailure($response);
+        }
 
         return json_decode($response->getContent(), true);
     }

@@ -3,9 +3,11 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Guard;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
@@ -86,6 +88,10 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
             $preAuthToken->setPayload($payload);
         } catch (JWTDecodeFailureException $e) {
+            if (JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason()) {
+                throw new ExpiredTokenException();
+            }
+
             throw JWTAuthenticationException::invalidToken($e);
         }
 
@@ -140,8 +146,18 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
-        $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
-        $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
+        if ($authException instanceof ExpiredTokenException) {
+            $event = new JWTExpiredEvent(
+                $authException,
+                // After adding other AuthException classes, assign $response
+                // before the check and use it for both events, using getMessageKey()
+                new JWTAuthenticationFailureResponse($authException->getMessageKey())
+            );
+            $this->dispatcher->dispatch(Events::JWT_EXPIRED, $event);
+        } else {
+            $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+            $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
+        }
 
         return $event->getResponse();
     }

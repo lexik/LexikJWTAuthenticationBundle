@@ -49,12 +49,6 @@
         "symfony/browser-kit": "^2.8|^3.0",
         "friendsofphp/php-cs-fixer": "^1.1"
     },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "~1.1",
-        "phpunit/phpunit": "^4.1",
-        "symfony/phpunit-bridge": "~2.8|~3.0",
-        "symfony/browser-kit": "~2.8|~3.0"
-    },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
         "spomky-labs/lexik-jose-bridge": "JWT Token encoder with encryption support"
