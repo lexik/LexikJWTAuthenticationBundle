@@ -7,8 +7,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidPayloadException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
@@ -40,20 +43,22 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(PreAuthenticationJWTUserToken::class, $authenticator->getCredentials($this->getRequestMock()));
     }
 
-    /**
-     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException
-     * @expectedExceptionMessage Invalid JWT Token
-     */
-    public function testGetCredentialsWithInvalidToken()
+    public function testGetCredentialsWithInvalidTokenThrowsException()
     {
-        (new JWTTokenAuthenticator(
-            $this->getJWTManagerMock(),
-            $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock('token')
-        ))->getCredentials($this->getRequestMock());
+        try {
+            (new JWTTokenAuthenticator(
+                $this->getJWTManagerMock(),
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock('token')
+            ))->getCredentials($this->getRequestMock());
+
+            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', InvalidTokenException::class));
+        } catch (InvalidTokenException $e) {
+            $this->assertSame('Invalid JWT Token', $e->getMessageKey());
+        }
     }
 
-    public function testGetCredentialsWithExpiredToken()
+    public function testGetCredentialsWithExpiredTokenThrowsException()
     {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager
@@ -124,20 +129,22 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($userStub, $authenticator->getUser($decodedToken, $userProvider));
     }
 
-    /**
-     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException
-     * @expectedExceptionMessage Unable to find a key corresponding to the configured user_identity_field ("username")
-     */
-    public function testGetUserWithInvalidPayload()
+    public function testGetUserWithInvalidPayloadThrowsException()
     {
         $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload([]); // Empty payload
 
-        (new JWTTokenAuthenticator(
-            $this->getJWTManagerMock('username'),
-            $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock()
-        ))->getUser($decodedToken, $this->getUserProviderMock());
+        try {
+            (new JWTTokenAuthenticator(
+                $this->getJWTManagerMock('username'),
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock()
+            ))->getUser($decodedToken, $this->getUserProviderMock());
+
+            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', InvalidPayloadException::class));
+        } catch (InvalidPayloadException $e) {
+            $this->assertSame('Unable to find key "username" in the token payload.', $e->getMessageKey());
+        }
     }
 
     /**
@@ -153,11 +160,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         ))->getUser(new \stdClass(), $this->getUserProviderMock());
     }
 
-    /**
-     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException
-     * @expectedExceptionMessage Unable to load a valid user with property "username" = "lexik"
-     */
-    public function testGetUserWithInvalidUser()
+    public function testGetUserWithInvalidUserThrowsException()
     {
         $userIdentityField = 'username';
         $payload           = [$userIdentityField => 'lexik'];
@@ -172,16 +175,22 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->with($payload[$userIdentityField])
             ->will($this->throwException(new UsernameNotFoundException()));
 
-        (new JWTTokenAuthenticator(
-            $this->getJWTManagerMock('username'),
-            $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock()
-        ))->getUser($decodedToken, $userProvider);
+        try {
+            (new JWTTokenAuthenticator(
+                $this->getJWTManagerMock('username'),
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock()
+            ))->getUser($decodedToken, $userProvider);
+
+            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', UserNotFoundException::class));
+        } catch (UserNotFoundException $e) {
+            $this->assertSame('Unable to load an user with property "username" = "lexik". If the user identity has changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $e->getMessageKey());
+        }
     }
 
     public function testOnAuthenticationFailureWithInvalidToken()
     {
-        $authException    = new JWTAuthenticationException('Invalid JWT Token');
+        $authException    = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
 
         $dispatcher = $this->getEventDispatcherMock();
@@ -207,8 +216,8 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function testStart()
     {
-        $authException   = JWTAuthenticationException::tokenNotFound();
-        $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessage());
+        $authException   = new MissingTokenException('JWT Token not found');
+        $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessageKey());
 
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
@@ -225,10 +234,34 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             $this->getTokenExtractorMock()
         );
 
-        $response = $authenticator->start($this->getRequestMock(), $authException);
+        $response = $authenticator->start($this->getRequestMock());
 
         $this->assertEquals($failureResponse, $response);
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());
+    }
+
+    public function testCheckCredentials()
+    {
+        $user = new AdvancedUserStub('test', 'test');
+
+        $this->assertTrue(
+            (new JWTTokenAuthenticator(
+                $this->getJWTManagerMock(),
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock()
+            ))->checkCredentials(null, $user)
+        );
+    }
+
+    public function testSupportsRememberMe()
+    {
+        $this->assertFalse(
+            (new JWTTokenAuthenticator(
+                $this->getJWTManagerMock(),
+                $this->getEventDispatcherMock(),
+                $this->getTokenExtractorMock()
+            ))->supportsRememberMe()
+        );
     }
 
     private function getJWTManagerMock($userIdentityField = null)

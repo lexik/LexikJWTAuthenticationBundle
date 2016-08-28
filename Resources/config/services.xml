@@ -46,18 +46,14 @@
             <argument type="service" id="event_dispatcher"/>
         </service>
 
-          <!-- OpenSSL Key Loader -->
-        <service id="lexik_jwt_authentication.key_loader.openssl" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader" public="false">
+        <!-- Key Loaders -->
+        <service id="lexik_jwt_authentication.key_loader.abstract"  abstract="true" public="false">
             <argument>%lexik_jwt_authentication.private_key_path%</argument>
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <!-- SecLib Key Loader -->
-        <service id="lexik_jwt_authentication.key_loader.phpseclib" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\SecLibKeyLoader" public="false">
-            <argument>%lexik_jwt_authentication.private_key_path%</argument>
-            <argument>%lexik_jwt_authentication.public_key_path%</argument>
-            <argument>%lexik_jwt_authentication.pass_phrase%</argument>
-        </service>
+        <service id="lexik_jwt_authentication.key_loader.openssl" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract"/>
+        <service id="lexik_jwt_authentication.key_loader.phpseclib" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\SecLibKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract"/>
 
         <!-- JWT Security Authentication Provider (Deprecated in 2.0) -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider" public="false">

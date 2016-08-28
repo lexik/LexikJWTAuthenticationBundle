@@ -64,7 +64,7 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
         });
 
         static::$client = static::createAuthenticatedClient();
-        static::$client->request('GET', '/api/secured');
+        static::accessSecuredRoute();
 
         $responseBody = json_decode(static::$client->getResponse()->getContent(), true);
 

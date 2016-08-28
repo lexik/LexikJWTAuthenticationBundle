@@ -8,8 +8,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\ExpiredTokenException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidPayloadException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
@@ -71,7 +74,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * @return PreAuthenticationJWTUserToken
      *
-     * @throws JWTAuthenticationException If the request token cannot be decoded
+     * @throws InvalidTokenException If the request token cannot be decoded
+     * @throws ExpiredTokenException If the request token is expired
      */
     public function getCredentials(Request $request)
     {
@@ -83,7 +87,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         try {
             if (!$payload = $this->jwtManager->decode($preAuthToken)) {
-                throw JWTAuthenticationException::invalidToken();
+                throw new InvalidTokenException();
             }
 
             $preAuthToken->setPayload($payload);
@@ -92,7 +96,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
                 throw new ExpiredTokenException();
             }
 
-            throw JWTAuthenticationException::invalidToken($e);
+            throw new InvalidTokenException('Invalid JWT Token', 0, $e);
         }
 
         return $preAuthToken;
@@ -119,9 +123,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         $identityField = $this->jwtManager->getUserIdentityField();
 
         if (!isset($payload[$identityField])) {
-            throw JWTAuthenticationException::invalidPayload(
-                sprintf('Unable to find a key corresponding to the configured user_identity_field ("%s") in the token payload.', $identityField)
-            );
+            throw new InvalidPayloadException($identityField);
         }
 
         $identity = $payload[$identityField];
@@ -129,7 +131,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         try {
             $user = $userProvider->loadUserByUsername($identity);
         } catch (UsernameNotFoundException $e) {
-            throw JWTAuthenticationException::invalidUser($identity, $identityField);
+            throw new UserNotFoundException($identityField, $identity);
         }
 
         $authToken = new JWTUserToken($user->getRoles());
@@ -146,16 +148,13 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
+        $response = new JWTAuthenticationFailureResponse($authException->getMessageKey());
+
         if ($authException instanceof ExpiredTokenException) {
-            $event = new JWTExpiredEvent(
-                $authException,
-                // After adding other AuthException classes, assign $response
-                // before the check and use it for both events, using getMessageKey()
-                new JWTAuthenticationFailureResponse($authException->getMessageKey())
-            );
+            $event = new JWTExpiredEvent($authException, $response);
             $this->dispatcher->dispatch(Events::JWT_EXPIRED, $event);
         } else {
-            $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+            $event = new JWTInvalidEvent($authException, $response);
             $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
         }
 
@@ -177,8 +176,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $authException = JWTAuthenticationException::tokenNotFound();
-        $event         = new JWTNotFoundEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+        $exception = new MissingTokenException('JWT Token not found', 0, $authException);
+        $event     = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
 
         $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
 

@@ -20,15 +20,19 @@ class CompleteTokenAuthenticationTest extends TestCase
     public function testAccessSecuredRoute()
     {
         static::$client = static::createAuthenticatedClient();
-        static::$client->request('GET', '/api/secured');
+        static::accessSecuredRoute();
 
-        $this->assertSuccessful(static::$client->getResponse());
+        $response = static::$client->getResponse();
+
+        $this->assertSuccessful($response);
+
+        return json_decode($response->getContent(), true);
     }
 
     public function testAccessSecuredRouteWithoutToken()
     {
         static::$client = static::createClient();
-        static::$client->request('GET', '/api/secured');
+        static::accessSecuredRoute();
 
         $response = static::$client->getResponse();
 
@@ -56,11 +60,11 @@ class CompleteTokenAuthenticationTest extends TestCase
     {
         static::bootKernel();
 
-        $encoderWrapper = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.exp_aware_jwt_encoder.wrapper');
-        $expiredToken   = $encoderWrapper->decreaseTokenExpirationTime(static::getAuthenticatedToken());
+        $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
+        $payload = ['exp' => time()];
 
-        static::$client = static::createAuthenticatedClient($expiredToken);
-        static::$client->request('GET', '/api/secured');
+        static::$client = static::createAuthenticatedClient($encoder->encode($payload));
+        static::accessSecuredRoute();
 
         $response = static::$client->getResponse();
 
@@ -81,5 +85,10 @@ class CompleteTokenAuthenticationTest extends TestCase
     {
         $this->assertTrue($response->isSuccessful());
         $this->assertSame(200, $response->getStatusCode());
+    }
+
+    protected function accessSecuredRoute()
+    {
+        static::$client->request('GET', '/api/secured');
     }
 }
