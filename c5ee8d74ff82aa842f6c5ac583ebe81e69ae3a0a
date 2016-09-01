@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by Spomky at 2016-08-24 07:54
+
+Hi,
+
+Even if I am not sure to be fully qualified for that, let try to review that wording.
+
+From my POV, PHPSecLib and OpenSSL are cryptographic libraries, so `encryption_engine` is correct however `crypto_engine` should be more appropriate.
+
+I noted some PHPDoc information to be updated accordingly or such as in [KeyLoaderInterface.php#L6](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.0/Services/KeyLoader/KeyLoaderInterface.php#L6): Interface for classes that are able to load ~~SSL encryption~~ keys.
+
+Anyway, method names are quite clear and should not be changed.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2016-08-24 08:27
+
+> Interface for classes that are able to load ~~SSL encryption~~ keys.
+
+Would you have a suggestion of correction?  `"... load crypto keys"`?
+
+Thank you @Spomky 👍
