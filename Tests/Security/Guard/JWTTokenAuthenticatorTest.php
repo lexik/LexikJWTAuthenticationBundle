@@ -98,17 +98,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $rawToken          = 'token';
         $userRoles         = ['ROLE_USER'];
 
-        $dispatcher = $this->getEventDispatcherMock();
-        $userStub   = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
-
-        $jwtUserToken = new JWTUserToken($userRoles);
-        $jwtUserToken->setUser($userStub);
-        $jwtUserToken->setRawToken($rawToken);
-
-        $dispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken));
+        $userStub = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
 
         $decodedToken = new PreAuthenticationJWTUserToken($rawToken);
         $decodedToken->setPayload($payload);
@@ -122,7 +112,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock('username'),
-            $dispatcher,
+            $this->getEventDispatcherMock(),
             $this->getTokenExtractorMock()
         );
 
@@ -186,6 +176,42 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         } catch (UserNotFoundException $e) {
             $this->assertSame('Unable to load an user with property "username" = "lexik". If the user identity has changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $e->getMessageKey());
         }
+    }
+
+    public function testCreateAuthenticatedToken()
+    {
+        $rawToken  = 'token';
+        $userRoles = ['ROLE_USER'];
+        $payload   = ['username' => 'lexik'];
+        $userStub  = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
+
+        $decodedToken = new PreAuthenticationJWTUserToken($rawToken);
+        $decodedToken->setPayload($payload);
+
+        $jwtUserToken = new JWTUserToken($userRoles, $userStub, $rawToken, 'lexik');
+
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken));
+
+        $authenticator = new JWTTokenAuthenticator(
+            $this->getJWTManagerMock('username'),
+            $dispatcher,
+            $this->getTokenExtractorMock()
+        );
+
+        $userProvider = $this->getUserProviderMock();
+        $userProvider
+            ->expects($this->once())
+            ->method('loadUserByUsername')
+            ->with($payload['username'])
+            ->willReturn($userStub);
+
+        $authenticator->getUser($decodedToken, $userProvider);
+
+        $this->assertInstanceOf(JWTUserToken::class, $authenticator->createAuthenticatedToken($userStub, 'lexik'));
     }
 
     public function testOnAuthenticationFailureWithInvalidToken()

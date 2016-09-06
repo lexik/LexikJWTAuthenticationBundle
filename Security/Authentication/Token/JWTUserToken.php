@@ -3,13 +3,15 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
 
 /**
  * JWTUserToken.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTUserToken extends AbstractToken
+class JWTUserToken extends AbstractToken implements GuardTokenInterface
 {
     /**
      * @var string
@@ -17,13 +19,25 @@ class JWTUserToken extends AbstractToken
     protected $rawToken;
 
     /**
+     * @var string
+     */
+    protected $providerKey;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(array $roles = [])
+    public function __construct(array $roles = [], UserInterface $user = null, $rawToken = null, $providerKey = null)
     {
         parent::__construct($roles);
 
+        if ($user) {
+            $this->setUser($user);
+        }
+
+        $this->setRawToken($rawToken);
         $this->setAuthenticated(count($roles) > 0);
+
+        $this->providerKey = $providerKey;
     }
 
     /**

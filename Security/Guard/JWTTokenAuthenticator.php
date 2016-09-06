@@ -20,6 +20,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -53,6 +55,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     private $tokenExtractor;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $preAuthenticationTokenStorage;
+
+    /**
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param TokenExtractorInterface  $tokenExtractor
@@ -62,9 +69,10 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         EventDispatcherInterface $dispatcher,
         TokenExtractorInterface $tokenExtractor
     ) {
-        $this->jwtManager     = $jwtManager;
-        $this->dispatcher     = $dispatcher;
-        $this->tokenExtractor = $tokenExtractor;
+        $this->jwtManager                    = $jwtManager;
+        $this->dispatcher                    = $dispatcher;
+        $this->tokenExtractor                = $tokenExtractor;
+        $this->preAuthenticationTokenStorage = new TokenStorage();
     }
 
     /**
@@ -109,7 +117,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * @param PreAuthenticationJWTUserToken Implementation of the (Security) TokenInterface
      *
-     * @throws JWTAuthenticationException If no user can be loaded from the decoded token
+     * @throws InvalidPayloadException If the user identity field is not a key of the payload
+     * @throws UserNotFoundException   If no user can be loaded from the given token
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
@@ -134,11 +143,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             throw new UserNotFoundException($identityField, $identity);
         }
 
-        $authToken = new JWTUserToken($user->getRoles());
-        $authToken->setUser($user);
-        $authToken->setRawToken($preAuthToken->getCredentials());
-
-        $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $authToken));
+        $this->preAuthenticationTokenStorage->setToken($preAuthToken);
 
         return $user;
     }
@@ -173,6 +178,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * {@inheritdoc}
      *
      * @return JWTAuthenticationFailureResponse
+     *
+     * @throws MissingTokenException
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -190,6 +197,30 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAuthenticatedToken(UserInterface $user, $providerKey)
+    {
+        $preAuthToken = $this->preAuthenticationTokenStorage->getToken();
+
+        if (null === $preAuthToken) {
+            return parent::createAuthenticatedToken($user, $providerKey);
+        }
+
+        $authToken = new JWTUserToken(
+            $user->getRoles(),
+            $user,
+            $preAuthToken->getCredentials(),
+            $providerKey
+        );
+
+        $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
+        $this->preAuthenticationTokenStorage->setToken(null);
+
+        return $authToken;
     }
 
     /**
