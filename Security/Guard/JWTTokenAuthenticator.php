@@ -27,17 +27,17 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Guard\GuardAuthenticatorInterface;
 
 /**
- * JWTTokenAuthenticator (Guard implementation).
+ * JWTTokenAuthenticator (Guard strict implementation).
  *
  * @see http://knpuniversity.com/screencast/symfony-rest4/jwt-guard-authenticator
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTTokenAuthenticator extends AbstractGuardAuthenticator
+class JWTTokenAuthenticator implements GuardAuthenticatorInterface
 {
     /**
      * @var JWTTokenManagerInterface
@@ -82,7 +82,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * @return PreAuthenticationJWTUserToken
      *
-     * @throws InvalidTokenException If the request token cannot be decoded
+     * @throws InvalidTokenException If an error occur while decoding the token
      * @throws ExpiredTokenException If the request token is expired
      */
     public function getCredentials(Request $request)
@@ -95,7 +95,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         try {
             if (!$payload = $this->jwtManager->decode($preAuthToken)) {
-                throw new InvalidTokenException();
+                throw new InvalidTokenException('Invalid JWT Token');
             }
 
             $preAuthToken->setPayload($payload);
@@ -117,8 +117,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * @param PreAuthenticationJWTUserToken Implementation of the (Security) TokenInterface
      *
-     * @throws InvalidPayloadException If the user identity field is not a key of the payload
-     * @throws UserNotFoundException   If no user can be loaded from the given token
+     * @throws \InvalidArgumentException If preAuthToken is not of the good type
+     * @throws InvalidPayloadException   If the user identity field is not a key of the payload
+     * @throws UserNotFoundException     If no user can be loaded from the given token
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
@@ -178,8 +179,6 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * {@inheritdoc}
      *
      * @return JWTAuthenticationFailureResponse
-     *
-     * @throws MissingTokenException
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -201,21 +200,18 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \RuntimeException If there is no pre-authenticated token previously stored
      */
     public function createAuthenticatedToken(UserInterface $user, $providerKey)
     {
         $preAuthToken = $this->preAuthenticationTokenStorage->getToken();
 
         if (null === $preAuthToken) {
-            return parent::createAuthenticatedToken($user, $providerKey);
+            throw new \RuntimeException('Unable to return an post authentication token since there is no pre authentication token in %s::$preAuthenticationTokenStorage');
         }
 
-        $authToken = new JWTUserToken(
-            $user->getRoles(),
-            $user,
-            $preAuthToken->getCredentials(),
-            $providerKey
-        );
+        $authToken = new JWTUserToken($user->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
 
         $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
         $this->preAuthenticationTokenStorage->setToken(null);

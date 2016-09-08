@@ -15,7 +15,7 @@ Configuration
   If a firewall allows anonymous, the entry point will not be called at all, letting the request continue.  
   If it doesn't, the entry point will dispatch a `on_jwt_not_found` event that can be subscribed to customize the default failure response that will be returned by the entry point.
   - `throw_exceptions`: This option doesn't make sense anymore as the exceptions thrown during the authentication process are needed, involving call of the good method in the good time, dispatching the good events, so a custom response can be easily set, as its content no more depends on the exception thrown.
-  - `authentication_provider` and `authentication_listener`: It's now part of the authenticator role, simplifiying a lot the corresponding code that can now be found/overrided from one place.
+  - `authentication_provider` and `authentication_listener`: It's now part of the authenticator role, simplifiying a lot the corresponding code that can now be found/overriden from one place.
 
   __Before__
 

@@ -211,7 +211,22 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
         $authenticator->getUser($decodedToken, $userProvider);
 
-        $this->assertInstanceOf(JWTUserToken::class, $authenticator->createAuthenticatedToken($userStub, 'lexik'));
+        $this->assertEquals($jwtUserToken, $authenticator->createAuthenticatedToken($userStub, 'lexik'));
+    }
+
+    /**
+     * @expectedException        \RuntimeException
+     * @expectedExceptionMessage Unable to return an post authentication token
+     */
+    public function testCreateAuthenticatedTokenThrowsExceptionIfNotPreAuthenticatedToken()
+    {
+        $userStub  = new AdvancedUserStub('lexik', 'test');
+
+        (new JWTTokenAuthenticator(
+           $this->getJWTManagerMock(),
+           $this->getEventDispatcherMock(),
+           $this->getTokenExtractorMock()
+       ))->createAuthenticatedToken($userStub, 'lexik');
     }
 
     public function testOnAuthenticationFailureWithInvalidToken()
