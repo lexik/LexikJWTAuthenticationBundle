@@ -41,14 +41,9 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.encryption_engine', $encoderConfig['encryption_engine']);
 
-        $tokenExtractorMapId = 'lexik_jwt_authentication.token_extractor_map';
-        $container
-            ->getDefinition($tokenExtractorMapId)
-            ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
-
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
-            ->replaceArgument(0, new Reference($tokenExtractorMapId));
+            ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
     }
 
     private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
@@ -62,7 +57,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(0, $tokenExtractorsConfig['authorization_header']['prefix'])
                 ->replaceArgument(1, $tokenExtractorsConfig['authorization_header']['name']);
 
-            $map[] = $authorizationHeaderExtractorId;
+            $map[] = new Reference($authorizationHeaderExtractorId);
         }
 
         if ($tokenExtractorsConfig['query_parameter']['enabled']) {
@@ -71,7 +66,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->getDefinition($queryParameterExtractorId)
                 ->replaceArgument(0, $tokenExtractorsConfig['query_parameter']['name']);
 
-            $map[] = $queryParameterExtractorId;
+            $map[] = new Reference($queryParameterExtractorId);
         }
 
         if ($tokenExtractorsConfig['cookie']['enabled']) {
@@ -80,7 +75,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->getDefinition($cookieExtractorId)
                 ->replaceArgument(0, $tokenExtractorsConfig['cookie']['name']);
 
-            $map[] = $cookieExtractorId;
+            $map[] = new Reference($cookieExtractorId);
         }
 
         return $map;

@@ -2,44 +2,52 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\TokenExtractor;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\TokenExtractorMap;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * AuthorizationHeaderTokenExtractorTest.
+ * ChainTokenExtractorTest.
  *
- * @author Nicolas Cabot <n.cabot@lexik.fr>
+ * @author Robin Chalas <robin.chalas@gmail.com>
  */
 class ChainTokenExtractorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testExtract()
+    public function testGetIterator()
     {
-        $request = new Request();
+        $map = $this->getTokenExtractorMap();
 
-        $tokenExtractorMap = $this
-            ->getMockBuilder(TokenExtractorMap::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $tokenExtractorMap
-            ->expects($this->once())
-            ->method('loadExtractors')
-            ->willReturn($this->generateTokenExtractorMocks([false, false, 'dummy']));
-
-        $chainExtractor = new ChainTokenExtractor($tokenExtractorMap);
-
-        $this->assertEquals('dummy', $chainExtractor->extract($request));
+        foreach ((new ChainTokenExtractor($map)) as $extractor) {
+            $this->assertContains($extractor, $map);
+        }
     }
 
-    public function testGetMap()
+    public function testAddExtractor()
     {
-        $tokenExtractorMap = $this
-            ->getMockBuilder(TokenExtractorMap::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $extractor = new ChainTokenExtractor($this->getTokenExtractorMap());
+        $custom    = $this->getTokenExtractorMock(null);
+        $extractor->addExtractor($custom);
 
-        $this->assertSame($tokenExtractorMap, (new ChainTokenExtractor($tokenExtractorMap))->getMap());
+        $map = [];
+        foreach ($extractor as $child) {
+            $map[] = $child;
+        }
+
+        $this->assertCount(4, $map);
+        $this->assertContains($custom, $map);
+    }
+
+    public function testExtract()
+    {
+        $this->assertEquals('dummy', (new ChainTokenExtractor($this->getTokenExtractorMap([false, false, 'dummy'])))->extract(new Request()));
+    }
+
+    public function testClearMap()
+    {
+        $extractor = new ChainTokenExtractor($this->getTokenExtractorMap());
+        $extractor->clearMap();
+
+        $this->assertNull($extractor->getIterator()->current());
     }
 
     private function getTokenExtractorMock($returnValue)
@@ -49,19 +57,32 @@ class ChainTokenExtractorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $extractor
-            ->expects($this->once())
-            ->method('extract')
-            ->with($this->isInstanceOf(Request::class))
-            ->willReturn($returnValue);
+        if ($returnValue) {
+            $extractor
+                ->expects($this->once())
+                ->method('extract')
+                ->with($this->isInstanceOf(Request::class))
+                ->willReturn($returnValue);
+        }
 
         return $extractor;
     }
 
-    private function generateTokenExtractorMocks($returnValues)
+    private function getTokenExtractorMap($returnValues = [null, null, null])
     {
+        $map = [];
+
         foreach ($returnValues as $value) {
-            yield $this->getTokenExtractorMock($value);
+            $map[] = $this->getTokenExtractorMock($value);
+        }
+
+        return $map;
+    }
+
+    private function generateTokenExtractors(array $map)
+    {
+        foreach ($map as $extractor) {
+            yield $extractor;
         }
     }
 }

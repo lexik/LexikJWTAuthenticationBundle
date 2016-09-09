@@ -58,16 +58,9 @@
                 <argument type="service" id="event_dispatcher"/>
             </call>
         </service>
-        <!-- Token Extractor Map -->
-        <service id="lexik_jwt_authentication.token_extractor_map" class="Lexik\Bundle\JWTAuthenticationBundle\Services\TokenExtractorMap" public="false">
-            <argument type="collection" /> <!-- The extractor services -->
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
-        </service>
         <!-- Chain Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.chain_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor" public="false">
-            <argument type="service" id="lexik_jwt_authentication.token_extractor_map" />
+            <argument type="collection" />
         </service>
         <!-- Authorization Header Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor">
