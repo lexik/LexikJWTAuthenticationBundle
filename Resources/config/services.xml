@@ -30,7 +30,6 @@
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
-            <argument type="string" /> <!-- Custom user identity field -->
         </service>
         <!-- Default JWT Token Authenticator -->
         <service id="lexik_jwt_authentication.jwt_token_authenticator" parent="lexik_jwt_authentication.security.guard.jwt_token_authenticator" />

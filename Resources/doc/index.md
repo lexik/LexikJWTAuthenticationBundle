@@ -76,7 +76,8 @@ firewalls:
     api:
         pattern:   ^/api
         stateless: true
-        lexik_jwt: ~
+        guard: 
+            - lexik_jwt_authentication.jwt_token_authenticator
 
 access_control:
     - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -174,3 +175,4 @@ The following documents are available:
 - [Functionally testing a JWT protected api](3-functional-testing.md)
 - [Working with CORS requests](4-cors-requests.md)
 - [JWT encoder service customization](5-encoder-service.md)
+- [Extending JWTTokenAuthenticator](6-extending-jwt-authenticator.md)

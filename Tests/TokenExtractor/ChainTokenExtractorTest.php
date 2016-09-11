@@ -37,6 +37,20 @@ class ChainTokenExtractorTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($custom, $map);
     }
 
+    public function testRemoveExtractor()
+    {
+        $extractor = new ChainTokenExtractor([]);
+        $custom    = $this->getTokenExtractorMock(null);
+
+        $extractor->addExtractor($custom);
+        $result = $extractor->removeExtractor(function (TokenExtractorInterface $extractor) use ($custom) {
+            return $extractor instanceof \PHPUnit_Framework_MockObject_MockObject;
+        });
+
+        $this->assertTrue($result, 'removeExtractor returns true in case of success, false otherwise');
+        $this->assertFalse($extractor->getIterator()->valid(), 'The token extractor should have been removed so the map should be empty');
+    }
+
     public function testExtract()
     {
         $this->assertEquals('dummy', (new ChainTokenExtractor($this->getTokenExtractorMap([false, false, 'dummy'])))->extract(new Request()));
@@ -47,7 +61,7 @@ class ChainTokenExtractorTest extends \PHPUnit_Framework_TestCase
         $extractor = new ChainTokenExtractor($this->getTokenExtractorMap());
         $extractor->clearMap();
 
-        $this->assertNull($extractor->getIterator()->current());
+        $this->assertFalse($extractor->getIterator()->valid());
     }
 
     private function getTokenExtractorMock($returnValue)

@@ -30,7 +30,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorInterface;
 
 /**
- * JWTTokenAuthenticator (Guard strict implementation).
+ * JWTTokenAuthenticator (Guard implementation).
  *
  * @see http://knpuniversity.com/screencast/symfony-rest4/jwt-guard-authenticator
  *
@@ -87,7 +87,13 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
      */
     public function getCredentials(Request $request)
     {
-        if (false === ($jsonWebToken = $this->tokenExtractor->extract($request))) {
+        $tokenExtractor = $this->getTokenExtractor();
+
+        if (!$tokenExtractor instanceof TokenExtractorInterface) {
+            throw new \RuntimeException(sprintf('Method "%s::getTokenExtractor()" must return an instance of "%s".', __CLASS__, TokenExtractorInterface::class));
+        }
+
+        if (false === ($jsonWebToken = $tokenExtractor->extract($request))) {
             return;
         }
 
@@ -225,5 +231,19 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
     public function supportsRememberMe()
     {
         return false;
+    }
+
+    /**
+     * Gets the token extractor to be used for retrieving a JWT token in the
+     * current request.
+     *
+     * Override this method for adding/removing extractors to the chain one or
+     * returning a different {@link TokenExtractorInterface} implementation.
+     *
+     * @return TokenExtractorInterface
+     */
+    protected function getTokenExtractor()
+    {
+        return $this->tokenExtractor;
     }
 }
