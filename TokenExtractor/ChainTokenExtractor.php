@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\TokenExtractorMap;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -11,19 +10,29 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class ChainTokenExtractor implements TokenExtractorInterface
+class ChainTokenExtractor implements \IteratorAggregate, TokenExtractorInterface
 {
     /**
-     * @var TokenExtractorMap
+     * @var array
      */
     private $map;
 
     /**
-     * @param TokenExtractorMap $map
+     * @param array $map
      */
-    public function __construct(TokenExtractorMap $map)
+    public function __construct(array $map)
     {
         $this->map = $map;
+    }
+
+    /**
+     * Adds a new token extractor to the map.
+     *
+     * @param TokenExtractorInterface $extractor
+     */
+    public function addExtractor(TokenExtractorInterface $extractor)
+    {
+        $this->map[] = $extractor;
     }
 
     /**
@@ -34,7 +43,7 @@ class ChainTokenExtractor implements TokenExtractorInterface
      */
     public function extract(Request $request)
     {
-        foreach ($this->map->loadExtractors() as $extractor) {
+        foreach ($this->getIterator() as $extractor) {
             if ($token = $extractor->extract($request)) {
                 return $token;
             }
@@ -44,10 +53,27 @@ class ChainTokenExtractor implements TokenExtractorInterface
     }
 
     /**
-     * @return TokenExtractorMap
+     * Iterates over the mapped token extractors while generating them.
+     *
+     * An extractor is initialized only if we really need it (at
+     * the corresponding iteration).
+     *
+     * @return \Generator The generated TokenExtractorInterface implementations
      */
-    public function getMap()
+    public function getIterator()
     {
-        return $this->map;
+        foreach ($this->map as $extractor) {
+            if ($extractor instanceof TokenExtractorInterface) {
+                yield $extractor;
+            }
+        }
+    }
+
+    /**
+     * Clears the token extractor map.
+     */
+    public function clearMap()
+    {
+        $this->map = [];
     }
 }
