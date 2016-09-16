@@ -220,7 +220,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateAuthenticatedTokenThrowsExceptionIfNotPreAuthenticatedToken()
     {
-        $userStub  = new AdvancedUserStub('lexik', 'test');
+        $userStub = new AdvancedUserStub('lexik', 'test');
 
         (new JWTTokenAuthenticator(
            $this->getJWTManagerMock(),

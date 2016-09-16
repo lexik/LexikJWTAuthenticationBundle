@@ -34,6 +34,15 @@
         <!-- Default JWT Token Authenticator -->
         <service id="lexik_jwt_authentication.jwt_token_authenticator" parent="lexik_jwt_authentication.security.guard.jwt_token_authenticator" />
 
+        <!-- Abstract FormLogin Authenticator / Guard implementation -->
+        <service id="lexik_jwt_authentication.security.guard.form_login_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\FormLoginAuthenticator" abstract="true">
+            <argument type="service" id="security.password_encoder" />
+            <argument type="service" id="lexik_jwt_authentication.handler.authentication_success" />
+            <argument type="service" id="lexik_jwt_authentication.handler.authentication_failure" />
+        </service>
+        <!-- Default FormLogin Authenticator -->
+        <service id="lexik_jwt_authentication.form_login_authenticator" parent="lexik_jwt_authentication.security.guard.form_login_authenticator" />
+
         <!-- JWT Authentication response interceptor -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
