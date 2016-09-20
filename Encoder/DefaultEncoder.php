@@ -35,11 +35,11 @@ class DefaultEncoder implements JWTEncoderInterface
         try {
             $jws = $this->jwsProvider->create($payload);
         } catch (InvalidArgumentException $e) {
-            throw new JWTEncodeFailureException('An error occurred while trying to encode the JWT token.', $e);
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
 
         if (!$jws->isSigned()) {
-            throw new JWTEncodeFailureException('Unable to create a signed JWT from the given configuration.');
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::UNSIGNED_TOKEN, 'Unable to create a signed JWT from the given configuration.');
         }
 
         return $jws->getToken();
@@ -53,17 +53,19 @@ class DefaultEncoder implements JWTEncoderInterface
         try {
             $jws = $this->jwsProvider->load($token);
         } catch (InvalidArgumentException $e) {
-            throw new JWTDecodeFailureException('Invalid JWT Token', $e);
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', $e);
         }
 
+        $payload = $jws->getPayload();
+
         if ($jws->isExpired()) {
-            throw new JWTDecodeFailureException('Expired JWT token');
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token');
         }
 
         if (!$jws->isVerified()) {
-            throw new JWTDecodeFailureException('Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }
 
-        return $jws->getPayload();
+        return $payload;
     }
 }

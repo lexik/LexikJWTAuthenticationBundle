@@ -5,6 +5,10 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
+* feature [\#230](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/230) Introduce JWTExpiredEvent ([chalasr](https://github.com/chalasr))
+
+* feature [\#184](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/184) [Security] Deprecate current system in favor of a JWTTokenAuthenticator (Guard) ([chalasr](https://github.com/chalasr))
+
 * feature [\#218](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/218) Add more flexibility in token extractors configuration ([chalasr](https://github.com/chalasr))
 
 * feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loading for easy overriding ([chalasr](https://github.com/chalasr))
@@ -25,7 +29,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [1.7.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.7.0) (2016-08-06)
 
-* feature [\#200](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/200) Depreciate injection of Request instances ([chalasr](https://github.com/chalasr))
+* feature [\#200](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/200) Deprecate injection of Request instances ([chalasr](https://github.com/chalasr))
 
 ## [v1.6.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v1.6.0) (2016-07-07)
 

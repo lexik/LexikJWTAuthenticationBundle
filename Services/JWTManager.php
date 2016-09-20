@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTManager implements JWTManagerInterface
+class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
 {
     /**
      * @var JWTEncoderInterface
@@ -111,7 +111,7 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getUserIdentityField()
     {
@@ -119,7 +119,7 @@ class JWTManager implements JWTManagerInterface
     }
 
     /**
-     * @param string $userIdentityField
+     * {@inheritdoc}
      */
     public function setUserIdentityField($userIdentityField)
     {

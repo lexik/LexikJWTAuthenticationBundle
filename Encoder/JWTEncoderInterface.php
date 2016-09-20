@@ -17,16 +17,18 @@ interface JWTEncoderInterface
      *
      * @return string the encoded token string
      *
-     * @throws JWTEncodeFailureException If an error occurred during the creation of the token (invalid configuration...)
+     * @throws JWTEncodeFailureException If an error occurred while trying to create
+     *                                   the token (invalid crypto key, invalid payload...)
      */
     public function encode(array $data);
 
     /**
      * @param string $token
      *
-     * @return false|array
+     * @return array
      *
-     * @throws JWTDecodeFailureException If an error occurred during the loading of the token (invalid signature, expired token...)
+     * @throws JWTDecodeFailureException If an error occurred while trying to load the token
+     *                                   (invalid signature, invalid crypto key, expired token...)
      */
     public function decode($token);
 }

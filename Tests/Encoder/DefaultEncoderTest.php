@@ -19,7 +19,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeFromValidJWS()
     {
-        $payload     = [
+        $payload = [
             'username' => 'chalasr',
             'exp'      => time() + 3600,
         ];
@@ -90,7 +90,8 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that calling DefaultEncoder::decode() with an expired payload correctly fails.
      *
-     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
+     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
+     * @expectedExceptionMessage Expired JWT Token
      */
     public function testDecodeFromExpiredPayload()
     {
