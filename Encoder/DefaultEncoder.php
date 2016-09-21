@@ -32,6 +32,8 @@ class DefaultEncoder implements JWTEncoderInterface
      */
     public function encode(array $payload)
     {
+        $payload['iat'] = time();
+
         try {
             $jws = $this->jwsProvider->create($payload);
         } catch (InvalidArgumentException $e) {
