@@ -107,6 +107,25 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that calling DefaultEncoder::decode() with an iat set in the future correctly fails.
+     *
+     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
+     * @expectedExceptionMessage Invalid JWT Token
+     */
+    public function testDecodeWithInvalidIssudAtClaimInPayload()
+    {
+        $loadedJWS   = new LoadedJWS(['exp' => time() + 3600, 'iat' => time() + 3600], true);
+        $jwsProvider = $this->getJWSProviderMock();
+        $jwsProvider
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn($loadedJWS);
+
+        $encoder = new DefaultEncoder($jwsProvider);
+        $encoder->decode('jwt');
+    }
+
+    /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getJWSProviderMock()
