@@ -58,7 +58,9 @@ class DefaultEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', $e);
         }
 
-        $payload = $jws->getPayload();
+        if ($jws->isInvalid()) {
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token');
+        }
 
         if ($jws->isExpired()) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token');
@@ -68,6 +70,6 @@ class DefaultEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }
 
-        return $payload;
+        return $jws->getPayload();
     }
 }

@@ -19,6 +19,7 @@ final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
         $this->goodPayload = [
             'username' => 'chalasr',
             'exp'      => time() + 3600,
+            'iat'      => time(),
         ];
     }
 
@@ -58,5 +59,17 @@ final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($jws->isVerified());
         $this->assertTrue($jws->isExpired());
+    }
+
+    public function testIsInvalidReturnsTrueWithIssuedAtSetInTheFuture()
+    {
+        $payload = $this->goodPayload;
+        $payload['iat'] += 3600;
+
+        $jws = new LoadedJWS($payload, true);
+
+        $this->assertFalse($jws->isVerified());
+        $this->assertFalse($jws->isExpired());
+        $this->assertTrue($jws->isInvalid());
     }
 }

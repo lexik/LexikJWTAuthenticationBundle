@@ -12,6 +12,7 @@ final class LoadedJWS
 {
     const VERIFIED = 'verified';
     const EXPIRED  = 'expired';
+    const INVALID  = 'invalid';
 
     /**
      * @var array
@@ -35,6 +36,7 @@ final class LoadedJWS
             $this->state = self::VERIFIED;
         }
 
+        $this->checkIssuedAt();
         $this->checkExpiration();
     }
 
@@ -65,16 +67,34 @@ final class LoadedJWS
     }
 
     /**
+     * @return bool
+     */
+    public function isInvalid()
+    {
+        return self::INVALID === $this->state;
+    }
+
+    /**
      * Ensures that the signature is not expired.
      */
     private function checkExpiration()
     {
         if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
-            return $this->state = null;
+            return $this->state = self::INVALID;
         }
 
         if (0 <= (new \DateTime())->format('U') - $this->payload['exp']) {
             $this->state = self::EXPIRED;
+        }
+    }
+
+    /**
+     * Ensures that the iat claim is not in the future.
+     */
+    private function checkIssuedAt()
+    {
+        if (isset($this->payload['iat']) && (int) $this->payload['iat'] > time()) {
+            return $this->state = self::INVALID;
         }
     }
 }
