@@ -132,6 +132,10 @@ Encoder
 * The `Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface` has been changed,  
   the `encode` and `decode` methods now throw exceptions rather than returning `false`  
   in case of error.
+  
+* The `Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder` default encoder used via service
+  "lexik_jwt_authentication.encoder.default" now checks for a `iat` claim existance and validity when decoding a token
+  using `DefaultEncoder::decode()`.
 
 KeyLoader
 ---------

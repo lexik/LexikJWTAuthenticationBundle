@@ -24,7 +24,7 @@ class LexikJWTAuthenticationBundle extends Bundle
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
 
-        // BC 1.x
+        // BC 1.x, to be removed in 3.0
         $extension->addSecurityListenerFactory(new JWTFactory());
     }
 }
