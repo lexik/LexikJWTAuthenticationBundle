@@ -13,7 +13,7 @@ but you can add your own data.
 services:
     acme_api.event.jwt_created_listener:
         class: Acme\Bundle\ApiBundle\EventListener\JWTCreatedListener
-        arguments: [ '@request_stack' ] # Symfony 2.4+
+        arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 ```
@@ -49,10 +49,6 @@ class JWTCreatedListener
      */
     public function onJWTCreated(JWTCreatedEvent $event)
     {
-        // Symfony < 2.4
-        $request = $event->getRequest();
-        
-        // Symfony 2.4+
         $request = $this->requestStack->getCurrentRequest();
 
         $payload       = $event->getData();
@@ -96,7 +92,7 @@ You can access the jwt payload once it has been decoded to perform you own addit
 services:
     acme_api.event.jwt_decoded_listener:
         class: Acme\Bundle\ApiBundle\EventListener\JWTDecodedListener
-        arguments: [ '@request_stack' ] # Symfony 2.4+
+        arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
 ```
@@ -116,10 +112,6 @@ class JWTDecodedListener
      */
     public function onJWTDecoded(JWTDecodedEvent $event)
     {
-        // Symfony < 2.4
-        $request = $event->getRequest();
-        
-        // Symfony 2.4+
         $request = $this->requestStack->getCurrentRequest();
         
         $payload = $event->getPayload();
