@@ -8,7 +8,7 @@ If this doesn't suit your needs, you can replace it with your own encoder servic
 
 ``` php
 // src/Acme/Bundle/ApiBundle/Encoder/NixillaJWTEncoder.php
-namespace Acme\Bundle\ApiBundle\Encoder;
+namespace AppBundle\Encoder;
 
 use JWT\Authentication\JWT;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -61,7 +61,7 @@ class NixillaJWTEncoder implements JWTEncoderInterface
 # services.yml
 services:
     acme_api.encoder.nixilla_jwt_encoder:
-        class: Acme\Bundle\ApiBundle\Encoder\NixillaJWTEncoder
+        class: AppBundle\Encoder\NixillaJWTEncoder
 ```
 
 ### Set it as the encoder_service in the bundle configuration
