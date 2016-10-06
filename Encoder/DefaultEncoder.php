@@ -5,7 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProviderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 
 /**
  * Default Json Web Token encoder/decoder.
@@ -32,8 +32,6 @@ class DefaultEncoder implements JWTEncoderInterface
      */
     public function encode(array $payload)
     {
-        $payload['iat'] = time();
-
         try {
             $jws = $this->jwsProvider->create($payload);
         } catch (InvalidArgumentException $e) {

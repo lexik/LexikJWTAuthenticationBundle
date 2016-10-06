@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInject
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Config\FileLocator;
@@ -40,7 +41,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $signatureAlgorithm = $container->getParameter($encoderNamespace.'.signature_algorithm');
 
         $jwsProviderMock = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider')
+            ->getMockBuilder(DefaultJWSProvider::class)
             ->setConstructorArgs([
                 $container->get('lexik_jwt_authentication.key_loader'),
                 $encryptionEngine,

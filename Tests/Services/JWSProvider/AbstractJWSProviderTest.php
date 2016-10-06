@@ -1,8 +1,7 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
@@ -11,14 +10,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWSProviderTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractJWSProviderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Tests to create a signed JWT Token.
-     */
-    public function testCreate()
-    {
-        $privateKey = '
+    protected static $privateKey = '
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-256-CBC,BBE45AC4E18DAF41A11D58B6C9271E3E
@@ -51,19 +45,38 @@ bEAuSwGVWIItASovCtEat2aQVOBcKFj5f66SJU9N9uVsdQmcug453lOBpdG1U2p4
 -----END RSA PRIVATE KEY-----
 ';
 
+    protected static $publicKey = '
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx590gReUdr72YYb03uem
++aGCpO5TWFZ190SIZ5wP99xNv1mHrwvQHXyKqsyyzdBKTepKqT8MB32TSsYGX00E
+S0t0iYS6U1ocXLeWVhpk9dkf5foMQlb4DfET76Kog2Xrlldh8c7g0+D5xn4zVVqw
+ZjDu2teURrboVEByz+M8Ztez5BNB/R7PGWhdl+QTI18RovuC7YtlEl4gKDmBliAr
+WqphyBrDRrYf1EnM/Xbq4zdC6P+D70FW5pvrpc8WkkoJmn1/zhlqz0YPGKawt1/+
+r1Zx+vZO5QZhkc4Y166d9UHPNFGBeWegnWwFV8eLmVr0iK3TVCriqB+8C1pQed4v
+vwIDAQAB
+-----END PUBLIC KEY-----
+';
+
+    protected static $providerClass;
+
+    /**
+     * Tests to create a signed JWT Token.
+     */
+    public function testCreate()
+    {
         $keyLoaderMock = $this->getKeyLoaderMock();
         $keyLoaderMock
             ->expects($this->once())
             ->method('loadKey')
             ->with('private')
-            ->willReturn($privateKey);
+            ->willReturn(self::$privateKey);
         $keyLoaderMock
             ->expects($this->once())
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
-        $jwsProvider = new JWSProvider($keyLoaderMock, 'openssl', 'RS384');
+        $payload     = ['username' => 'chalasr', 'exp' => time() + 3600];
+        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384');
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
@@ -77,26 +90,14 @@ bEAuSwGVWIItASovCtEat2aQVOBcKFj5f66SJU9N9uVsdQmcug453lOBpdG1U2p4
      */
     public function testLoad($jwt)
     {
-        $publicKey = '
------BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx590gReUdr72YYb03uem
-+aGCpO5TWFZ190SIZ5wP99xNv1mHrwvQHXyKqsyyzdBKTepKqT8MB32TSsYGX00E
-S0t0iYS6U1ocXLeWVhpk9dkf5foMQlb4DfET76Kog2Xrlldh8c7g0+D5xn4zVVqw
-ZjDu2teURrboVEByz+M8Ztez5BNB/R7PGWhdl+QTI18RovuC7YtlEl4gKDmBliAr
-WqphyBrDRrYf1EnM/Xbq4zdC6P+D70FW5pvrpc8WkkoJmn1/zhlqz0YPGKawt1/+
-r1Zx+vZO5QZhkc4Y166d9UHPNFGBeWegnWwFV8eLmVr0iK3TVCriqB+8C1pQed4v
-vwIDAQAB
------END PUBLIC KEY-----
-';
-
         $keyLoaderMock = $this->getKeyLoaderMock();
         $keyLoaderMock
             ->expects($this->once())
             ->method('loadKey')
             ->with('public')
-            ->willReturn($publicKey);
+            ->willReturn(self::$publicKey);
 
-        $jwsProvider = new JWSProvider($keyLoaderMock, 'openssl', 'RS384');
+        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384');
         $this->assertInstanceOf(LoadedJWS::class, $jwsProvider->load($jwt));
     }
 
@@ -106,7 +107,7 @@ vwIDAQAB
      */
     public function testInvalidsignatureAlgorithm()
     {
-        new JWSProvider($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm');
+        new self::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm');
     }
 
     /**

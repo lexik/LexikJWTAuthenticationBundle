@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
 /**
  * Interface for classes that are able to create and load JSON web signatures (JWS).

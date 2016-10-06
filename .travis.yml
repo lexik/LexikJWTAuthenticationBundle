@@ -36,3 +36,8 @@ before_install:
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
 
 install: composer update --prefer-dist --no-interaction
+
+script:
+    - vendor/bin/phpunit --testsuite unit
+    - SYMFONY__JWT__ENCODER=default vendor/bin/phpunit --testsuite functional
+    - SYMFONY__JWT__ENCODER=lcobucci vendor/bin/phpunit --testsuite functional
