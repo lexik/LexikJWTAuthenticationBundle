@@ -44,7 +44,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         ];
 
         $response = new JsonResponse($data, self::RESPONSE_CODE);
-        $event = new AuthenticationFailureEvent(null, $exception, $response);
+        $event = new AuthenticationFailureEvent($request, $exception, $response, false);
 
         $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);
 

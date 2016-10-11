@@ -78,7 +78,8 @@ class JWTManager implements JWTManagerInterface
             $payload,
             $user,
             // Ensure backward compatibility for Symfony < 2.8
-            class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request
+            $this->getRequest(false),
+            false
         );
         $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
 
@@ -99,7 +100,7 @@ class JWTManager implements JWTManagerInterface
             return false;
         }
 
-        $event = new JWTDecodedEvent($payload, class_exists('Symfony\Component\HttpFoundation\RequestStack') ? null : $this->request);
+        $event = new JWTDecodedEvent($payload, $this->getRequest(false), false);
         $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
 
         if (!$event->isValid()) {
@@ -145,7 +146,7 @@ class JWTManager implements JWTManagerInterface
      */
     public function setRequest($requestStack)
     {
-        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+        if ((1 === func_num_args() || func_get_arg(1)) && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
             @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
         }
 
@@ -163,8 +164,8 @@ class JWTManager implements JWTManagerInterface
      */
     public function getRequest()
     {
-        if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
+        if ((0 === func_num_args() || func_get_arg(0)) && class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
+            @trigger_error(sprintf('Method %s() is deprecated since version 1.7 and will be removed in 2.0.%sUse Symfony\Component\HttpFoundation\RequestStack::getCurrentRequest() instead.', __METHOD__, PHP_EOL), E_USER_DEPRECATED);
         }
 
         return $this->request;
