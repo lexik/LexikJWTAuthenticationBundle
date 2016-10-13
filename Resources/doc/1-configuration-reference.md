@@ -6,6 +6,17 @@ Bundle configuration
 
 ### Minimal configuration
 
+``` yaml
+# app/config/config.yml
+#...
+lexik_jwt_authentication:
+    private_key_path:    '%kernel.root_dir%/var/jwt/private.pem'
+    # ssh public key path
+    public_key_path:     '%kernel.root_dir%/var/jwt/public.pem'
+    # ssh key pass phrase
+    pass_phrase:         ''
+```
+
 ### Full default configuration
 
 ``` yaml
