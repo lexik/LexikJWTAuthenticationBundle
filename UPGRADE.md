@@ -51,6 +51,7 @@ Configuration
           cookie: ~
           query_parameter: ~
   ```
+  
 Events
 -------
 
