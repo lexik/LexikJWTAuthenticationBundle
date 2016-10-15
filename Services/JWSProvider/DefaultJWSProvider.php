@@ -33,13 +33,19 @@ class DefaultJWSProvider implements JWSProviderInterface
     private $signatureAlgorithm;
 
     /**
+     * @var int
+     */
+    private $ttl;
+
+    /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
+     * @param int                $ttl
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
         $cryptoEngine = $cryptoEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
 
@@ -52,6 +58,7 @@ class DefaultJWSProvider implements JWSProviderInterface
         $this->keyLoader          = $keyLoader;
         $this->cryptoEngine       = $cryptoEngine;
         $this->signatureAlgorithm = $signatureAlgorithm;
+        $this->ttl                = $ttl;
     }
 
     /**
@@ -61,7 +68,7 @@ class DefaultJWSProvider implements JWSProviderInterface
     {
         $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
 
-        $jws->setPayload($payload + ['iat' => time()]);
+        $jws->setPayload($payload + ['exp' => (time() + $this->ttl), 'iat' => time()]);
         $jws->sign(
             $this->keyLoader->loadKey('private'),
             $this->keyLoader->getPassphrase()

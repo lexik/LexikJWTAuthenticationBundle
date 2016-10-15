@@ -46,6 +46,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
                 $container->get('lexik_jwt_authentication.key_loader'),
                 $cryptoEngine,
                 $signatureAlgorithm,
+                3600,
             ])
             ->getMock();
 

@@ -24,16 +24,23 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $signer;
 
     /**
+     * @var int
+     */
+    private $ttl;
+
+    /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
+     * @param int                $ttl
      *
      * @throws \InvalidArgumentException If the given algorithm|engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
+        $this->ttl       = $ttl;
 
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
@@ -47,9 +54,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
     {
         $jws = (new Builder())
             ->setIssuedAt(time())
-            ->setExpiration($payload['exp']);
+            ->setExpiration(time() + $this->ttl);
 
-        foreach ($this->getCustomClaims($payload) as $name => $value) {
+        foreach ($payload as $name => $value) {
             $jws->set($name, $value);
         }
 
@@ -104,20 +111,5 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $signer = sprintf('Lcobucci\\JWT\\Signer\\%s\\Sha%s', $signerType, $bits);
 
         return new $signer();
-    }
-
-    private function getCustomClaims(array $claims = [])
-    {
-        $standardClaimNames = ['jti', 'iss', 'aud', 'sub', 'iat', 'nbf', 'exp'];
-        $customClaimNames   = array_filter(array_keys($claims), function ($name) use ($standardClaimNames) {
-            return !in_array($name, $standardClaimNames);
-        });
-
-        $customClaims = [];
-        foreach ($customClaimNames as $name) {
-            $customClaims[$name] = $claims[$name];
-        }
-
-        return $customClaims;
     }
 }

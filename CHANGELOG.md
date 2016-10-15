@@ -5,7 +5,9 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
-* feature [\#246](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/247) Add a simple built-in encoder based on lcobucci/jwt ([chalasr](https://github.com/chalasr))
+* feature [\#249](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/249) Avoid setting exp claim from JWTManager ([chalasr](https://github.com/chalasr))
+
+* feature [\#246](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/246) Add a simple built-in encoder based on lcobucci/jwt ([chalasr](https://github.com/chalasr))
 
 * feature [\#240](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/240) Add iat check ([chalasr](https://github.com/chalasr))
 
@@ -15,7 +17,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 * feature [\#218](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/218) Add more flexibility in token extractors configuration ([chalasr](https://github.com/chalasr))
 
-* feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loading for easy overriding ([chalasr](https://github.com/chalasr))
+* feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loadi ng for easy overriding ([chalasr](https://github.com/chalasr))
 
 * feature [\#202](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/202) Exceptions simplified ([Spomky](https://github.com/Spomky))
 

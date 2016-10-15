@@ -42,6 +42,12 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('token_ttl')
                     ->defaultValue(3600)
+                    ->validate()
+                        ->ifTrue(function ($ttl) {
+                            return !is_numeric($ttl);
+                        })
+                        ->thenInvalid('The token_ttl must be a numeric value.')
+                    ->end()
                 ->end()
                 ->arrayNode('encoder')
                     ->addDefaultsIfNotSet()
