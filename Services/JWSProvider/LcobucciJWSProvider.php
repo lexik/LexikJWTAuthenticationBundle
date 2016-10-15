@@ -25,18 +25,18 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     /**
      * @param KeyLoaderInterface $keyLoader
-     * @param string             $encryptionEngine
+     * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
      *
      * @throws \InvalidArgumentException If the given algorithm|engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $signatureAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm)
     {
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
 
-        if ('openssl' !== $encryptionEngine) {
-            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as encryption engine.', __CLASS__));
+        if ('openssl' !== $cryptoEngine) {
+            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
         }
     }
 

@@ -9,7 +9,7 @@ use Namshi\JOSE\JWS;
 
 /**
  * JWS Provider, Namshi\JOSE library integration.
- * Supports OpenSSL and phpseclib encryption engines.
+ * Supports OpenSSL and phpseclib crypto engines.
  *
  * @internal
  *
@@ -25,7 +25,7 @@ class DefaultJWSProvider implements JWSProviderInterface
     /**
      * @var string
      */
-    private $encryptionEngine;
+    private $cryptoEngine;
 
     /**
      * @var string
@@ -34,23 +34,23 @@ class DefaultJWSProvider implements JWSProviderInterface
 
     /**
      * @param KeyLoaderInterface $keyLoader
-     * @param string             $encryptionEngine
+     * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $signatureAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm)
     {
-        $encryptionEngine = $encryptionEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
+        $cryptoEngine = $cryptoEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
 
-        if (!$this->isAlgorithmSupportedForEngine($encryptionEngine, $signatureAlgorithm)) {
+        if (!$this->isAlgorithmSupportedForEngine($cryptoEngine, $signatureAlgorithm)) {
             throw new \InvalidArgumentException(
-                sprintf('The algorithm "%s" is not supported for %s', $signatureAlgorithm, $encryptionEngine)
+                sprintf('The algorithm "%s" is not supported for %s', $signatureAlgorithm, $cryptoEngine)
             );
         }
 
         $this->keyLoader          = $keyLoader;
-        $this->encryptionEngine   = $encryptionEngine;
+        $this->cryptoEngine       = $cryptoEngine;
         $this->signatureAlgorithm = $signatureAlgorithm;
     }
 
@@ -59,7 +59,7 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function create(array $payload)
     {
-        $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->encryptionEngine);
+        $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
 
         $jws->setPayload($payload + ['iat' => time()]);
         $jws->sign(
@@ -75,7 +75,7 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function load($token)
     {
-        $jws = JWS::load($token, false, null, $this->encryptionEngine);
+        $jws = JWS::load($token, false, null, $this->cryptoEngine);
 
         return new LoadedJWS(
             $jws->getPayload(),
@@ -84,14 +84,14 @@ class DefaultJWSProvider implements JWSProviderInterface
     }
 
     /**
-     * @param string $encryptionEngine
+     * @param string $cryptoEngine
      * @param string $signatureAlgorithm
      *
      * @return bool
      */
-    private function isAlgorithmSupportedForEngine($encryptionEngine, $signatureAlgorithm)
+    private function isAlgorithmSupportedForEngine($cryptoEngine, $signatureAlgorithm)
     {
-        $signerClass = sprintf('Namshi\\JOSE\\Signer\\%s\\%s', $encryptionEngine, $signatureAlgorithm);
+        $signerClass = sprintf('Namshi\\JOSE\\Signer\\%s\\%s', $cryptoEngine, $signatureAlgorithm);
 
         return class_exists($signerClass);
     }
