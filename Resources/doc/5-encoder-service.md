@@ -1,8 +1,11 @@
 JWT encoder service customization
 =================================
+, 
+This bundle comes with two built-in token encoders, one based on the [`namshi/jose`](https://github.com/namshi/jose) library (default) and the later based on the []`lcobucci/jwt`](https://github.com/lcobucci/jwt) library.
+If both don't suit your needs, you can replace it with your own encoder service. Here's an example implementing a [`nixilla/php-jwt`](https://github.com/nixilla/php-jwt) library based encoder.
 
-This bundle comes with a [`namshi/jose`](https://github.com/namshi/jose) library based token encoder as it uses SSH keys to encrypt and decrypt data.
-If this doesn't suit your needs, you can replace it with your own encoder service. Here's an example implementing a [`nixilla/php-jwt`](https://github.com/nixilla/php-jwt) library based encoder.
+Creating your own encoder
+--------------------------
 
 ### Create the encoder class
 
