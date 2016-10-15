@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Encoder;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
@@ -130,7 +130,7 @@ class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
      */
     private function getJWSProviderMock()
     {
-        return $this->getMockBuilder(JWSProvider::class)
+        return $this->getMockBuilder(DefaultJWSProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

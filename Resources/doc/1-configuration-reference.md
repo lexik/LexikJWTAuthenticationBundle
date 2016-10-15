@@ -61,7 +61,11 @@ lexik_jwt_authentication:
 
 ##### service
 
-Default based on the [Namshi/JOSE](https://github.com/namshi/jose) library.  
+Default to `lexik_jwt_authentication.encoder.default` which is based on the [Namshi/JOSE](https://github.com/namshi/jose) library.  
+You can also use `lexik_jwt_authentication.encoder.lcobucci` which is based on the [Lcobucci/JWT](https://github.com/lcobucci/jwt) library and concern the same usage level as the default one, providing an easy way to validate claims.
+
+For an advanced token encoding with higher encryption support, please see the [`Spomky-Labs/lexik-jose-bridge`](https://github.com/Spomky-Labs/lexik-jose-bridge) which is based on the great [`Spomky-Labs/JOSE`](https://github.com/Spomky-Labs/JOSE) library.
+
 To create your own encoder service, see the [JWT encoder service customization chapter](5-encoder-service.md).
 
 ##### encryption_engine

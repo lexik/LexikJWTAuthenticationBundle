@@ -6,11 +6,6 @@ framework:
     session:
         storage_id: session.storage.mock_file
 
-lexik_jwt_authentication:
-    private_key_path:   '%kernel.root_dir%/../var/jwt/private.pem'
-    public_key_path:    '%kernel.root_dir%/../var/jwt/public.pem'
-    pass_phrase:        testing
-
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext

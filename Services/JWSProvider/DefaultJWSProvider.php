@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
@@ -15,7 +15,7 @@ use Namshi\JOSE\JWS;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWSProvider implements JWSProviderInterface
+class DefaultJWSProvider implements JWSProviderInterface
 {
     /**
      * @var KeyLoaderInterface
@@ -61,7 +61,7 @@ class JWSProvider implements JWSProviderInterface
     {
         $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->encryptionEngine);
 
-        $jws->setPayload($payload);
+        $jws->setPayload($payload + ['iat' => time()]);
         $jws->sign(
             $this->keyLoader->loadKey('private'),
             $this->keyLoader->getPassphrase()

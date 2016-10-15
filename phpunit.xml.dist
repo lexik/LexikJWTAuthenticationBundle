@@ -11,9 +11,14 @@
          syntaxCheck="false"
          bootstrap="vendor/autoload.php"
         >
+
     <testsuites>
-        <testsuite name="LexikJWTAuthenticationBundle Test Suite">
+        <testsuite name="unit">
             <directory>./Tests/</directory>
+            <exclude>./Tests/Functional/</exclude>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>./Tests/Functional/</directory>
         </testsuite>
     </testsuites>
 
@@ -28,7 +33,4 @@
         </whitelist>
     </filter>
 
-    <php>
-        <server name="ROOT_DIR" value="../../../../.." />
-    </php>
 </phpunit>

@@ -20,7 +20,7 @@ abstract class TestCase extends WebTestCase
     {
         require_once __DIR__.'/app/AppKernel.php';
 
-        return new AppKernel('test', true);
+        return new AppKernel(getenv('SYMFONY__JWT__ENCODER') ?: 'default', true);
     }
 
     protected static function createAuthenticatedClient($token = null)
