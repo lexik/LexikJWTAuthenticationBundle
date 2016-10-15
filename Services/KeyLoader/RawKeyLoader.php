@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
 /**
- * Reads crypto keys, mainly useful for using the phpseclib encryption engine.
+ * Reads crypto keys, mainly useful for using the phpseclib crypto engine.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */

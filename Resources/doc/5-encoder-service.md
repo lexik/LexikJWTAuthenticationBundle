@@ -77,5 +77,5 @@ lexik_jwt_authentication:
 ```
 
 __Note__  
-You can use the `lexik_jwt_authentication.encoder.encryption_engine` and `lexik_jwt_authentication.encoder.signature_algorithm` parameters that represent the corresponding configuration options by injecting them as argument of the encoder's service, then use them through the library on which the encoder is based on.  
+You can use the `lexik_jwt_authentication.encoder.crypto_engine` and `lexik_jwt_authentication.encoder.signature_algorithm` parameters that represent the corresponding configuration options by injecting them as argument of the encoder's service, then use them through the library on which the encoder is based on.  
 See the [configuration reference](1-configuration-reference.md) for more informations.

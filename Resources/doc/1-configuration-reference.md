@@ -38,8 +38,8 @@ lexik_jwt_authentication:
     encoder:
         # token encoder/decoder service - default implementation based on the namshi/jose library
         service:            lexik_jwt_authentication.encoder.default
-        # encryption engine used by the encoder service
-        encryption_engine:  openssl
+        # crypto engine used by the encoder service
+        crypto_engine:  openssl
         # encryption algorithm used by the encoder service
         signature_algorithm: RS256
 
@@ -68,14 +68,14 @@ For an advanced token encoding with higher encryption support, please see the [`
 
 To create your own encoder service, see the [JWT encoder service customization chapter](5-encoder-service.md).
 
-##### encryption_engine
+##### crypto_engine
 
-One of `openssl` and `phpseclib`, the encryption engines supported by the default token encoder service.  
+One of `openssl` and `phpseclib`, the crypto engines supported by the default token encoder service.  
 See the [OpenSSL](https://github.com/openssl/openssl) and [phpseclib](https://github.com/phpseclib/phpseclib) documentations for more information.
 
 ##### signature_algorithm
 
-One of the algorithms supported by the default encoder for the configured [encryption engine](#encryption_engine).
+One of the algorithms supported by the default encoder for the configured [crypto engine](#crypto_engine).
 
 __Supported algorithms for OpenSSL:__
 - RS256, RS384, RS512 (RSA)

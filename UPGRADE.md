@@ -122,7 +122,7 @@ Encoder
 
 * The service `lexik_jwt_authentication.jwt_encoder` has been removed in favor  
   of `lexik_jwt_authentication.encoder.default` that supports OpenSSL and  
-  phpseclib encryption engines.
+  phpseclib crypto engines.
   
 * The class `Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoder` has been  
   removed in favor of `Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder`.
@@ -152,7 +152,7 @@ Command
 -------
 
 * The `lexik:jwt:check-open-ssl` command has been renamed to `lexik:jwt:check-config`  
-  as the bundle now supports several encryption engines.
+  as the bundle now supports several crypto engines.
 
 Security
 --------

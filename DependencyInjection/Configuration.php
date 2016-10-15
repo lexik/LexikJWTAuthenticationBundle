@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('RS256')
                             ->cannotBeEmpty()
                         ->end()
-                        ->enumNode('encryption_engine')
+                        ->enumNode('crypto_engine')
                             ->values(['openssl', 'phpseclib'])
                             ->defaultValue('openssl')
                         ->end()

@@ -37,14 +37,14 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         /* @var \Symfony\Component\DependencyInjection\ContainerInterface */
         $container          = static::$kernel->getContainer();
         $encoderNamespace   = 'lexik_jwt_authentication.encoder';
-        $encryptionEngine   = $container->getParameter($encoderNamespace.'.encryption_engine');
+        $cryptoEngine       = $container->getParameter($encoderNamespace.'.crypto_engine');
         $signatureAlgorithm = $container->getParameter($encoderNamespace.'.signature_algorithm');
 
         $jwsProviderMock = $this
             ->getMockBuilder(DefaultJWSProvider::class)
             ->setConstructorArgs([
                 $container->get('lexik_jwt_authentication.key_loader'),
-                $encryptionEngine,
+                $cryptoEngine,
                 $signatureAlgorithm,
             ])
             ->getMock();
@@ -56,8 +56,8 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
 
         // The configured engine is the one used by the service
         $this->assertAttributeEquals(
-            'openssl' == $encryptionEngine ? 'OpenSSL' : 'SecLib',
-            'encryptionEngine',
+            'openssl' == $cryptoEngine ? 'OpenSSL' : 'SecLib',
+            'cryptoEngine',
             $jwsProviderMock
         );
 

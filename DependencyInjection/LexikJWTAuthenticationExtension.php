@@ -36,10 +36,10 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setAlias('lexik_jwt_authentication.encoder', $encoderConfig['service']);
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
-            'lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['encryption_engine'] ? $encoderConfig['encryption_engine'] : 'raw')
+            'lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] ? $encoderConfig['crypto_engine'] : 'raw')
         );
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
-        $container->setParameter('lexik_jwt_authentication.encoder.encryption_engine', $encoderConfig['encryption_engine']);
+        $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
