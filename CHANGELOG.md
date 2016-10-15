@@ -5,7 +5,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
-* feature [\#246](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/247) Add a simple built-in encoder based on lcobucci/jw ([chalasr](https://github.com/chalasr))
+* feature [\#246](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/247) Add a simple built-in encoder based on lcobucci/jwt ([chalasr](https://github.com/chalasr))
 
 * feature [\#240](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/240) Add iat check ([chalasr](https://github.com/chalasr))
 

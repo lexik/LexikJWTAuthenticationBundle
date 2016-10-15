@@ -4,7 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Keychain;
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
@@ -18,16 +19,16 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $keyLoader;
 
     /**
-     * @var string
+     * @var Signer
      */
-    private $signatureAlgorithm;
+    private $signer;
 
     /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $encryptionEngine
      * @param string             $signatureAlgorithm
      *
-     * @throws \InvalidArgumentException If the given algorithm is not supported
+     * @throws \InvalidArgumentException If the given algorithm|engine is not supported
      */
     public function __construct(KeyLoaderInterface $keyLoader, $encryptionEngine, $signatureAlgorithm)
     {
@@ -55,7 +56,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         try {
             $jws->sign(
                 $this->signer,
-                (new Keychain())->getPrivateKey($this->keyLoader->loadKey('private'), $this->keyLoader->getPassphrase())
+                new Key($this->keyLoader->loadKey('private'), $this->keyLoader->getPassphrase())
             );
             $signed = true;
         } catch (\InvalidArgumentException $e) {
@@ -79,22 +80,21 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
         return new LoadedJWS(
             $payload,
-            $jws->verify($this->signer, (new Keychain())->getPublicKey($this->keyLoader->loadKey('public'), $this->signatureAlgorithm)) &&
-            $jws->validate(new ValidationData())
+            $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData())
         );
     }
 
     private function getSignerForAlgorithm($signatureAlgorithm)
     {
-        if (0 === $pos = strpos($signatureAlgorithm, 'HS')) {
+        if (0 === strpos($signatureAlgorithm, 'HS')) {
             $signerType = 'Hmac';
-        } elseif (0 === $pos = strpos($signatureAlgorithm, 'RS')) {
+        } elseif (0 === strpos($signatureAlgorithm, 'RS')) {
             $signerType = 'Rsa';
-        } elseif (0 === $pos = strpos($signatureAlgorithm, 'EC')) {
+        } elseif (0 === strpos($signatureAlgorithm, 'EC')) {
             $signerType = 'Ecdsa';
         }
 
-        if (!isset($signerType) || !isset($pos)) {
+        if (!isset($signerType)) {
             throw new \InvalidArgumentException(
                 sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, __CLASS__)
             );

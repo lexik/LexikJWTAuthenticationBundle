@@ -12,6 +12,8 @@ class RawKeyLoader extends AbstractKeyLoader
     /**
      * {@inheritdoc}
      *
+     * @return string
+     *
      * @throws \RuntimeException If the key cannot be read
      */
     public function loadKey($type)
