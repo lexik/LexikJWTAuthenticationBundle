@@ -10,7 +10,7 @@ Creating your own encoder
 ### Create the encoder class
 
 ``` php
-// src/Acme/Bundle/ApiBundle/Encoder/NixillaJWTEncoder.php
+// src/AppBundle/Encoder/NixillaJWTEncoder.php
 namespace AppBundle\Encoder;
 
 use JWT\Authentication\JWT;
