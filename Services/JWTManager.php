@@ -31,11 +31,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     protected $dispatcher;
 
     /**
-     * @var integer
-     */
-    protected $ttl;
-
-    /**
      * @var string
      */
     protected $userIdentityField;
@@ -43,13 +38,11 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     /**
      * @param JWTEncoderInterface      $encoder
      * @param EventDispatcherInterface $dispatcher
-     * @param int                      $ttl
      */
-    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $ttl)
+    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher)
     {
         $this->jwtEncoder        = $encoder;
         $this->dispatcher        = $dispatcher;
-        $this->ttl               = $ttl;
         $this->userIdentityField = 'username';
     }
 
@@ -59,11 +52,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     public function create(UserInterface $user)
     {
         $payload = [];
-
-        if (is_numeric($this->ttl)) {
-            $payload['exp'] = time() + $this->ttl;
-        }
-
         $this->addUserIdentityToPayload($user, $payload);
 
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);

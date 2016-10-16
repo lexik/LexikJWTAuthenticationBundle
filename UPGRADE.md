@@ -162,3 +162,6 @@ Security
   implementing two new methods: `setUserIdentityField` and `getUserIdentityField`.
   These methods were already implemented by the JWTManager class in 1.x but not guaranteed
   by the old interface.
+
+* The `JWTManager` is no more responsible of setting the token 
+  `exp` claim, meaning that its constructor takes one less argument (the last one). This logic has been moved to the `Encoder` that is responsible of creating signed tokens and verifying/validating existing ones.

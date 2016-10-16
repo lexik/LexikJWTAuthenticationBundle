@@ -75,8 +75,8 @@ vwIDAQAB
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr', 'exp' => time() + 3600];
-        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384');
+        $payload     = ['username' => 'chalasr'];
+        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
@@ -97,8 +97,14 @@ vwIDAQAB
             ->with('public')
             ->willReturn(self::$publicKey);
 
-        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384');
-        $this->assertInstanceOf(LoadedJWS::class, $jwsProvider->load($jwt));
+        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
+        $loadedJWS   = $jwsProvider->load($jwt);
+        $this->assertInstanceOf(LoadedJWS::class, $loadedJWS);
+
+        $payload = $loadedJWS->getPayload();
+        $this->assertTrue(isset($payload['exp']));
+        $this->assertTrue(isset($payload['iat']));
+        $this->assertTrue(isset($payload['username']));
     }
 
     /**
@@ -107,7 +113,7 @@ vwIDAQAB
      */
     public function testInvalidsignatureAlgorithm()
     {
-        new self::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm');
+        new self::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600);
     }
 
     /**
