@@ -88,18 +88,17 @@ __Supported algorithms for phpseclib:__
 Security configuration
 -----------------------
 
-### Full default configuration
-
 ```yaml
 # app/config/security.yml
-# ...
-firewalls:
+security:
     # ...
-    api:
+    firewalls:
         # ...
-        guard:
-            authenticators: 
-                - lexik_jwt_authentication.jwt_token_authenticator
+        api:
+            # ...
+            guard:
+                authenticators: 
+                    - lexik_jwt_authentication.jwt_token_authenticator
 ```
 
 For more details about the `lexik_jwt_authentication.jwt_token_authenticator` service and how to

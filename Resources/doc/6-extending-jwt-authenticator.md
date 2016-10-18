@@ -35,11 +35,16 @@ Then, use it in your security configuration:
 
 ```yaml
 # app/config/security.yml
-api:
-    pattern:   ^/api
-    stateless: true
-    guard: 
-        - app.jwt_token_authenticator
+security:
+    # ...
+    firewalls:
+        # ...
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard: 
+                authenticators:
+                    - app.jwt_token_authenticator
 
 ```
 
