@@ -158,6 +158,9 @@ Command
 Security
 --------
 
+* The `token_ttl` option __must__ be a numeric value, having an infinite token lifetime is no more 
+  supported by the built-in encoders (the `exp` claim is automatically set), see issue [\#250](https://github.com/lexik/LexikJWTAuthenticationBundle/issues/250) for more details.
+
 * The `JWTManagerInterface` has been deprecated in favor of a new `JWTTokenManagerInterface` 
   implementing two new methods: `setUserIdentityField` and `getUserIdentityField`.
   These methods were already implemented by the JWTManager class in 1.x but not guaranteed
