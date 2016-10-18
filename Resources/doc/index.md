@@ -61,27 +61,31 @@ Configure your `parameters.yml.dist` :
 Configure your `security.yml` :
 
 ``` yaml
-firewalls:
+security:
+    # ...
+    
+    firewalls:
 
-    login:
-        pattern:  ^/api/login
-        stateless: true
-        anonymous: true
-        form_login:
-            check_path:               /api/login_check
-            success_handler:          lexik_jwt_authentication.handler.authentication_success
-            failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-            require_previous_session: false
-            
-    api:
-        pattern:   ^/api
-        stateless: true
-        guard: 
-            - lexik_jwt_authentication.jwt_token_authenticator
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
 
-access_control:
-    - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
 Configure your `routing.yml` :
