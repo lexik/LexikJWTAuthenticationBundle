@@ -52,6 +52,10 @@ Configuration
           query_parameter: ~
   ```
   
+* The `token_ttl` option __must__ be a numeric value, having an infinite token lifetime is no more 
+  supported by the built-in encoders (the `exp` claim is automatically set), see issue [\#250](https://github.com/lexik/LexikJWTAuthenticationBundle/issues/250) for more details.
+
+  
 Events
 -------
 
