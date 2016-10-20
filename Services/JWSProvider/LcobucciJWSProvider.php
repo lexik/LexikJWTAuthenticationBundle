@@ -7,14 +7,14 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\ValidationData;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
 class LcobucciJWSProvider implements JWSProviderInterface
 {
     /**
-     * @var KeyLoaderInterface
+     * @var RawKeyLoader
      */
     private $keyLoader;
 
@@ -29,14 +29,14 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $ttl;
 
     /**
-     * @param KeyLoaderInterface $keyLoader
-     * @param string             $cryptoEngine
-     * @param string             $signatureAlgorithm
-     * @param int                $ttl
+     * @param RawKeyLoader $keyLoader
+     * @param string       $cryptoEngine
+     * @param string       $signatureAlgorithm
+     * @param int          $ttl
      *
      * @throws \InvalidArgumentException If the given algorithm|engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
+    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);

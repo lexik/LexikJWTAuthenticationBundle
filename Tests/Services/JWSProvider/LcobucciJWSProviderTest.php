@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 
 /**
  * Tests the LcobucciJWSProvider.
@@ -13,6 +14,7 @@ final class LcobucciJWSProviderTest extends AbstractJWSProviderTest
 {
     public function __construct()
     {
-        self::$providerClass = LcobucciJWSProvider::class;
+        self::$providerClass  = LcobucciJWSProvider::class;
+        self::$keyLoaderClass = RawKeyLoader::class;
     }
 }

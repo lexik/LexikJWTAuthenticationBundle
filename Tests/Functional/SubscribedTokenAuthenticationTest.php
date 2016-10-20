@@ -82,7 +82,7 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
             $response = $e->getResponse();
 
             if ($response instanceof JWTAuthenticationFailureResponse) {
-                $e->getResponse()->setMessage('Custom JWT Expired Token message');
+                $response->setMessage('Custom JWT Expired Token message');
             }
         });
 

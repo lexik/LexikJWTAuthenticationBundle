@@ -11,6 +11,9 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * JWTFactory.
  *
+ * @deprecated since 2.0, use the "lexik_jwt_authentication.jwt_token_authenticator" Guard
+ * authenticator instead
+ *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class JWTFactory implements SecurityFactoryInterface
