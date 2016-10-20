@@ -10,6 +10,7 @@
         </service>
         <service id="lexik_jwt_authentication.encoder.default" parent="lexik_jwt_authentication.encoder.abstract">
             <argument type="service" id="lexik_jwt_authentication.jws_provider.default"/>
+            <autowiring-type>Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface</autowiring-type>
         </service>
         <!--  Lcobucci/JWT Encoder / Decoder -->
         <service id="lexik_jwt_authentication.encoder.lcobucci" parent="lexik_jwt_authentication.encoder.abstract">
@@ -29,6 +30,7 @@
             <argument>%lexik_jwt_authentication.encoder.crypto_engine%</argument>
             <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
+            <autowiring-type>Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface</autowiring-type>
         </service>
         <!-- Lcobucci/JWT JWS Provider -->
         <service id="lexik_jwt_authentication.jws_provider.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider" public="false">
@@ -37,7 +39,6 @@
             <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
         </service>
-
         <!-- Abstract JWT Token Authenticator / Guard implementation -->
         <service id="lexik_jwt_authentication.security.guard.jwt_token_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator" abstract="true">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
@@ -46,7 +47,6 @@
         </service>
         <!-- Default JWT Token Authenticator -->
         <service id="lexik_jwt_authentication.jwt_token_authenticator" parent="lexik_jwt_authentication.security.guard.jwt_token_authenticator" />
-
         <!-- JWT Authentication response interceptor -->
         <service id="lexik_jwt_authentication.handler.authentication_success" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
@@ -57,7 +57,6 @@
             <tag name="monolog.logger" channel="security" />
             <argument type="service" id="event_dispatcher"/>
         </service>
-
         <!-- Key Loaders -->
         <service id="lexik_jwt_authentication.key_loader.abstract"  abstract="true" public="false">
             <argument>%lexik_jwt_authentication.private_key_path%</argument>
@@ -94,6 +93,7 @@
         <!-- Chain Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.chain_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor" public="false">
             <argument type="collection" />
+            <autowiring-type>Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface</autowiring-type>
         </service>
         <!-- Authorization Header Token Extractor -->
         <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor">
