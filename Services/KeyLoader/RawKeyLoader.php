@@ -10,7 +10,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 class RawKeyLoader extends AbstractKeyLoader
 {
     /**
-     * {@inheritdoc}
+     * @param string $type
      *
      * @return string
      *

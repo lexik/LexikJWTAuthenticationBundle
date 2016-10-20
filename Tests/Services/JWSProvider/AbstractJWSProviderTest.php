@@ -58,6 +58,7 @@ vwIDAQAB
 ';
 
     protected static $providerClass;
+    protected static $keyLoaderClass;
 
     /**
      * Tests to create a signed JWT Token.
@@ -69,14 +70,14 @@ vwIDAQAB
             ->expects($this->once())
             ->method('loadKey')
             ->with('private')
-            ->willReturn(self::$privateKey);
+            ->willReturn(static::$privateKey);
         $keyLoaderMock
             ->expects($this->once())
             ->method('getPassphrase')
             ->willReturn('foobar');
 
         $payload     = ['username' => 'chalasr'];
-        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
@@ -95,9 +96,9 @@ vwIDAQAB
             ->expects($this->once())
             ->method('loadKey')
             ->with('public')
-            ->willReturn(self::$publicKey);
+            ->willReturn(static::$publicKey);
 
-        $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
         $loadedJWS   = $jwsProvider->load($jwt);
         $this->assertInstanceOf(LoadedJWS::class, $loadedJWS);
 
@@ -113,16 +114,13 @@ vwIDAQAB
      */
     public function testInvalidsignatureAlgorithm()
     {
-        new self::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600);
+        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600);
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getKeyLoaderMock()
+    private function getKeyLoaderMock()
     {
         return $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface')
+            ->getMockBuilder(static::$keyLoaderClass)
             ->disableOriginalConstructor()
             ->getMock();
     }
