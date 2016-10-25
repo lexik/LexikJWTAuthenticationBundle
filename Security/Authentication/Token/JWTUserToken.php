@@ -35,7 +35,7 @@ class JWTUserToken extends AbstractToken implements GuardTokenInterface
         }
 
         $this->setRawToken($rawToken);
-        $this->setAuthenticated(count($roles) > 0);
+        $this->setAuthenticated(true);
 
         $this->providerKey = $providerKey;
     }
