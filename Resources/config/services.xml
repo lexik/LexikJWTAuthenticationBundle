@@ -40,7 +40,7 @@
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
         </service>
         <!-- Abstract JWT Token Authenticator / Guard implementation -->
-        <service id="lexik_jwt_authentication.security.guard.jwt_token_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator" abstract="true">
+        <service id="lexik_jwt_authentication.security.guard.jwt_token_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
