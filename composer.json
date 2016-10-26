@@ -65,5 +65,12 @@
         "branch-alias": {
             "dev-master": "2.x-dev"
         }
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit --testsuite unit --colors=always",
+            "SYMFONY__JWT__ENCODER=default vendor/bin/phpunit --testsuite functional --colors=always",
+            "SYMFONY__JWT__ENCODER=lcobucci vendor/bin/phpunit --testsuite functional --colors=always"
+        ]
     }
 }
