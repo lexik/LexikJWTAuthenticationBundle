@@ -18,6 +18,8 @@ The bulk of the documentation is stored in the `Resources/doc/index.md` file in 
 
 [Read the documentation](Resources/doc/index.md)
 
+__Note__: For the documentation of the 1.x versions of this bundl
+
 Upgrading
 ----------
 
@@ -30,15 +32,14 @@ Setup the test suite using [Composer](http://getcomposer.org/):
 
     $ composer install
 
-Run it using PHPUnit:
+Run it:
 
-    $ vendor/bin/phpunit
+    $ composer test
 
 Contributing
 ------------
 
 See [CONTRIBUTING](CONTRIBUTING.md) file.
-
 
 Credits
 -------
