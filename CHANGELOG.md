@@ -1,9 +1,19 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v1.7.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.0.2
 
-## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
+## [2.0.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.2) (2016-10-27)
+
+* feature [\#262](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/262) Add composer test script ([chalasr](https://github.com/chalasr))
+
+* bug [\#261](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/261) The security token must be authenticated no matter of the user's roles ([chalasr](https://github.com/chalasr))
+
+## [2.0.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.1) (2016-10-20)
+
+* feature [\#257](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/257) Set autowiring types on services with many alternatives 
+
+## [2.0.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.0) (2016-10-16)
 
 * feature [\#249](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/249) Avoid setting exp claim from JWTManager ([chalasr](https://github.com/chalasr))
 
@@ -26,7 +36,6 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 * feature [\#196](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/196) Make *_key_path config options not mandatory ([chalasr](https://github.com/chalasr))
 
 * feature [\#177](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/177) Add JWTAuthenticationResponse ([chalasr](https://github.com/chalasr))
-
 * feature [\#162](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/162) [Encoder] Handle OpenSSL/phpseclib engines and algorithms ([chalasr](https://github.com/chalasr))
 
 * [\#175](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/175) Stop ensuring support for PHP versions smaller than 5.0 ([chalasr](https://github.com/chalasr))
