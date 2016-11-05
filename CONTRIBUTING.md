@@ -12,7 +12,7 @@ should really read the recommendations. Can't wait? Use the [PHP-CS-Fixer
 tool](http://cs.sensiolabs.org/):
 
 ```
-vendor/bin/php-cs-fixer fix --config-file=.php_cs
+$ vendor/bin/php-cs-fixer fix --config-file=.php_cs
 ```
 
 __Note:__ Never fix coding standards in some existing code as it makes code review more difficult.

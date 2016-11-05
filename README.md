@@ -11,6 +11,12 @@ This bundle provides JWT (Json Web Token) authentication for your Symfony REST A
 
 It is compatible and tested with PHP 5.5, 5.6, 7.0, 7.1, HHVM and Symfony 2.8, 3.0 and 3.1.
 
+Upgrading from 1.x
+-------------------
+
+Please see the [UPGRADE](UPGRADE.md) file.
+
+
 Documentation
 -------------
 
@@ -18,28 +24,30 @@ The bulk of the documentation is stored in the `Resources/doc/index.md` file in 
 
 [Read the documentation](Resources/doc/index.md)
 
-__Note__: For the documentation of the 1.x versions of this bundl
-
-Upgrading
-----------
-
-Please see the [UPGRADE](UPGRADE.md) file.
-
-Testing
+Support
 -------
 
-Setup the test suite using [Composer](http://getcomposer.org/):
+Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle), we use it as support platform.  
+Github Issues are dedicated to bug reports and feature requests.
 
-    $ composer install
 
-Run it:
+Running the test suite
+----------------------
 
-    $ composer test
+Setup the project using [Composer](http://getcomposer.org/):
+```
+$ composer install
+```
+
+Run the test suite:
+```
+$ composer test
+```
 
 Contributing
 ------------
 
-See [CONTRIBUTING](CONTRIBUTING.md) file.
+See the [CONTRIBUTING](CONTRIBUTING.md) file.
 
 Credits
 -------
@@ -50,4 +58,5 @@ Credits
 License
 -------
 
-This bundle is under the MIT license. See the complete license in the [LICENSE](LICENSE) file distributed with this source code.
+This bundle is under the MIT license.  
+For the whole copyright, see the [LICENSE](LICENSE) file distributed with this source code.
