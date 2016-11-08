@@ -6,15 +6,15 @@ Data customization and validation
 Table of contents
 -----------------
 
-* [Adding data to the JWT payload](#eventsjwt_created---add-data-to-the-jwt-payload)
-* [Validating data in the JWT payload](#eventsjwt_decoded---validate-data-in-the-jwt-payload)
-* [Customize your security token](#eventsjwt_authenticated---customize-your-authenticated-token)
-* [Adding public data to the JWT response](#eventsauthentication_success---add-public-data-to-the-jwt-response)
-* [Getting the JWT token string after encoding](#eventsjwt_encoded---get-jwt-string)
-* [Customizing the response on invalid credentials](#eventsauthentication_failure---customize-the-failure-response)
-* [Customizing the response on invalid token](#eventsjwt_invalid---customize-the-invalid-token-response)
-* [Customizing the response on token not found](#eventsjwt_not_found---customize-the-response-on-token-not-found)
-* [Customizing the response on expired token](#eventsjwt_not_found---customize-the-response-on-token-not-found)
+* [Adding data to the JWT payload](#eventsjwt_created---adding-data-to-the-jwt-payload)
+* [Validating data in the JWT payload](#eventsjwt_decoded---validating-data-in-the-jwt-payload)
+* [Customize your security token](#eventsjwt_authenticated---customizing-your-security-token)
+* [Adding public data to the JWT response](#eventsauthentication_success---adding-public-data-to-the-jwt-response)
+* [Getting the JWT token string after encoding](#eventsjwt_encoded---getting-the-jwt-token-string-after-encoding)
+* [Customizing the response on invalid credentials](#eventsauthentication_failure---customizing-the-failure-response-body)
+* [Customizing the response on invalid token](#eventsjwt_invalid---customizing-the-invalid-token-response)
+* [Customizing the response on token not found](#eventsjwt_not_found---customizing-the-response-on-token-not-found)
+* [Customizing the response on expired token](#eventsjwt_expired---customizing-the-response-message-on-expired-token)
 
 Events::JWT_CREATED - Adding data to the JWT payload
 ----------------------------------------------------
@@ -66,7 +66,6 @@ public function onJWTCreated(JWTCreatedEvent $event)
     $payload['ip'] = $request->getClientIp();
 
     $event->setData($payload);
-}
 }
 ```
 
@@ -133,8 +132,8 @@ public function onJWTDecoded(JWTDecodedEvent $event)
 }
 ```
 
-Events::JWT_AUTHENTICATED - customize your authenticated token
----------------------------------------------------------------
+Events::JWT_AUTHENTICATED - Customizing your security token
+------------------------------------------------------------
 
 You can add attributes to the token once it has been authenticated to allow JWT properties to be used by your application.
 
@@ -168,8 +167,8 @@ public function onJWTAuthenticated(JWTAuthenticatedEvent $event)
 }
 ```
 
-Events::AUTHENTICATION_SUCCESS - add public data to the JWT response
----------------------------------------------------------------------
+Events::AUTHENTICATION_SUCCESS - Adding public data to the JWT response
+-----------------------------------------------------------------------
 
 By default, the authentication response is just a json containing the JWT but you can add your own public data to it.
 
@@ -341,7 +340,7 @@ public function onJWTNotFound(JWTNotFoundEvent $event)
 ```
 
 Events::JWT_EXPIRED - Customizing the response message on expired token
-----------------------------------------------------------------------
+------------------------------------------------------------------------
 
 By default, if the token provided in the request is expired, the authentication listener will call the entry point returning an unauthorized (401) json response.
 Thanks to this event, you can set a custom response or simply change the response message.
