@@ -11,43 +11,41 @@ This bundle provides JWT (Json Web Token) authentication for your Symfony REST A
 
 It is compatible and tested with PHP 5.5, 5.6, 7.0, 7.1, HHVM and Symfony 2.8, 3.0 and 3.1.
 
-Upgrading from 1.x
--------------------
-
-Please see the [UPGRADE](UPGRADE.md) file.
-
-
 Documentation
 -------------
 
-The bulk of the documentation is stored in the `Resources/doc/index.md` file in this bundle:
+The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/index.md) directory of this bundle:
 
-[Read the documentation](Resources/doc/index.md)
+* [Getting started](Resources/doc/index.md#getting-started)
+  * [Prerequisites](Resources/doc/index.md#prerequisites)
+  * [Installation](Resources/doc/index.md#installation)
+  * [Configuration](Resources/doc/index.md#configuration)
+  * [Usage](Resources/doc/index.md#usage)
+  * [Notes](Resources/doc/index.md#notes)
+* [Further documentation](Resources/doc/index.md#further-documentation)
+  * [Configuration reference](Resources/doc/1-configuration-reference.md)
+  * [Data customization and validation](Resources/doc/2-data-customization.md)
+  * [Functional testing](Resources/doc/3-functional-testing.md)
+  * [Working with CORS requests](Resources/doc/4-cors-requests.md)
+  * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
+  * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
 
 Support
 -------
 
-Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle), we use it as support platform.  
+Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle),  it is the official support platform for this bundle.
+  
 Github Issues are dedicated to bug reports and feature requests.
-
-
-Running the test suite
-----------------------
-
-Setup the project using [Composer](http://getcomposer.org/):
-```
-$ composer install
-```
-
-Run the test suite:
-```
-$ composer test
-```
 
 Contributing
 ------------
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file.
+
+Upgrading from 1.x
+-------------------
+
+Please see the [UPGRADE](UPGRADE.md) file.
 
 Credits
 -------
