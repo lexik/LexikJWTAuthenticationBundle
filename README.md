@@ -30,35 +30,22 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
   * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
 
-Upgrading from 1.x
--------------------
-
-Please see the [UPGRADE](UPGRADE.md) file.
-
 Support
 -------
 
-Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle), we use it as support platform.  
+Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle),  it is the official support platform for this bundle.
+  
 Github Issues are dedicated to bug reports and feature requests.
-
-
-Running the test suite
-----------------------
-
-Setup the project using [Composer](http://getcomposer.org/):
-```
-$ composer install
-```
-
-Run the test suite:
-```
-$ composer test
-```
 
 Contributing
 ------------
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file.
+
+Upgrading from 1.x
+-------------------
+
+Please see the [UPGRADE](UPGRADE.md) file.
 
 Credits
 -------
