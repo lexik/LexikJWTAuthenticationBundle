@@ -67,13 +67,14 @@ services:
         class: AppBundle\Encoder\NixillaJWTEncoder
 ```
 
-### Set it as the encoder_service in the bundle configuration
+### Use it as encoder service
 
 ``` yaml
 # config.yml
 lexik_jwt_authentication:
     # ...
-    encoder_service: acme_api.encoder.nixilla_jwt_encoder
+    encoder:
+        service: acme_api.encoder.nixilla_jwt_encoder
 ```
 
 __Note__  
