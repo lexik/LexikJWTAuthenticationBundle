@@ -157,6 +157,10 @@ Using form_login security factory is very straightforward but it involves cookie
 
 This may not be a problem depending on the system that makes calls to your API (like a typical SPA). But if it is, take a look at the [GfreeauGetJWTBundle](https://github.com/gfreeau/GfreeauGetJWTBundle), which provides a stateless replacement for form_login.
 
+#### Impersonation
+
+For impersonating users using JWT, see [lafourchette/SwitchUserStatelessBundle](https://github.com/lafourchette/SwitchUserStatelessBundle), a stateless replacement of the `switch_user` listener.
+
 #### Important note for Apache users
 
 As stated in [this link](http://stackoverflow.com/questions/11990388/request-headers-bag-is-missing-authorization-header-in-symfony-2) and [this one](http://stackoverflow.com/questions/19443718/symfony-2-3-getrequest-headers-not-showing-authorization-bearer-token/19445020), Apache server will strip any `Authorization header` not in a valid HTTP BASIC AUTH format. 
