@@ -55,4 +55,14 @@ class JWTUserToken extends AbstractToken implements GuardTokenInterface
     {
         return $this->rawToken;
     }
+
+    /**
+     * Returns the provider key.
+     *
+     * @return string The provider key
+     */
+    public function getProviderKey()
+    {
+        return $this->providerKey;
+    }
 }
