@@ -185,3 +185,4 @@ The following documents are available:
 - [JWT encoder service customization](5-encoder-service.md)
 - [Extending JWTTokenAuthenticator](6-extending-jwt-authenticator.md)
 - [Creating JWT tokens programmatically](7-manual-token-creation.md)
+- [A database-less user provider](8-jwt-user-provider.md)

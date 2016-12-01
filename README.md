@@ -30,6 +30,7 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
   * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
+  * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
 
 Support
 -------

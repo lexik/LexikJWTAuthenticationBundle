@@ -1,0 +1,18 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    providers:
+        in_memory:
+            memory:
+                users:
+                    lexik:
+                        password: dummy
+                        roles: ROLE_USER
+        jwt:
+            lexik_jwt:
+                class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

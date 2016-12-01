@@ -16,6 +16,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -145,7 +146,7 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
         $identity = $payload[$identityField];
 
         try {
-            $user = $userProvider->loadUserByUsername($identity);
+            $user = $this->loadUser($userProvider, $payload, $identity);
         } catch (UsernameNotFoundException $e) {
             throw new UserNotFoundException($identityField, $identity);
         }
@@ -214,7 +215,7 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
         $preAuthToken = $this->preAuthenticationTokenStorage->getToken();
 
         if (null === $preAuthToken) {
-            throw new \RuntimeException('Unable to return an post authentication token since there is no pre authentication token in %s::$preAuthenticationTokenStorage');
+            throw new \RuntimeException('Unable to return an authenticated token since there is no pre authentication token.');
         }
 
         $authToken = new JWTUserToken($user->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
@@ -245,5 +246,23 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
     protected function getTokenExtractor()
     {
         return $this->tokenExtractor;
+    }
+
+    /**
+     * Loads the user to authenticate.
+     *
+     * @param UserProviderInterface $userProvider An user provider
+     * @param array                 $payload      The token payload
+     * @param string                $identity     The key from which to retrieve the user "username"
+     *
+     * @return UserInterface
+     */
+    protected function loadUser(UserProviderInterface $userProvider, array $payload, $identity)
+    {
+        if ($userProvider instanceof JWTUserProvider) {
+            return $userProvider->loadUserByUsername($identity, $payload);
+        }
+
+        return $userProvider->loadUserByUsername($identity);
     }
 }

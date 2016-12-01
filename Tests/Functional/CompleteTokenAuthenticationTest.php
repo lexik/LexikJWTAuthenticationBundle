@@ -2,7 +2,9 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\User;
 
 /**
  * Base class for classes testing the different cases of authentication via
@@ -23,10 +25,17 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::accessSecuredRoute();
 
         $response = static::$client->getResponse();
+        $content  = json_decode($response->getContent(), true);
 
         $this->assertSuccessful($response);
 
-        return json_decode($response->getContent(), true);
+        if ('lexik_jwt' === static::$kernel->getUserProvider()) {
+            $this->assertSame(JWTUser::class, $content['class']);
+        } else {
+            $this->assertSame(User::class, $content['class']);
+        }
+
+        return $content;
     }
 
     public function testAccessSecuredRouteWithoutToken()

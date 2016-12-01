@@ -10,6 +10,17 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class AppKernel extends Kernel
 {
+    private $encoder;
+    private $userProvider;
+
+    public function __construct($environment, $debug)
+    {
+        parent::__construct($environment, $debug);
+
+        $this->encoder      = getenv('ENCODER') ?: 'default';
+        $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,6 +60,17 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->getEnvironment()));
+        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
+        $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider));
+    }
+
+    public function getUserProvider()
+    {
+        return $this->userProvider;
+    }
+
+    public function getEncoder()
+    {
+        return $this->encoder;
     }
 }
