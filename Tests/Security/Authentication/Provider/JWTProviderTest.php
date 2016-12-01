@@ -42,7 +42,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * test authenticate method with an invalid token.
      *
-     * @expectedException        Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedException        \Symfony\Component\Security\Core\Exception\AuthenticationException
      * @expectedExceptionMessage Invalid JWT Token
      */
     public function testAuthenticateWithInvalidJWT()
@@ -66,7 +66,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * test authenticate method.
      *
-     * @expectedException Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedException \Symfony\Component\Security\Core\Exception\AuthenticationException
      * @expectedExceptionMessage Invalid JWT Token
      */
     public function testAuthenticateWithoutUsername()
@@ -90,7 +90,7 @@ class JWTProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * test authenticate method.
      *
-     * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function testAuthenticateWithNotExistingUser()
     {
