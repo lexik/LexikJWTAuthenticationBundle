@@ -4,25 +4,17 @@ php:
   - 5.5
   - 5.6
   - 7.0
+  - 5.5
+    env: DEPS="low"
+  - 5.6
+    env: DEPS="low"
+  - 7.0
+    env: DEPS="low"
+  - 7.1
   - hhvm
 
 matrix:
   fast_finish: true
-  include:
-    - php: 5.6
-      env: SYMFONY_VERSION=2.8.*
-    - php: 7.0
-      env: SYMFONY_VERSION=2.8.*
-    - php: 5.6
-      env: SYMFONY_VERSION=3.0.*
-    - php: 7.0
-      env: SYMFONY_VERSION=3.0.*
-    - php: 5.6
-      env: SYMFONY_VERSION=3.1.*
-    - php: 7.0
-      env: SYMFONY_VERSION=3.1.*
-    - php: 7.1
-      env: SYMFONY_VERSION=3.1.*
   allow_failures:
     - php: hhvm
 
@@ -32,8 +24,7 @@ cache:
 
 before_install:
   - phpenv config-rm xdebug.ini || true
-  - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
 
-install: composer update --prefer-dist --no-interaction
+install: if [[ "$DEPS" == "low" ]]; then composer update --prefer-dist --prefer-lowest --no-interaction --optimize-autoloader; else composer update --optimize-autoloader --prefer-dist --no-interaction; fi;
 
 script: composer test
