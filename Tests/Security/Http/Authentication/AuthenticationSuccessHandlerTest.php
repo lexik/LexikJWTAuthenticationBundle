@@ -4,6 +4,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authenticatio
 
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * AuthenticationSuccessHandlerTest.
@@ -20,8 +23,10 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequest();
         $token   = $this->getToken();
 
-        $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher()))
+            ->onAuthenticationSuccess($request, $token);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
         $content = json_decode($response->getContent(), true);
@@ -29,33 +34,30 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('secrettoken', $content['token']);
     }
 
-    /**
-     * @return AuthenticationSuccessHandler
-     */
-    protected function getHandler()
+    public function testHandleAuthenticationSuccess()
     {
-        $jwtManager = $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher()))
+            ->handleAuthenticationSuccess($this->getUser());
 
-        $jwtManager
-            ->expects($this->any())
-            ->method('create')
-            ->will($this->returnValue('secrettoken'));
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
 
-        $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $content = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('token', $content);
+        $this->assertEquals('secrettoken', $content['token']);
+    }
 
-        $dispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with(
-                $this->equalTo(Events::AUTHENTICATION_SUCCESS),
-                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent')
-            );
+    public function testHandleAuthenticationSuccessWithGivenJWT()
+    {
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager(), $this->getDispatcher()))
+            ->handleAuthenticationSuccess($this->getUser(), 'jwt');
 
-        return new AuthenticationSuccessHandler($jwtManager, $dispatcher);
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $content = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('token', $content);
+        $this->assertEquals('jwt', $content['token']);
     }
 
     /**
@@ -76,6 +78,21 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected function getToken()
     {
+        $token = $this
+            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token
+            ->expects($this->any())
+            ->method('getUser')
+            ->will($this->returnValue($this->getUser()));
+
+        return $token;
+    }
+
+    private function getUser()
+    {
         $user = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')
             ->getMock();
@@ -85,16 +102,39 @@ class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getUsername')
             ->will($this->returnValue('username'));
 
-        $token = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+        return $user;
+    }
+
+    private function getJWTManager($token = null)
+    {
+        $jwtManager = $this->getMockBuilder(JWTManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $token
-            ->expects($this->any())
-            ->method('getUser')
-            ->will($this->returnValue($user));
+        if (null !== $token) {
+            $jwtManager
+                ->expects($this->any())
+                ->method('create')
+                ->will($this->returnValue('secrettoken'));
+        }
 
-        return $token;
+        return $jwtManager;
+    }
+
+    private function getDispatcher()
+    {
+        $dispatcher = $this->getMockBuilder(EventDispatcher::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(Events::AUTHENTICATION_SUCCESS),
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent')
+            );
+
+        return $dispatcher;
     }
 }
