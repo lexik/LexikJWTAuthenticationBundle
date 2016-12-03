@@ -40,7 +40,7 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
         $this->assertSame('Custom JWT not found message', $response['message']);
     }
 
-    public function testAccessSecuredRouteWithInvalidToken()
+    public function testAccessSecuredRouteWithInvalidToken($token = 'dummy')
     {
         self::$subscriber->setListener(Events::JWT_INVALID, function (JWTInvalidEvent $e) {
             $response = $e->getResponse();
@@ -50,7 +50,7 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
             }
         });
 
-        $response = parent::testAccessSecuredRouteWithInvalidToken();
+        $response = parent::testAccessSecuredRouteWithInvalidToken($token);
 
         self::$subscriber->unsetListener(Events::JWT_INVALID);
 
