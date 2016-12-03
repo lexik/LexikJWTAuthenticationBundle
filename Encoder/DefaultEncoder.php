@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
-use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
@@ -34,7 +33,7 @@ class DefaultEncoder implements JWTEncoderInterface
     {
         try {
             $jws = $this->jwsProvider->create($payload);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
 
@@ -52,7 +51,7 @@ class DefaultEncoder implements JWTEncoderInterface
     {
         try {
             $jws = $this->jwsProvider->load($token);
-        } catch (InvalidArgumentException $e) {
+        } catch (\Exception $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', $e);
         }
 
