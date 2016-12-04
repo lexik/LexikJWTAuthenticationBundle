@@ -5,8 +5,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authenticatio
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * AuthenticationSuccessHandlerTest.

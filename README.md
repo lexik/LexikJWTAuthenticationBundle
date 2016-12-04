@@ -7,9 +7,9 @@ LexikJWTAuthenticationBundle
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 [![Latest Stable Version](https://poser.pugx.org/lexik/jwt-authentication-bundle/v/stable.svg)](https://packagist.org/packages/lexik/jwt-authentication-bundle)
 
-This bundle provides JWT (Json Web Token) authentication for your Symfony REST API default using the [`namshi/jose`](https://github.com/namshi/jose) library.
+This bundle provides JWT (Json Web Token) authentication for your Symfony API.
 
-It is compatible and tested with PHP 5.5, 5.6, 7.0, 7.1, HHVM and Symfony 2.8, 3.0 and 3.1.
+It is compatible and tested with PHP 5.5, 5.6, 7.0, 7.1, HHVM on Symfony 2.8, 3.0, 3.1 and 3.2.
 
 Documentation
 -------------
@@ -29,6 +29,8 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Working with CORS requests](Resources/doc/4-cors-requests.md)
   * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
   * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
+  * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
+  * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
 
 Support
 -------
