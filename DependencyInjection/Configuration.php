@@ -25,17 +25,9 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('private_key_path')
                     ->defaultNull()
-                    ->validate()
-                    ->ifTrue($this->isPathInvalid())
-                        ->thenInvalid(self::INVALID_KEY_PATH)
-                    ->end()
                 ->end()
                 ->scalarNode('public_key_path')
                     ->defaultNull()
-                    ->validate()
-                    ->ifTrue($this->isPathInvalid())
-                        ->thenInvalid(self::INVALID_KEY_PATH)
-                    ->end()
                 ->end()
                 ->scalarNode('pass_phrase')
                     ->defaultValue('')
@@ -120,19 +112,5 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $node;
-    }
-
-    /**
-     * @return \Closure
-     */
-    private function isPathInvalid()
-    {
-        return function ($path) {
-            if (null === $path) {
-                return;
-            }
-
-            return !is_file($path) || !is_readable($path);
-        };
     }
 }
