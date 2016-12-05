@@ -6,7 +6,6 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 ## [2.0.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.2) (2016-10-27)
 
 * feature [\#262](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/262) Add composer test script ([chalasr](https://github.com/chalasr))
-
 * bug [\#261](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/261) The security token must be authenticated no matter of the user's roles ([chalasr](https://github.com/chalasr))
 
 ## [2.0.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.1) (2016-10-20)
@@ -16,25 +15,15 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 ## [2.0.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.0) (2016-10-16)
 
 * feature [\#249](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/249) Avoid setting exp claim from JWTManager ([chalasr](https://github.com/chalasr))
-
 * feature [\#246](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/246) Add a simple built-in encoder based on lcobucci/jwt ([chalasr](https://github.com/chalasr))
-
 * feature [\#240](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/240) Add iat check ([chalasr](https://github.com/chalasr))
-
 * feature [\#230](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/230) Introduce JWTExpiredEvent ([chalasr](https://github.com/chalasr))
-
 * feature [\#184](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/184) [Security] Deprecate current system in favor of a JWTTokenAuthenticator (Guard) ([chalasr](https://github.com/chalasr))
-
 * feature [\#218](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/218) Add more flexibility in token extractors configuration ([chalasr](https://github.com/chalasr))
-
 * feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loadi ng for easy overriding ([chalasr](https://github.com/chalasr))
-
 * feature [\#202](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/202) Exceptions simplified ([Spomky](https://github.com/Spomky))
-
 * feature [\#201](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/201) Remove deprecated request injections ([chalasr](https://github.com/chalasr))
-
 * feature [\#196](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/196) Make *_key_path config options not mandatory ([chalasr](https://github.com/chalasr))
-
 * feature [\#177](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/177) Add JWTAuthenticationResponse ([chalasr](https://github.com/chalasr))
 * feature [\#162](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/162) [Encoder] Handle OpenSSL/phpseclib engines and algorithms ([chalasr](https://github.com/chalasr))
 
