@@ -3,6 +3,14 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.0.2
 
+## [2.0.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.3) (2016-12-05)
+* [\#285] Avoid validating key paths before container compilation (@chalasr)
+* [\#283] Ease creating tokens programatically (@chalasr)
+* [\#282] Catch exception from lcobucci parser on invalid but correctly formatted token (@chalasr)
+* [\#280] Travis: build on sf 3.2 + highest/lowest deps, fix build on hhvm (@chalasr)
+* [\#276] Added `getProviderKey()` to JWTUserToken (@eXtreme)
+* [\#269] Improve the structure of the documentation (@chalasr)
+
 ## [2.0.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.2) (2016-10-27)
 
 * feature [\#262](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/262) Add composer test script ([chalasr](https://github.com/chalasr))
