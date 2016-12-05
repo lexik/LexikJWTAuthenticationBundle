@@ -4,12 +4,12 @@ CHANGELOG
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.0.2
 
 ## [2.0.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.3) (2016-12-05)
-* [\#285] Avoid validating key paths before container compilation (@chalasr)
-* [\#283] Ease creating tokens programatically (@chalasr)
-* [\#282] Catch exception from lcobucci parser on invalid but correctly formatted token (@chalasr)
-* [\#280] Travis: build on sf 3.2 + highest/lowest deps, fix build on hhvm (@chalasr)
-* [\#276] Added `getProviderKey()` to JWTUserToken (@eXtreme)
-* [\#269] Improve the structure of the documentation (@chalasr)
+* bug [\#285](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/285) Avoid validating key paths before container compilation ([chalasr](https://github.com/chalasr))
+* feature [\#283](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/283) Ease creating tokens programatically ([chalasr](https://github.com/chalasr))
+* bug [\#282](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/282) Catch exception from lcobucci parser on invalid but correctly formatted token ([chalasr](https://github.com/chalasr))
+* feature [\#276](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/276) Added `getProviderKey()` to JWTUserToken ([eXtreme](https://github.com/eXtreme))
+* [\#280](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/280) Travis: build on sf 3.2 + highest/lowest deps, fix build on hhvm ([chalasr](https://github.com/chalasr))
+* [\#269](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/269) Improve the structure of the documentation ([chalasr](https://github.com/chalasr))
 
 ## [2.0.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.2) (2016-10-27)
 
