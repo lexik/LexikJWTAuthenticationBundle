@@ -65,6 +65,6 @@ final class JWTAuthenticationFailureResponse extends JsonResponse
      */
     public function setData($data = [])
     {
-        parent::setData(['code' => $this->statusCode, 'message' => $this->message] + (array) $data);
+        parent::setData((array) $data + ['code' => $this->statusCode, 'message' => $this->message]);
     }
 }
