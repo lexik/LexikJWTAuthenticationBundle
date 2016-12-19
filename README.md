@@ -29,7 +29,6 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Working with CORS requests](Resources/doc/4-cors-requests.md)
   * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
   * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
-  * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
 
 Support
