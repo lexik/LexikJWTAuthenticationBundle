@@ -3,6 +3,11 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.0.2
 
+## [2.1.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2016-12-30)
+
+* feature [\#278](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/278) Add JWTUserProvider for loading users from the JWT itself ([chalasr](https://github.com/chalasr))
+* bug [\#287](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/287) Avoid override existing properties in failure response ([kevin-lot](https://github.com/kevin-lot))
+
 ## [2.0.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.0.3) (2016-12-05)
 * bug [\#285](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/285) Avoid validating key paths before container compilation ([chalasr](https://github.com/chalasr))
 * feature [\#283](https//github.com/lexik/LexikJWTAuthenticationBundle/pull/283) Ease creating tokens programatically ([chalasr](https://github.com/chalasr))
