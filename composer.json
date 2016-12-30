@@ -71,8 +71,9 @@
     "scripts": {
         "test": [
             "vendor/bin/phpunit --testsuite unit",
-            "SYMFONY__JWT__ENCODER=default vendor/bin/phpunit --testsuite functional",
-            "SYMFONY__JWT__ENCODER=lcobucci vendor/bin/phpunit --testsuite functional"
+            "vendor/bin/phpunit --testsuite functional",
+            "ENCODER=lcobucci vendor/bin/phpunit --testsuite functional",
+            "PROVIDER=lexik_jwt vendor/bin/phpunit --testsuite functional"
         ]
     }
 }

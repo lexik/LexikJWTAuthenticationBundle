@@ -216,7 +216,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Unable to return an post authentication token
+     * @expectedExceptionMessage Unable to return an authenticated token
      */
     public function testCreateAuthenticatedTokenThrowsExceptionIfNotPreAuthenticatedToken()
     {

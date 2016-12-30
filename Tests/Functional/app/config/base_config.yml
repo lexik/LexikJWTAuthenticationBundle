@@ -1,0 +1,14 @@
+framework:
+    secret: test
+    router:
+        resource: '%kernel.root_dir%/config/routing.yml'
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+
+services:
+    lexik_jwt_authentication.test.jwt_event_subscriber:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils\CallableEventSubscriber
+        shared: true
+        tags:
+            - { name: kernel.event_subscriber }

@@ -108,6 +108,10 @@
         <service id="lexik_jwt_authentication.extractor.cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor">
             <argument /> <!-- Name -->
         </service>
+        <!-- JWT User Provider -->
+        <service public="false" id="lexik_jwt_authentication.security.jwt_user_provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider">
+            <argument />
+        </service>
     </services>
 
 </container>

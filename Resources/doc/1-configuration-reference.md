@@ -92,6 +92,11 @@ Security configuration
 # app/config/security.yml
 security:
     # ...
+    providers:
+        # ...
+        jwt: # optional
+            lexik_jwt:
+                class: AppBundle\Security\JWTUser
     firewalls:
         # ...
         api:
@@ -99,7 +104,13 @@ security:
             guard:
                 authenticators: 
                     - lexik_jwt_authentication.jwt_token_authenticator
+            provider: jwt # optional
 ```
 
-For more details about the `lexik_jwt_authentication.jwt_token_authenticator` service and how to
-customize it, see ["Extending the Guard JWTTokenAuthenticator"](6-extending-jwt-authenticator.md)
+##### authenticator
+
+For more details about the `lexik_jwt_authentication.jwt_token_authenticator` service and how to customize it, see ["Extending the Guard JWTTokenAuthenticator"](6-extending-jwt-authenticator.md)
+
+##### database-less user provider
+
+For a database-less authentication (i.e. trusting into the JWT data instead of reloading the user from the database), see ["A database less user provider"](8-jwt-user-provider).
