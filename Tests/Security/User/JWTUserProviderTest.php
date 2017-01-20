@@ -38,6 +38,7 @@ class JWTUserProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testRefreshUser()
     {
-        $this->assertNull((new JWTUserProvider(JWTUser::class))->refreshUser(new JWTUser('lexik')));
+        $user = new JWTUser('lexik');
+        $this->assertSame($user, (new JWTUserProvider(JWTUser::class))->refreshUser($user));
     }
 }
