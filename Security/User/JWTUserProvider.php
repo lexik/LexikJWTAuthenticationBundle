@@ -51,6 +51,6 @@ final class JWTUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        // noop
+        return $user; // noop
     }
 }
