@@ -25,8 +25,15 @@ class OpenSSLKeyLoader extends AbstractKeyLoader
         );
 
         if (!$key) {
+            $sslError = '';
+            while ($msg = trim(openssl_error_string(), " \n\r\t\0\x0B\"")) {
+                if (substr($msg, 0, 6) === 'error:') {
+                    $msg = substr($msg, 6);
+                }
+                $sslError .= "\n ".$msg;
+            }
             throw new \RuntimeException(
-                sprintf('Failed to load %1$s key "%2$s". Did you correctly set the "lexik_jwt_authentication.jwt_%1$s_key_path" config option?', $type, $path)
+                sprintf('Failed to load %s key "%s": %s', $type, $path, $sslError)
             );
         }
 
