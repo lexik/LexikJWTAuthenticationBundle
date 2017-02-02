@@ -113,4 +113,5 @@ For more details about the `lexik_jwt_authentication.jwt_token_authenticator` se
 
 ##### database-less user provider
 
-For a database-less authentication (i.e. trusting into the JWT data instead of reloading the user from the database), see ["A database less user provider"](8-jwt-user-provider).
+For a database-less authentication (i.e. trusting into the JWT data instead of reloading the user from the database), see ["A database less user provider"](8-jwt-user-provider.md).
+
