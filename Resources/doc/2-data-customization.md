@@ -248,7 +248,7 @@ Example: Set a custom response on authentication failure
 ``` php
 // src/AppBundle/EventListener/AuthenticationFailureListener.php
 
-use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthentciationFailureEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
 /**
