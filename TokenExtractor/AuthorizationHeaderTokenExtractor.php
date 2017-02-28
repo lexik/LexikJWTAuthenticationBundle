@@ -22,8 +22,8 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
     protected $name;
 
     /**
-     * @param string $prefix
-     * @param string $name
+     * @param string|null $prefix
+     * @param string      $name
      */
     public function __construct($prefix, $name)
     {
@@ -40,7 +40,13 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
             return false;
         }
 
-        $headerParts = explode(' ', $request->headers->get($this->name));
+        $authorizationHeader = $request->headers->get($this->name);
+
+        if (empty($this->prefix)) {
+            return $authorizationHeader;
+        }
+
+        $headerParts = explode(' ', $authorizationHeader);
 
         if (!(count($headerParts) === 2 && $headerParts[0] === $this->prefix)) {
             return false;
