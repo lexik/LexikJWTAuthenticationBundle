@@ -7,7 +7,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class RawKeyLoader extends AbstractKeyLoader
+class RawKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 {
     /**
      * @param string $type
@@ -19,5 +19,13 @@ class RawKeyLoader extends AbstractKeyLoader
     public function loadKey($type)
     {
         return file_get_contents($this->getKeyPath($type));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dumpKey()
+    {
+        return $this->loadKey('public');
     }
 }

@@ -7,7 +7,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class OpenSSLKeyLoader extends AbstractKeyLoader
+class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 {
     /**
      * {@inheritdoc}
@@ -38,5 +38,19 @@ class OpenSSLKeyLoader extends AbstractKeyLoader
         }
 
         return $key;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dumpKey()
+    {
+        $key = openssl_pkey_get_details($this->loadKey('public'));
+
+        if (!isset($key['key'])) {
+            return;
+        }
+
+        return $key['key'];
     }
 }
