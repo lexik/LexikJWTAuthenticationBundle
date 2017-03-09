@@ -3,7 +3,13 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.2.0
 
-## [2.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2017-01-23)
+## [2.2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.2.0) (2017-03-09)
+
+* feature [\#312](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/312) Ease sharing keys between parties ([chalasr](https://github.com/chalasr))
+* bug [\#311](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/311) Handle empty or null authorization header prefix ([chteuchteu](https://github.com/chteuchteu))
+* feature [\#303](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/303) Throw less missleading exception if SSL keys could not be loaded ([phansys](https://github.com/phansys))
+
+## [2.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.1) (2017-01-23)
 
 * bug [\#302](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/302) Return user object from User Provider refresh ([MisterGlass](https://github.com/MisterGlass))
 
