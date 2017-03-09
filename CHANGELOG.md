@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.0.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.2.0
+
+## [2.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2017-01-23)
+
+* bug [\#302](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/302) Return user object from User Provider refresh ([MisterGlass](https://github.com/MisterGlass))
 
 ## [2.1.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.1.0) (2016-12-30)
 
