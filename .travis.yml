@@ -10,6 +10,7 @@ matrix:
     - php: 5.6
       env: SYMFONY_VERSION=3.2.*
     - php: 7.0
+      env: SYMFONY_VERSION=3.3.* DEPENDENCIES=dev
     - php: 7.1
     - php: hhvm-stable
       sudo: required
@@ -24,6 +25,7 @@ cache:
 
 before_install:
   - phpenv config-rm xdebug.ini || true
+  - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
 
 install: composer update --no-interaction
