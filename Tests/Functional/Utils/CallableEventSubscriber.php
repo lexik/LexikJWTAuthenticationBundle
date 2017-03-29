@@ -31,9 +31,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
         $subscriberMap = [];
 
         foreach (self::$eventClassMap as $name => $className) {
-            if (self::hasListener($name)) {
-                $subscriberMap[$name] = 'handleEvent';
-            }
+            $subscriberMap[$name] = 'handleEvent';
         }
 
         return $subscriberMap;
@@ -54,6 +52,10 @@ class CallableEventSubscriber implements EventSubscriberInterface
         }
 
         $listener = self::getListener($eventName);
+
+        if (!$listener) {
+            return;
+        }
 
         if ($listener instanceof \Closure) {
             return $listener($event);
