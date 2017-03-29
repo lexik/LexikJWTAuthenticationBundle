@@ -13,12 +13,8 @@
         >
 
     <testsuites>
-        <testsuite name="unit">
+        <testsuite name="LexikJWTAuthenticationBundle Test Suite">
             <directory>./Tests/</directory>
-            <exclude>./Tests/Functional/</exclude>
-        </testsuite>
-        <testsuite name="functional">
-            <directory>./Tests/Functional/</directory>
         </testsuite>
     </testsuites>
 
