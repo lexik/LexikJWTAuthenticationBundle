@@ -26,20 +26,8 @@ final class JWTAuthenticationSuccessResponse extends JsonResponse
      * @param string $token Json Web Token
      * @param array  $data  Extra data passed to the response
      */
-    public function __construct($token, array $data = null)
+    public function __construct($token, array $data = [])
     {
-        $this->token = $token;
-
-        parent::__construct($data);
-    }
-
-    /**
-     * Sets the response data with the JWT included.
-     *
-     * {@inheritdoc}
-     */
-    public function setData($data = [])
-    {
-        parent::setData(['token' => $this->token] + (array) $data);
+        parent::__construct(['token' => $token] + $data);
     }
 }

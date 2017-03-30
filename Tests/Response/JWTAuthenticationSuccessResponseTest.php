@@ -35,8 +35,8 @@ final class JWTAuthenticationSuccessResponseTest extends \PHPUnit_Framework_Test
         $response->setData($replacementData);
 
         // Test that the previous method call has no effect on the original body
-        $this->assertNotEquals(json_encode($replacementData), $response->getContent());
+        $this->assertEquals(json_encode($replacementData), $response->getContent());
         $this->assertAttributeSame($replacementData['foo'], 'foo', json_decode($response->getContent()));
-        $this->assertAttributeNotEmpty('token', json_decode($response->getContent()));
+        $this->assertFalse(isset(json_decode($response->getContent())->token));
     }
 }
