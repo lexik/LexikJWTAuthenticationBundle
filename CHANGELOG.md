@@ -1,7 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.2.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
+
+## [2.3.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.3.0) (2017-04-14)
+
+* bug [\#325](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/325) Move ttl `is_numeric` check from build time to runtime to allow use of %env()% ([DrBenton](https://github.com/DrBenton))
+* feature [\#320](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/320) Allow for Response Body without JWT Token ([Batch1211](https://github.com/Batch1211))
+* feature [\#317](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/317) Use symfony/phpunit-bridge for testing ([chalasr](https://github.com/chalasr))
 
 ## [2.2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.2.0) (2017-03-09)
 
