@@ -38,6 +38,10 @@ class LcobucciJWSProvider implements JWSProviderInterface
      */
     public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
+        if (!is_numeric($ttl)) {
+            throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
+        }
+
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;

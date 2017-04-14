@@ -47,6 +47,10 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
+        if (!is_numeric($ttl)) {
+            throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
+        }
+
         $cryptoEngine = $cryptoEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
 
         if (!$this->isAlgorithmSupportedForEngine($cryptoEngine, $signatureAlgorithm)) {
