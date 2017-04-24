@@ -25,6 +25,17 @@ security:
             lexik_jwt: ~
 ```
 
+Then, use it on your JWT protected firewall:
+
+```yaml
+security:
+    firewalls:
+        api:
+            provider: lexik_jwt
+            guard:
+                # ...
+```
+
 What does it change?
 --------------------
 
