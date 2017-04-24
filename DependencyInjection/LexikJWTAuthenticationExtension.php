@@ -2,6 +2,11 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -31,22 +36,48 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
-
         $encoderConfig = $config['encoder'];
         $container->setAlias('lexik_jwt_authentication.encoder', $encoderConfig['service']);
+        $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
             'lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] ? $encoderConfig['crypto_engine'] : 'raw')
         );
+
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
+
+        // Support for autowiring in symfony < 3.3
+        if (!method_exists($container, 'fileExists')) {
+            $this->registerAutowiringTypes($container);
+        }
     }
 
-    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
+    private static function registerAutowiringTypes(ContainerBuilder $container)
+    {
+        $container
+            ->findDefinition('lexik_jwt_authentication.encoder')
+            ->addAutowiringType(JWTEncoderInterface::class);
+
+        $container
+            ->getDefinition('lexik_jwt_authentication.jws_provider.default')
+            ->addAutowiringType(JWSProviderInterface::class);
+
+        $container
+            ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
+            ->addAutowiringType(ChainTokenExtractor::class);
+
+        $container
+            ->getDefinition('lexik_jwt_authentication.jwt_manager')
+            ->addAutowiringType(JWTTokenManagerInterface::class)
+            ->addAutowiringType(JWTManagerInterface::class); // To be removed in 3.0 along with the interface
+    }
+
+    private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
     {
         $map = [];
 
