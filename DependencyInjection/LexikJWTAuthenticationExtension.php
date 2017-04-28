@@ -6,7 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -60,7 +60,7 @@ class LexikJWTAuthenticationExtension extends Extension
     private static function registerAutowiringTypes(ContainerBuilder $container)
     {
         $container
-            ->findDefinition('lexik_jwt_authentication.encoder')
+            ->findDefinition('lexik_jwt_authentication.encoder.default')
             ->addAutowiringType(JWTEncoderInterface::class);
 
         $container
@@ -69,7 +69,7 @@ class LexikJWTAuthenticationExtension extends Extension
 
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
-            ->addAutowiringType(ChainTokenExtractor::class);
+            ->addAutowiringType(TokenExtractorInterface::class);
 
         $container
             ->getDefinition('lexik_jwt_authentication.jwt_manager')
