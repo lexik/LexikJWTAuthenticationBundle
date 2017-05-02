@@ -17,7 +17,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
 class JWTListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * test handle method.
+     * @group time-sensitive
      */
     public function testHandle()
     {
