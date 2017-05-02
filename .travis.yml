@@ -18,7 +18,6 @@ matrix:
       group: edge
   allow_failures:
     - php: hhvm-stable
-    - php: 5.5
 
 cache:
   directories:
