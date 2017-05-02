@@ -11,6 +11,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
+/**
+ * @final
+ *
+ * @author Robin Chalas <robin.chalas@gmail.com>
+ */
 class LcobucciJWSProvider implements JWSProviderInterface
 {
     /**
@@ -32,23 +37,23 @@ class LcobucciJWSProvider implements JWSProviderInterface
      * @param RawKeyLoader $keyLoader
      * @param string       $cryptoEngine
      * @param string       $signatureAlgorithm
-     * @param int          $ttl
+     * @param int|null     $ttl
      *
-     * @throws \InvalidArgumentException If the given algorithm|engine is not supported
+     * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
     public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
-        if (!is_numeric($ttl)) {
+        if ('openssl' !== $cryptoEngine) {
+            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
+        }
+
+        if (null !== $ttl && !is_numeric($ttl)) {
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
         }
 
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
-
-        if ('openssl' !== $cryptoEngine) {
-            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
-        }
     }
 
     /**
@@ -56,9 +61,12 @@ class LcobucciJWSProvider implements JWSProviderInterface
      */
     public function create(array $payload)
     {
-        $jws = (new Builder())
-            ->setIssuedAt(time())
-            ->setExpiration(time() + $this->ttl);
+        $jws = new Builder();
+        $jws->setIssuedAt(time());
+
+        if (null !== $this->ttl) {
+            $jws->setExpiration(time() + $this->ttl);
+        }
 
         foreach ($payload as $name => $value) {
             $jws->set($name, $value);
@@ -91,7 +99,8 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
         return new LoadedJWS(
             $payload,
-            $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData())
+            $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData()),
+            null !== $this->ttl
         );
     }
 

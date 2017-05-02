@@ -89,6 +89,27 @@ class CompleteTokenAuthenticationTest extends TestCase
         return json_decode($response->getContent(), true);
     }
 
+    public function testExpClaimIsNotSetIfNoTTL()
+    {
+        static::bootKernel();
+        $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
+
+        $r = new \ReflectionProperty(get_class($encoder), 'jwsProvider');
+        $r->setAccessible(true);
+        $jwsProvider = $r->getValue($encoder);
+        \Closure::bind(function () {
+            $this->ttl = null;
+        }, $jwsProvider, get_class($jwsProvider))->__invoke();
+
+        $token = $encoder->encode(['username' => 'lexik']);
+        $this->assertArrayNotHasKey('exp', $encoder->decode($token));
+
+        static::$client = static::createAuthenticatedClient($token);
+        static::accessSecuredRoute();
+
+        $this->assertSuccessful(static::$client->getResponse());
+    }
+
     protected function assertFailure(Response $response)
     {
         $this->assertFalse($response->isSuccessful());
