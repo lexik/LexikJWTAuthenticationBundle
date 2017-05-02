@@ -11,7 +11,7 @@ use Namshi\JOSE\JWS;
  * JWS Provider, Namshi\JOSE library integration.
  * Supports OpenSSL and phpseclib crypto engines.
  *
- * @internal
+ * @final
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
@@ -47,7 +47,7 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
     {
-        if (!is_numeric($ttl)) {
+        if (null !== $ttl && !is_numeric($ttl)) {
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
         }
 
@@ -70,9 +70,14 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function create(array $payload)
     {
-        $jws = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
+        $jws    = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
+        $claims = ['iat' => time()];
 
-        $jws->setPayload($payload + ['exp' => (time() + $this->ttl), 'iat' => time()]);
+        if (null !== $this->ttl) {
+            $claims['exp'] = time() + $this->ttl;
+        }
+
+        $jws->setPayload($payload + $claims);
         $jws->sign(
             $this->keyLoader->loadKey('private'),
             $this->keyLoader->getPassphrase()
@@ -90,7 +95,8 @@ class DefaultJWSProvider implements JWSProviderInterface
 
         return new LoadedJWS(
             $jws->getPayload(),
-            $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm)
+            $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm),
+            null !== $this->ttl
         );
     }
 
