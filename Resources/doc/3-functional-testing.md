@@ -8,7 +8,7 @@ Generate some test specific keys, for example :
 
 ``` bash
 $ openssl genrsa -out var/jwt/private-test.pem -aes256 4096
-$ openssl rsa -pubout -in var/jwt/private-test.pem -out var/var/jwt/public-test.pem
+$ openssl rsa -pubout -in var/jwt/private-test.pem -out var/jwt/public-test.pem
 ```
 
 Override the bundle configuration in your `config_test.yml` :
