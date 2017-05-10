@@ -3,6 +3,11 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
+## [2.4.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.0) (2017-05-10)
+
+* feature [\#330](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/330) Allow empty ttl for testing purpose ([chalasr](https://github.com/chalasr))
+* bug [\#328](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/328) Fix autowiring for upcoming Symfony 3.3 ([chalasr](https://github.com/chalasr))
+
 ## [2.3.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.3.0) (2017-04-14)
 
 * bug [\#325](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/325) Move ttl `is_numeric` check from build time to runtime to allow use of %env()% ([DrBenton](https://github.com/DrBenton))
