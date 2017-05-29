@@ -21,7 +21,7 @@ To work, the provider just needs a few lines of configuration:
 # app/config/security.yml
 security:
     providers:
-        jwt: 
+        jwt:
             lexik_jwt: ~
 ```
 
@@ -31,7 +31,7 @@ Then, use it on your JWT protected firewall:
 security:
     firewalls:
         api:
-            provider: lexik_jwt
+            provider: jwt
             guard:
                 # ...
 ```
@@ -70,8 +70,8 @@ final class User implements JWTUserInterface
     {
         return new self(
             $username,
-            $payload['roles'] // Added by default
-            $payload['email'] // Custom
+            $payload['roles'], // Added by default
+            $payload['email']  // Custom
         );
     }
 }
