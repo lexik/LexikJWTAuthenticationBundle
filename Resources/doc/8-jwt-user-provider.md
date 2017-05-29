@@ -21,7 +21,7 @@ To work, the provider just needs a few lines of configuration:
 # app/config/security.yml
 security:
     providers:
-        jwt: # optional
+        jwt:
             lexik_jwt: ~
 ```
 
