@@ -9,9 +9,10 @@ matrix:
       env: SYMFONY_VERSION=2.8.*
     - php: 5.6
       env: SYMFONY_VERSION=3.2.*
-    - php: 7.0
-      env: SYMFONY_VERSION=3.3.* DEPENDENCIES=dev
     - php: 7.1
+      env: SYMFONY_VERSION=3.3.*
+    - php: 7.1
+      env: SYMFONY_VERSION=3.4.* DEPENDENCIES=dev
     - php: hhvm-stable
       sudo: required
       dist: trusty
