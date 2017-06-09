@@ -18,5 +18,5 @@ interface UserProviderWithPayloadSupportsInterface extends UserProviderInterface
      *
      * @return UserInterface
      */
-    public function loadUserByUsernameAndPayload(string $username, array $payload);
+    public function loadUserByUsernameAndPayload($username, array $payload);
 }
