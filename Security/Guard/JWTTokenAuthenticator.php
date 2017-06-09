@@ -17,6 +17,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\UserProviderWithPayloadSupportsInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -259,8 +260,8 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
      */
     protected function loadUser(UserProviderInterface $userProvider, array $payload, $identity)
     {
-        if ($userProvider instanceof JWTUserProvider) {
-            return $userProvider->loadUserByUsername($identity, $payload);
+        if ($userProvider instanceof UserProviderWithPayloadSupportsInterface) {
+            return $userProvider->loadUserByUsernameAndPayload($identity, $payload);
         }
 
         return $userProvider->loadUserByUsername($identity);

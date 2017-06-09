@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTUserProvider implements UserProviderInterface
+final class JWTUserProvider implements UserProviderWithPayloadSupportsInterface
 {
     private $class;
     private $cache = [];
@@ -31,6 +31,14 @@ final class JWTUserProvider implements UserProviderInterface
      * @return JWTUserInterface
      */
     public function loadUserByUsername($username, array $payload = [])
+    {
+        return $this->loadUserByUsernameAndPayload($username, $payload);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadUserByUsernameAndPayload(string $username, array $payload): UserInterface
     {
         $class = $this->class;
 
