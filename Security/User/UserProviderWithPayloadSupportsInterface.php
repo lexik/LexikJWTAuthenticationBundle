@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
 
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -13,7 +14,9 @@ interface UserProviderWithPayloadSupportsInterface extends UserProviderInterface
      * @param string $username
      * @param array $payload
      *
+     * @throws UsernameNotFoundException if the user is not found
+     *
      * @return UserInterface
      */
-    public function loadUserByUsernameAndPayload(string $username, array $payload) : UserInterface;
+    public function loadUserByUsernameAndPayload(string $username, array $payload);
 }

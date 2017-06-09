@@ -38,7 +38,7 @@ final class JWTUserProvider implements UserProviderWithPayloadSupportsInterface
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsernameAndPayload(string $username, array $payload): UserInterface
+    public function loadUserByUsernameAndPayload(string $username, array $payload)
     {
         $class = $this->class;
 
