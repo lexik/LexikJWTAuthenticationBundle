@@ -17,6 +17,11 @@ final class LoadedJWS
     /**
      * @var array
      */
+    private $header;
+
+    /**
+     * @var array
+     */
     private $payload;
 
     /**
@@ -30,10 +35,11 @@ final class LoadedJWS
     private $hasLifetime;
 
     /**
+     * @param array $header
      * @param array $payload
      * @param bool  $isVerified
      */
-    public function __construct(array $payload, $isVerified, $hasLifetime = true)
+    public function __construct(array $header, array $payload, $isVerified, $hasLifetime = true)
     {
         $this->payload     = $payload;
         $this->hasLifetime = $hasLifetime;
@@ -44,6 +50,14 @@ final class LoadedJWS
 
         $this->checkIssuedAt();
         $this->checkExpiration();
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeader()
+    {
+        return $this->header;
     }
 
     /**
