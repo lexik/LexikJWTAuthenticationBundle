@@ -29,10 +29,10 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function encode(array $payload)
+    public function encode(array $header, array $payload)
     {
         try {
-            $jws = $this->jwsProvider->create($payload);
+            $jws = $this->jwsProvider->create($header, $payload);
         } catch (\InvalidArgumentException $e) {
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
@@ -47,7 +47,7 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token)
+    public function decode($token, array &$header = array())
     {
         try {
             $jws = $this->jwsProvider->load($token);
@@ -67,6 +67,8 @@ class DefaultEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }
 
+        $header = $jws->getHeader();
+        
         return $jws->getPayload();
     }
 }
