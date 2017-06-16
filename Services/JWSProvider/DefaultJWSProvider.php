@@ -68,9 +68,10 @@ class DefaultJWSProvider implements JWSProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload)
+    public function create(array $header, array $payload)
     {
-        $jws    = new JWS(['alg' => $this->signatureAlgorithm], $this->cryptoEngine);
+        $header['alg'] = $this->signatureAlgorithm;
+        $jws    = new JWS($header, $this->cryptoEngine);
         $claims = ['iat' => time()];
 
         if (null !== $this->ttl) {
@@ -94,6 +95,7 @@ class DefaultJWSProvider implements JWSProviderInterface
         $jws = JWS::load($token, false, null, $this->cryptoEngine);
 
         return new LoadedJWS(
+            $jws->getHeader(),
             $jws->getPayload(),
             $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm),
             null !== $this->ttl
