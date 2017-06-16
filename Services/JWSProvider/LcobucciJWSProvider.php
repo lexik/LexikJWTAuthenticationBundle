@@ -59,9 +59,12 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload)
+    public function create(array $header, array $payload)
     {
         $jws = new Builder();
+        foreach($header as $k => $v) {
+            $jws->withHeader($k, $v);
+        }
         $jws->setIssuedAt(time());
 
         if (null !== $this->ttl) {
@@ -98,6 +101,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         return new LoadedJWS(
+            $jws->headers()->all(),
             $payload,
             $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData()),
             null !== $this->ttl
