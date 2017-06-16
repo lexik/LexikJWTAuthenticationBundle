@@ -13,6 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 interface JWTEncoderInterface
 {
     /**
+     * @param array $header
      * @param array $data
      *
      * @return string the encoded token string
@@ -20,15 +21,16 @@ interface JWTEncoderInterface
      * @throws JWTEncodeFailureException If an error occurred while trying to create
      *                                   the token (invalid crypto key, invalid payload...)
      */
-    public function encode(array $data);
+    public function encode(array $header, array $data);
 
     /**
      * @param string $token
+     * @param array  $header
      *
      * @return array
      *
      * @throws JWTDecodeFailureException If an error occurred while trying to load the token
      *                                   (invalid signature, invalid crypto key, expired token...)
      */
-    public function decode($token);
+    public function decode($token, array &$header = array());
 }
