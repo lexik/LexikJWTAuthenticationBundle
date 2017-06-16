@@ -14,6 +14,11 @@ class JWTDecodedEvent extends Event
     /**
      * @var array
      */
+    protected $header;
+
+    /**
+     * @var array
+     */
     protected $payload;
 
     /**
@@ -22,12 +27,22 @@ class JWTDecodedEvent extends Event
     protected $isValid;
 
     /**
+     * @param array $header
      * @param array $payload
      */
-    public function __construct(array $payload)
+    public function __construct(array $header, array $payload)
     {
+        $this->header = $header;
         $this->payload = $payload;
         $this->isValid = true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeader()
+    {
+        return $this->payload;
     }
 
     /**
