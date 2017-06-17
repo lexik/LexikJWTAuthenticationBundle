@@ -24,7 +24,7 @@ class ApiController extends Controller
 }
 ```
 
-This dispatches the `Events::JWT_CREATED`, `Events::JWT_ENCODED` events and returns a JWT token, but the `Events::AUTHENTCIATION_SUCCESS` event is not dispatched, you need to create and format the response by yourself.
+This dispatches the `Events::JWT_CREATED`, `Events::JWT_ENCODED` events and returns a JWT token, but the `Events::AUTHENTICATION_SUCCESS` event is not dispatched, you need to create and format the response by yourself.
 
 For manually authenticating an user and returning the same response as your login form:
 
