@@ -30,11 +30,11 @@ class JWTDecodedEvent extends Event
      * @param array $header
      * @param array $payload
      */
-    public function __construct(array $header, array $payload)
+    public function __construct(array $payload, array $header = [])
     {
-        $this->header = $header;
         $this->payload = $payload;
         $this->isValid = true;
+        $this->header  = $header;
     }
 
     /**

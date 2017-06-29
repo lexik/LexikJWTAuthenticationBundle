@@ -29,10 +29,10 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function encode(array $header, array $payload)
+    public function encode(array $payload, array $header = [])
     {
         try {
-            $jws = $this->jwsProvider->create($header, $payload);
+            $jws = $this->jwsProvider->create($payload, $header);
         } catch (\InvalidArgumentException $e) {
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
@@ -47,7 +47,7 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token, array &$header = array())
+    public function decode($token, array &$header = [])
     {
         try {
             $jws = $this->jwsProvider->load($token);
@@ -68,7 +68,7 @@ class DefaultEncoder implements JWTEncoderInterface
         }
 
         $header = $jws->getHeader();
-        
+
         return $jws->getPayload();
     }
 }

@@ -35,13 +35,15 @@ final class LoadedJWS
     private $hasLifetime;
 
     /**
-     * @param array $header
      * @param array $payload
      * @param bool  $isVerified
+     * @param bool  $hasLifetime
+     * @param array $header
      */
-    public function __construct(array $header, array $payload, $isVerified, $hasLifetime = true)
+    public function __construct(array $payload, $isVerified, $hasLifetime = true, array $header = [])
     {
         $this->payload     = $payload;
+        $this->header      = $header;
         $this->hasLifetime = $hasLifetime;
 
         if (true === $isVerified) {
