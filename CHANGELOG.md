@@ -3,6 +3,10 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
+## [2.4.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.1) (2017-08-29)
+
+* bug [\#356](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/356) Dont use DefinitionDecorator on Symfony 3.3+ ([chalasr](https://github.com/chalasr))
+
 ## [2.4.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.0) (2017-05-10)
 
 * feature [\#330](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/330) Allow empty ttl for testing purpose ([chalasr](https://github.com/chalasr))
