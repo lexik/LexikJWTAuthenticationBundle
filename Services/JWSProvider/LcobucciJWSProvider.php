@@ -63,7 +63,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     {
         $jws = new Builder();
         foreach ($header as $k => $v) {
-            $jws->withHeader($k, $v);
+            $jws->setHeader($k, $v);
         }
         $jws->setIssuedAt(time());
 

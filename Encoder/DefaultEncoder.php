@@ -11,7 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterfa
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DefaultEncoder implements JWTEncoderInterface
+class DefaultEncoder implements HeaderAwareJWTEncoderInterface
 {
     /**
      * @var JWSProviderInterface
@@ -34,7 +34,7 @@ class DefaultEncoder implements JWTEncoderInterface
         try {
             $jws = $this->jwsProvider->create($payload, $header);
         } catch (\InvalidArgumentException $e) {
-            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
 
         if (!$jws->isSigned()) {
@@ -47,7 +47,7 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token, array &$header = [])
+    public function decode($token)
     {
         try {
             $jws = $this->jwsProvider->load($token);
@@ -66,8 +66,6 @@ class DefaultEncoder implements JWTEncoderInterface
         if (!$jws->isVerified()) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }
-
-        $header = $jws->getHeader();
 
         return $jws->getPayload();
     }

@@ -41,13 +41,10 @@ class GetTokenTest extends TestCase
 
         $body    = json_decode(static::$client->getResponse()->getContent(), true);
         $decoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder.default');
-        $header  = [];
-        $payload = $decoder->decode($body['token'], $header);
+        $payload = $decoder->decode($body['token']);
 
         $this->assertArrayHasKey('custom', $payload, 'The payload should contains a "custom" claim.');
         $this->assertSame('dummy', $payload['custom'], 'The "custom" claim should be equal to "dummy".');
-        $this->assertArrayHasKey('foo', $header, 'The header should contains a "foo" parameter.');
-        $this->assertSame('bar', $header['foo'], 'The "foo" claim should be equal to "bar".');
     }
 
     public function testGetTokenFromInvalidCredentials()
