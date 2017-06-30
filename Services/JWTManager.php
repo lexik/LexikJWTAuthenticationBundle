@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\HeaderAwareJWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
@@ -57,7 +58,11 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
         $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
 
-        $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
+        if ($this->jwtEncoder instanceof HeaderAwareJWTEncoderInterface) {
+            $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData(), $jwtCreatedEvent->getHeader());
+        } else {
+            $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
+        }
 
         $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
         $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);

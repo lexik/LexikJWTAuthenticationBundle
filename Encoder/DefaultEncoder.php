@@ -11,7 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterfa
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DefaultEncoder implements JWTEncoderInterface
+class DefaultEncoder implements HeaderAwareJWTEncoderInterface
 {
     /**
      * @var JWSProviderInterface
@@ -29,12 +29,12 @@ class DefaultEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function encode(array $payload)
+    public function encode(array $payload, array $header = [])
     {
         try {
-            $jws = $this->jwsProvider->create($payload);
+            $jws = $this->jwsProvider->create($payload, $header);
         } catch (\InvalidArgumentException $e) {
-            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occured while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
         }
 
         if (!$jws->isSigned()) {

@@ -17,10 +17,10 @@ class Autowired
 
     public function __construct(JWTTokenManagerInterface $jwtManager, JWTEncoderInterface $jwtEncoder, TokenExtractorInterface $tokenExtractor, JWSProviderInterface $jwsProvider)
     {
-        $this->jwtManager = $jwtManager;
-        $this->jwtEncoder = $jwtEncoder;
+        $this->jwtManager     = $jwtManager;
+        $this->jwtEncoder     = $jwtEncoder;
         $this->tokenExtractor = $tokenExtractor;
-        $this->jwsProvider = $jwsProvider;
+        $this->jwsProvider    = $jwsProvider;
     }
 
     public function getJWTManager()

@@ -34,6 +34,7 @@ class GetTokenTest extends TestCase
         $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
         $subscriber->setListener(Events::JWT_CREATED, function (JWTCreatedEvent $e) {
             $e->setData($e->getData() + ['custom' => 'dummy']);
+            $e->setHeader($e->getHeader() + ['foo' => 'bar']);
         });
 
         static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
