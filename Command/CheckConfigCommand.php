@@ -18,9 +18,12 @@ class CheckConfigCommand extends Command
 
     private $keyLoader;
 
-    public function __construct(KeyLoaderInterface $keyLoader)
+    private $signatureAlgorithm;
+
+    public function __construct(KeyLoaderInterface $keyLoader, $signatureAlgorithm)
     {
-        $this->keyLoader = $keyLoader;
+        $this->keyLoader          = $keyLoader;
+        $this->signatureAlgorithm = $signatureAlgorithm;
 
         parent::__construct();
     }
@@ -32,7 +35,7 @@ class CheckConfigCommand extends Command
     {
         $this
             ->setName(static::$defaultName)
-            ->setDescription('Check JWT configuration');
+            ->setDescription('Checks JWT configuration');
     }
 
     /**
@@ -42,7 +45,10 @@ class CheckConfigCommand extends Command
     {
         try {
             $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);
-            $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
+            // No public key for HMAC
+            if (false === strpos($this->signatureAlgorithm, 'HS')) {
+                $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
+            }
         } catch (\RuntimeException $e) {
             $output->writeln('<error>'.$e->getMessage().'</error>');
 

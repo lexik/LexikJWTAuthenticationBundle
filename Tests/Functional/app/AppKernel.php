@@ -16,12 +16,15 @@ class AppKernel extends Kernel
 
     private $userProvider;
 
+    private $signatureAlgorithm;
+
     public function __construct($environment, $debug)
     {
         parent::__construct($environment, $debug);
 
-        $this->encoder      = getenv('ENCODER') ?: 'default';
-        $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
+        $this->encoder            = getenv('ENCODER') ?: 'default';
+        $this->userProvider       = getenv('PROVIDER') ?: 'in_memory';
+        $this->signatureAlgorithm = getenv('ALGORITHM');
     }
 
     /**
@@ -63,8 +66,15 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
         $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider));
+
+        if ($this->signatureAlgorithm && file_exists($file = __DIR__.sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
+            $loader->load($file);
+
+            return;
+        }
+
+        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
     }
 
     public function getUserProvider()
