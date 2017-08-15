@@ -68,11 +68,6 @@ public function onJWTCreated(JWTCreatedEvent $event)
     $payload['ip'] = $request->getClientIp();
 
     $event->setData($payload);
-    
-    $header        = $event->getHeader();
-    $header['cty'] = 'JWT';
-
-    $event->setHeader($header);
 }
 ```
 
