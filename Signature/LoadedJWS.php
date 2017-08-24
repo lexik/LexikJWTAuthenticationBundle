@@ -119,7 +119,7 @@ final class LoadedJWS
      */
     private function checkIssuedAt()
     {
-        if (isset($this->payload['iat']) && (int) $this->payload['iat'] > time()) {
+        if (isset($this->payload['iat']) && (int) $this->payload['iat'] >= time()) {
             return $this->state = self::INVALID;
         }
     }
