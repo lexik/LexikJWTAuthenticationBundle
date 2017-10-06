@@ -32,6 +32,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
                 }
                 $sslError .= "\n ".$msg;
             }
+
             throw new \RuntimeException(
                 sprintf('Failed to load %s key "%s": %s', $type, $path, $sslError)
             );
