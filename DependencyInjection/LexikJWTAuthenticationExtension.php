@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use Lcobucci\JWT\Token;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
@@ -31,6 +32,11 @@ class LexikJWTAuthenticationExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        if (!class_exists(Token::class)) {
+            $container->removeDefinition('lexik_jwt_authentication.encoder.lcobucci');
+            $container->removeDefinition('lexik_jwt_authentication.jws_provider.lcobucci');
+        }
 
         $container->setParameter('lexik_jwt_authentication.private_key_path', $config['private_key_path']);
         $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key_path']);
