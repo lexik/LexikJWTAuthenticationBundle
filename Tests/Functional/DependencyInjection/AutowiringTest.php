@@ -26,10 +26,11 @@ class AutowiringTest extends \PHPUnit_Framework_TestCase
         $container->registerExtension(new FrameworkExtension());
         $container->registerExtension(new LexikJWTAuthenticationExtension());
 
-        (new YamlFileLoader($container, new FileLocator([__DIR__.'/../app/config'])))->load('config_default.yml');
+        (new YamlFileLoader($container, new FileLocator([__DIR__.'/../app/config'])))->load('autowiring.yml');
 
         $container
             ->register('autowired', Autowired::class)
+            ->setPublic(true)
             ->setAutowired(true);
 
         $container->compile();
@@ -57,6 +58,7 @@ class AutowiringTest extends \PHPUnit_Framework_TestCase
 
         $container
             ->register('autowired', Autowired::class)
+            ->setPublic(true)
             ->setAutowired(true);
 
         $container->compile();
@@ -76,6 +78,7 @@ class AutowiringTest extends \PHPUnit_Framework_TestCase
             'kernel.environment'      => 'test',
             'kernel.name'             => 'kernel',
             'kernel.root_dir'         => __DIR__,
+            'kernel.project_dir'      => __DIR__,
             'kernel.container_class'  => 'AutowiringTestContainer',
             'kernel.charset'          => 'utf8',
         ]));

@@ -8,13 +8,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessRespon
 
 class GetTokenTest extends TestCase
 {
-    public static function setupBeforeClass()
-    {
-        static::$client = static::createClient();
-    }
-
     public function testGetToken()
     {
+        static::$client = static::createClient();
         static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
 
         $response = static::$client->getResponse();
@@ -29,7 +25,7 @@ class GetTokenTest extends TestCase
 
     public function testGetTokenWithCustomClaim()
     {
-        static::bootKernel();
+        static::$client = static::createClient();
 
         $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
         $subscriber->setListener(Events::JWT_CREATED, function (JWTCreatedEvent $e) {
@@ -48,6 +44,7 @@ class GetTokenTest extends TestCase
 
     public function testGetTokenFromInvalidCredentials()
     {
+        static::$client = static::createClient();
         static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'wrong']);
 
         $response = static::$client->getResponse();
