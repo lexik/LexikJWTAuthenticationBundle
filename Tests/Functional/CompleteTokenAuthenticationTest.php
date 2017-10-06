@@ -14,11 +14,6 @@ use Symfony\Component\Security\Core\User\User;
  */
 class CompleteTokenAuthenticationTest extends TestCase
 {
-    public static function setupBeforeClass()
-    {
-        static::bootKernel();
-    }
-
     public function testAccessSecuredRoute()
     {
         static::$client = static::createAuthenticatedClient();
