@@ -13,6 +13,8 @@ matrix:
       env: SYMFONY_VERSION=3.3.*
     - php: 7.1
       env: SYMFONY_VERSION=3.4.* DEPENDENCIES=dev
+    - php: 7.1
+      env: SYMFONY_VERSION=4.0.* DEPENDENCIES=dev
     - php: hhvm-stable
       sudo: required
       dist: trusty
