@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorInterface;
+use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 /**
  * JWTTokenAuthenticator (Guard implementation).
@@ -38,7 +38,7 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorInterface;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTTokenAuthenticator implements GuardAuthenticatorInterface
+class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
      * @var JWTTokenManagerInterface
@@ -74,6 +74,11 @@ class JWTTokenAuthenticator implements GuardAuthenticatorInterface
         $this->dispatcher                    = $dispatcher;
         $this->tokenExtractor                = $tokenExtractor;
         $this->preAuthenticationTokenStorage = new TokenStorage();
+    }
+
+    public function supports(Request $request)
+    {
+        return false !== $this->getTokenExtractor()->extract($request);
     }
 
     /**

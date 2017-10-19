@@ -6,6 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\UserProvider\UserProviderFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
@@ -20,7 +21,13 @@ final class JWTUserFactory implements UserProviderFactoryInterface
 {
     public function create(ContainerBuilder $container, $id, $config)
     {
-        $definition = $container->setDefinition($id, new DefinitionDecorator('lexik_jwt_authentication.security.jwt_user_provider'));
+        if (class_exists(ChildDefinition::class)) {
+            $definition = new ChildDefinition('lexik_jwt_authentication.security.jwt_user_provider');
+        } else {
+            $definition = new DefinitionDecorator('lexik_jwt_authentication.security.jwt_user_provider');
+        }
+
+        $definition = $container->setDefinition($id, $definition);
         $definition->replaceArgument(0, $config['class']);
     }
 
