@@ -3,6 +3,11 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
+## [2.4.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.2) (2017-10-19)
+
+* bug [\#398](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/398) Fix Symfony 4 compatibility ([benji07](https://github.com/benji07))
+* bug [\#383](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/383) Don't register lcobucci encoder if lcobucci/jwt is not installed ([chalasr](https://github.com/chalasr))
+
 ## [2.4.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.1) (2017-08-29)
 
 * bug [\#356](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/356) Dont use DefinitionDecorator on Symfony 3.3+ ([chalasr](https://github.com/chalasr))
