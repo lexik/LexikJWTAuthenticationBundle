@@ -32,8 +32,8 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
   * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
 
-Support
--------
+Community Support
+-----------------
 
 Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle),  it is the official support platform for this bundle.
   
@@ -54,6 +54,11 @@ Credits
 
 * Lexik <dev@lexik.fr>
 * [All contributors](https://github.com/lexik/LexikJWTAuthenticationBundle/graphs/contributors)
+
+Supported by Auth0 ![auth0](http://passportjs.org/images/supported_logo.svg)
+----------------------------------------------------------------------------
+
+If you want to quickly add secure token based authentication to your PHP apps or APIs, feel free to check out Auth0's free plan at [https://auth0.com/overview](https://auth0.com/overview?utm_source=GHsponsor&utm_medium=GHsponsor&utm_campaign=lexikjwt&utm_content=auth) 
 
 License
 -------
