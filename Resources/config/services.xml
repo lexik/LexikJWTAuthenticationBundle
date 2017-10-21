@@ -87,6 +87,11 @@
         </service>
         <service id="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface" alias="lexik_jwt_authentication.extractor.chain_extractor" />
 
+        <!-- Console -->
+        <service id="lexik_jwt_authentication.check_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand">
+            <tag name="console.command" command="lexik:jwt:check-config" />
+        </service>
+
         <!-- Deprecated -->
         <service id="lexik_jwt_authentication.security.authentication.provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider" public="false">
             <argument /> <!-- User Provider -->
