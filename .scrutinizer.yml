@@ -1,0 +1,4 @@
+build:
+    tests:
+        override:
+            - 'vendor/bin/simple-phpunit'
