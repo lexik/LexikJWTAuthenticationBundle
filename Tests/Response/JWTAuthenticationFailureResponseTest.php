@@ -3,13 +3,14 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Response;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the JWTAuthenticationFailureResponse.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTAuthenticationFailureResponseTest extends \PHPUnit_Framework_TestCase
+final class JWTAuthenticationFailureResponseTest extends TestCase
 {
     public function testResponse()
     {

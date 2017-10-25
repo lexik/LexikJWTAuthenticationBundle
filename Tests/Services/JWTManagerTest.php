@@ -5,6 +5,7 @@ namespace Services;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Core\User\User;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTManagerTest extends \PHPUnit_Framework_TestCase
+class JWTManagerTest extends TestCase
 {
     /**
      * test create.
