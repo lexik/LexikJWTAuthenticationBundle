@@ -14,6 +14,8 @@ final class LcobucciJWSProviderTest extends AbstractJWSProviderTest
 {
     public function __construct()
     {
+        parent::__construct();
+
         self::$providerClass  = LcobucciJWSProvider::class;
         self::$keyLoaderClass = RawKeyLoader::class;
     }

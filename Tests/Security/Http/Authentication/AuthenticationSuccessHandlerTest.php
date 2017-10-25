@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authenticatio
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class AuthenticationSuccessHandlerTest extends \PHPUnit_Framework_TestCase
+class AuthenticationSuccessHandlerTest extends TestCase
 {
     /**
      * test onAuthenticationSuccess method.

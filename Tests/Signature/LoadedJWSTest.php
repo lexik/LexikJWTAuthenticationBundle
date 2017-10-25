@@ -3,11 +3,12 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Signature;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CreatedJWS model class.
  */
-final class LoadedJWSTest extends \PHPUnit_Framework_TestCase
+final class LoadedJWSTest extends TestCase
 {
     private $goodPayload;
 

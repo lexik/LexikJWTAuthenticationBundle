@@ -3,13 +3,14 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\KeyLoader;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base class for KeyLoader classes tests.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-abstract class AbstractTestKeyLoader extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestKeyLoader extends TestCase
 {
     /** @var KeyLoaderInterface */
     protected $keyLoader;

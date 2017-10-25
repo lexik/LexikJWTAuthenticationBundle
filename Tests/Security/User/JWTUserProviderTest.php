@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTUserProviderTest extends \PHPUnit_Framework_TestCase
+class JWTUserProviderTest extends TestCase
 {
     public function testSupportsClass()
     {
