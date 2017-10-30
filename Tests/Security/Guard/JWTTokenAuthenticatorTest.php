@@ -221,7 +221,7 @@ class JWTTokenAuthenticatorTest extends TestCase
      */
     public function testCreateAuthenticatedTokenThrowsExceptionIfNotPreAuthenticatedToken()
     {
-        $userStub  = new AdvancedUserStub('lexik', 'test');
+        $userStub = new AdvancedUserStub('lexik', 'test');
 
         (new JWTTokenAuthenticator(
            $this->getJWTManagerMock(),

@@ -14,15 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 final class JWTAuthenticationSuccessResponse extends JsonResponse
 {
     /**
-     * The Json Web Token.
-     *
-     * Immutable property.
-     *
-     * @var string
-     */
-    private $token;
-
-    /**
      * @param string $token Json Web Token
      * @param array  $data  Extra data passed to the response
      */

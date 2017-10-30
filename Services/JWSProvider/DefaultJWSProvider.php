@@ -51,7 +51,7 @@ class DefaultJWSProvider implements JWSProviderInterface
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
         }
 
-        $cryptoEngine = $cryptoEngine == 'openssl' ? 'OpenSSL' : 'SecLib';
+        $cryptoEngine = 'openssl' == $cryptoEngine ? 'OpenSSL' : 'SecLib';
 
         if (!$this->isAlgorithmSupportedForEngine($cryptoEngine, $signatureAlgorithm)) {
             throw new \InvalidArgumentException(
