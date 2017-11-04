@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Response sent on successful JWT authentication.
  *
- * @internal
- *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
 final class JWTAuthenticationSuccessResponse extends JsonResponse
