@@ -10,7 +10,7 @@ A JWT is _self-contained_, meaning that we can trust into its payload for proces
 In a nutshell, there should be no need for loading the user from the database when authenticating a JWT Token,  
 the database should be hit only once for delivering the token. 
 
-That's why we decided to provide an user provider which is able to create User instances from the JWT payload.
+That's why we decided to provide a user provider which is able to create User instances from the JWT payload.
 
 Configuring the user provider
 -----------------------------
