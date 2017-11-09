@@ -39,7 +39,7 @@ security:
 What does it change?
 --------------------
 
-Now that the provider is configured, it will automatically be used by the `JWTGuardAuthenticator` at the time to authenticate a token.
+Now that the provider is configured, it will automatically be used by the `JWTGuardAuthenticator` when authenticating a token.
 Instead of loading the user from a "datastore" (i.e. memory or any database engine), a `JWTUserInterface` instance will be created from the JWT payload, will be cached for a request and be authenticated.
 We provide a simple  `JWTUser` class implementing this interface, which is used by default when configuring the provider.
 
@@ -50,7 +50,7 @@ Of course, you can. You just need to make your user class implement the `JWTUser
 This interface contains only a `createFromPayload()` _named constructor_ which takes the user's username and 
 the JWT token payload as arguments and returns an instance of the class.
 
-##### Example of implementation
+##### Sample implementation
 
 ```php
 namespace AppBundle\Security;
