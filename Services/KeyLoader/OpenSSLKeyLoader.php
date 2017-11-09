@@ -27,7 +27,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
         if (!$key) {
             $sslError = '';
             while ($msg = trim(openssl_error_string(), " \n\r\t\0\x0B\"")) {
-                if (substr($msg, 0, 6) === 'error:') {
+                if ('error:' === substr($msg, 0, 6)) {
                     $msg = substr($msg, 6);
                 }
                 $sslError .= "\n ".$msg;
