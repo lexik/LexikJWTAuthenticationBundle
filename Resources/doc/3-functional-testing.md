@@ -16,8 +16,8 @@ Override the bundle configuration in your `config_test.yml` :
 ``` yaml
 # config_test.yml
 lexik_jwt_authentication:
-    private_key_path:   %kernel.root_dir%/../var/jwt/private-test.pem
-    public_key_path:    %kernel.root_dir%/../var/jwt/public-test.pem
+    private_key_path:   '%kernel.root_dir%/../var/jwt/private-test.pem'
+    public_key_path:    '%kernel.root_dir%/../var/jwt/public-test.pem'
 ```
 
 **Protip:** You might want to commit those keys if you intend to run your test on a ci server.
