@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authentication;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class AuthenticationFailureHandlerTest extends \PHPUnit_Framework_TestCase
+class AuthenticationFailureHandlerTest extends TestCase
 {
     /**
      * test onAuthenticationFailure method.

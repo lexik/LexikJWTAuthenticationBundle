@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Provider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTProviderTest extends \PHPUnit_Framework_TestCase
+class JWTProviderTest extends TestCase
 {
     /**
      * test supports method.

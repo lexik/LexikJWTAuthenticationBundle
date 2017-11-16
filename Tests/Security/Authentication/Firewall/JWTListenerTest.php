@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Fir
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
+use PHPUnit\Framework\TestCase;
 
 /**
  * JWTListenerTest.
@@ -14,7 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTListenerTest extends \PHPUnit_Framework_TestCase
+class JWTListenerTest extends TestCase
 {
     /**
      * @group time-sensitive

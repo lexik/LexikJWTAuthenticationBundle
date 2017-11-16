@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\TokenExtractor;
 
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class ChainTokenExtractorTest extends \PHPUnit_Framework_TestCase
+class ChainTokenExtractorTest extends TestCase
 {
     public function testGetIterator()
     {

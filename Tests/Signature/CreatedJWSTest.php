@@ -3,11 +3,12 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Signature;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CreatedJWS model class.
  */
-final class CreatedJWSTest extends \PHPUnit_Framework_TestCase
+final class CreatedJWSTest extends TestCase
 {
     public function testCreateUnsigned()
     {

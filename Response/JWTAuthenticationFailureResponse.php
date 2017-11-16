@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * Response sent on failed JWT authentication (can be replaced by a custom Response).
  *
- * @internal
- *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
 final class JWTAuthenticationFailureResponse extends JsonResponse

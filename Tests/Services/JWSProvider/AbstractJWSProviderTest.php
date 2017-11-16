@@ -4,13 +4,14 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the JWSProvider.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-abstract class AbstractJWSProviderTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractJWSProviderTest extends TestCase
 {
     protected static $privateKey = '
 -----BEGIN RSA PRIVATE KEY-----

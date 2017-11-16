@@ -6,13 +6,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DefaultEncoder.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DefaultEncoderTest extends \PHPUnit_Framework_TestCase
+class DefaultEncoderTest extends TestCase
 {
     /**
      * Tests calling DefaultEncoder::decode() with a valid signature and payload.

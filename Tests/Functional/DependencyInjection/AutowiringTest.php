@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\Autowired;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-class AutowiringTest extends \PHPUnit_Framework_TestCase
+class AutowiringTest extends TestCase
 {
     public function testAutowiring()
     {

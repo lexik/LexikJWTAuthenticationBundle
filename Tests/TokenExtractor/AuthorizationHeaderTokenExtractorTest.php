@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\TokenExtractor;
 
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class AuthorizationHeaderTokenExtractorTest extends \PHPUnit_Framework_TestCase
+class AuthorizationHeaderTokenExtractorTest extends TestCase
 {
     /**
      * test getRequestToken.
