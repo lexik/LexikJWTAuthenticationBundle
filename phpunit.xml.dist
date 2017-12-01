@@ -13,6 +13,9 @@
         >
 
     <testsuites>
+        <testsuite name="LexikJWTAuthenticationBundle Gen keys command">
+            <file>./Tests/Functional/Command/GenKeysCommandTest.php</file>
+        </testsuite>
         <testsuite name="LexikJWTAuthenticationBundle Test Suite">
             <directory>./Tests/</directory>
         </testsuite>

@@ -3,3 +3,4 @@ build
 vendor
 composer.lock
 composer.phar
+Tests/Functional/var

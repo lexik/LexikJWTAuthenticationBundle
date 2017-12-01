@@ -9,6 +9,12 @@
             <argument type="service" id="lexik_jwt_authentication.key_loader" />
             <tag name="console.command" command="lexik:jwt:check-config" />
         </service>
+        <service id="lexik_jwt_authentication.gen_keys_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenKeysCommand" public="true">
+            <argument>%lexik_jwt_authentication.private_key_path%</argument>
+            <argument>%lexik_jwt_authentication.public_key_path%</argument>
+            <argument>%lexik_jwt_authentication.pass_phrase%</argument>
+            <tag name="console.command" command="lexik:jwt:gen-keys" />
+        </service>
     </services>
 
 </container>
