@@ -6,11 +6,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 /**
- * GenKeysCommand
+ * GenKeysCommand.
  *
  * @author zorn-v
  */
@@ -62,7 +62,7 @@ class GenKeysCommand extends Command
         $fs->mkdir(dirname($this->publicKey));
 
         $process = new Process(sprintf('openssl genrsa -passout env:JWT_PASSPHRASE -out %s -aes256 4096', escapeshellarg($this->privateKey)));
-        $process->setEnv(array('JWT_PASSPHRASE'=>$this->passphrase));
+        $process->setEnv(['JWT_PASSPHRASE'=>$this->passphrase]);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
@@ -75,5 +75,4 @@ class GenKeysCommand extends Command
 
         $output->writeln('<info>Keys successfully generated</>');
     }
-
 }
