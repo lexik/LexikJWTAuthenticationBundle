@@ -62,6 +62,9 @@ class GenKeysCommand extends Command
         $fs->mkdir(dirname($this->publicKey));
 
         $process = new Process(sprintf('openssl genrsa -passout env:JWT_PASSPHRASE -out %s -aes256 4096', escapeshellarg($this->privateKey)));
+        if (method_exists($process, 'inheritEnvironmentVariables')) {
+            $process->inheritEnvironmentVariables(true); //prevent symfony deprecation notice
+        }
         $process->setEnv(['JWT_PASSPHRASE'=>$this->passphrase]);
         $process->run();
         if (!$process->isSuccessful()) {
