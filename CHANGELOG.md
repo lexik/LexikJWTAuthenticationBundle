@@ -9,7 +9,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 * bug [\#403](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/403) Switch to PSR-4 namespaces for PHPUnit ([chalasr](https://github.com/chalasr))
 * bug [\#399](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/399) Fix sf3.4 command autoregistration deprecation ([ogizanagi](https://github.com/ogizanagi))
 
-## [2.4.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.2) (2017-10-19)
+## [2.4.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.2) (2017-10-19)
 
 * bug [\#398](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/398) Fix Symfony 4 compatibility ([benji07](https://github.com/benji07))
 * bug [\#383](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/383) Don't register lcobucci encoder if lcobucci/jwt is not installed ([chalasr](https://github.com/chalasr))
