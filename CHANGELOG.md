@@ -3,6 +3,12 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
+## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-6)
+
+* bug [\#408](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/408) Response classes shouldn't have the @internal PhpDoc tag ([lashae](https://github.com/lashae))
+* bug [\#403](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/403) Switch to PSR-4 namespaces for PHPUnit ([chalasr](https://github.com/chalasr))
+* bug [\#399](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/399) Fix sf3.4 command autoregistration deprecation ([ogizanagi](https://github.com/ogizanagi))
+
 ## [2.4.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.2) (2017-10-19)
 
 * bug [\#398](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/398) Fix Symfony 4 compatibility ([benji07](https://github.com/benji07))
