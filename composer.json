@@ -49,13 +49,13 @@
         "symfony/dom-crawler": "^2.8|^3.0|^4.0",
         "symfony/yaml": "^2.8|^3.0|^4.0",
         "friendsofphp/php-cs-fixer": "^1.1|^2.8@dev",
-        "lcobucci/jwt": "~3.2"
+        "lcobucci/jwt": "~3.2",
+        "phpunit/phpunit": ">=4.0"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
         "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support",
-        "lcobucci/jwt": "For using the LcobucciJWTEncoder",
-        "symfony/process": "For generate keys command"
+        "lcobucci/jwt": "For using the LcobucciJWTEncoder"
     },
     "autoload": {
         "psr-4": { "Lexik\\Bundle\\JWTAuthenticationBundle\\": "" },

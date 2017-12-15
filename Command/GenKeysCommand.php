@@ -6,8 +6,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 /**
  * GenKeysCommand.
@@ -61,20 +59,18 @@ class GenKeysCommand extends Command
         $fs->mkdir(dirname($this->privateKey));
         $fs->mkdir(dirname($this->publicKey));
 
-        $process = new Process(sprintf('openssl genrsa -passout env:JWT_PASSPHRASE -out %s -aes256 4096', escapeshellarg($this->privateKey)));
-        if (method_exists($process, 'inheritEnvironmentVariables')) {
-            $process->inheritEnvironmentVariables(true); //prevent symfony deprecation notice
-        }
-        $process->setEnv(['JWT_PASSPHRASE'=>$this->passphrase]);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        $process->setCommandLine(sprintf('openssl rsa -passin env:JWT_PASSPHRASE -pubout -in %s -out %s', escapeshellarg($this->privateKey), escapeshellarg($this->publicKey)));
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        $pKeyRes = openssl_pkey_new([
+            'digest_alg'         => 'sha512',
+            'private_key_bits'   => 4096,
+            'private_key_type'   => OPENSSL_KEYTYPE_RSA,
+            'encrypt_key'        => true,
+            'encrypt_key_cipher' => OPENSSL_CIPHER_AES_256_CBC,
+        ]);
+        openssl_pkey_export($pKeyRes, $privKeyData, $this->passphrase);
+        $pubKeyData = openssl_pkey_get_details($pKeyRes);
+
+        $fs->dumpFile($this->privateKey, $privKeyData);
+        $fs->dumpFile($this->publicKey, $pubKeyData['key']);
 
         $output->writeln('<info>Keys successfully generated</>');
     }
