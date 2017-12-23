@@ -39,11 +39,6 @@ Please consider [opening a question on StackOverflow](http://stackoverflow.com/q
   
 Github Issues are dedicated to bug reports and feature requests.
 
-Supported by Auth0 ![auth0](http://passportjs.org/images/supported_logo.svg)
-----------------------------------------------------------------------------
-
-If you want to quickly add secure token based authentication to your PHP apps or APIs, feel free to check out Auth0's free plan at [https://auth0.com/overview](https://auth0.com/overview?utm_source=GHsponsor&utm_medium=GHsponsor&utm_campaign=lexikjwt&utm_content=auth)
-
 Contributing
 ------------
 
