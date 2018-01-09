@@ -8,6 +8,7 @@ Table of contents
 
 * [Adding data to the JWT payload](#eventsjwt_created---adding-data-to-the-jwt-payload)
 * [Validating data in the JWT payload](#eventsjwt_decoded---validating-data-in-the-jwt-payload)
+* [Overriding your security token roles](#eventsjwt_roles_defined---Overriding your security token roles)
 * [Customize your security token](#eventsjwt_authenticated---customizing-your-security-token)
 * [Adding public data to the JWT response](#eventsauthentication_success---adding-public-data-to-the-jwt-response)
 * [Getting the JWT token string after encoding](#eventsjwt_encoded---getting-the-jwt-token-string-after-encoding)
@@ -136,6 +137,41 @@ public function onJWTDecoded(JWTDecodedEvent $event)
     if (!isset($payload['ip']) || $payload['ip'] !== $request->getClientIp()) {
         $event->markAsInvalid();
     }
+}
+```
+
+Events::JWT_ROLES_DEFINED - Overriding your security token roles
+----------------------------------------------------------------
+
+If you're working based on complex security requirements, you may need to also hook into the token roles definition. 
+
+``` yaml
+# services.yml
+services:
+    acme_api.event.jwt_roles_defined_listener:
+        class: AppBundle\EventListener\JWTRolesDefinedListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_roles_defined, method: onJWTRolesDefined }
+```
+
+#### Example: Add roles from organization
+
+``` php
+// src/AppBundle/EventListener/JWTRolesDefinedListener.php
+
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTRolesDefinedEvent;
+
+/**
+ * @param JWTRolesDefinedEvent $event
+ *
+ * @return void
+ */
+public function onJWTRolesDefined(JWTRolesDefinedEvent $event)
+{
+    $user = $event->getUser();
+    $payload = $event->getPayload();
+    $organizationRoles = $payload['organizationRoles'];
+    $event->setRoles(array_merge($organizationRoles, $user->getRoles()))
 }
 ```
 
