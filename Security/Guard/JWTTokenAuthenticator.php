@@ -223,7 +223,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             throw new \RuntimeException('Unable to return an authenticated token since there is no pre authentication token.');
         }
 
-        $authToken = new JWTUserToken($user->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
+        $rolesEvent = new JWTRolesDefinedEvent($user, $preAuthToken->getPayload());
+
+        $this->dispatcher->dispatch(Events::JWT_ROLES_DEFINED, $rolesEvent);
+
+        $authToken = new JWTUserToken($rolesEvent->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
 
         $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
         $this->preAuthenticationTokenStorage->setToken(null);

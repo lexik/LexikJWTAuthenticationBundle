@@ -40,6 +40,12 @@ final class Events
     const JWT_DECODED = 'lexik_jwt_authentication.on_jwt_decoded';
 
     /**
+     * Dispatched before the JWTUserToken creation.
+     * Hook into this event to change the token roles using the payload and the user.
+     */
+    const JWT_ROLES_DEFINED = 'lexik_jwt_authentication.on_roles_defined';
+
+    /**
      * Dispatched after the token payload has been authenticated by the provider.
      * Hook into this event to perform additional modification to the authenticated token using the payload.
      */
