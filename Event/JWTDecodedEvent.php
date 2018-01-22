@@ -41,7 +41,7 @@ class JWTDecodedEvent extends Event
     /**
      * @param array $payload
      */
-    public function setPayload($payload)
+    public function setPayload(array $payload)
     {
         $this->payload = $payload;
     }
