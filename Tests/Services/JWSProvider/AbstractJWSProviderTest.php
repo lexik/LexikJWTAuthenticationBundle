@@ -59,6 +59,7 @@ vwIDAQAB
 ';
 
     protected static $providerClass;
+
     protected static $keyLoaderClass;
 
     /**

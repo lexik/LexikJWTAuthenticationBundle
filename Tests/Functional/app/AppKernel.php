@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Kernel;
 class AppKernel extends Kernel
 {
     private $encoder;
+
     private $userProvider;
 
     public function __construct($environment, $debug)

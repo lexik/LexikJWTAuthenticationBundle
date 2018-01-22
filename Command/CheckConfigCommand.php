@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CheckConfigCommand extends Command
 {
     protected static $defaultName = 'lexik:jwt:check-config';
+
     private $keyLoader;
 
     public function __construct(KeyLoaderInterface $keyLoader)
