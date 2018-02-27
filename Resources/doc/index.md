@@ -49,7 +49,7 @@ lexik_jwt_authentication:
     token_ttl:        '%jwt_token_ttl%'
 ```
 
-Configure your `parameters.yml.dist` :
+Configure your `parameters.yml` :
 
 ``` yaml
 jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem' # ssh private key path
