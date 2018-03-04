@@ -5,6 +5,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInject
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\Autowired;
@@ -42,6 +44,8 @@ class AutowiringTest extends TestCase
         $this->assertInstanceOf(DefaultEncoder::class, $autowired->getJWTEncoder());
         $this->assertInstanceOf(ChainTokenExtractor::class, $autowired->getTokenExtractor());
         $this->assertInstanceOf(DefaultJWSProvider::class, $autowired->getJWSProvider());
+        $this->assertInstanceOf(AuthenticationSuccessHandler::class, $autowired->getAuthenticationSuccessHandler());
+        $this->assertInstanceOf(AuthenticationFailureHandler::class, $autowired->getAuthenticationFailureHandler());
     }
 
     public function testAutowireConfiguredEncoderServiceForInterfaceTypeHint()
