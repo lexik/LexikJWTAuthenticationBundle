@@ -166,7 +166,7 @@ This may not be a problem depending on the system that makes calls to your API (
 
 #### Impersonation
 
-For impersonating users using JWT, see [lafourchette/SwitchUserStatelessBundle](https://github.com/lafourchette/SwitchUserStatelessBundle), a stateless replacement of the `switch_user` listener.
+For impersonating users using JWT, see https://symfony.com/doc/current/security/impersonating_user.html 
 
 #### Important note for Apache users
 
