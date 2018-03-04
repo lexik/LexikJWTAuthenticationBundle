@@ -59,7 +59,7 @@
             <tag name="monolog.logger" channel="security" />
             <argument type="service" id="event_dispatcher"/>
         </service>
-        <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler" alias="lexik_jwt_authentication.handler.authentication_" />
+        <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler" alias="lexik_jwt_authentication.handler.authentication_failure" />
 
         <!-- Key Loaders -->
         <service id="lexik_jwt_authentication.key_loader.abstract"  abstract="true" public="false">

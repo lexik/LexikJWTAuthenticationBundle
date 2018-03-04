@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
@@ -24,7 +25,7 @@ class Autowired
         TokenExtractorInterface $tokenExtractor,
         JWSProviderInterface $jwsProvider,
         AuthenticationSuccessHandler $authenticationSuccessHandler,
-        AuthenticationSuccessHandler $authenticationFailureHandler
+        AuthenticationFailureHandler $authenticationFailureHandler
     ) {
         $this->jwtManager = $jwtManager;
         $this->jwtEncoder = $jwtEncoder;
