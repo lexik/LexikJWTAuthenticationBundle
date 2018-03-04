@@ -11,7 +11,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
 final class LoadedJWS
 {
     const VERIFIED = 'verified';
+
     const EXPIRED  = 'expired';
+
     const INVALID  = 'invalid';
 
     /**

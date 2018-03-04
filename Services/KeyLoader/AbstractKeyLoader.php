@@ -10,6 +10,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 abstract class AbstractKeyLoader implements KeyLoaderInterface
 {
     const TYPE_PUBLIC  = 'public';
+
     const TYPE_PRIVATE = 'private';
 
     /**
