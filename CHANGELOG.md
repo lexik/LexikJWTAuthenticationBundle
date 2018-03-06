@@ -3,7 +3,12 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.3.0
 
-## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-6)
+## [2.4.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.4) (2018-03-06)
+
+* bug [\#466](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/466) bug #466 Public jwt manager ([chalasr](https://github.com/chalasr))
+* bug [\#465](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/465) bug #466 Make authentication Success/Failure handlers autowirable ([chalasr](https://github.com/chalasr))
+
+## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-06)
 
 * bug [\#408](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/408) Response classes shouldn't have the @internal PhpDoc tag ([lashae](https://github.com/lashae))
 * bug [\#403](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/403) Switch to PSR-4 namespaces for PHPUnit ([chalasr](https://github.com/chalasr))
