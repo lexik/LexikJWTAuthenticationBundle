@@ -25,12 +25,19 @@ class AuthenticationFailureHandlerTest extends TestCase
 
         $handler  = new AuthenticationFailureHandler($dispatcher);
         $response = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException());
+        $responseCustom = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException('User account is disabled.'));
         $content  = json_decode($response->getContent(), true);
+        $contentCustom  = json_decode($responseCustom->getContent(), true);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
         $this->assertEquals('Bad credentials', $content['message']);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $responseCustom);
+        $this->assertEquals(401, $responseCustom->getStatusCode());
+        $this->assertEquals(401, $contentCustom['code']);
+        $this->assertEquals('User account is disabled.', $contentCustom['message']);
     }
 
     /**
@@ -45,10 +52,16 @@ class AuthenticationFailureHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @param string $exceptionMessage
+     *
+     * @return AuthenticationException
      */
-    protected function getAuthenticationException()
+    protected function getAuthenticationException($exceptionMessage = '')
     {
+        if ('' != $exceptionMessage) {
+            return new AuthenticationException($exceptionMessage);
+        }
+
         return new AuthenticationException();
     }
 }
