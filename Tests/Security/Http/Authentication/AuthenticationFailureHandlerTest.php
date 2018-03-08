@@ -23,10 +23,10 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $handler  = new AuthenticationFailureHandler($dispatcher);
-        $response = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException());
+        $handler        = new AuthenticationFailureHandler($dispatcher);
+        $response       = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException());
         $responseCustom = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException('User account is disabled.'));
-        $content  = json_decode($response->getContent(), true);
+        $content        = json_decode($response->getContent(), true);
         $contentCustom  = json_decode($responseCustom->getContent(), true);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
