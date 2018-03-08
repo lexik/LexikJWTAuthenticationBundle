@@ -66,11 +66,12 @@ class AuthenticationFailureHandlerTest extends TestCase
 
     /**
      * @param string $exceptionMessage
+     * 
      * @return AuthenticationException
      */
     protected function getAuthenticationException($exceptionMessage = '')
     {
-        if ($exceptionMessage != '') {
+        if ('' != $exceptionMessage) {
             return new AuthenticationException($exceptionMessage);
         }
         return new AuthenticationException();
