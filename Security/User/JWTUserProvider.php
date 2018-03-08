@@ -3,14 +3,13 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * JWT User provider.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTUserProvider implements UserProviderInterface
+final class JWTUserProvider implements UserProviderWithPayloadSupportsInterface
 {
     private $class;
 
@@ -32,6 +31,14 @@ final class JWTUserProvider implements UserProviderInterface
      * @return JWTUserInterface
      */
     public function loadUserByUsername($username, array $payload = [])
+    {
+        return $this->loadUserByUsernameAndPayload($username, $payload);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadUserByUsernameAndPayload($username, array $payload)
     {
         $class = $this->class;
 

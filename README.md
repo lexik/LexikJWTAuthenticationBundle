@@ -32,8 +32,8 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
   * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
 
-Support
--------
+Community Support
+-----------------
 
 Please consider [opening a question on StackOverflow](http://stackoverflow.com/questions/ask) using the [`lexikjwtauthbundle` tag](http://stackoverflow.com/questions/tagged/lexikjwtauthbundle),  it is the official support platform for this bundle.
   
