@@ -34,6 +34,26 @@ class AuthenticationFailureHandlerTest extends TestCase
     }
 
     /**
+     * test onAuthenticationFailure method with custom exception message.
+     */
+    public function testOnAuthenticationFailureWithCustomExceptionMessage()
+    {
+        $dispatcher = $this
+            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $handler  = new AuthenticationFailureHandler($dispatcher);
+        $response = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException('User account is disabled'));
+        $content  = json_decode($response->getContent(), true);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(401, $content['code']);
+        $this->assertEquals('User account is disabled', $content['message']);
+    }
+
+    /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getRequest()
@@ -45,10 +65,14 @@ class AuthenticationFailureHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @param string $exceptionMessage
+     * @return AuthenticationException
      */
-    protected function getAuthenticationException()
+    protected function getAuthenticationException($exceptionMessage = '')
     {
+        if ($exceptionMessage != '') {
+            return new AuthenticationException($exceptionMessage);
+        }
         return new AuthenticationException();
     }
 }
