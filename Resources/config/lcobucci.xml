@@ -16,6 +16,7 @@
             <argument>%lexik_jwt_authentication.encoder.crypto_engine%</argument>
             <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
+            <argument>%lexik_jwt_authentication.clock_skew%</argument>
         </service>
     </services>
 </container>
