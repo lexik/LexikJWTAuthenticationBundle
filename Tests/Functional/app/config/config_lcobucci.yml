@@ -2,8 +2,8 @@ imports:
     - { resource: base_config.yml }
 
 lexik_jwt_authentication:
-    private_key_path:   '%kernel.root_dir%/../var/jwt/private.pem'
-    public_key_path:    '%kernel.root_dir%/../var/jwt/public.pem'
+    private_key_path:   '%kernel.root_dir%/../config/jwt/private.pem'
+    public_key_path:    '%kernel.root_dir%/../config/jwt/public.pem'
     pass_phrase:        testing
     encoder:
         service: lexik_jwt_authentication.encoder.lcobucci
