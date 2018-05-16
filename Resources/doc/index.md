@@ -175,9 +175,7 @@ As stated in [this link](http://stackoverflow.com/questions/11990388/request-hea
 If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
 
 ```apache
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 ```
 
 Further documentation
