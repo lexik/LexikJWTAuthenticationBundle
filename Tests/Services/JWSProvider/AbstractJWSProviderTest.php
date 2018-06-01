@@ -79,7 +79,7 @@ vwIDAQAB
             ->willReturn('foobar');
 
         $payload     = ['username' => 'chalasr'];
-        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
@@ -100,7 +100,7 @@ vwIDAQAB
             ->with('public')
             ->willReturn(static::$publicKey);
 
-        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
         $loadedJWS   = $jwsProvider->load($jwt);
         $this->assertInstanceOf(LoadedJWS::class, $loadedJWS);
 
@@ -129,7 +129,7 @@ vwIDAQAB
             ->with('public')
             ->willReturn(static::$publicKey);
 
-        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null);
+        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
         $jws      = $provider->create(['username' => 'chalasr']);
 
         $this->assertInstanceOf(CreatedJWS::class, $jws);
@@ -150,7 +150,7 @@ vwIDAQAB
      */
     public function testInvalidsignatureAlgorithm()
     {
-        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600);
+        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600, 0);
     }
 
     /**
@@ -159,7 +159,7 @@ vwIDAQAB
      */
     public function testInvalidTtl()
     {
-        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl');
+        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl', 0);
     }
 
     private function getKeyLoaderMock()
