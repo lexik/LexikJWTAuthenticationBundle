@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2018-05-16T11:16:25Z
+
+Could you also update the `LcobucciJWSProvider` class? I can do it otherwise.
+Thanks for proposing this feature
+
+---------------------------------------------------------------------------
+
+by patrickjDE at 2018-05-17T08:34:58Z
+
+I needed this for a project I'm working on, so why not share the implementation 😄
+I'll update the other provider class in the next days.
+
+---------------------------------------------------------------------------
+
+by patrickjDE at 2018-06-01T12:09:38Z
+
+Finally had the time for it, also updated the corresponding tests.
