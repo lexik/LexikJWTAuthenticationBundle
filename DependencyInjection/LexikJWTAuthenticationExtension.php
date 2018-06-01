@@ -56,6 +56,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key_path']);
         $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
+        $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
         $encoderConfig = $config['encoder'];
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));
