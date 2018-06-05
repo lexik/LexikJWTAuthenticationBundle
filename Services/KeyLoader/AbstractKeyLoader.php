@@ -71,7 +71,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
 
         if (!is_file($path) || !is_readable($path)) {
             throw new \RuntimeException(
-                sprintf('%s key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.jwt_%s_key_path" config option?', ucfirst($type), $path, $type)
+                sprintf('%s key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.%s_key_path" config option?', ucfirst($type), $path, $type)
             );
         }
 
