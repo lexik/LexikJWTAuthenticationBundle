@@ -80,7 +80,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
         $jws->setIssuedAt(time());
 
-        if (null !== $this->ttl) {
+        if (null !== $this->ttl && !isset($payload['exp'])) {
             $jws->setExpiration(time() + $this->ttl);
         }
 

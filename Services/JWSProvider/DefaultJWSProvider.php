@@ -89,7 +89,7 @@ class DefaultJWSProvider implements JWSProviderInterface
         $jws           = new JWS($header, $this->cryptoEngine);
         $claims        = ['iat' => time()];
 
-        if (null !== $this->ttl) {
+        if (null !== $this->ttl && !isset($payload['exp'])) {
             $claims['exp'] = time() + $this->ttl;
         }
 
