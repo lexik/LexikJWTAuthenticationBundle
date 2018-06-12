@@ -50,18 +50,18 @@ Configure the SSH keys path in your `config.yml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    private_key_path: '%jwt_private_key_path%'
-    public_key_path:  '%jwt_public_key_path%'
-    pass_phrase:      '%jwt_key_pass_phrase%'
+    secret_key:       '%jwt_private_key_path%' # required for token creation
+    public_key:       '%jwt_public_key_path%'  # required for token verification
+    pass_phrase:      '%jwt_key_pass_phrase%'  # required for token creation
     token_ttl:        '%jwt_token_ttl%'
 ```
 
 Configure your `parameters.yml` :
 
 ``` yaml
-jwt_private_key_path: '%kernel.root_dir%/../config/jwt/private.pem' # ssh private key path
-jwt_public_key_path:  '%kernel.root_dir%/../config/jwt/public.pem'  # ssh public key path
-jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
+jwt_private_key_path: '%kernel.root_dir%/../config/jwt/private.pem'
+jwt_public_key_path:  '%kernel.root_dir%/../config/jwt/public.pem'
+jwt_key_pass_phrase:  'your_secret_passphrase'
 jwt_token_ttl:        3600
 ```
 

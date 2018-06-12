@@ -6,8 +6,8 @@
 
     <services>
         <service id="lexik_jwt_authentication.key_loader.abstract"  abstract="true" public="false">
-            <argument>%lexik_jwt_authentication.private_key_path%</argument>
-            <argument>%lexik_jwt_authentication.public_key_path%</argument>
+            <argument/> <!-- private key -->
+            <argument/> <!-- public key -->
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
         <service id="lexik_jwt_authentication.key_loader.openssl" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract"/>
