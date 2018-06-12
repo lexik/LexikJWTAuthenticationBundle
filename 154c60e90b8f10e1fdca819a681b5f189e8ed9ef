@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by railto at 2018-02-27T17:02:31Z
+
+Any update as to when this could be implemented?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2018-03-02T14:30:15Z
+
+@railto This will be released by the end of the month, some cleanup needed.
+
+---------------------------------------------------------------------------
+
+by piteur at 2018-03-13T09:24:31Z
+
+@chalasr - Can't wait for this to be implemented. It'll be easier to deploy with docker thanks to this PR. No more volume to store only the keys...
+Thanks for your work !
+
+---------------------------------------------------------------------------
+
+by MasseElch at 2018-06-02T08:41:39Z
+
+@chalasr What is the progress here? Do you need any help?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2018-06-12T10:29:11Z
+
+Sorry for being latish guys, this is ready and will be merged today (not now in case one wants to give it a last review).
