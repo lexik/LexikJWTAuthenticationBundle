@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2018-04-24T08:41:25Z
+
+Definitely 👍 for adding this.
+
+---------------------------------------------------------------------------
+
+by sroze at 2018-05-01T12:40:00Z
+
+I've updated the PR to use user providers. Though, I can't see how we can easily get their short names so I've kept the service ID as name. I think that's OK as we have a default one used when only one provider is registered.
