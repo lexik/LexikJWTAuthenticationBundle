@@ -1,0 +1,9 @@
+imports:
+    - { resource: '../base_config.yml' }
+    - { resource: '../security_in_memory.yml' }
+
+lexik_jwt_authentication:
+    secret_key: testing
+    encoder:
+        signature_algorithm: 'HS256'
+        service: lexik_jwt_authentication.encoder.lcobucci

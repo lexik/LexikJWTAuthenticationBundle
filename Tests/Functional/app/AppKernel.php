@@ -18,10 +18,14 @@ class AppKernel extends Kernel
 
     private $signatureAlgorithm;
 
-    public function __construct($environment, $debug)
+    private $testCase;
+
+    public function __construct($environment, $debug, $testCase = null)
     {
         parent::__construct($environment, $debug);
 
+
+        $this->testCase           = $testCase;
         $this->encoder            = getenv('ENCODER') ?: 'default';
         $this->userProvider       = getenv('PROVIDER') ?: 'in_memory';
         $this->signatureAlgorithm = getenv('ALGORITHM');
@@ -66,6 +70,12 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
+            $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
+
+            return;
+        }
+
         $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider));
 
         if ($this->signatureAlgorithm && file_exists($file = __DIR__.sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
