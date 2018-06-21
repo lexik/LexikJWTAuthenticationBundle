@@ -5,7 +5,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Token;
 use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
@@ -34,14 +36,20 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $ttl;
 
     /**
+     * @var int
+     */
+    private $clockSkew;
+
+    /**
      * @param RawKeyLoader $keyLoader
      * @param string       $cryptoEngine
      * @param string       $signatureAlgorithm
      * @param int|null     $ttl
+     * @param int          $clockSkew
      *
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
+    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
@@ -51,9 +59,14 @@ class LcobucciJWSProvider implements JWSProviderInterface
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
         }
 
+        if (null !== $clockSkew && !is_numeric($clockSkew)) {
+            throw new \InvalidArgumentException(sprintf('The clock skew should be a numeric value, got %s instead.', $clockSkew));
+        }
+
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
+        $this->clockSkew = $clockSkew;
     }
 
     /**
@@ -75,17 +88,14 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $jws->set($name, $value);
         }
 
+        $e = null;
+
         try {
-            $jws->sign(
-                $this->signer,
-                new Key($this->keyLoader->loadKey('private'), $this->keyLoader->getPassphrase())
-            );
-            $signed = true;
+            $this->sign($jws);
         } catch (\InvalidArgumentException $e) {
-            $signed = false;
         }
 
-        return new CreatedJWS((string) $jws->getToken(), $signed);
+        return new CreatedJWS((string) $jws->getToken(), null === $e);
     }
 
     /**
@@ -100,33 +110,56 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $payload[$claim->getName()] = $claim->getValue();
         }
 
-        return new LoadedJWS(
-            $payload,
-            $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData()),
-            null !== $this->ttl,
-            $jws->getHeaders()
-        );
+        return new LoadedJWS($payload, $this->verify($jws), null !== $this->ttl, $jws->getHeaders());
     }
 
     private function getSignerForAlgorithm($signatureAlgorithm)
     {
-        if (0 === strpos($signatureAlgorithm, 'HS')) {
-            $signerType = 'Hmac';
-        } elseif (0 === strpos($signatureAlgorithm, 'RS')) {
-            $signerType = 'Rsa';
-        } elseif (0 === strpos($signatureAlgorithm, 'EC')) {
-            $signerType = 'Ecdsa';
-        }
+        $signerMap = [
+            'HS256' => Signer\Hmac\Sha256::class,
+            'HS384' => Signer\Hmac\Sha384::class,
+            'HS512' => Signer\Hmac\Sha512::class,
+            'RS256' => Signer\Rsa\Sha256::class,
+            'RS384' => Signer\Rsa\Sha384::class,
+            'RS512' => Signer\Rsa\Sha512::class,
+            'EC256' => Signer\Ecdsa\Sha256::class,
+            'EC384' => Signer\Ecdsa\Sha384::class,
+            'EC512' => Signer\Ecdsa\Sha512::class,
+        ];
 
-        if (!isset($signerType)) {
+        if (!isset($signerMap[$signatureAlgorithm])) {
             throw new \InvalidArgumentException(
                 sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, __CLASS__)
             );
         }
 
-        $bits   = substr($signatureAlgorithm, 2, strlen($signatureAlgorithm));
-        $signer = sprintf('Lcobucci\\JWT\\Signer\\%s\\Sha%s', $signerType, $bits);
+        $signerClass = $signerMap[$signatureAlgorithm];
 
-        return new $signer();
+        return new $signerClass();
+    }
+
+    private function sign(Builder $jws)
+    {
+        if ($this->signer instanceof Hmac) {
+            return $jws->sign($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE));
+        }
+
+        return $jws->sign(
+            $this->signer,
+            new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->keyLoader->getPassphrase())
+        );
+    }
+
+    private function verify(Token $jwt)
+    {
+        if (!$jwt->validate(new ValidationData())) {
+            return false;
+        }
+
+        if ($this->signer instanceof Hmac) {
+            return $jwt->verify($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE));
+        }
+
+        return $jwt->verify($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
     }
 }

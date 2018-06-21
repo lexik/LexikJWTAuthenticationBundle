@@ -47,6 +47,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
                 $cryptoEngine,
                 $signatureAlgorithm,
                 3600,
+                0,
             ])
             ->getMock();
 

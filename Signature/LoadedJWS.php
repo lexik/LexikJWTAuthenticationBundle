@@ -11,7 +11,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
 final class LoadedJWS
 {
     const VERIFIED = 'verified';
+
     const EXPIRED  = 'expired';
+
     const INVALID  = 'invalid';
 
     /**
@@ -30,6 +32,11 @@ final class LoadedJWS
     private $state;
 
     /**
+     * @var int
+     */
+    private $clockSkew;
+
+    /**
      * @var bool
      */
     private $hasLifetime;
@@ -38,13 +45,15 @@ final class LoadedJWS
      * @param array $payload
      * @param bool  $isVerified
      * @param bool  $hasLifetime
+     * @param int   $clockSkew
      * @param array $header
      */
-    public function __construct(array $payload, $isVerified, $hasLifetime = true, array $header = [])
+    public function __construct(array $payload, $isVerified, $hasLifetime = true, array $header = [], $clockSkew = 0)
     {
         $this->payload     = $payload;
         $this->header      = $header;
         $this->hasLifetime = $hasLifetime;
+        $this->clockSkew   = $clockSkew;
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
@@ -109,7 +118,7 @@ final class LoadedJWS
             return $this->state = self::INVALID;
         }
 
-        if (0 <= (new \DateTime())->format('U') - $this->payload['exp']) {
+        if ($this->clockSkew <= (new \DateTime())->format('U') - $this->payload['exp']) {
             $this->state = self::EXPIRED;
         }
     }
@@ -119,7 +128,7 @@ final class LoadedJWS
      */
     private function checkIssuedAt()
     {
-        if (isset($this->payload['iat']) && (int) $this->payload['iat'] > time()) {
+        if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
             return $this->state = self::INVALID;
         }
     }

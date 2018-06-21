@@ -25,16 +25,30 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('private_key_path')
+                    ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.secret_key" instead.')
                     ->defaultNull()
                 ->end()
                 ->scalarNode('public_key_path')
+                    ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.public_key" instead.')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('public_key')
+                    ->info('The key used to sign tokens (useless for HMAC). If not set, the key will be automatically computed from the secret key.')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('secret_key')
+                    ->info('The key used to sign tokens. It can be a raw secret (for HMAC), a raw RSA/ECDSA key or the path to a file itself being plaintext or PEM.')
                     ->defaultNull()
                 ->end()
                 ->scalarNode('pass_phrase')
+                    ->info('The key passphrase (useless for HMAC)')
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('token_ttl')
                     ->defaultValue(3600)
+                ->end()
+                ->scalarNode('clock_skew')
+                    ->defaultValue(0)
                 ->end()
                 ->arrayNode('encoder')
                     ->addDefaultsIfNotSet()
@@ -68,9 +82,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @return TreeBuilder
-     */
     private function getTokenExtractorsNode()
     {
         $builder = new TreeBuilder();

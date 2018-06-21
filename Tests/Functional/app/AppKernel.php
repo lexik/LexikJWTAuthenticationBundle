@@ -13,14 +13,22 @@ use Symfony\Component\HttpKernel\Kernel;
 class AppKernel extends Kernel
 {
     private $encoder;
+
     private $userProvider;
 
-    public function __construct($environment, $debug)
+    private $signatureAlgorithm;
+
+    private $testCase;
+
+    public function __construct($environment, $debug, $testCase = null)
     {
         parent::__construct($environment, $debug);
 
-        $this->encoder      = getenv('ENCODER') ?: 'default';
-        $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
+
+        $this->testCase           = $testCase;
+        $this->encoder            = getenv('ENCODER') ?: 'default';
+        $this->userProvider       = getenv('PROVIDER') ?: 'in_memory';
+        $this->signatureAlgorithm = getenv('ALGORITHM');
     }
 
     /**
@@ -62,8 +70,21 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
+        if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
+            $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
+
+            return;
+        }
+
         $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider));
+
+        if ($this->signatureAlgorithm && file_exists($file = __DIR__.sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
+            $loader->load($file);
+
+            return;
+        }
+
+        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
     }
 
     public function getUserProvider()

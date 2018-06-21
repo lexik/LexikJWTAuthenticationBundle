@@ -7,8 +7,8 @@ Configuration
 Generate some test specific keys, for example :
 
 ``` bash
-$ openssl genrsa -out var/jwt/private-test.pem -aes256 4096
-$ openssl rsa -pubout -in var/jwt/private-test.pem -out var/jwt/public-test.pem
+$ openssl genrsa -out config/jwt/private-test.pem -aes256 4096
+$ openssl rsa -pubout -in config/jwt/private-test.pem -out config/jwt/public-test.pem
 ```
 
 Override the bundle configuration in your `config_test.yml` :
@@ -16,8 +16,8 @@ Override the bundle configuration in your `config_test.yml` :
 ``` yaml
 # config_test.yml
 lexik_jwt_authentication:
-    private_key_path:   '%kernel.root_dir%/../var/jwt/private-test.pem'
-    public_key_path:    '%kernel.root_dir%/../var/jwt/public-test.pem'
+    private_key_path:   '%kernel.root_dir%/../config/jwt/private-test.pem'
+    public_key_path:    '%kernel.root_dir%/../config/jwt/public-test.pem'
 ```
 
 **Protip:** You might want to commit those keys if you intend to run your test on a ci server.

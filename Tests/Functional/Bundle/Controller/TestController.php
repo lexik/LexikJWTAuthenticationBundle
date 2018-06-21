@@ -15,9 +15,4 @@ class TestController extends Controller
             'username' => $this->getUser()->getUsername(),
         ]);
     }
-
-    public function loginCheckAction()
-    {
-        throw new \RuntimeException('loginCheckAction() should never be called directly.');
-    }
 }

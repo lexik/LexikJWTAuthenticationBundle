@@ -38,16 +38,16 @@
     ],
     "require": {
         "php": "^5.5|^7.0",
-        "symfony/framework-bundle": "^2.8|^3.0|^4.0",
-        "symfony/security-bundle": "^2.8|^3.0|^4.0",
+        "symfony/framework-bundle": "^3.4|^4.0",
+        "symfony/security-bundle": "^3.4|^4.0",
         "namshi/jose": "^7.2"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~3.3",
-        "symfony/browser-kit": "^2.8|^3.0|^4.0",
-        "symfony/console": "^2.8|^3.0|^4.0",
-        "symfony/dom-crawler": "^2.8|^3.0|^4.0",
-        "symfony/yaml": "^2.8|^3.0|^4.0",
+        "symfony/phpunit-bridge": "^3.4|^4.0",
+        "symfony/browser-kit": "^3.4|^4.0",
+        "symfony/console": "^3.4|^4.0",
+        "symfony/dom-crawler": "^3.4|^4.0",
+        "symfony/yaml": "^3.4|^4.0",
         "friendsofphp/php-cs-fixer": "^1.1|^2.8@dev",
         "lcobucci/jwt": "~3.2"
     },
@@ -71,6 +71,7 @@
         "test": [
             "vendor/bin/simple-phpunit",
             "ENCODER=lcobucci vendor/bin/simple-phpunit",
+            "ENCODER=lcobucci ALGORITHM=HS256 vendor/bin/simple-phpunit",
             "PROVIDER=lexik_jwt vendor/bin/simple-phpunit"
         ]
     }

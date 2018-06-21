@@ -36,7 +36,7 @@ class GetTokenTest extends TestCase
         static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
 
         $body    = json_decode(static::$client->getResponse()->getContent(), true);
-        $decoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder.default');
+        $decoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $payload = $decoder->decode($body['token']);
 
         $this->assertArrayHasKey('custom', $payload, 'The payload should contains a "custom" claim.');

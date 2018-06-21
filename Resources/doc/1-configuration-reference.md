@@ -10,9 +10,9 @@ Bundle configuration
 # app/config/config.yml
 #...
 lexik_jwt_authentication:
-    private_key_path:    '%kernel.root_dir%/../var/jwt/private.pem'
+    private_key_path:    '%kernel.root_dir%/../config/jwt/private.pem'
     # ssh public key path
-    public_key_path:     '%kernel.root_dir%/../var/jwt/public.pem'
+    public_key_path:     '%kernel.root_dir%/../config/jwt/public.pem'
     # ssh key pass phrase
     pass_phrase:         ''
 ```
@@ -24,9 +24,9 @@ lexik_jwt_authentication:
 # ...
 lexik_jwt_authentication:
     # ssh private key path
-    private_key_path:    '%kernel.root_dir%/../var/jwt/private.pem'
+    private_key_path:    '%kernel.root_dir%/../config/jwt/private.pem'
     # ssh public key path
-    public_key_path:     '%kernel.root_dir%/../var/jwt/public.pem'
+    public_key_path:     '%kernel.root_dir%/../config/jwt/public.pem'
     # ssh key pass phrase
     pass_phrase:         ''
     # token ttl

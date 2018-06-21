@@ -7,6 +7,7 @@
     <services>
         <service id="lexik_jwt_authentication.check_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand" public="true">
             <argument type="service" id="lexik_jwt_authentication.key_loader" />
+            <argument type="string">%lexik_jwt_authentication.encoder.signature_algorithm%</argument> <!-- signature algorithm -->
             <tag name="console.command" command="lexik:jwt:check-config" />
         </service>
         <service id="lexik_jwt_authentication.gen_keys_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenKeysCommand" public="true">
@@ -14,6 +15,11 @@
             <argument>%lexik_jwt_authentication.public_key_path%</argument>
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
             <tag name="console.command" command="lexik:jwt:gen-keys" />
+        </service>
+        <service id="lexik_jwt_authentication.generate_token_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateTokenCommand" public="true">
+            <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
+            <argument type="collection" /> <!-- user providers -->
+            <tag name="console.command" command="lexik:jwt:generate-token" />
         </service>
     </services>
 

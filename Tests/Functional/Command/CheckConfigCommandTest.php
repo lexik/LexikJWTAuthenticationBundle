@@ -17,11 +17,10 @@ class CheckConfigCommandTest extends TestCase
      */
     public function testCheckOpenSSLCommand()
     {
-        $kernel = $this->createKernel();
-        $kernel->boot();
-
+        $kernel = $this->bootKernel();
         $tester = new CommandTester($kernel->getContainer()->get('lexik_jwt_authentication.check_config_command'));
-        $this->assertEquals(0, $tester->execute([]));
+
+        $this->assertSame(0, $tester->execute([]));
         $this->assertContains('The configuration seems correct.', $tester->getDisplay());
     }
 }

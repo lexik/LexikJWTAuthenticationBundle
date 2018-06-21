@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class JWTUserProvider implements UserProviderWithPayloadSupportsInterface
 {
     private $class;
+
     private $cache = [];
 
     /**

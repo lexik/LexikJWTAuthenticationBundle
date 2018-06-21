@@ -11,13 +11,20 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
  */
 class RawKeyLoaderTest extends AbstractTestKeyLoader
 {
-    /**
-     * {@inheritdoc}
-     */
     public function setUp()
     {
         $this->keyLoader = new RawKeyLoader('private.pem', 'public.pem', 'foobar');
 
         parent::setup();
+    }
+
+    public function testLoadPublicKey()
+    {
+        $this->assertSame('public.pem', $this->keyLoader->loadKey('public'));
+    }
+
+    public function testLoadPrivateKey()
+    {
+        $this->assertSame('private.pem', $this->keyLoader->loadKey('private'));
     }
 }

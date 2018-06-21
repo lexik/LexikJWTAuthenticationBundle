@@ -4,10 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
 use Lcobucci\JWT\Token;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Alias;
@@ -52,18 +49,36 @@ class LexikJWTAuthenticationExtension extends Extension
             $container->removeDefinition('lexik_jwt_authentication.jws_provider.lcobucci');
         }
 
-        $container->setParameter('lexik_jwt_authentication.private_key_path', $config['private_key_path']);
-        $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key_path']);
+        if (isset($config['private_key_path'])) {
+            $config['secret_key'] = $config['private_key_path'];
+            $container->setParameter('lexik_jwt_authentication.private_key_path', $config['secret_key']);
+        }
+
+        if (isset($config['public_key_path'])) {
+            $config['public_key'] = $config['public_key_path'];
+            $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key']);
+        }
+
+        if (empty($config['public_key']) && empty(['secret_key'])) {
+            throw new InvalidConfigurationException('You must either configure a "public_key" or a "secret_key".', 'lexik_jwt_authentication');
+        }
+
         $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
+        $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
         $encoderConfig = $config['encoder'];
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));
         $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
-            new Alias('lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
+            new Alias('lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
         );
+
+        $container
+            ->findDefinition('lexik_jwt_authentication.key_loader')
+            ->replaceArgument(0, $config['secret_key'])
+            ->replaceArgument(1, $config['public_key']);
 
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
@@ -71,31 +86,6 @@ class LexikJWTAuthenticationExtension extends Extension
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
-
-        // Support for autowiring in symfony < 3.3
-        if (!method_exists($container, 'fileExists')) {
-            $this->registerAutowiringTypes($container);
-        }
-    }
-
-    private static function registerAutowiringTypes(ContainerBuilder $container)
-    {
-        $container
-            ->findDefinition('lexik_jwt_authentication.encoder.default')
-            ->addAutowiringType(JWTEncoderInterface::class);
-
-        $container
-            ->getDefinition('lexik_jwt_authentication.jws_provider.default')
-            ->addAutowiringType(JWSProviderInterface::class);
-
-        $container
-            ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
-            ->addAutowiringType(TokenExtractorInterface::class);
-
-        $container
-            ->getDefinition('lexik_jwt_authentication.jwt_manager')
-            ->addAutowiringType(JWTTokenManagerInterface::class)
-            ->addAutowiringType(JWTManagerInterface::class); // To be removed in 3.0 along with the interface
     }
 
     private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
