@@ -8,6 +8,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader;
  * OpenSSLKeyLoaderTest.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @group legacy
  */
 class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
 {

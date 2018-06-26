@@ -9,6 +9,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
  * Tests the DefaultJWSProvider.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @group legacy
  */
 final class DefaultJWSProviderTest extends AbstractJWSProviderTest
 {

@@ -14,7 +14,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    lexik_jwt_authentication.encoder.default:
-        parent: lexik_jwt_authentication.encoder.abstract
-        arguments: ['@lexik_jwt_authentication.jws_provider.default']
+    lexik_jwt_authentication.encoder.lcobucci:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder
+        arguments: ['@lexik_jwt_authentication.jws_provider.lcobucci']
         public: true
