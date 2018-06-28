@@ -12,6 +12,8 @@ use PHPUnit\Framework\TestCase;
  * Tests the DefaultEncoder.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @group legacy
  */
 class DefaultEncoderTest extends TestCase
 {

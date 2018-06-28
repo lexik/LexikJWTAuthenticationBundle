@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInjection;
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
@@ -51,10 +52,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
             ])
             ->getMock();
 
-        $this->assertInstanceOf(
-            'Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder',
-            $container->get($encoderNamespace)
-        );
+        $this->assertInstanceOf(LcobucciJWTEncoder::class, $container->get($encoderNamespace));
 
         // The configured engine is the one used by the service
         $this->assertAttributeEquals(

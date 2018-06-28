@@ -37,9 +37,7 @@ lexik_jwt_authentication:
     # token encoding/decoding settings
     encoder:
         # token encoder/decoder service - default implementation based on the namshi/jose library
-        service:            lexik_jwt_authentication.encoder.default
-        # crypto engine used by the encoder service
-        crypto_engine:  openssl
+        service:            lexik_jwt_authentication.encoder.lcobucci
         # encryption algorithm used by the encoder service
         signature_algorithm: RS256
 

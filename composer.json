@@ -40,27 +40,25 @@
         "php": "^5.5|^7.0",
         "symfony/framework-bundle": "^3.4|^4.0",
         "symfony/security-bundle": "^3.4|^4.0",
-        "namshi/jose": "^7.2"
+        "lcobucci/jwt": "^3.2"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.4|^4.0",
         "symfony/browser-kit": "^3.4|^4.0",
         "symfony/console": "^3.4|^4.0",
         "symfony/dom-crawler": "^3.4|^4.0",
+        "symfony/var-dumper": "^3.4|^4.0",
         "symfony/yaml": "^3.4|^4.0",
-        "friendsofphp/php-cs-fixer": "^1.1|^2.8@dev",
-        "lcobucci/jwt": "~3.2"
+        "friendsofphp/php-cs-fixer": "^1.1|^2.8",
+        "namshi/jose": "^7.2"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
-        "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support",
-        "lcobucci/jwt": "For using the LcobucciJWTEncoder"
+        "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
     },
     "autoload": {
         "psr-4": { "Lexik\\Bundle\\JWTAuthenticationBundle\\": "" },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        "exclude-from-classmap": ["/Tests/"]
     },
     "extra": {
         "branch-alias": {

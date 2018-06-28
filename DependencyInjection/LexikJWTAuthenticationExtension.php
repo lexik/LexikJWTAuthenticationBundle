@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
-use Lcobucci\JWT\Token;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -35,19 +34,13 @@ class LexikJWTAuthenticationExtension extends Extension
         }
 
         $loader->load('deprecated.xml');
-        $loader->load('jwt_encoder.xml');
         $loader->load('jwt_manager.xml');
         $loader->load('key_loader.xml');
-        $loader->load('lcobucci.xml');
         $loader->load('namshi.xml');
+        $loader->load('lcobucci.xml');
         $loader->load('response_interceptor.xml');
         $loader->load('token_authenticator.xml');
         $loader->load('token_extractor.xml');
-
-        if (!class_exists(Token::class)) {
-            $container->removeDefinition('lexik_jwt_authentication.encoder.lcobucci');
-            $container->removeDefinition('lexik_jwt_authentication.jws_provider.lcobucci');
-        }
 
         if (isset($config['private_key_path'])) {
             $config['secret_key'] = $config['private_key_path'];

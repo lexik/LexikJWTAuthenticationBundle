@@ -3,11 +3,11 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInjection;
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\Autowired;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor;
@@ -41,9 +41,9 @@ class AutowiringTest extends TestCase
         $autowired = $container->get('autowired');
 
         $this->assertInstanceOf(JWTManager::class, $autowired->getJWTManager());
-        $this->assertInstanceOf(DefaultEncoder::class, $autowired->getJWTEncoder());
+        $this->assertInstanceOf(LcobucciJWTEncoder::class, $autowired->getJWTEncoder());
         $this->assertInstanceOf(ChainTokenExtractor::class, $autowired->getTokenExtractor());
-        $this->assertInstanceOf(DefaultJWSProvider::class, $autowired->getJWSProvider());
+        $this->assertInstanceOf(LcobucciJWSProvider::class, $autowired->getJWSProvider());
         $this->assertInstanceOf(AuthenticationSuccessHandler::class, $autowired->getAuthenticationSuccessHandler());
         $this->assertInstanceOf(AuthenticationFailureHandler::class, $autowired->getAuthenticationFailureHandler());
     }
@@ -90,7 +90,7 @@ class AutowiringTest extends TestCase
     }
 }
 
-final class DummyEncoder extends DefaultEncoder
+final class DummyEncoder extends LcobucciJWTEncoder
 {
     public function __construct()
     {

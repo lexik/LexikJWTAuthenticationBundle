@@ -2,10 +2,14 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
+@trigger_error(sprintf('The "%s\OpenSSLKeyLoader" class is deprecated since version 2.5 and will be removed in 3.0. Use "%s" instead.', __NAMESPACE__, RawKeyLoader::class), E_USER_DEPRECATED);
+
 /**
  * Load crypto keys for the OpenSSL crypto engine.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @deprecated since version 2.5, to be removed in 3.0. Use RawKeyLoader instead
  */
 class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 {

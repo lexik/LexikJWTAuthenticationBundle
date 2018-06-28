@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+@trigger_error(sprintf('The "%s" class is deprecated since version 2.5 and will be removed in 3.0. Use "%s" or create your own "%s" implementation instead.', DefaultJWSProvider::class, LcobucciJWSProvider::class, JWSProviderInterface::class), E_USER_DEPRECATED);
+
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
@@ -14,6 +16,8 @@ use Namshi\JOSE\JWS;
  * @final
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
+ * @deprecated since version 2.5, to be removed in 3.0
  */
 class DefaultJWSProvider implements JWSProviderInterface
 {

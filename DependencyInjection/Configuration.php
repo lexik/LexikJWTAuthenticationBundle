@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
-use Lcobucci\JWT\Token;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -54,13 +53,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('service')
-                            ->defaultValue('lexik_jwt_authentication.encoder.default')
-                            ->validate()
-                                ->ifTrue(function ($encoder) {
-                                    return 'lexik_jwt_authentication.encoder.lcobucci' === $encoder && !class_exists(Token::class);
-                                })
-                                ->thenInvalid('You must require "lcobucci/jwt" in your composer.json for using the lcobucci encoder.')
-                            ->end()
+                            ->defaultValue('lexik_jwt_authentication.encoder.lcobucci')
                         ->end()
                         ->scalarNode('signature_algorithm')
                             ->defaultValue('RS256')
@@ -69,6 +62,7 @@ class Configuration implements ConfigurationInterface
                         ->enumNode('crypto_engine')
                             ->values(['openssl', 'phpseclib'])
                             ->defaultValue('openssl')
+                            ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5, built-in encoders support OpenSSL only')
                         ->end()
                     ->end()
                 ->end()
