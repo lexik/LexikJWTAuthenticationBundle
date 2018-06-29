@@ -5,15 +5,15 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.5.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.0) (2018-06-29)
 
-feature [\#508](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/508) Replace namshi/jose by lcobucci/jwt ([chalasr](https://github.com/chalasr))
-feature [\#485](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/485) Add a `lexik:jwt:generate-token` command ([sroze](https://github.com/sroze))
-feature [\#369](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/369) Fix HMAC support ([chalasr](https://github.com/chalasr))
-feature [\#492](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/492) Clock skew ([patrickjDE](https://github.com/patrickjDE))
-feature [\#433](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/433) Added setPayload to JWTDecodedEvent analogous to JWTCreatedEvent. ([vgeyer](https://github.com/vgeyer))
-feature [\#412](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/412) Make the token type case insensitive ([greg0ire](https://github.com/greg0ire))
-feature [\#404](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/404) CheckConfigCommand should not be container aware ([chalasr](https://github.com/chalasr))
-feature [\#352](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/352) JWT header alteration ([Spomky](https://github.com/Spomky))
-feature [\#344](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/344) Add an extension point on the PayloadAwareUserProviderInterface ([sroze](https://github.com/sroze))
+* feature [\#508](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/508) Replace namshi/jose by lcobucci/jwt ([chalasr](https://github.com/chalasr))
+* feature [\#485](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/485) Add a `lexik:jwt:generate-token` command ([sroze](https://github.com/sroze))
+* feature [\#369](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/369) Fix HMAC support ([chalasr](https://github.com/chalasr))
+* feature [\#492](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/492) Clock skew ([patrickjDE](https://github.com/patrickjDE))
+* feature [\#433](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/433) Added setPayload to JWTDecodedEvent analogous to JWTCreatedEvent. ([vgeyer](https://github.com/vgeyer))
+* feature [\#412](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/412) Make the token type case insensitive ([greg0ire](https://github.com/greg0ire))
+* feature [\#404](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/404) CheckConfigCommand should not be container aware ([chalasr](https://github.com/chalasr))
+* feature [\#352](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/352) JWT header alteration ([Spomky](https://github.com/Spomky))
+* feature [\#344](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/344) Add an extension point on the PayloadAwareUserProviderInterface ([sroze](https://github.com/sroze))
 
 ## [2.4.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.4.3) (2017-11-6)
 
