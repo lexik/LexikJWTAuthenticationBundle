@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-interface UserProviderWithPayloadSupportsInterface extends UserProviderInterface
+interface PayloadAwareUserProviderInterface extends UserProviderInterface
 {
     /**
      * Load a user by its username, including the JWT token payload.
