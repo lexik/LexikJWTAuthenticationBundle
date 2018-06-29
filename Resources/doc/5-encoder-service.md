@@ -10,8 +10,8 @@ Creating your own encoder
 ### Create the encoder class
 
 ``` php
-// src/AppBundle/Encoder/NixillaJWTEncoder.php
-namespace AppBundle\Encoder;
+// src/App/Encoder/NixillaJWTEncoder.php
+namespace App\Encoder;
 
 use JWT\Authentication\JWT;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -25,15 +25,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
  */
 class NixillaJWTEncoder implements JWTEncoderInterface
 {
-    /**
-     * @var string
-     */
-    protected $key;
+    private $key;
 
-    /**
-     * __construct
-     */
-    public function __construct($key = 'super_secret_key')
+    public function __construct(string $key = 'super_secret_key')
     {
         $this->key = $key;
     }
@@ -68,16 +62,16 @@ class NixillaJWTEncoder implements JWTEncoderInterface
 ### Declare it as a service
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.encoder.nixilla_jwt_encoder:
-        class: AppBundle\Encoder\NixillaJWTEncoder
+        class: App\Encoder\NixillaJWTEncoder
 ```
 
 ### Use it as encoder service
 
 ``` yaml
-# config.yml
+# config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
     # ...
     encoder:
