@@ -5,7 +5,7 @@ It might be useful in many cases to manually create a JWT token for a given user
 To achieve this, use the `lexik_jwt_authentication.jwt_manager` service directly:
 
 ```php
-namespace AppBundle\Controller;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -25,10 +25,10 @@ but you can add your own data.
 You can also modify the header to fit on your application context.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_created_listener:
-        class: AppBundle\EventListener\JWTCreatedListener
+        class: App\EventListener\JWTCreatedListener
         arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
@@ -37,7 +37,7 @@ services:
 #### Example: Add client ip to the encoded payload
 
 ``` php
-// src/AppBundle/EventListener/JWTCreatedListener.php
+// src/App/EventListener/JWTCreatedListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -79,7 +79,7 @@ public function onJWTCreated(JWTCreatedEvent $event)
 #### Example: Override token expiration date calculation to be more flexible
 
 ``` php
-// src/AppBundle/EventListener/JWTCreatedListener.php
+// src/App/EventListener/JWTCreatedListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
@@ -106,10 +106,10 @@ Events::JWT_DECODED - Validating data in the JWT payload
 You can access the jwt payload once it has been decoded to perform you own additional validation.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_decoded_listener:
-        class: AppBundle\EventListener\JWTDecodedListener
+        class: App\EventListener\JWTDecodedListener
         arguments: [ '@request_stack' ]
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
@@ -118,7 +118,7 @@ services:
 #### Example: Check client ip the decoded payload (from example 1)
 
 ``` php
-// src/AppBundle/EventListener/JWTDecodedListener.php
+// src/App/EventListener/JWTDecodedListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 
@@ -145,10 +145,10 @@ Events::JWT_AUTHENTICATED - Customizing your security token
 You can add attributes to the token once it has been authenticated to allow JWT properties to be used by your application.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_authenticated_listener:
-        class: AppBundle\EventListener\JWTAuthenticatedListener
+        class: App\EventListener\JWTAuthenticatedListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_authenticated, method: onJWTAuthenticated }
 ```
@@ -156,7 +156,7 @@ services:
 #### Example: Keep a UUID that was set into the JWT in the authenticated token
 
 ``` php
-// src/AppBundle/EventListener/JWTAuthenticatedListener.php
+// src/App/EventListener/JWTAuthenticatedListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 
@@ -180,10 +180,10 @@ Events::AUTHENTICATION_SUCCESS - Adding public data to the JWT response
 By default, the authentication response is just a json containing the JWT but you can add your own public data to it.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.authentication_success_listener:
-        class: AppBundle\EventListener\AuthenticationSuccessListener
+        class: App\EventListener\AuthenticationSuccessListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 ```
@@ -191,7 +191,7 @@ services:
 #### Example: Add user roles to the response body
 
 ``` php
-// src/AppBundle/EventListener/AuthenticationSuccessListener.php
+// src/App/EventListener/AuthenticationSuccessListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
@@ -223,7 +223,7 @@ You may need to get JWT after its creation.
 #### Example: Obtain JWT string
 
 ``` php
-// src/AppBundle/EventListener/JWTEncodedListener.php
+// src/App/EventListener/JWTEncodedListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 
@@ -242,10 +242,10 @@ Events::AUTHENTICATION_FAILURE - Customizing the failure response body
 By default, the response in case of failed authentication is just a json containing a failure message and a 401 status code, but you can set a custom response.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.authentication_failure_listener:
-        class: AppBundle\EventListener\AuthenticationFailureListener
+        class: App\EventListener\AuthenticationFailureListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
 ```
@@ -253,7 +253,7 @@ services:
 Example: Set a custom response on authentication failure
 
 ``` php
-// src/AppBundle/EventListener/AuthenticationFailureListener.php
+// src/App/EventListener/AuthenticationFailureListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
@@ -280,10 +280,10 @@ Events::JWT_INVALID - Customizing the invalid token response
 By default, if the token is invalid, the response is just a json containing the corresponding error message and a 401 status code, but you can set a custom response.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_invalid_listener:
-        class: AppBundle\EventListener\JWTInvalidListener
+        class: App\EventListener\JWTInvalidListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
 ```
@@ -291,7 +291,7 @@ services:
 #### Example: Set a custom response message and status code on invalid token
 
 ``` php
-// src/AppBundle/EventListener/JWTInvalidListener.php
+// src/App/EventListener/JWTInvalidListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
@@ -314,10 +314,10 @@ By default, if no token is found in a request, the authentication listener will 
 Thanks to this event, you can set a custom response.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_invalid_listener:
-        class: AppBundle\EventListener\JWTInvalidListener
+        class: App\EventListener\JWTInvalidListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 ```
@@ -325,7 +325,7 @@ services:
 #### Example: Set a custom response message on token not found
 
 ``` php
-// src/AppBundle/EventListener/JWTNotFoundListener.php
+// src/App/EventListener/JWTNotFoundListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -353,10 +353,10 @@ By default, if the token provided in the request is expired, the authentication 
 Thanks to this event, you can set a custom response or simply change the response message.
 
 ``` yaml
-# services.yml
+# config/services.yaml
 services:
     acme_api.event.jwt_expired_listener:
-        class: AppBundle\EventListener\JWTExpiredListener
+        class: App\EventListener\JWTExpiredListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
 ```
@@ -364,7 +364,7 @@ services:
 #### Example: Customize the response in case of expired token
 
 ``` php
-// src/AppBundle/EventListener/JWTExpiredListener.php
+// src/App/EventListener/JWTExpiredListener.php
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
@@ -382,4 +382,4 @@ public function onJWTExpired(JWTExpiredEvent $event)
 ```
 
 __Protip:__ You might want to use the same method for customizing the response on both `JWT_INVALID`, `JWT_NOT_FOUND` and/or `JWT_EXPIRED` events. 
-For that, use the `Lexik\Bundle\JWTAuthenticationBundle\Event\JWTFailureEventInterface` interface to type-hint the event argument of your listener's method, rather the class corresponding to one of these specific events.
+For that, use the `Lexik\Bundle\JWTAuthenticationBundle\Event\JWTFailureEventInterface` interface to type-hint the event argument of your listener's method instead of the concrete class corresponding to one of these specific events.

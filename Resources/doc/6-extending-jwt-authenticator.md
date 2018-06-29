@@ -11,7 +11,7 @@ The following code can be used for creating your own authenticators.
 Create the authenticator class extending the built-in one:
 
 ```php
-namespace AppBundle\Security\Guard;
+namespace App\Security\Guard;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator as BaseAuthenticator;
 
@@ -24,17 +24,17 @@ class JWTTokenAuthenticator extends BaseAuthenticator
 Same for the service definition:
 
 ```yaml
-# services.yml
+# config/services.yaml
 services:
     app.jwt_token_authenticator:
-        class: AppBundle\Security\Guard\JWTTokenAuthenticator
+        class: App\Security\Guard\JWTTokenAuthenticator
         parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
 ```
 
 Then, use it in your security configuration:
 
 ```yaml
-# app/config/security.yml
+# config/packages/security.yaml
 security:
     # ...
     firewalls:
@@ -58,7 +58,7 @@ If your application contains multiple firewalls with different security contexts
 
 
 ```php
-namespace AppBundle\Security\Guard;
+namespace App\Security\Guard;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator as BaseAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;

@@ -18,7 +18,7 @@ Configuring the user provider
 To work, the provider just needs a few lines of configuration:
 
 ```yaml
-# app/config/security.yml
+# config/packages/security.yaml
 security:
     providers:
         jwt:
@@ -53,7 +53,7 @@ the JWT token payload as arguments and returns an instance of the class.
 ##### Sample implementation
 
 ```php
-namespace AppBundle\Security;
+namespace App\Security;
 
 final class User implements JWTUserInterface
 {
@@ -82,12 +82,12 @@ _Note_:  You can extend the default `JWTUser` class if that fits your needs.
 ##### Configuration
 
 ```yaml
-# app/config/security.yml
+# config/packages/security.yaml
 providers:
     # ...
     jwt:
         lexik_jwt:
-            class: AppBundle\Security\User
+            class: App\Security\User
 ```
 
 And voilà!

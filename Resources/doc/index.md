@@ -4,7 +4,7 @@ Getting started
 Prerequisites
 -------------
 
-This bundle requires Symfony 2.8+ (and the OpenSSL library if you intend to use the default provided encoder).
+This bundle requires Symfony 3.4+ and the openssl extension.
 
 **Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS. 
 
@@ -46,26 +46,17 @@ $ mv config/jwt/private2.pem config/jwt/private.pem
 Configuration
 -------------
 
-Configure the SSH keys path in your `config.yml` :
+Configure the SSH keys path in your `config/packages/lexik_jwt_authentication.yaml` :
 
 ``` yaml
 lexik_jwt_authentication:
-    secret_key:       '%jwt_private_key_path%' # required for token creation
-    public_key:       '%jwt_public_key_path%'  # required for token verification
-    pass_phrase:      '%jwt_key_pass_phrase%'  # required for token creation
-    token_ttl:        '%jwt_token_ttl%'
+    secret_key:       '%kernel.project_dir%/config/jwt/private.pem' # required for token creation
+    public_key:       '%kernel.project_dir%/config/jwt/public.pem'  # required for token verification
+    pass_phrase:      'your_secret_passphrase' # required for token creation, usage of an environment variable is recommended
+    token_ttl:        3600
 ```
 
-Configure your `parameters.yml` :
-
-``` yaml
-jwt_private_key_path: '%kernel.root_dir%/../config/jwt/private.pem'
-jwt_public_key_path:  '%kernel.root_dir%/../config/jwt/public.pem'
-jwt_key_pass_phrase:  'your_secret_passphrase'
-jwt_token_ttl:        3600
-```
-
-Configure your `security.yml` :
+Configure your `config/packages/security.yaml` :
 
 ``` yaml
 security:
@@ -77,11 +68,10 @@ security:
             pattern:  ^/api/login
             stateless: true
             anonymous: true
-            form_login:
+            json_login:
                 check_path:               /api/login_check
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-                require_previous_session: false
 
         api:
             pattern:   ^/api
@@ -118,7 +108,7 @@ Store it (client side), the JWT is reusable until its ttl has expired (3600 seco
 Note: You can test getting the token with a simple curl command like this:
 
 ```bash
-curl -X POST http://localhost:8000/api/login_check -d _username=johndoe -d _password=test
+curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login_check -d '{"username":"johndoe","password":"test"}'
 ```
 
 If it works, you will receive something like this:
