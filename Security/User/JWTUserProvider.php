@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTUserProvider implements UserProviderWithPayloadSupportsInterface
+final class JWTUserProvider implements PayloadAwareUserProviderInterface
 {
     private $class;
 

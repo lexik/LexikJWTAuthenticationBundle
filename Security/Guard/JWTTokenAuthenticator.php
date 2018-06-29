@@ -16,7 +16,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\UserProviderWithPayloadSupportsInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -264,7 +264,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     protected function loadUser(UserProviderInterface $userProvider, array $payload, $identity)
     {
-        if ($userProvider instanceof UserProviderWithPayloadSupportsInterface) {
+        if ($userProvider instanceof PayloadAwareUserProviderInterface) {
             return $userProvider->loadUserByUsernameAndPayload($identity, $payload);
         }
 
