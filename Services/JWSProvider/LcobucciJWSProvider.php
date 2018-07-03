@@ -110,7 +110,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $payload[$claim->getName()] = $claim->getValue();
         }
 
-        return new LoadedJWS($payload, $this->verify($jws), null !== $this->ttl, $jws->getHeaders());
+        return new LoadedJWS($payload, $this->verify($jws), null !== $this->ttl, $jws->getHeaders(), $this->clockSkew);
     }
 
     private function getSignerForAlgorithm($signatureAlgorithm)

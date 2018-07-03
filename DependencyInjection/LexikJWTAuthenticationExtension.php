@@ -61,6 +61,11 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
         $encoderConfig = $config['encoder'];
+
+        if ('lexik_jwt_authentication.encoder.default' === $encoderConfig['service']) {
+            @trigger_error('Using "lexik_jwt_authentication.encoder.default" as encoder service is deprecated since LexikJWTAuthenticationBundle 2.5, use "lexik_jwt_authentication.encoder.lcobucci" (default) or your own encoder service instead.', E_USER_DEPRECATED);
+        }
+
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));
         $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
