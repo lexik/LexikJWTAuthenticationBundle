@@ -5,7 +5,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInject
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Config\FileLocator;
@@ -33,40 +32,18 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         }
     }
 
-    public function testEncoderConfiguration()
+    public function testEncoderAlias()
     {
-        /* @var \Symfony\Component\DependencyInjection\ContainerInterface */
-        $container          = static::$kernel->getContainer();
-        $encoderNamespace   = 'lexik_jwt_authentication.encoder';
-        $cryptoEngine       = $container->getParameter($encoderNamespace.'.crypto_engine');
-        $signatureAlgorithm = $container->getParameter($encoderNamespace.'.signature_algorithm');
+        $this->assertInstanceOf(LcobucciJWTEncoder::class, static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder'));
+    }
 
-        $jwsProviderMock = $this
-            ->getMockBuilder(DefaultJWSProvider::class)
-            ->setConstructorArgs([
-                $container->get('lexik_jwt_authentication.key_loader'),
-                $cryptoEngine,
-                $signatureAlgorithm,
-                3600,
-                0,
-            ])
-            ->getMock();
-
-        $this->assertInstanceOf(LcobucciJWTEncoder::class, $container->get($encoderNamespace));
-
-        // The configured engine is the one used by the service
-        $this->assertAttributeEquals(
-            'openssl' == $cryptoEngine ? 'OpenSSL' : 'SecLib',
-            'cryptoEngine',
-            $jwsProviderMock
-        );
-
-        // The configured algorithm is the one used by the service
-        $this->assertAttributeEquals(
-            $signatureAlgorithm,
-            'signatureAlgorithm',
-            $jwsProviderMock
-        );
+    /**
+     * @group legacy
+     * @expectedDeprecation Using "lexik_jwt_authentication.encoder.default" as encoder service is deprecated since LexikJWTAuthenticationBundle 2.5, use "lexik_jwt_authentication.encoder.lcobucci" (default) or your own encoder service instead.
+     */
+    public function testDeprecatedDefaultEncoderService()
+    {
+        (new LexikJWTAuthenticationExtension())->load([['encoder' => ['service' => 'lexik_jwt_authentication.encoder.default']]], new ContainerBuilder());
     }
 
     public function testTokenExtractorsConfiguration()
