@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.3
+
+## [2.5.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.3) (2018-07-6)
+
+* bug [\#525](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/525) Make openssl key loader service deprecated ([Faecie](https://github.com/Faecie))
 
 ## [2.5.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.2) (2018-07-3)
 
