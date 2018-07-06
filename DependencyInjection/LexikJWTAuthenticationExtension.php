@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -31,7 +32,20 @@ class LexikJWTAuthenticationExtension extends Extension
         $config        = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+
+        if (class_exists(Application::class)) {
+            $loader->load('console.xml');
+        }
+
+        $loader->load('deprecated.xml');
+        $loader->load('jwt_encoder.xml');
+        $loader->load('jwt_manager.xml');
+        $loader->load('key_loader.xml');
+        $loader->load('lcobucci.xml');
+        $loader->load('namshi.xml');
+        $loader->load('response_interceptor.xml');
+        $loader->load('token_authenticator.xml');
+        $loader->load('token_extractor.xml');
 
         if (!class_exists(Token::class)) {
             $container->removeDefinition('lexik_jwt_authentication.encoder.lcobucci');
@@ -42,6 +56,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key_path']);
         $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
+        $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
         $encoderConfig = $config['encoder'];
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));

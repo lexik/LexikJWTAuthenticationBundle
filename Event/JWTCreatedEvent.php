@@ -13,6 +13,11 @@ class JWTCreatedEvent extends Event
     /**
      * @var array
      */
+    protected $header;
+
+    /**
+     * @var array
+     */
     protected $data;
 
     /**
@@ -23,11 +28,29 @@ class JWTCreatedEvent extends Event
     /**
      * @param array         $data
      * @param UserInterface $user
+     * @param array         $header
      */
-    public function __construct(array $data, UserInterface $user)
+    public function __construct(array $data, UserInterface $user, array $header = [])
     {
-        $this->data = $data;
-        $this->user = $user;
+        $this->data   = $data;
+        $this->user   = $user;
+        $this->header = $header;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeader()
+    {
+        return $this->header;
+    }
+
+    /**
+     * @param array $header
+     */
+    public function setHeader(array $header)
+    {
+        $this->header = $header;
     }
 
     /**

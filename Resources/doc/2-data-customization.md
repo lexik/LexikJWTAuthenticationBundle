@@ -16,11 +16,13 @@ Table of contents
 * [Customizing the response on token not found](#eventsjwt_not_found---customizing-the-response-on-token-not-found)
 * [Customizing the response on expired token](#eventsjwt_expired---customizing-the-response-message-on-expired-token)
 
-Events::JWT_CREATED - Adding data to the JWT payload
-----------------------------------------------------
+Events::JWT_CREATED - Adding custom data or headers to the JWT
+--------------------------------------------------------------
 
 By default the JWT payload will contain the username and the token TTL,
 but you can add your own data.
+
+You can also modify the header to fit on your application context.
 
 ``` yaml
 # services.yml
@@ -66,10 +68,15 @@ public function onJWTCreated(JWTCreatedEvent $event)
     $payload['ip'] = $request->getClientIp();
 
     $event->setData($payload);
+    
+    $header        = $event->getHeader();
+    $header['cty'] = 'JWT';
+
+    $event->setHeader($header);
 }
 ```
 
-#### Example: Override token expiration date calcul to be more flexible
+#### Example: Override token expiration date calculation to be more flexible
 
 ``` php
 // src/AppBundle/EventListener/JWTCreatedListener.php

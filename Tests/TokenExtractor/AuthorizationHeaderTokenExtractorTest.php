@@ -35,4 +35,13 @@ class AuthorizationHeaderTokenExtractorTest extends TestCase
         $request->headers->set('Authorization', 'Bearer testtoken');
         $this->assertEquals('testtoken', $extractor->extract($request));
     }
+
+    public function testTokenTypeIsCaseInsensitive()
+    {
+        $extractor = new AuthorizationHeaderTokenExtractor('MyToKeNTypE', 'Authorization');
+
+        $request = new Request();
+        $request->headers->set('Authorization', 'MyTokenType testtoken');
+        $this->assertEquals('testtoken', $extractor->extract($request));
+    }
 }

@@ -34,14 +34,20 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $ttl;
 
     /**
+     * @var int
+     */
+    private $clockSkew;
+
+    /**
      * @param RawKeyLoader $keyLoader
      * @param string       $cryptoEngine
      * @param string       $signatureAlgorithm
      * @param int|null     $ttl
+     * @param int          $clockSkew
      *
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl)
+    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
@@ -51,17 +57,25 @@ class LcobucciJWSProvider implements JWSProviderInterface
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
         }
 
+        if (null !== $clockSkew && !is_numeric($clockSkew)) {
+            throw new \InvalidArgumentException(sprintf('The clock skew should be a numeric value, got %s instead.', $clockSkew));
+        }
+
         $this->keyLoader = $keyLoader;
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
+        $this->clockSkew = $clockSkew;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload)
+    public function create(array $payload, array $header = [])
     {
         $jws = new Builder();
+        foreach ($header as $k => $v) {
+            $jws->setHeader($k, $v);
+        }
         $jws->setIssuedAt(time());
 
         if (null !== $this->ttl) {
@@ -100,7 +114,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new LoadedJWS(
             $payload,
             $jws->verify($this->signer, $this->keyLoader->loadKey('public')) && $jws->validate(new ValidationData()),
-            null !== $this->ttl
+            null !== $this->ttl,
+            $jws->getHeaders(),
+            $this->clockSkew
         );
     }
 

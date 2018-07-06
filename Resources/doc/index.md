@@ -31,9 +31,16 @@ public function registerBundles()
 Generate the SSH keys :
 
 ``` bash
-$ mkdir -p var/jwt # For Symfony3+, no need of the -p option
-$ openssl genrsa -out var/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem
+$ mkdir -p config/jwt # For Symfony3+, no need of the -p option
+$ openssl genrsa -out config/jwt/private.pem -aes256 4096
+$ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+```
+
+In case first ```openssl``` command forces you to input password use following to get the private key decrypted
+``` bash
+$ openssl rsa -in config/jwt/private.pem -out config/jwt/private2.pem
+$ mv config/jwt/private.pem config/jwt/private.pem-back
+$ mv config/jwt/private2.pem config/jwt/private.pem
 ```
 
 Configuration
@@ -52,8 +59,8 @@ lexik_jwt_authentication:
 Configure your `parameters.yml` :
 
 ``` yaml
-jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem' # ssh private key path
-jwt_public_key_path:  '%kernel.root_dir%/../var/jwt/public.pem'  # ssh public key path
+jwt_private_key_path: '%kernel.root_dir%/../config/jwt/private.pem' # ssh private key path
+jwt_public_key_path:  '%kernel.root_dir%/../config/jwt/public.pem'  # ssh public key path
 jwt_key_pass_phrase:  ''                                         # ssh key pass phrase
 jwt_token_ttl:        3600
 ```
@@ -159,7 +166,7 @@ This may not be a problem depending on the system that makes calls to your API (
 
 #### Impersonation
 
-For impersonating users using JWT, see [lafourchette/SwitchUserStatelessBundle](https://github.com/lafourchette/SwitchUserStatelessBundle), a stateless replacement of the `switch_user` listener.
+For impersonating users using JWT, see https://symfony.com/doc/current/security/impersonating_user.html 
 
 #### Important note for Apache users
 
@@ -168,9 +175,7 @@ As stated in [this link](http://stackoverflow.com/questions/11990388/request-hea
 If you intend to use the authorization header mode of this bundle (and you should), please add those rules to your VirtualHost configuration :
 
 ```apache
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 ```
 
 Further documentation
