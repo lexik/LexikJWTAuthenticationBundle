@@ -1,9 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.2
 
-## [2.5.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.0) (2018-06-30)
+## [2.5.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.2) (2018-07-3)
+
+* bug [\#522](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/522) Fix clock skew + deprecation message ([chalasr](https://github.com/chalasr))
+
+## [2.5.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.1) (2018-06-30)
 
 * bug [\#515](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/515) Re-add namshi/jose as an hard requirement until 3.0 ([chalasr](https://github.com/chalasr))
 
