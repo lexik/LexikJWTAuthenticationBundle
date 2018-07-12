@@ -47,7 +47,7 @@ See the [CONTRIBUTING](CONTRIBUTING.md) file.
 Upgrading from 1.x
 -------------------
 
-Please see the [UPGRADE](UPGRADE.md) file.
+Please see the [UPGRADE](UPGRADE-2.0.md) file.
 
 Credits
 -------
