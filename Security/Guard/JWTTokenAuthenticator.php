@@ -141,19 +141,20 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             );
         }
 
-        $payload       = $preAuthToken->getPayload();
-        $identityField = $this->jwtManager->getUserIdentityField();
+        $payload = $preAuthToken->getPayload();
+        $idClaim = $this->jwtManager->getUserIdClaim();
 
-        if (!isset($payload[$identityField])) {
-            throw new InvalidPayloadException($identityField);
+
+        if (!isset($payload[$idClaim])) {
+            throw new InvalidPayloadException($idClaim);
         }
 
-        $identity = $payload[$identityField];
+        $identity = $payload[$idClaim];
 
         try {
             $user = $this->loadUser($userProvider, $payload, $identity);
         } catch (UsernameNotFoundException $e) {
-            throw new UserNotFoundException($identityField, $identity);
+            throw new UserNotFoundException($idClaim, $identity);
         }
 
         $this->preAuthenticationTokenStorage->setToken($preAuthToken);

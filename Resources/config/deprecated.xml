@@ -9,6 +9,7 @@
         <service id="lexik_jwt_authentication.security.authentication.provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider" public="false">
             <argument /> <!-- User Provider -->
             <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
+            <argument>%lexik_jwt_authentication.user_id_claim%</argument>
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>

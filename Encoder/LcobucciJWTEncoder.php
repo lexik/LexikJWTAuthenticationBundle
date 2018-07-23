@@ -11,7 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterfa
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class LcobucciJWTEncoder implements JWTEncoderInterface
+class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderInterface
 {
     /**
      * @var JWSProviderInterface

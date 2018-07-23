@@ -70,6 +70,7 @@
             "vendor/bin/simple-phpunit",
             "ENCODER=lcobucci vendor/bin/simple-phpunit",
             "ENCODER=lcobucci ALGORITHM=HS256 vendor/bin/simple-phpunit",
+            "ENCODER=user_id_claim vendor/bin/simple-phpunit",
             "PROVIDER=lexik_jwt vendor/bin/simple-phpunit"
         ]
     }

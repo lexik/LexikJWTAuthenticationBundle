@@ -21,7 +21,7 @@ class JWTProviderTest extends TestCase
      */
     public function testSupports()
     {
-        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock(), $this->getEventDispatcherMock());
+        $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock(), $this->getEventDispatcherMock(), 'username');
 
         /** @var TokenInterface $usernamePasswordToken */
         $usernamePasswordToken = $this
@@ -60,7 +60,7 @@ class JWTProviderTest extends TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(false));
 
-        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'username');
         $provider->authenticate($jwtUserToken);
     }
 
@@ -84,7 +84,7 @@ class JWTProviderTest extends TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['foo' => 'bar']));
 
-        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'username');
         $provider->authenticate($jwtUserToken);
     }
 
@@ -109,7 +109,7 @@ class JWTProviderTest extends TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['username' => 'user']));
 
-        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'username');
         $provider->authenticate($jwtUserToken);
     }
 
@@ -138,7 +138,7 @@ class JWTProviderTest extends TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['username' => 'user']));
 
-        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'username');
 
         $this->assertInstanceOf(
             'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
@@ -150,7 +150,7 @@ class JWTProviderTest extends TestCase
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['uid' => 'user']));
 
-        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher);
+        $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'uid');
         $provider->setUserIdentityField('uid');
 
         $this->assertInstanceOf(

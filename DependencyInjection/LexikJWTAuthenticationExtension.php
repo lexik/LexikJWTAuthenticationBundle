@@ -60,6 +60,9 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
         $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
         $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
+
+        $user_id_claim = $config['user_id_claim'] ? $config['user_id_claim'] : $config['user_identity_field'];
+        $container->setParameter('lexik_jwt_authentication.user_id_claim', $user_id_claim);
         $encoderConfig = $config['encoder'];
 
         if ('lexik_jwt_authentication.encoder.default' === $encoderConfig['service']) {

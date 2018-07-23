@@ -40,4 +40,11 @@ interface JWTTokenManagerInterface
      * @return string
      */
     public function getUserIdentityField();
+
+    /**
+     * Returns the claim used as identifier to load an user from a JWT payload.
+     *
+     * @return string
+     */
+    public function getUserIdClaim();
 }

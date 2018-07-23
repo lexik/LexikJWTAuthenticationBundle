@@ -45,14 +45,21 @@ class JWTProvider implements AuthenticationProviderInterface
     protected $userIdentityField;
 
     /**
+     * @var string
+     */
+    private $userIdClaim;
+
+    /**
      * @param UserProviderInterface    $userProvider
      * @param JWTManagerInterface      $jwtManager
      * @param EventDispatcherInterface $dispatcher
+     * @param string                   $userIdClaim
      */
     public function __construct(
         UserProviderInterface $userProvider,
         JWTManagerInterface $jwtManager,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        $userIdClaim
     ) {
         @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
 
@@ -60,6 +67,7 @@ class JWTProvider implements AuthenticationProviderInterface
         $this->jwtManager        = $jwtManager;
         $this->dispatcher        = $dispatcher;
         $this->userIdentityField = 'username';
+        $this->userIdClaim       = $userIdClaim;
     }
 
     /**
@@ -97,11 +105,11 @@ class JWTProvider implements AuthenticationProviderInterface
      */
     protected function getUserFromPayload(array $payload)
     {
-        if (!isset($payload[$this->userIdentityField])) {
+        if (!isset($payload[$this->userIdClaim])) {
             throw $this->createAuthenticationException();
         }
 
-        return $this->userProvider->loadUserByUsername($payload[$this->userIdentityField]);
+        return $this->userProvider->loadUserByUsername($payload[$this->userIdClaim]);
     }
 
     /**
@@ -126,6 +134,14 @@ class JWTProvider implements AuthenticationProviderInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdClaim()
+    {
+        return $this->userIdClaim;
     }
 
     /**

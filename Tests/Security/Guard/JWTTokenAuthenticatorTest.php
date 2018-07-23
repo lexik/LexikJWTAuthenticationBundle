@@ -94,10 +94,10 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     public function testGetUser()
     {
-        $userIdentityField = 'username';
-        $payload           = [$userIdentityField => 'lexik'];
-        $rawToken          = 'token';
-        $userRoles         = ['ROLE_USER'];
+        $userIdClaim = 'sub';
+        $payload     = [$userIdClaim => 'lexik'];
+        $rawToken    = 'token';
+        $userRoles   = ['ROLE_USER'];
 
         $userStub = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
 
@@ -108,11 +108,11 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->with($payload[$userIdentityField])
+            ->with($payload[$userIdClaim])
             ->willReturn($userStub);
 
         $authenticator = new JWTTokenAuthenticator(
-            $this->getJWTManagerMock('username'),
+            $this->getJWTManagerMock(null, $userIdClaim),
             $this->getEventDispatcherMock(),
             $this->getTokenExtractorMock()
         );
@@ -127,7 +127,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
         try {
             (new JWTTokenAuthenticator(
-                $this->getJWTManagerMock('username'),
+                $this->getJWTManagerMock(null, 'username'),
                 $this->getEventDispatcherMock(),
                 $this->getTokenExtractorMock()
             ))->getUser($decodedToken, $this->getUserProviderMock());
@@ -153,8 +153,8 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     public function testGetUserWithInvalidUserThrowsException()
     {
-        $userIdentityField = 'username';
-        $payload           = [$userIdentityField => 'lexik'];
+        $userIdClaim = 'username';
+        $payload     = [$userIdClaim => 'lexik'];
 
         $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload($payload);
@@ -163,12 +163,12 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->with($payload[$userIdentityField])
+            ->with($payload[$userIdClaim])
             ->will($this->throwException(new UsernameNotFoundException()));
 
         try {
             (new JWTTokenAuthenticator(
-                $this->getJWTManagerMock('username'),
+                $this->getJWTManagerMock(null, 'username'),
                 $this->getEventDispatcherMock(),
                 $this->getTokenExtractorMock()
             ))->getUser($decodedToken, $userProvider);
@@ -183,7 +183,7 @@ class JWTTokenAuthenticatorTest extends TestCase
     {
         $rawToken  = 'token';
         $userRoles = ['ROLE_USER'];
-        $payload   = ['username' => 'lexik'];
+        $payload   = ['sub' => 'lexik'];
         $userStub  = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
 
         $decodedToken = new PreAuthenticationJWTUserToken($rawToken);
@@ -198,7 +198,7 @@ class JWTTokenAuthenticatorTest extends TestCase
             ->with(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken));
 
         $authenticator = new JWTTokenAuthenticator(
-            $this->getJWTManagerMock('username'),
+            $this->getJWTManagerMock(null, 'sub'),
             $dispatcher,
             $this->getTokenExtractorMock()
         );
@@ -207,7 +207,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->with($payload['username'])
+            ->with($payload['sub'])
             ->willReturn($userStub);
 
         $authenticator->getUser($decodedToken, $userProvider);
@@ -306,7 +306,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         );
     }
 
-    private function getJWTManagerMock($userIdentityField = null)
+    private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
     {
         $jwtManager = $this->getMockBuilder(JWTTokenManagerInterface::class)
             ->disableOriginalConstructor()
@@ -317,6 +317,12 @@ class JWTTokenAuthenticatorTest extends TestCase
                 ->expects($this->once())
                 ->method('getUserIdentityField')
                 ->willReturn($userIdentityField);
+        }
+        if (null !== $userIdClaim) {
+            $jwtManager
+                ->expects($this->once())
+                ->method('getUserIdClaim')
+                ->willReturn($userIdClaim);
         }
 
         return $jwtManager;

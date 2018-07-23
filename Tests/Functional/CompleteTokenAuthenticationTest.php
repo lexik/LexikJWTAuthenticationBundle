@@ -88,6 +88,7 @@ class CompleteTokenAuthenticationTest extends TestCase
     {
         static::bootKernel();
         $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
+        $idClaim = static::$kernel->getContainer()->getParameter('lexik_jwt_authentication.user_id_claim');
 
         $r = new \ReflectionProperty(get_class($encoder), 'jwsProvider');
         $r->setAccessible(true);
@@ -96,7 +97,7 @@ class CompleteTokenAuthenticationTest extends TestCase
             $this->ttl = null;
         }, $jwsProvider, get_class($jwsProvider))->__invoke();
 
-        $token = $encoder->encode(['username' => 'lexik']);
+        $token = $encoder->encode([$idClaim => 'lexik']);
         $this->assertArrayNotHasKey('exp', $encoder->decode($token));
 
         static::$client = static::createAuthenticatedClient($token);
