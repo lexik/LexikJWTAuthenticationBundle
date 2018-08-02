@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.4
+
+## [2.5.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.4) (2018-08-2)
+
+* bug [\#542](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/542) Fix missing implements breaking JWT header alteration ([tucksaun](https://github.com/tucksaun))
 
 ## [2.5.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.3) (2018-07-6)
 
