@@ -85,7 +85,7 @@ security:
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
-Configure your `routing.yml` :
+Configure your `routes.yml` :
 
 ``` yaml
 api_login_check:
