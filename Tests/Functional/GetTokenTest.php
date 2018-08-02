@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Lcobucci\JWT\Parser;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
@@ -41,6 +42,9 @@ class GetTokenTest extends TestCase
 
         $this->assertArrayHasKey('custom', $payload, 'The payload should contains a "custom" claim.');
         $this->assertSame('dummy', $payload['custom'], 'The "custom" claim should be equal to "dummy".');
+
+        $jws = (new Parser())->parse((string) $body['token']);
+        $this->assertArrayHasKey('foo', $jws->getHeaders(), 'The payload should contains a custom "foo" header.');
     }
 
     public function testGetTokenFromInvalidCredentials()
