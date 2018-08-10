@@ -37,14 +37,21 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     protected $userIdentityField;
 
     /**
+     * @var string
+     */
+    protected $userIdClaim;
+
+    /**
      * @param JWTEncoderInterface      $encoder
      * @param EventDispatcherInterface $dispatcher
+     * @param string                   $userIdClaim
      */
-    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher)
+    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $userIdClaim)
     {
         $this->jwtEncoder        = $encoder;
         $this->dispatcher        = $dispatcher;
         $this->userIdentityField = 'username';
+        $this->userIdClaim       = $userIdClaim;
     }
 
     /**
@@ -99,8 +106,8 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor                          = PropertyAccess::createPropertyAccessor();
-        $payload[$this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
+        $accessor                    = PropertyAccess::createPropertyAccessor();
+        $payload[$this->userIdClaim] = $accessor->getValue($user, $this->userIdentityField);
     }
 
     /**
@@ -117,5 +124,13 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdClaim()
+    {
+        return $this->userIdClaim;
     }
 }
