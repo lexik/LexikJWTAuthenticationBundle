@@ -131,7 +131,7 @@ See [configuration reference](1-configuration-reference.md) document to enable q
 #### Examples
 
 See [Functionally testing a JWT protected api](3-functional-testing.md) document
-or the [sandbox application](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox) for a fully working example.
+or the sandbox application ([Symfony2](https://github.com/slashfan/LexikJWTAuthenticationBundleSandbox) or [Symfony4](https://github.com/chalasr/lexik-jwt-authentication-sandbox)) for a fully working example.
 
 Notes
 -----
