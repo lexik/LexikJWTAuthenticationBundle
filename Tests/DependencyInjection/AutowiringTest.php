@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\DependencyInjection;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\DependencyInjection;
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
@@ -15,21 +15,22 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 class AutowiringTest extends TestCase
 {
     public function testAutowiring()
     {
-        $container = $this->createContainerBuilder();
-        $container->registerExtension(new SecurityExtension());
-        $container->registerExtension(new FrameworkExtension());
-        $container->registerExtension(new LexikJWTAuthenticationExtension());
+        $container = $this->createContainerBuilder([
+            'framework' => ['secret' => 'test'],
+            'lexik_jwt_authentication' => [
+                'secret_key' => 'private.pem',
+                'public_key' => 'public.pem',
+                'pass_phrase' => 'testing',
 
-        (new YamlFileLoader($container, new FileLocator([__DIR__.'/../app/config'])))->load('autowiring.yml');
+            ],
+        ]);
 
         $container
             ->register('autowired', Autowired::class)
@@ -50,16 +51,19 @@ class AutowiringTest extends TestCase
 
     public function testAutowireConfiguredEncoderServiceForInterfaceTypeHint()
     {
-        if (!method_exists(ContainerBuilder::class, 'fileExists')) {
-            $this->markTestSkipped('Using the configured encoder for autowiring is supported using symfony 3.3+ only.');
-        }
+        $container = $this->createContainerBuilder([
+            'framework' => ['secret' => 'testing'],
+            'lexik_jwt_authentication' => [
+                'secret_key' => 'private.pem',
+                'pass_phrase' => 'testing',
+                'encoder' => ['service' => 'app.dummy_encoder']
+            ]
+        ]);
 
-        $container = $this->createContainerBuilder();
-        $container->registerExtension(new SecurityExtension());
-        $container->registerExtension(new FrameworkExtension());
-        $container->registerExtension(new LexikJWTAuthenticationExtension());
-
-        (new YamlFileLoader($container, new FileLocator([__DIR__.'/../app/config'])))->load('config_custom_encoder.yml');
+        $container
+            ->register('app.dummy_encoder')
+            ->setClass(DummyEncoder::class)
+            ->setPublic(true);
 
         $container
             ->register('autowired', Autowired::class)
@@ -73,9 +77,9 @@ class AutowiringTest extends TestCase
         $this->assertInstanceOf(DummyEncoder::class, $autowired->getJWTEncoder());
     }
 
-    private static function createContainerBuilder()
+    private static function createContainerBuilder(array $configs = [])
     {
-        return new ContainerBuilder(new ParameterBag([
+        $container = new ContainerBuilder(new ParameterBag([
             'kernel.bundles'          => ['FrameworkBundle' => FrameworkBundle::class, 'LexikJWTAuthenticationBundle' => LexikJWTAuthenticationBundle::class],
             'kernel.bundles_metadata' => [],
             'kernel.cache_dir'        => __DIR__,
@@ -87,6 +91,16 @@ class AutowiringTest extends TestCase
             'kernel.container_class'  => 'AutowiringTestContainer',
             'kernel.charset'          => 'utf8',
         ]));
+
+        $container->registerExtension(new SecurityExtension());
+        $container->registerExtension(new FrameworkExtension());
+        $container->registerExtension(new LexikJWTAuthenticationExtension());
+
+        foreach ($configs as $extension => $config) {
+            $container->loadFromExtension($extension, $config);
+        }
+
+        return $container;
     }
 }
 
