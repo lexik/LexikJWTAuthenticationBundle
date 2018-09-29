@@ -18,3 +18,8 @@ services:
         class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder
         arguments: ['@lexik_jwt_authentication.jws_provider.lcobucci']
         public: true
+
+
+    Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController:
+        arguments: ['@security.token_storage']
+        public: true

@@ -2,17 +2,19 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class TestController extends Controller
+class TestController
 {
-    public function securedAction()
+    public function securedAction(UserInterface $user)
     {
         return new JsonResponse([
-            'class'    => get_class($this->getUser()),
-            'roles'    => $this->getUser()->getRoles(),
-            'username' => $this->getUser()->getUsername(),
+            'class'    => get_class($user),
+            'roles'    => $user->getRoles(),
+            'username' => $user->getUsername(),
         ]);
     }
 }
