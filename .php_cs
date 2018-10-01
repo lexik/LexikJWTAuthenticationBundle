@@ -11,7 +11,6 @@ return Symfony\CS\Config\Config::create()
         '-extra_empty_lines',
         '-unalign_double_arrow',
         '-unalign_equals',
-        'align_equals',
         'align_double_arrow',
         'newline_after_open_tag',
         'ordered_use',

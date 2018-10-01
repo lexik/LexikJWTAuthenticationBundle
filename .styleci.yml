@@ -3,8 +3,6 @@ preset: symfony
 enabled:
   - ordered_imports
   - short_array_syntax
-  - align_equals
-  - align_double_arrow
 
 disabled:
   - phpdoc_scalar
