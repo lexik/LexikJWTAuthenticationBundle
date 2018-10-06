@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by sinner at 2018-07-11T04:28:19Z
+
+I have the same problem... Could you accept this PR?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2018-07-11T09:10:20Z
+
+I'm 👍 to allow setting the exp claim (bypassing the configuration). But I think that if I set it from an event listener, I expect the value to not be changed later, I mean not adding the configured ttl.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2018-09-15T11:28:06Z
+
+ping @MaximeMaillet :)
