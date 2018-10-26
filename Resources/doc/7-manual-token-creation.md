@@ -39,7 +39,7 @@ class ApiController extends Controller
     {
         // ...
 
-        return new JsonResponse(['token' => $jwtManager->create($user)]);
+        return new JsonResponse(['token' => $JWTManager->create($user)]);
     }
 }
 ```
