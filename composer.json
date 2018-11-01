@@ -38,6 +38,7 @@
     ],
     "require": {
         "php": "^5.5|^7.0",
+        "ext-openssl": "*",
         "lcobucci/jwt": "^3.2",
         "namshi/jose": "^7.2",
         "symfony/framework-bundle": "^3.4|^4.0",
