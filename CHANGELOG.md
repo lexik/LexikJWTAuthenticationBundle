@@ -1,7 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.5.4
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.0
+
+## [2.6.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.0) (2018-11-1)
+
+* bug [\#574](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/574) fix clockSkew not taken into account in some case ([mu4ddi3](https://github.com/mu4ddi3))
+* bug [\#554](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/554) Fix deprecations on Symfony 4.2 ([chalasr](https://github.com/chalasr))
+* feature [\#537](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/537) Customizable User ID Claim  ([Spomky](https://github.com/Spomky))
+* feature [\#503](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/503) Allow setting the "exp" claim from event listeners ([MaximeMaillet](https://github.com/MaximeMaillet))
 
 ## [2.5.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.4) (2018-08-2)
 
