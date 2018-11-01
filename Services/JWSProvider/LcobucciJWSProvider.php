@@ -152,7 +152,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function verify(Token $jwt)
     {
-        if (!$jwt->validate(new ValidationData())) {
+        if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
             return false;
         }
 
