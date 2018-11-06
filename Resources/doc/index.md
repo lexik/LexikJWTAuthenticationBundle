@@ -58,11 +58,16 @@ lexik_jwt_authentication:
 
 Configure your `config/packages/security.yaml` :
 
+(note that you must place your rules after the main rule)
+
 ``` yaml
 security:
     # ...
     
     firewalls:
+    
+        main:
+            # ...
 
         login:
             pattern:  ^/api/login
