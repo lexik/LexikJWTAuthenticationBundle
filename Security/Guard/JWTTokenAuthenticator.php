@@ -43,22 +43,22 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * @var JWTTokenManagerInterface
      */
-    private $jwtManager;
+    protected $jwtManager;
 
     /**
      * @var EventDispatcherInterface
      */
-    private $dispatcher;
+    protected $dispatcher;
 
     /**
      * @var TokenExtractorInterface
      */
-    private $tokenExtractor;
+    protected $tokenExtractor;
 
     /**
      * @var TokenStorageInterface
      */
-    private $preAuthenticationTokenStorage;
+    protected $preAuthenticationTokenStorage;
 
     /**
      * @param JWTTokenManagerInterface $jwtManager
