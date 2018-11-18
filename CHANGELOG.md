@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.1
+
+## [2.6.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.1) (2018-11-1)
+
+* bug [\#577](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/577) Fix argument order in JWTProvider service declaration ([fjogeleit](https://github.com/fjogeleit))
 
 ## [2.6.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.0) (2018-11-1)
 
