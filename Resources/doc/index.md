@@ -16,7 +16,10 @@ to your `composer.json` file:
 
     php composer.phar require "lexik/jwt-authentication-bundle"
 
-Register the bundle in `app/AppKernel.php`:
+#### Register the bundle: 
+
+**Symfony 3 Version:**  
+Register bundle into `app/AppKernel.php`:
 
 ``` php
 public function registerBundles()
@@ -27,8 +30,16 @@ public function registerBundles()
     );
 }
 ```
+**Symfony 4 Version :**   
+Register bundle into `config/bundles.php` (Flex did it automatically):  
+```php 
+return [
+    //...
+    Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
+];
+```
 
-Generate the SSH keys :
+#### Generate the SSH keys :
 
 ``` bash
 $ mkdir -p config/jwt # For Symfony3+, no need of the -p option
