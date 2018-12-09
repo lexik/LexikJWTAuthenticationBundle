@@ -72,7 +72,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('user_id_claim')
                     ->defaultNull()
-                    ->info('If null, the user ID clam will be have the same name as the one defined by the option "user_identity_field"')
+                    ->info('If null, the user ID claim will have the same name as the one defined by the option "user_identity_field"')
                 ->end()
                 ->append($this->getTokenExtractorsNode())
             ->end();
