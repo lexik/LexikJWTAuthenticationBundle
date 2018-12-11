@@ -47,13 +47,6 @@ $ openssl genrsa -out config/jwt/private.pem -aes256 4096
 $ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 ```
 
-In case first ```openssl``` command forces you to input password use following to get the private key decrypted
-``` bash
-$ openssl rsa -in config/jwt/private.pem -out config/jwt/private2.pem
-$ mv config/jwt/private.pem config/jwt/private.pem-back
-$ mv config/jwt/private2.pem config/jwt/private.pem
-```
-
 Configuration
 -------------
 
@@ -96,7 +89,7 @@ security:
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
-Configure your `config/routes.yaml` :
+Configure your routing into `config/routes.yaml` :
 
 ``` yaml
 api_login_check:
@@ -109,17 +102,10 @@ Usage
 ### 1. Obtain the token
 
 The first step is to authenticate the user using its credentials.
-A classical form_login on an anonymously accessible firewall will do perfect.
 
-Just set the provided `lexik_jwt_authentication.handler.authentication_success` service as success handler to
-generate the token and send it as part of a json response body.
-
-Store it (client side), the JWT is reusable until its ttl has expired (3600 seconds by default).
-
-Note: You can test getting the token with a simple curl command like this:
-
+You can test getting the token with a simple curl command like this (adapt host and port):
 ```bash
-curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login_check -d '{"username":"johndoe","password":"test"}'
+curl -X POST -H "Content-Type: application/json" http://localhost/api/login_check -d '{"username":"johndoe","password":"test"}'
 ```
 
 If it works, you will receive something like this:
@@ -129,6 +115,8 @@ If it works, you will receive something like this:
    "token" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXUyJ9.eyJleHAiOjE0MzQ3Mjc1MzYsInVzZXJuYW1lIjoia29ybGVvbiIsImlhdCI6IjE0MzQ2NDExMzYifQ.nh0L_wuJy6ZKIQWh6OrW5hdLkviTs1_bau2GqYdDCB0Yqy_RplkFghsuqMpsFls8zKEErdX5TYCOR7muX0aQvQxGQ4mpBkvMDhJ4-pE4ct2obeMTr_s4X8nC00rBYPofrOONUOR4utbzvbd4d2xT_tj4TdR_0tsr91Y7VskCRFnoXAnNT-qQb7ci7HIBTbutb9zVStOFejrb4aLbr7Fl4byeIEYgp2Gd7gY"
 }
 ```
+
+Store it (client side), the JWT is reusable until its ttl has expired (3600 seconds by default).
 
 ### 2. Use the token
 
