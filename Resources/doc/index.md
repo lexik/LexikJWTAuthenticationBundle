@@ -127,6 +127,28 @@ By default only the authorization header mode is enabled : `Authorization: Beare
 
 See [configuration reference](1-configuration-reference.md) document to enable query string parameter mode or change the header value prefix.
 
+### 3. (Optional) Get the decoded JWT Token from a Service/Controller (via Dependency Injection)
+
+If you need to get the information that have a JWT Token from a Controller or Service for some purposes (e.g.: validate role of the user), you can:
+
+1. Inject _Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface_ (for example in an attribute tokenStorageInterface) and _Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface_ (for example, in an attribute jwtManager):
+
+```php
+public function __construct(TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+{
+    $this->jwtManager = $jwtManager;
+    $this->tokenStorageInterface = $tokenStorageInterface;
+}
+```
+
+2. Call decode in jwtManager, and getToken in tokenStorageInterface.
+
+```php
+$decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken())
+```
+
+This returns the decoded information of the JWT Token sent in the current request.
+
 #### Examples
 
 See [Functionally testing a JWT protected api](3-functional-testing.md) document
