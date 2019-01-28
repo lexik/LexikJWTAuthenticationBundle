@@ -57,9 +57,10 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(UserInterface $user)
+    public function create(UserInterface $user, $payload = [])
     {
-        $payload = ['roles' => $user->getRoles()];
+        $payload = array_merge(['roles' => $user->getRoles()], $payload);
+
         $this->addUserIdentityToPayload($user, $payload);
 
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);

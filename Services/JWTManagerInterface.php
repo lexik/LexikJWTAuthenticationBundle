@@ -16,10 +16,11 @@ interface JWTManagerInterface
 {
     /**
      * @param UserInterface $user
+     * @param array $payload
      *
      * @return string The JWT token
      */
-    public function create(UserInterface $user);
+    public function create(UserInterface $user, $payload = []);
 
     /**
      * @param TokenInterface $token
