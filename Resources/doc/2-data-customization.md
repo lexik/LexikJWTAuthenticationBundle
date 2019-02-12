@@ -6,7 +6,7 @@ Data customization and validation
 Table of contents
 -----------------
 
-* [Adding data to the JWT payload](#eventsjwt_created---adding-data-to-the-jwt-payload)
+* [Adding custom data or headers to the JWT payload](#eventsjwt_created---adding-custom-data-or-headers-to-the-jwt)
 * [Validating data in the JWT payload](#eventsjwt_decoded---validating-data-in-the-jwt-payload)
 * [Customize your security token](#eventsjwt_authenticated---customizing-your-security-token)
 * [Adding public data to the JWT response](#eventsauthentication_success---adding-public-data-to-the-jwt-response)
