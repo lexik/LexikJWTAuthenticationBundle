@@ -6,13 +6,9 @@ matrix:
     - php: 5.5
       env: SYMFONY_VERSION=3.4.*
     - php: 7.2
-      env: SYMFONY_VERSION=4.2.* DEPENDENCIES=dev
+      env: SYMFONY_VERSION=4.2.*
     - php: 7.3
       env: SYMFONY_VERSION=4.3.* DEPENDENCIES=dev
-    - php: hhvm-stable
-      dist: trusty
-  allow_failures:
-    - php: hhvm-stable
 
 cache:
   directories:
