@@ -52,7 +52,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key']);
         }
 
-        if (empty($config['public_key']) && empty(['secret_key'])) {
+        if (empty($config['public_key']) && empty($config['secret_key'])) {
             throw new InvalidConfigurationException('You must either configure a "public_key" or a "secret_key".', 'lexik_jwt_authentication');
         }
 
