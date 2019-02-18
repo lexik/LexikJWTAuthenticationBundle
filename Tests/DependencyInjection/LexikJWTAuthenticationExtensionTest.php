@@ -74,7 +74,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
     public function testTokenExtractorsConfiguration()
     {
         // Default configuration
-        $chainTokenExtractor = $this->getContainer()->getDefinition('lexik_jwt_authentication.extractor.chain_extractor');
+        $chainTokenExtractor = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem'])->getDefinition('lexik_jwt_authentication.extractor.chain_extractor');
 
         $extractorIds = array_map('strval', $chainTokenExtractor->getArgument(0));
 
@@ -83,7 +83,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $this->assertNotContains('lexik_jwt_authentication.extractor.query_parameter_extractor', $extractorIds);
 
         // Custom configuration
-        $chainTokenExtractor = $this->getContainer(['token_extractors' => ['authorization_header' => true, 'cookie' => true]])
+        $chainTokenExtractor = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem', 'token_extractors' => ['authorization_header' => true, 'cookie' => true]])
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor');
 
         $extractorIds = array_map('strval', $chainTokenExtractor->getArgument(0));
