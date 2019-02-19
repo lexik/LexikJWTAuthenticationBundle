@@ -40,13 +40,16 @@ protected function createAuthenticatedClient($username = 'user', $password = 'pa
 {
     $client = static::createClient();
     $client->request(
-        'POST',
-        '/api/login_check',
-        array(
-            '_username' => $username,
-            '_password' => $password,
-        )
-    );
+      'POST',
+      '/api/login_check',
+      array(),
+      array(),
+      array('CONTENT_TYPE' => 'application/json'),
+      json_encode(array(
+        '_username' => $username,
+        '_password' => $password,
+        ))
+      );
 
     $data = json_decode($client->getResponse()->getContent(), true);
 
