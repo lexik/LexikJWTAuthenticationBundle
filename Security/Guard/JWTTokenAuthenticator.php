@@ -20,6 +20,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderI
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -171,10 +172,16 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         if ($authException instanceof ExpiredTokenException) {
             $event = new JWTExpiredEvent($authException, $response);
-            $this->dispatcher->dispatch(Events::JWT_EXPIRED, $event);
+            $eventName = Events::JWT_EXPIRED;
         } else {
             $event = new JWTInvalidEvent($authException, $response);
-            $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
+            $eventName = Events::JWT_INVALID;
+        }
+
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $this->dispatcher->dispatch($event, $eventName);
+        } else {
+            $this->dispatcher->dispatch($eventName, $event);
         }
 
         return $event->getResponse();
@@ -198,7 +205,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
         $event     = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
 
-        $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $this->dispatcher->dispatch($event, Events::JWT_NOT_FOUND);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
+        }
 
         return $event->getResponse();
     }
@@ -226,7 +237,12 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         $authToken = new JWTUserToken($user->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
 
-        $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $this->dispatcher->dispatch(new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken), Events::JWT_AUTHENTICATED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
+        }
+
         $this->preAuthenticationTokenStorage->setToken(null);
 
         return $authToken;
