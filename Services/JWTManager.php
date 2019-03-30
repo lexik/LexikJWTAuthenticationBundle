@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -63,7 +64,12 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $this->addUserIdentityToPayload($user, $payload);
 
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
-        $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
+
+        }
 
         if ($this->jwtEncoder instanceof HeaderAwareJWTEncoderInterface) {
             $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData(), $jwtCreatedEvent->getHeader());
@@ -72,7 +78,12 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         }
 
         $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
-        $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
+
+        if (interface_exists(ContractsEventDispatcherInterface::class, false)) {
+            $this->dispatcher->dispatch($jwtEncodedEvent, Events::JWT_ENCODED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
+        }
 
         return $jwtString;
     }
@@ -87,8 +98,11 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         }
 
         $event = new JWTDecodedEvent($payload);
-
-        $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $this->dispatcher->dispatch($event, Events::JWT_DECODED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
+        }
 
         if (!$event->isValid()) {
             return false;
