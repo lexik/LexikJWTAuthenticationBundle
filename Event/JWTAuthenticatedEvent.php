@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**

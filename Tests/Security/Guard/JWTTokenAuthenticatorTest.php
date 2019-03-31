@@ -352,7 +352,7 @@ class JWTTokenAuthenticatorTest extends TestCase
             ->getMock();
     }
 
-    private function expectEvent($eventName, Event $event, $dispatcher)
+    private function expectEvent($eventName, $event, $dispatcher)
     {
         if (interface_exists(ContractsEventDispatcherInterface::class)) {
             $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
