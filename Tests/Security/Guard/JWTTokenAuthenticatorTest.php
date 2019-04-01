@@ -20,7 +20,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -192,10 +194,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $jwtUserToken = new JWTUserToken($userRoles, $userStub, $rawToken, 'lexik');
 
         $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken));
+        $this->expectEvent(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken), $dispatcher);
 
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(null, 'sub'),
@@ -236,13 +235,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
 
         $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with(
-                Events::JWT_INVALID,
-                new JWTInvalidEvent($authException, $expectedResponse)
-            );
+        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse), $dispatcher);
 
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
@@ -262,13 +255,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessageKey());
 
         $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with(
-                Events::JWT_NOT_FOUND,
-                new JWTNotFoundEvent($authException, $failureResponse)
-            );
+        $this->expectEvent(Events::JWT_NOT_FOUND, new JWTNotFoundEvent($authException, $failureResponse), $dispatcher);
 
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
@@ -363,5 +350,16 @@ class JWTTokenAuthenticatorTest extends TestCase
         return $this->getMockBuilder(UserProviderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    private function expectEvent($eventName, $event, $dispatcher)
+    {
+        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+            $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
+
+            return;
+        }
+
+        $dispatcher->expects($this->once())->method('dispatch')->with($eventName, $event);
     }
 }

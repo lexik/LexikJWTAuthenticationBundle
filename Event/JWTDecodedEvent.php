@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * JWTDecodedEvent.
  *

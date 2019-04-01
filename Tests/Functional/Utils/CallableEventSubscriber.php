@@ -41,10 +41,10 @@ class CallableEventSubscriber implements EventSubscriberInterface
     /**
      * Executes the good listener depending on the passed event.
      *
-     * @param Event $event An instance of one of the events
+     * @param object $event An instance of one of the events
      *                     defined in {@link self::$eventClassMap}
      */
-    public function handleEvent(Event $event)
+    public function handleEvent($event)
     {
         $eventName = array_search(get_class($event), self::$eventClassMap);
 
