@@ -1,7 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.2
+
+## [2.6.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.2) (2018-04-1)
+
+* bug [\#637](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/637) Fix deprecations on symfony/event-dispatcher:4.3 ([chalasr](https://github.com/chalasr))
+* bug [\#620](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/620) Fix missing $config variable ([Oliboy50](https://github.com/Oliboy50))
+* bug [\#618](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/618) Use the JWTTokenManagerInterface ([trsteel88](https://github.com/trsteel88))
+* bug [\#593](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/593) Make JWTManager::$userIdClaim nullable ([chalasr](https://github.com/chalasr))
 
 ## [2.6.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.1) (2018-11-18)
 
