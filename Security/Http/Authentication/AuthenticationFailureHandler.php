@@ -38,7 +38,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     {
         $event = new AuthenticationFailureEvent($exception, new JWTAuthenticationFailureResponse());
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($event, Events::AUTHENTICATION_FAILURE);
         } else {
             $this->dispatcher->dispatch(Events::AUTHENTICATION_FAILURE, $event);

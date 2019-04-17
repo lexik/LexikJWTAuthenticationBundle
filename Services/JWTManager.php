@@ -64,7 +64,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $this->addUserIdentityToPayload($user, $payload);
 
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
         } else {
             $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
@@ -79,7 +79,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
 
         $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
 
-        if (interface_exists(ContractsEventDispatcherInterface::class, false)) {
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($jwtEncodedEvent, Events::JWT_ENCODED);
         } else {
             $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
@@ -98,7 +98,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         }
 
         $event = new JWTDecodedEvent($payload);
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($event, Events::JWT_DECODED);
         } else {
             $this->dispatcher->dispatch(Events::JWT_DECODED, $event);

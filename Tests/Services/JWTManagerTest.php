@@ -26,7 +26,7 @@ class JWTManagerTest extends TestCase
     {
         $dispatcher = $this->getEventDispatcherMock();
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
                 ->expects($this->at(0))
                 ->method('dispatch')
@@ -76,7 +76,7 @@ class JWTManagerTest extends TestCase
     {
         $dispatcher = $this->getEventDispatcherMock();
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
                 ->expects($this->once())
                 ->method('dispatch')
@@ -111,7 +111,7 @@ class JWTManagerTest extends TestCase
     {
         $dispatcher = $this->getEventDispatcherMock();
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
                 ->expects($this->at(0))
                 ->method('dispatch')
@@ -196,7 +196,7 @@ class JWTManagerTest extends TestCase
 
     private function expectEvent($eventName, $eventClass, $dispatcher)
     {
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
 
             return;

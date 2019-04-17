@@ -354,7 +354,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     private function expectEvent($eventName, $event, $dispatcher)
     {
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
 
             return;

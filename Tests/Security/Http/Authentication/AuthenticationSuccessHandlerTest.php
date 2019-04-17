@@ -129,7 +129,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
                 ->expects($this->once())
                 ->method('dispatch')
