@@ -46,7 +46,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $response = new JWTAuthenticationSuccessResponse($jwt);
         $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
 
-        if (interface_exists(ContractsEventDispatcherInterface::class)) {
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);
         } else {
             $this->dispatcher->dispatch(Events::AUTHENTICATION_SUCCESS, $event);
