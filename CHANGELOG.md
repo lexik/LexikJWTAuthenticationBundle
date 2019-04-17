@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.3
+
+
+## [2.6.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.3) (2018-04-17)
+
+* bug [\#644](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/644) Fix FC/BC layer for EventDispatcher ([nicolas-grekas](https://github.com/nicolas-grekas))
 
 ## [2.6.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.2) (2018-04-1)
 
