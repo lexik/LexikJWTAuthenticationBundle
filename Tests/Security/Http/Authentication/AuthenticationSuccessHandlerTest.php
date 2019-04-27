@@ -7,8 +7,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\Authentica
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 
 /**
  * AuthenticationSuccessHandlerTest.
@@ -119,6 +119,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
                 ->method('create')
                 ->will($this->returnValue('secrettoken'));
         }
+
+        $jwtManager
+            ->expects($this->any())
+            ->method('getTokenParameterName')
+            ->will($this->returnValue('token'));
 
         return $jwtManager;
     }
