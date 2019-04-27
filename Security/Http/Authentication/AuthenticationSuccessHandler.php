@@ -7,11 +7,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 
 /**
  * AuthenticationSuccessHandler.
@@ -37,6 +37,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         return $this->handleAuthenticationSuccess($token->getUser());
     }
 
+    /**
+     * @param UserInterface $user
+     * @param string|null $jwt
+     *
+     * @return JWTAuthenticationSuccessResponse
+     */
     public function handleAuthenticationSuccess(UserInterface $user, $jwt = null)
     {
         if (null === $jwt) {
@@ -44,7 +50,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $response = new JWTAuthenticationSuccessResponse($jwt);
-        $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
+        $event    = new AuthenticationSuccessEvent([$this->jwtManager->getTokenParameterName() => $jwt], $user, $response);
 
         if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);

@@ -42,6 +42,21 @@ interface JWTTokenManagerInterface
     public function getUserIdentityField();
 
     /**
+     * Set the parameter name for the token in the response
+     *
+     * @param string $tokenParameterName
+     * @return void
+     */
+    public function setTokenParameterName($tokenParameterName);
+
+    /**
+     * Get the parameter name for the token in the response
+     *
+     * @return string
+     */
+    public function getTokenParameterName();
+
+    /**
      * Returns the claim used as identifier to load an user from a JWT payload.
      *
      * @return string
