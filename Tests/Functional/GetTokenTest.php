@@ -62,7 +62,7 @@ class GetTokenTest extends TestCase
         $this->assertArrayHasKey('message', $body, 'The response should have a "message" key containing the failure reason.');
         $this->assertArrayHasKey('code', $body, 'The response should have a "code" key containing the response status code.');
 
-        $this->assertSame('Bad credentials', $body['message']);
+        $this->assertSame('Bad credentials.', $body['message']);
         $this->assertSame(401, $body['code']);
     }
 }

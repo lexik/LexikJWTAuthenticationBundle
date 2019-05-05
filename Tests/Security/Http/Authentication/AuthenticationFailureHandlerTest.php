@@ -23,14 +23,16 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $authenticationException = $this->getAuthenticationException();
+
         $handler  = new AuthenticationFailureHandler($dispatcher);
-        $response = $handler->onAuthenticationFailure($this->getRequest(), $this->getAuthenticationException());
+        $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
         $content  = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
-        $this->assertEquals('Bad credentials', $content['message']);
+        $this->assertEquals($authenticationException->getMessage(), $content['message']);
     }
 
     /**
