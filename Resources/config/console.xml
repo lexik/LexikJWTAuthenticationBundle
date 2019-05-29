@@ -16,6 +16,13 @@
             <argument type="collection" /> <!-- user providers -->
             <tag name="console.command" command="lexik:jwt:generate-token" />
         </service>
+
+        <service id="lexik_jwt_authentication.generate_jwt_key_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateJWTKeyCommand" public="true">
+            <argument>%lexik_jwt_authentication.secret_key%</argument>
+            <argument>%lexik_jwt_authentication.public_key%</argument>
+            <argument>%lexik_jwt_authentication.pass_phrase%</argument>
+            <tag name="console.command"/>
+        </service>
     </services>
 
 </container>
