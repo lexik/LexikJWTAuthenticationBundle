@@ -1,0 +1,8 @@
+imports:
+    - { resource: '../base_config.yml' }
+    - { resource: '../security_in_memory.yml' }
+
+lexik_jwt_authentication:
+    secret_key: '%kernel.root_dir%/../config/test/private.pem'
+    public_key: '%kernel.root_dir%/../config/test/public.pem'
+    pass_phrase: testing
