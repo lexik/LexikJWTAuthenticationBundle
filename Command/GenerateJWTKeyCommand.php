@@ -105,7 +105,6 @@ EOC;
         $this->setHelp($usage);
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $digest     = $input->getOption('digest');
@@ -126,31 +125,28 @@ EOC;
             ));
         }
 
+        $keyType    = $this->validKeyType[$keyType];
         $pubKeyPath = $this->pubKeyPath;
         $secKeyPath = $this->secKeyPath;
-        $passphrase = $this->passphrase;
 
         if (!is_dir($dir = \dirname($pubKeyPath))) {
             $output->writeln('Creating directories in '.$pubKeyPath);
             mkdir($dir, 0777, true);
         }
 
-        // generate private key
-        $output->writeln(sprintf('Generating private key in <info>%s</info>', $secKeyPath));
         $config = [
             'digest_alg' => $digest,
             'private_key_bits' => $keyBits,
-            'private_key_type' => $keyType,
-            'encrypted_key' => true
+            'private_key_type' => $keyType
         ];
-        $res = openssl_pkey_new($config);
-        $secretKey = openssl_pkey_get_private($res, $passphrase);
-        openssl_pkey_export_to_file($secretKey, $secKeyPath,  $passphrase);
+
+        // generate private key
+        $output->writeln(sprintf('Generating private key in <info>%s</info>', $secKeyPath));
+        $this->generateSecretKey($config);
 
         // generate public key
         $output->writeln(sprintf('Generating public key in <info>%s</info>', $pubKeyPath));
-        $publicKey = openssl_pkey_get_details($secretKey);
-        file_put_contents($pubKeyPath, $publicKey['key'], LOCK_EX);
+        $this->generatePublicKey();
 
         // chmod 0775 secretKey and publicKey
         $output->writeln(
@@ -161,5 +157,19 @@ EOC;
             sprintf('chmod 0775 <info>%s</info>',$pubKeyPath)
         );
         chmod($pubKeyPath,0755);
+    }
+
+    final private function generateSecretKey($config)
+    {
+        $res = openssl_pkey_new($config);
+        openssl_pkey_export_to_file($res,$this->secKeyPath,$this->passphrase);
+    }
+
+    final private function generatePublicKey()
+    {
+        $secretKey = file_get_contents($this->secKeyPath);
+        $key = openssl_pkey_get_private($secretKey, $this->passphrase);
+        $details = openssl_pkey_get_details($key);
+        file_put_contents($this->pubKeyPath, $details['key']);
     }
 }
