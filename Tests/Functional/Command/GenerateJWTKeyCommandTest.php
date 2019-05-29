@@ -39,21 +39,23 @@ class GenerateJWTKeyCommandTest extends TestCase
         $this->assertFileExists($publicKey);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Invalid.*value foo$/
+     */
     public function testWithInvalidDigest()
     {
         $tester = $this->getCommandTester();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/Invalid.*value foo$/');
         $tester->execute(['--digest' => 'foo']);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Invalid.*key-type.*value foo$/
+     */
     public function testWithInvalidKeyType()
     {
         $tester = $this->getCommandTester();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/Invalid.*key-type.*value foo$/');
         $tester->execute(['--key-type' => 'foo']);
     }
 }
