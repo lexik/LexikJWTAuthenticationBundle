@@ -90,7 +90,7 @@ class JWTProvider implements AuthenticationProviderInterface
         $authToken->setRawToken($token->getCredentials());
 
         $event = new JWTAuthenticatedEvent($payload, $authToken);
-        $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, $event);
+        $this->dispatcher->dispatch($event);
 
         return $authToken;
     }
