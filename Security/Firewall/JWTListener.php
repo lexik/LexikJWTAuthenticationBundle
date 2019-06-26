@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserTo
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -80,7 +81,12 @@ class JWTListener implements ListenerInterface
 
         if (null === $requestToken) {
             $jwtNotFoundEvent = new JWTNotFoundEvent();
-            $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
+            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
+                $this->dispatcher->dispatch($jwtNotFoundEvent, Events::JWT_NOT_FOUND);
+            } else {
+                $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
+            }
+
 
             if ($response = $jwtNotFoundEvent->getResponse()) {
                 $event->setResponse($response);
@@ -105,7 +111,12 @@ class JWTListener implements ListenerInterface
             $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
             $jwtInvalidEvent = new JWTInvalidEvent($failed, $response);
-            $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);
+            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
+                $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
+            } else {
+                $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);
+            }
+
 
             $event->setResponse($jwtInvalidEvent->getResponse());
         }
