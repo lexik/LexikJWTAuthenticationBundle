@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by Webonaute at 2019-06-26T20:36:37Z
+
+This should resolve https://github.com/lexik/LexikJWTAuthenticationBundle/pull/668 as well.
+
+---------------------------------------------------------------------------
+
+by Webonaute at 2019-07-09T14:41:15Z
+
+@chalasr is it possible to release a fix for this?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2019-07-15T16:15:18Z
+
+Apologies for the delay @Webonaute.
+We have an unrelated failure on the travis build which I'm looking into. Once I'm done, I will merge this one and release it right away.
+Thank you for the patch.
