@@ -3,6 +3,10 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.3
 
+## [2.6.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.4) (2019-07-27)
+
+* bug [\#669](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/669) Fix dispatch signature on SF > 4.3 ([Webonaute](https://github.com/Webonaute))
+* bug [\#650](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/650) Fixed AuthenticaionFailureHandler to utilize messages from custom exceptions ([EresDev](https://github.com/EresDev))
 
 ## [2.6.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.3) (2018-04-17)
 
