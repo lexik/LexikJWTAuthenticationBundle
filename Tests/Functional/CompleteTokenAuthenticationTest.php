@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
+use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\User;
 

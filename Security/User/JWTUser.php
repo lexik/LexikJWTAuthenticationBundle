@@ -27,10 +27,10 @@ class JWTUser implements JWTUserInterface
     public static function createFromPayload($username, array $payload)
     {
         if (isset($payload['roles'])) {
-            return new self($username, (array) $payload['roles']);
+            return new static($username, (array) $payload['roles']);
         }
 
-        return new self($username);
+        return new static($username);
     }
 
     /**
