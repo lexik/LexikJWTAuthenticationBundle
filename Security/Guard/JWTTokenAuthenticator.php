@@ -65,16 +65,18 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param TokenExtractorInterface  $tokenExtractor
+     * @param TokenStorageInterface    $preAuthenticationTokenStorage
      */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
-        TokenExtractorInterface $tokenExtractor
+        TokenExtractorInterface $tokenExtractor,
+        TokenStorageInterface $preAuthenticationTokenStorage
     ) {
         $this->jwtManager                    = $jwtManager;
         $this->dispatcher                    = $dispatcher;
         $this->tokenExtractor                = $tokenExtractor;
-        $this->preAuthenticationTokenStorage = new TokenStorage();
+        $this->preAuthenticationTokenStorage = $preAuthenticationTokenStorage;
     }
 
     public function supports(Request $request)
