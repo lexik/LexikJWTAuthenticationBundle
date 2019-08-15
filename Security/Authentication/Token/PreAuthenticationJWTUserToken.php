@@ -9,7 +9,7 @@ use Symfony\Component\Security\Guard\Token\PreAuthenticationGuardToken;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class PreAuthenticationJWTUserToken extends PreAuthenticationGuardToken
+final class PreAuthenticationJWTUserToken extends PreAuthenticationGuardToken implements PreAuthenticationJWTUserTokenInterface
 {
     /**
      * @var string

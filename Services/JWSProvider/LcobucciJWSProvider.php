@@ -9,6 +9,7 @@ use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\ValidationData;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
@@ -21,7 +22,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 class LcobucciJWSProvider implements JWSProviderInterface
 {
     /**
-     * @var RawKeyLoader
+     * @var KeyLoaderInterface
      */
     private $keyLoader;
 
@@ -41,15 +42,15 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $clockSkew;
 
     /**
-     * @param RawKeyLoader $keyLoader
-     * @param string       $cryptoEngine
-     * @param string       $signatureAlgorithm
-     * @param int|null     $ttl
-     * @param int          $clockSkew
+     * @param KeyLoaderInterface $keyLoader
+     * @param string             $cryptoEngine
+     * @param string             $signatureAlgorithm
+     * @param int|null           $ttl
+     * @param int                $clockSkew
      *
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(RawKeyLoader $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
