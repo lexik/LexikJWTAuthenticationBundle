@@ -141,7 +141,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     /**
      * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage must be an instance of "Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken".
+     * @expectedExceptionMessage must be an instance of "Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserTokenInterface".
      */
     public function testGetUserWithInvalidFirstArg()
     {
