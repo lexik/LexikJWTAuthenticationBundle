@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -283,6 +284,14 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     {
         if ($userProvider instanceof PayloadAwareUserProviderInterface) {
             return $userProvider->loadUserByUsernameAndPayload($identity, $payload);
+        }
+
+        if ($userProvider instanceof ChainUserProvider) {
+            foreach ($userProvider->getProviders() as $provider) {
+                if ($provider instanceof PayloadAwareUserProviderInterface) {
+                    return $provider->loadUserByUsernameAndPayload($identity, $payload);
+                }
+            }
         }
 
         return $userProvider->loadUserByUsername($identity);
