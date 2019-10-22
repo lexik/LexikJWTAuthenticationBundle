@@ -1,5 +1,7 @@
 language: php
 
+dist: trusty
+
 matrix:
   fast_finish: true
   include:
