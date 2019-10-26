@@ -32,7 +32,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
-        $this->assertEquals($authenticationException->getMessage(), $content['message']);
+        $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
     }
 
     /**
@@ -47,7 +47,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return AuthenticationException
      */
     protected function getAuthenticationException()
     {
