@@ -16,6 +16,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserTokenInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
@@ -87,7 +88,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * {@inheritdoc}
      *
-     * @return PreAuthenticationJWTUserToken
+     * @return PreAuthenticationJWTUserTokenInterface
      *
      * @throws InvalidTokenException If an error occur while decoding the token
      * @throws ExpiredTokenException If the request token is expired
@@ -128,7 +129,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * {@inheritdoc}
      *
-     * @param PreAuthenticationJWTUserToken Implementation of the (Security) TokenInterface
+     * @param PreAuthenticationJWTUserTokenInterface Implementation of the (Security) TokenInterface
      *
      * @throws \InvalidArgumentException If preAuthToken is not of the good type
      * @throws InvalidPayloadException   If the user identity field is not a key of the payload
@@ -136,9 +137,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
-        if (!$preAuthToken instanceof PreAuthenticationJWTUserToken) {
+        if (!$preAuthToken instanceof PreAuthenticationJWTUserTokenInterface) {
             throw new \InvalidArgumentException(
-                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserToken::class)
+                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserTokenInterface::class)
             );
         }
 
