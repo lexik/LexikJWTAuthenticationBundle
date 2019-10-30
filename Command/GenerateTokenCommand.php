@@ -85,5 +85,7 @@ class GenerateTokenCommand extends Command
             '<info>'.$token.'</info>',
             '',
         ]);
+
+        return 0;
     }
 }

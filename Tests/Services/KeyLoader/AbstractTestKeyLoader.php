@@ -23,14 +23,11 @@ abstract class AbstractTestKeyLoader extends TestCase
         $this->removeKeysIfExist();
     }
 
-    /**
-     * Test load key from invalid type.
-     *
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The key type must be "public" or "private", "wrongType" given.
-     */
     public function testLoadKeyFromWrongType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The key type must be "public" or "private", "wrongType" given.');
+
         $this->keyLoader->loadKey('wrongType');
     }
 

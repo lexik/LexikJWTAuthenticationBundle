@@ -10,6 +10,7 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Tests the bundle extension and the configuration of services.
@@ -96,12 +97,12 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
     private function getContainer($config = [])
     {
         $container = new ContainerBuilder();
-        $container->registerExtension(new SecurityExtension());
         $container->registerExtension(new LexikJWTAuthenticationExtension());
         $container->loadFromExtension('lexik_jwt_authentication', $config);
 
         $container->getCompilerPassConfig()->setOptimizationPasses([new ResolveChildDefinitionsPass()]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);
+        $container->getCompilerPassConfig()->setAfterRemovingPasses([]);
         $container->compile();
 
         return $container;

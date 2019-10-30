@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Pro
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
@@ -40,14 +41,11 @@ class JWTProviderTest extends TestCase
         $this->assertTrue($provider->supports($jwtUserToken));
     }
 
-    /**
-     * test authenticate method with an invalid token.
-     *
-     * @expectedException        \Symfony\Component\Security\Core\Exception\AuthenticationException
-     * @expectedExceptionMessage Invalid JWT Token
-     */
     public function testAuthenticateWithInvalidJWT()
     {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Invalid JWT Token');
+
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
@@ -64,14 +62,11 @@ class JWTProviderTest extends TestCase
         $provider->authenticate($jwtUserToken);
     }
 
-    /**
-     * test authenticate method.
-     *
-     * @expectedException \Symfony\Component\Security\Core\Exception\AuthenticationException
-     * @expectedExceptionMessage Invalid JWT Token
-     */
     public function testAuthenticateWithoutUsername()
     {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Invalid JWT Token');
+
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
@@ -88,13 +83,10 @@ class JWTProviderTest extends TestCase
         $provider->authenticate($jwtUserToken);
     }
 
-    /**
-     * test authenticate method.
-     *
-     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
-     */
     public function testAuthenticateWithNotExistingUser()
     {
+        $this->expectException(UsernameNotFoundException::class);
+
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')

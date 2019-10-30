@@ -23,23 +23,21 @@ class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
         parent::setup();
     }
 
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage 0906D06C:PEM routines:PEM_read_bio:no start line
-     */
     public function testLoadInvalidPublicKey()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('no start line');
+
         touch('public.pem');
 
         $this->keyLoader->loadKey('public');
     }
 
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage 0906D06C:PEM routines:PEM_read_bio:no start line
-     */
     public function testLoadInvalidPrivateKey()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('no start line');
+
         touch('private.pem');
 
         $this->keyLoader->loadKey('private');
