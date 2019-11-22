@@ -1,7 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.5
+
+## [2.6.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.5) (2019-11-22)
+
+* bug [\#689](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/689) Symfony 4.4/5.0 compatibility ([Deuchnord](https://github.com/Deuchnord))
+* bug [\#687](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/687) Authentication Exception Message from its key ([arslan](https://github.com/arslan))
+* bug [\#675](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/675) Use late static binding on JWTUser ([kaznovac](https://github.com/kaznovac))
 
 ## [2.6.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.4) (2019-07-27)
 
@@ -32,7 +38,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.5.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.4) (2018-08-2)
 
-* bug [\#542](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/542) Fix missing implements breaking JWT header alteration ([tucksaun](https://github.com/tucksaun))
+* bug [\#542](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/542) Fix missing implemenets breaking JWT header alteration ([tucksaun](https://github.com/tucksaun))
 
 ## [2.5.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.5.3) (2018-07-6)
 
