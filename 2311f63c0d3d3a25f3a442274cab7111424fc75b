@@ -1,0 +1,50 @@
+---------------------------------------------------------------------------
+
+by Deuchnord at 2019-10-31T18:09:18Z
+
+Having a weird issue with the event dispatcher, both on v4.4 and v5.0, when running the tests:
+```
+Lexik\Bundle\JWTAuthenticationBundle\Tests\DependencyInjection\LexikJWTAuthenticationExtensionTest::testEncoderConfiguration
+Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException: The service "lexik_jwt_authentication.security.authentication.provider" has a dependency on a non-existent service "event_dispatcher".
+```
+
+Tried to add `symfony/event-dispatcher` in the dev dependencies, but didn’t fix it.
+
+Plus, I have two failing tests on my laptop, which seem to pass on the CI, and I don’t get why.
+
+```1) Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\KeyLoader\OpenSSLKeyLoaderTest::testLoadInvalidPublicKey
+Failed asserting that exception message 'Failed to load public key:
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line
+ 0909006C:PEM routines:get_name:no start line' contains '0906D06C:PEM routines:PEM_read_bio:no start line'.
+
+2) Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\KeyLoader\OpenSSLKeyLoaderTest::testLoadInvalidPrivateKey
+Failed asserting that exception message 'Failed to load private key:
+ 0909006C:PEM routines:get_name:no start line' contains '0906D06C:PEM routines:PEM_read_bio:no start line'.
+```
+
+Is it possible that’s related to my version of OpenSSL (OpenSSL 1.1.1d  10 Sep 2019)?
+
+@chalasr WDYT?
+
+---------------------------------------------------------------------------
+
+by sergiu-popa at 2019-11-21T18:09:08Z
+
+How did you install it for Symfony 5?
+```
+Problem 1
+- lexik/jwt-authentication-bundle v2.6.4 requires symfony/framework-bundle ^3.4|^4.0 -> no matching package found.
+```
