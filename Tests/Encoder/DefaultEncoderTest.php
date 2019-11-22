@@ -3,6 +3,8 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Encoder;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
@@ -58,11 +60,10 @@ class DefaultEncoderTest extends TestCase
 
     /**
      * Tests that calling DefaultEncoder::encode() with an unsigned JWS correctly fails.
-     *
-     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException
      */
     public function testEncodeFromUnsignedJWS()
     {
+        $this->expectException(JWTEncodeFailureException::class);
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
             ->expects($this->once())
@@ -75,11 +76,11 @@ class DefaultEncoderTest extends TestCase
 
     /**
      * Tests that calling DefaultEncoder::decode() with an unverified signature correctly fails.
-     *
-     * @expectedException \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
      */
     public function testDecodeFromUnverifiedJWS()
     {
+        $this->expectException(JWTDecodeFailureException::class);
+
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
             ->expects($this->once())
@@ -92,12 +93,12 @@ class DefaultEncoderTest extends TestCase
 
     /**
      * Tests that calling DefaultEncoder::decode() with an expired payload correctly fails.
-     *
-     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
-     * @expectedExceptionMessage Expired JWT Token
      */
     public function testDecodeFromExpiredPayload()
     {
+        $this->expectException(JWTDecodeFailureException::class);
+        $this->expectExceptionMessage('Expired JWT Token');
+
         $loadedJWS   = new LoadedJWS(['exp' => time() - 3600], true);
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider
@@ -111,12 +112,12 @@ class DefaultEncoderTest extends TestCase
 
     /**
      * Tests that calling DefaultEncoder::decode() with an iat set in the future correctly fails.
-     *
-     * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException
-     * @expectedExceptionMessage Invalid JWT Token
      */
     public function testDecodeWithInvalidIssudAtClaimInPayload()
     {
+        $this->expectException(JWTDecodeFailureException::class);
+        $this->expectExceptionMessage('Invalid JWT Token');
+
         $loadedJWS   = new LoadedJWS(['exp' => time() + 3600, 'iat' => time() + 3600], true);
         $jwsProvider = $this->getJWSProviderMock();
         $jwsProvider

@@ -7,10 +7,12 @@ matrix:
   include:
     - php: 5.5
       env: SYMFONY_VERSION=3.4.*
-    - php: 7.2
-      env: SYMFONY_VERSION=4.2.*
     - php: 7.3
       env: SYMFONY_VERSION=4.3.*
+    - php: 7.3
+      env: SYMFONY_VERSION=4.4.*
+    - php: 7.3
+      env: SYMFONY_VERSION=5.0.*
 
 cache:
   directories:

@@ -144,21 +144,19 @@ vwIDAQAB
         $this->assertArrayNotHasKey('exp', $jws->getPayload());
     }
 
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The algorithm "wrongAlgorithm" is not supported
-     */
     public function testInvalidsignatureAlgorithm()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The algorithm "wrongAlgorithm" is not supported');
+
         new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600, 0);
     }
 
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The TTL should be a numeric value
-     */
     public function testInvalidTtl()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The TTL should be a numeric value');
+
         new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl', 0);
     }
 

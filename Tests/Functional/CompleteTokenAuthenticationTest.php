@@ -14,6 +14,13 @@ use Symfony\Component\Security\Core\User\User;
  */
 class CompleteTokenAuthenticationTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        static::$client = static::createClient();
+    }
+
     public function testAccessSecuredRoute()
     {
         static::$client = static::createAuthenticatedClient();
@@ -35,7 +42,6 @@ class CompleteTokenAuthenticationTest extends TestCase
 
     public function testAccessSecuredRouteWithoutToken()
     {
-        static::$client = static::createClient();
         static::accessSecuredRoute();
 
         $response = static::$client->getResponse();
@@ -47,7 +53,6 @@ class CompleteTokenAuthenticationTest extends TestCase
 
     public function testAccessSecuredRouteWithInvalidToken($token = 'dummy')
     {
-        static::$client = static::createClient();
         static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => "Bearer $token"]);
 
         $response = static::$client->getResponse();

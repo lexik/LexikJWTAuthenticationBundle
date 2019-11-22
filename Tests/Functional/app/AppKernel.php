@@ -100,5 +100,9 @@ class AppKernel extends Kernel
     protected function build(ContainerBuilder $container)
     {
         $container->register('logger', NullLogger::class);
+
+        if (!$container->hasParameter('kernel.root_dir')) {
+            $container->setParameter('kernel.root_dir', $this->getRootDir());
+        }
     }
 }

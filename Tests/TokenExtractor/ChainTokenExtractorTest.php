@@ -45,7 +45,7 @@ class ChainTokenExtractorTest extends TestCase
 
         $extractor->addExtractor($custom);
         $result = $extractor->removeExtractor(function (TokenExtractorInterface $extractor) use ($custom) {
-            return $extractor instanceof \PHPUnit_Framework_MockObject_MockObject;
+            return $extractor === $custom;
         });
 
         $this->assertTrue($result, 'removeExtractor returns true in case of success, false otherwise');
@@ -92,12 +92,5 @@ class ChainTokenExtractorTest extends TestCase
         }
 
         return $map;
-    }
-
-    private function generateTokenExtractors(array $map)
-    {
-        foreach ($map as $extractor) {
-            yield $extractor;
-        }
     }
 }

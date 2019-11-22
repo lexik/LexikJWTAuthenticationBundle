@@ -16,12 +16,11 @@ class GenerateTokenCommandTest extends TestCase
         $this->assertSame(0, $tester->execute(['username' => 'lexik', '--user-class' => User::class]));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The "--user-class" option must be passed as there is more than 1 configured user provider.
-     */
     public function testRunWithoutSpecifiedProviderAndMoreThanOneConfigured()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The "--user-class" option must be passed as there is more than 1 configured user provider.');
+
         $tester = new CommandTester((new Application($this->bootKernel(['test_case' => 'GenerateTokenCommand'])))->get('lexik:jwt:generate-token'));
 
         $this->assertSame(0, $tester->execute(['username' => 'lexik']));

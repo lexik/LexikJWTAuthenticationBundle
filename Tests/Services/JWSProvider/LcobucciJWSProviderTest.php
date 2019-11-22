@@ -12,10 +12,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
  */
 final class LcobucciJWSProviderTest extends AbstractJWSProviderTest
 {
-    public function __construct()
+    public static function setUpBeforeClass()
     {
-        parent::__construct();
-
         self::$providerClass  = LcobucciJWSProvider::class;
         self::$keyLoaderClass = RawKeyLoader::class;
     }
