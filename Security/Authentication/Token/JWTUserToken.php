@@ -48,6 +48,16 @@ class JWTUserToken extends AbstractToken implements GuardTokenInterface
         $this->rawToken = $rawToken;
     }
 
+     /**
+     * Returns the raw token.
+     *
+     * @return string Raw token
+     */
+    public function getRawToken()
+    {
+        return $this->rawToken;
+    }
+    
     /**
      * {@inheritdoc}
      */
