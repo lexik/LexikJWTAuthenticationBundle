@@ -23,6 +23,8 @@ lexik_jwt_authentication:
 #...
 lexik_jwt_authentication:
     secret_key: yoursecret
+    encoder:
+        signature_algorithm: HS256 # optional, set it when you want to use without SSH keys 
 ```
 
 ### Full default configuration

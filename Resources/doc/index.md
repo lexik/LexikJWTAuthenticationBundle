@@ -50,7 +50,7 @@ $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 Configuration
 -------------
 
-Configure the SSH keys path in your `config/packages/lexik_jwt_authentication.yaml` :
+* Configure the SSH keys path in your `config/packages/lexik_jwt_authentication.yaml` :
 
 ``` yaml
 lexik_jwt_authentication:
@@ -60,6 +60,14 @@ lexik_jwt_authentication:
     token_ttl:        3600
 ```
 
+* Configure without SSH keys
+
+``` yaml
+lexik_jwt_authentication:
+    secret_key: yoursecret
+    encoder:
+        signature_algorithm: HS256 
+```
 Configure your `config/packages/security.yaml` :
 
 ``` yaml
