@@ -108,7 +108,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
             return false;
         }
 
-        return $payload;
+        return $event->getPayload();
     }
 
     /**
