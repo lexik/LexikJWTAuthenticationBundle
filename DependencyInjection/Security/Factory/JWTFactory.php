@@ -98,6 +98,10 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        if (method_exists($node, 'setDeprecated')) {
+            $node->setDeprecated();
+        }
+
         $node
             ->children()
                 ->arrayNode('authorization_header')
