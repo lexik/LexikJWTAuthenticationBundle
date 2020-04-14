@@ -4,6 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Lcobucci\JWT\Parser;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 
@@ -22,6 +24,32 @@ class GetTokenTest extends TestCase
         $body = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('token', $body, 'The response should have a "token" key containing a JWT Token.');
+    }
+
+    public function testGetTokenWithListener()
+    {
+        static::$client = static::createClient();
+
+        $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
+        $subscriber->setListener(Events::JWT_DECODED, function (JWTDecodedEvent $e) {
+            $payload = $e->getPayload();
+            $payload['added_data'] = 'still visible after the event';
+            $e->setPayload($payload);
+        });
+
+        $payloadTested = new \stdClass();
+        $payloadTested->payload = [];
+        $subscriber->setListener(Events::JWT_AUTHENTICATED, function (JWTAuthenticatedEvent $e) use ($payloadTested) {
+            $payloadTested->payload = $e->getPayload();
+        });
+
+        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        $body = json_decode(static::$client->getResponse()->getContent(), true);
+
+        static::$client->request('GET', '/api/secured', [], [], [ 'HTTP_AUTHORIZATION' => "Bearer ".$body['token'] ]);
+
+        $this->assertArrayHasKey('added_data', $payloadTested->payload, 'The payload should contains a "added_data" claim.');
+        $this->assertSame('still visible after the event', $payloadTested->payload['added_data'], 'The "added_data" claim should be equal to "still visible after the event".');
     }
 
     public function testGetTokenWithCustomClaim()
