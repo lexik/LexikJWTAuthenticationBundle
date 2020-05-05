@@ -14,8 +14,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
 /**
- * @final
- *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
 class LcobucciJWSProvider implements JWSProviderInterface
