@@ -23,22 +23,22 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @var RawKeyLoader
      */
-    private $keyLoader;
+    protected $keyLoader;
 
     /**
      * @var Signer
      */
-    private $signer;
+    protected $signer;
 
     /**
      * @var int
      */
-    private $ttl;
+    protected $ttl;
 
     /**
      * @var int
      */
-    private $clockSkew;
+    protected $clockSkew;
 
     /**
      * @param RawKeyLoader $keyLoader
@@ -113,7 +113,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new LoadedJWS($payload, $this->verify($jws), null !== $this->ttl, $jws->getHeaders(), $this->clockSkew);
     }
 
-    private function getSignerForAlgorithm($signatureAlgorithm)
+    protected function getSignerForAlgorithm($signatureAlgorithm)
     {
         $signerMap = [
             'HS256' => Signer\Hmac\Sha256::class,
@@ -138,7 +138,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new $signerClass();
     }
 
-    private function sign(Builder $jws)
+    protected function sign(Builder $jws)
     {
         if ($this->signer instanceof Hmac) {
             return $jws->sign($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE));
@@ -150,7 +150,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         );
     }
 
-    private function verify(Token $jwt)
+    protected function verify(Token $jwt)
     {
         if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
             return false;
