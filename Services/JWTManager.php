@@ -9,10 +9,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 
 /**
  * Provides convenient methods to manage JWT creation/verification.
@@ -36,6 +36,11 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      * @var string
      */
     protected $userIdentityField;
+
+    /**
+     * @var string
+     */
+    protected $tokenParameterName;
 
     /**
      * @var string
@@ -138,6 +143,22 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     public function setUserIdentityField($userIdentityField)
     {
         $this->userIdentityField = $userIdentityField;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTokenParameterName($tokenParameterName)
+    {
+        $this->tokenParameterName = $tokenParameterName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTokenParameterName()
+    {
+        return $this->tokenParameterName;
     }
 
     /**

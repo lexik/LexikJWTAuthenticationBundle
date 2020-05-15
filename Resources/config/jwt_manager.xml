@@ -12,6 +12,9 @@
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
             </call>
+            <call method="setTokenParameterName">
+                <argument>%lexik_jwt_authentication.token_parameter_name%</argument>
+            </call>
         </service>
 
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface" alias="lexik_jwt_authentication.jwt_manager" />

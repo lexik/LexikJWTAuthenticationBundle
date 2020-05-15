@@ -36,6 +36,7 @@ lexik_jwt_authentication:
     pass_phrase: ~
     token_ttl: 3600 # token TTL in seconds, defaults to 1 hour
     user_identity_field: username  # key under which the user identity will be stored in the token payload
+    token_parameter_name: token  # key under which the token will be returned in the response
     clock_skew: 0
 
     # token encoding/decoding settings
@@ -58,7 +59,7 @@ lexik_jwt_authentication:
         cookie:
             enabled: false
             name:    BEARER
-            
+
         # check token in query string parameter
         query_parameter:
             enabled: false
@@ -100,7 +101,7 @@ security:
         api:
             # ...
             guard:
-                authenticators: 
+                authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
             provider: jwt # optional
 ```
