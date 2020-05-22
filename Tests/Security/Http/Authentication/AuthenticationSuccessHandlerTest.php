@@ -4,9 +4,11 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authenticatio
 
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -60,6 +62,25 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
         $this->assertEquals('jwt', $content['token']);
+    }
+
+    public function testOnAuthenticationSuccessSetCookie()
+    {
+        $request = $this->getRequest();
+        $token   = $this->getToken();
+
+        $cookieProvider = new JWTCookieProvider('access_token', 60);
+
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher(), [$cookieProvider]))
+            ->onAuthenticationSuccess($request, $token);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertSame(204, $response->getStatusCode());
+        $this->assertEmpty(json_decode($response->getContent(), true));
+
+        $cookie = $response->headers->getCookies()[0];
+        $this->assertSame('access_token', $cookie->getName());
+        $this->assertSame('secrettoken', $cookie->getValue());
     }
 
     /**
