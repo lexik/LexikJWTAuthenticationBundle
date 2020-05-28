@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * LexikJWTAuthenticationBundle Configuration.
@@ -75,6 +76,25 @@ class Configuration implements ConfigurationInterface
                     ->info('If null, the user ID claim will have the same name as the one defined by the option "user_identity_field"')
                 ->end()
                 ->append($this->getTokenExtractorsNode())
+                ->arrayNode('set_cookies')
+                    ->fixXmlConfig('set_cookie')
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('lifetime')
+                                ->defaultNull()
+                                ->info('The cookie lifetime. If null, the "token_ttl" option value will be used')
+                            ->end()
+                            ->enumNode('samesite')
+                                ->values([Cookie::SAMESITE_NONE, Cookie::SAMESITE_LAX, Cookie::SAMESITE_STRICT])
+                                ->defaultValue(Cookie::SAMESITE_LAX)
+                            ->end()
+                            ->scalarNode('path')->defaultValue('/')->cannotBeEmpty()->end()
+                            ->scalarNode('domain')->defaultNull()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

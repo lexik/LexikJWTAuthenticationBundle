@@ -8,6 +8,7 @@
         <service id="lexik_jwt_authentication.handler.authentication_success" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="collection"/> <!-- Cookie providers -->
             <tag name="monolog.logger" channel="security" />
         </service>
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler" alias="lexik_jwt_authentication.handler.authentication_success" />
