@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.6.5
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.7.0
+
+## [2.7.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.7.0) (2020-05-29)
+
+* feature [\#753](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/753) Add `set_cookies` option to store JWT in secure cookies ([chalasr](https://github.com/chalasr))
+* feature [\#737](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/737) Enable to keep the modified payload after decode ([cedriclombardot](https://github.com/cedriclombardot))
 
 ## [2.6.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.6.5) (2019-11-22)
 
