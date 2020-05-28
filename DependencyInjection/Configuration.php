@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -24,11 +25,11 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('private_key_path')
-                    ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.secret_key" instead.')
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.secret_key" instead.', '2.5'))
                     ->defaultNull()
                 ->end()
                 ->scalarNode('public_key_path')
-                    ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.public_key" instead.')
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.5. Use "%path%.public_key" instead.', '2.5'))
                     ->defaultNull()
                 ->end()
                 ->scalarNode('public_key')
@@ -62,7 +63,7 @@ class Configuration implements ConfigurationInterface
                         ->enumNode('crypto_engine')
                             ->values(['openssl', 'phpseclib'])
                             ->defaultValue('openssl')
-                            ->setDeprecated('The "%path%.%node%" configuration key is deprecated since version 2.5, built-in encoders support OpenSSL only')
+                            ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.5, built-in encoders support OpenSSL only', '2.5'))
                         ->end()
                     ->end()
                 ->end()
@@ -121,5 +122,22 @@ class Configuration implements ConfigurationInterface
         ;
 
         return $node;
+    }
+
+    /**
+     * Returns the correct deprecation parameters for setDeprecated.
+     *
+     * @param string $message
+     * @param string $version
+     *
+     * @return string[]
+     */
+    private function getDeprecationParameters($message, $version)
+    {
+        if (method_exists(BaseNode::class, 'getDeprecation')) {
+            return ['lexik/jwt-authentication-bundle', $version, $message];
+        }
+
+        return [$message];
     }
 }

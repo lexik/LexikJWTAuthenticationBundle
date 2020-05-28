@@ -10,9 +10,6 @@
             <argument/> <!-- public key -->
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
         </service>
-        <service id="lexik_jwt_authentication.key_loader.openssl" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract">
-            <deprecated>The "%service_id%" service is deprecated since version 2.5 and will be removed in 3.0. Use lexik_jwt_authentication.key_loader.raw instead.</deprecated>
-        </service>
         <service id="lexik_jwt_authentication.key_loader.raw" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract"/>
     </services>
 </container>

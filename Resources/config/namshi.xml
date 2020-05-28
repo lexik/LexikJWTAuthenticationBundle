@@ -10,13 +10,5 @@
         </service>
 
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface" alias="lexik_jwt_authentication.jws_provider.default" />
-        <service id="lexik_jwt_authentication.jws_provider.default" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider" public="false">
-            <deprecated>The "%service_id%" is deprecated since version 2.5 and will be removed in 5.0, use "lexik_jwt_authentication.jws_provider.lcobucci" instead.</deprecated>
-            <argument type="service" id="lexik_jwt_authentication.key_loader"/>
-            <argument>%lexik_jwt_authentication.encoder.crypto_engine%</argument>
-            <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
-            <argument>%lexik_jwt_authentication.token_ttl%</argument>
-            <argument>%lexik_jwt_authentication.clock_skew%</argument>
-        </service>
     </services>
 </container>
