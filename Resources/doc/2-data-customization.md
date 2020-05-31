@@ -103,7 +103,7 @@ public function onJWTCreated(JWTCreatedEvent $event)
 Events::JWT_DECODED - Validating data in the JWT payload
 --------------------------------------------------------
 
-You can access the jwt payload once it has been decoded to perform you own additional validation.
+You can access the jwt payload once it has been decoded to perform your own additional validation.
 
 ``` yaml
 # config/services.yaml
