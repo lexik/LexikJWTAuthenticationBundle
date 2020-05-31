@@ -35,7 +35,11 @@ class LexikJWTAuthenticationExtension extends Extension
             $loader->load('console.xml');
         }
 
-        $loader->load('deprecated.xml');
+        if (method_exists(Alias::class, 'getDeprecation')) {
+            $loader->load('deprecated_51.xml');
+        } else {
+            $loader->load('deprecated.xml');
+        }
         $loader->load('jwt_manager.xml');
         $loader->load('key_loader.xml');
         $loader->load('namshi.xml');

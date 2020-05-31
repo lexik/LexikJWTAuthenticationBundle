@@ -5,14 +5,16 @@ dist: trusty
 matrix:
   fast_finish: true
   include:
-    - php: 5.5
-      env: SYMFONY_VERSION=3.4.*
+    - php: 5.6
+      env: SYMFONY_VERSION=3.4.* SYMFONY_PHPUNIT_VERSION=5.7
     - php: 7.3
       env: SYMFONY_VERSION=4.3.*
     - php: 7.3
       env: SYMFONY_VERSION=4.4.*
     - php: 7.3
       env: SYMFONY_VERSION=5.0.*
+    - php: 7.3
+      env: SYMFONY_VERSION=5.1.*
 
 cache:
   directories:

@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Psr\Log\NullLogger;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -70,6 +71,11 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        if (\method_exists(TreeBuilder::class, 'getRootNode')) {
+            // Symfony 4.2+
+            $loader->load(__DIR__.'/config/config_router_utf8.yml');
+        }
+        
         if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
             $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
 
