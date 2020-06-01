@@ -23,6 +23,8 @@ lexik_jwt_authentication:
 #...
 lexik_jwt_authentication:
     secret_key: yoursecret
+    encoder:
+        signature_algorithm: HS256
 ```
 
 ### Full default configuration
