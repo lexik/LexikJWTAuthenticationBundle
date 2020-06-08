@@ -13,7 +13,7 @@ matrix:
       env: SYMFONY_VERSION=4.4.*
     - php: 7.3
       env: SYMFONY_VERSION=5.0.*
-    - php: 7.3
+    - php: 7.4
       env: SYMFONY_VERSION=5.1.*
 
 cache:
@@ -22,7 +22,6 @@ cache:
 
 before_install:
   - phpenv config-rm xdebug.ini || true
-  - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
 
 install: composer update --no-interaction
