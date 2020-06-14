@@ -34,11 +34,11 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
         try {
             $jws = $this->jwsProvider->create($payload, $header);
         } catch (\InvalidArgumentException $e) {
-            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e);
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e, $payload);
         }
 
         if (!$jws->isSigned()) {
-            throw new JWTEncodeFailureException(JWTEncodeFailureException::UNSIGNED_TOKEN, 'Unable to create a signed JWT from the given configuration.');
+            throw new JWTEncodeFailureException(JWTEncodeFailureException::UNSIGNED_TOKEN, 'Unable to create a signed JWT from the given configuration.', null, $payload);
         }
 
         return $jws->getToken();
@@ -56,15 +56,15 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
         }
 
         if ($jws->isInvalid()) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token');
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', null, $jws->getPayload());
         }
 
         if ($jws->isExpired()) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token');
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token', null, $jws->getPayload());
         }
 
         if (!$jws->isVerified()) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::UNVERIFIED_TOKEN, 'Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.', null, $jws->getPayload());
         }
 
         return $jws->getPayload();
