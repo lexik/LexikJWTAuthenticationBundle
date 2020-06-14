@@ -1,7 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.7.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.8.0
+
+## [2.8.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.8.0) (2020-06-14)
+
+* feature [\#761](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/761) Expose payload in encode/decode exceptions ([chalasr](https://github.com/chalasr))
+* bug [\#755](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/755) Drop php 5.5 compat, Test against php 7.4 + symfony 5.1 and fix deprecations ([acrobat](https://github.com/acrobat))
+* bug [\#683](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/683) Handle ChainUserProvider ([Gemorroj](https://github.com/Gemorroj))
 
 ## [2.7.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.7.0) (2020-05-29)
 
