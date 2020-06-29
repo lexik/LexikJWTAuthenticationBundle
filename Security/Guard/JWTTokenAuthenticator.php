@@ -288,10 +288,20 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         if ($userProvider instanceof ChainUserProvider) {
             foreach ($userProvider->getProviders() as $provider) {
-                if ($provider instanceof PayloadAwareUserProviderInterface) {
-                    return $provider->loadUserByUsernameAndPayload($identity, $payload);
+                try {
+                    if ($provider instanceof PayloadAwareUserProviderInterface) {
+                        return $provider->loadUserByUsernameAndPayload($identity, $payload);
+                    }
+
+                    return $provider->loadUserByUsername($identity);
+                } catch (UsernameNotFoundException $e) {
+                    // try next one
                 }
             }
+
+            $ex = new UsernameNotFoundException(sprintf('There is no user with name "%s".', $identity));
+            $ex->setUsername($identity);
+            throw $ex;
         }
 
         return $userProvider->loadUserByUsername($identity);
