@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by t-richard at 2020-06-29T11:09:50Z
+
+@abdounikarim @elangosundar @Spomky could this be merged ? Had people on the Symfony Slack thinking the bundle was not maintained anymore because the README didn't stated that it was compatible :slightly_smiling_face:
+Maybe we could rephrase to point to the travis for more details
+Something like
+> It is compatible and tested with PHP 5.5, 7.2, 7.3, on Symfony 3.4, 4 and 5. To see specific versions this bundle is tested against, please refer to our [Travis builds](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle).
+
+---------------------------------------------------------------------------
+
+by abdounikarim at 2020-06-29T11:39:18Z
+
+@t-richard i don’t have rights to merge.
