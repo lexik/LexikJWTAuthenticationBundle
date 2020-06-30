@@ -101,6 +101,7 @@ set_cookies:
 #      samesite: lax
 #      path: /
 #      domain: null (null means automatically set by symfony)
+#      secure: true (default to true)
 
 ```
 

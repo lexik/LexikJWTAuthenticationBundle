@@ -14,6 +14,7 @@ final class JWTCookieProvider
     private $defaultSameSite;
     private $defaultPath;
     private $defaultDomain;
+    private $defaultSecure;
 
     /**
      * @param string|null $defaultName
@@ -21,14 +22,16 @@ final class JWTCookieProvider
      * @param string      $defaultPath
      * @param string|null $defaultDomain
      * @param string      $defaultSameSite
+     * @param bool        $defaultSecure
      */
-    public function __construct($defaultName = null, $defaultLifetime = 0, $defaultSameSite = Cookie::SAMESITE_LAX, $defaultPath = '/', $defaultDomain = null)
+    public function __construct($defaultName = null, $defaultLifetime = 0, $defaultSameSite = Cookie::SAMESITE_LAX, $defaultPath = '/', $defaultDomain = null, $defaultSecure = true)
     {
         $this->defaultName = $defaultName;
         $this->defaultLifetime = $defaultLifetime;
         $this->defaultSameSite = $defaultSameSite;
         $this->defaultPath = $defaultPath;
         $this->defaultDomain = $defaultDomain;
+        $this->defaultSecure = $defaultSecure;
     }
 
     /**
@@ -43,10 +46,11 @@ final class JWTCookieProvider
      * @param string|null                        $sameSite
      * @param string|null                        $path
      * @param string|null                        $domain
+     * @param bool|null                          $secure
      *
      * @return Cookie
      */
-    public function createCookie($jwt, $name = null, $expiresAt = null, $sameSite = null, $path = null, $domain = null)
+    public function createCookie($jwt, $name = null, $expiresAt = null, $sameSite = null, $path = null, $domain = null, $secure = null)
     {
         if (!$name && !$this->defaultName) {
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
@@ -62,7 +66,7 @@ final class JWTCookieProvider
             null === $expiresAt ? (time() + $this->defaultLifetime) : $expiresAt,
             $path ?: $this->defaultPath,
             $domain ?: $this->defaultDomain,
-            true,
+            $secure ?: $this->defaultSecure,
             true,
             false,
             $sameSite ?: $this->defaultSameSite

@@ -93,6 +93,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->scalarNode('path')->defaultValue('/')->cannotBeEmpty()->end()
                             ->scalarNode('domain')->defaultNull()->end()
+                            ->scalarNode('secure')->defaultTrue()->end()
                         ->end()
                     ->end()
                 ->end()

@@ -110,7 +110,8 @@ class LexikJWTAuthenticationExtension extends Extension
                     ->replaceArgument(1, $attributes['lifetime'] ?: ($config['token_ttl'] ?: 0))
                     ->replaceArgument(2, $attributes['samesite'])
                     ->replaceArgument(3, $attributes['path'])
-                    ->replaceArgument(4, $attributes['domain']);
+                    ->replaceArgument(4, $attributes['domain'])
+                    ->replaceArgument(5, $attributes['secure']);
                 $cookieProviders[] = new Reference($id);
             }
 
