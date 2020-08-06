@@ -12,6 +12,8 @@
             <argument/> <!-- Default path -->
             <argument>null</argument> <!-- Default domain -->
             <argument/> <!-- Default secure -->
+            <argument/> <!-- Default httpOnly -->
+            <argument>null</argument> <!-- Default split -->
         </service>
     </services>
 </container>

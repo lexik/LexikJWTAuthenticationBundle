@@ -111,7 +111,9 @@ class LexikJWTAuthenticationExtension extends Extension
                     ->replaceArgument(2, $attributes['samesite'])
                     ->replaceArgument(3, $attributes['path'])
                     ->replaceArgument(4, $attributes['domain'])
-                    ->replaceArgument(5, $attributes['secure']);
+                    ->replaceArgument(5, $attributes['secure'])
+                    ->replaceArgument(6, $attributes['httpOnly'])
+                    ->replaceArgument(7, $attributes['split']);
                 $cookieProviders[] = new Reference($id);
             }
 
@@ -149,6 +151,15 @@ class LexikJWTAuthenticationExtension extends Extension
             $container
                 ->getDefinition($cookieExtractorId)
                 ->replaceArgument(0, $tokenExtractorsConfig['cookie']['name']);
+
+            $map[] = new Reference($cookieExtractorId);
+        }
+
+        if ($tokenExtractorsConfig['split_cookie']['enabled']) {
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.split_cookie_extractor';
+            $container
+                ->getDefinition($cookieExtractorId)
+                ->replaceArgument(0, $tokenExtractorsConfig['split_cookie']['cookies']);
 
             $map[] = new Reference($cookieExtractorId);
         }

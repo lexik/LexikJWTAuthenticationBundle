@@ -71,7 +71,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $cookieProvider = new JWTCookieProvider('access_token', 60);
 
-        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher(), [$cookieProvider]))
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('testheader.testpayload.testsignature'), $this->getDispatcher(), [$cookieProvider]))
             ->onAuthenticationSuccess($request, $token);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
@@ -80,7 +80,31 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $cookie = $response->headers->getCookies()[0];
         $this->assertSame('access_token', $cookie->getName());
-        $this->assertSame('secrettoken', $cookie->getValue());
+        $this->assertSame('testheader.testpayload.testsignature', $cookie->getValue());
+    }
+
+    public function testOnAuthenticationSuccessSetSplitCookie()
+    {
+        $request = $this->getRequest();
+        $token   = $this->getToken();
+
+        $headerPayloadCookieProvider = new JWTCookieProvider('jwt_hp', 60, null, null, null, true, false, ['header', 'payload']);
+        $signatureCookieProvider = new JWTCookieProvider('jwt_s', 60, null, null, null, true, true, ['signature']);
+
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secretheader.secretpayload.secretsignature'), $this->getDispatcher(), [$headerPayloadCookieProvider, $signatureCookieProvider]))
+            ->onAuthenticationSuccess($request, $token);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertSame(204, $response->getStatusCode());
+        $this->assertEmpty(json_decode($response->getContent(), true));
+
+        $headerPayloadCookie = $response->headers->getCookies()[0];
+        $this->assertSame('jwt_hp', $headerPayloadCookie->getName());
+        $this->assertSame('secretheader.secretpayload', $headerPayloadCookie->getValue());
+
+        $signatureCookie = $response->headers->getCookies()[1];
+        $this->assertSame('jwt_s', $signatureCookie->getName());
+        $this->assertSame('secretsignature', $signatureCookie->getValue());
     }
 
     /**
@@ -138,7 +162,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             $jwtManager
                 ->expects($this->any())
                 ->method('create')
-                ->will($this->returnValue('secrettoken'));
+                ->will($this->returnValue($token));
         }
 
         return $jwtManager;

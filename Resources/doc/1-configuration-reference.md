@@ -63,6 +63,13 @@ lexik_jwt_authentication:
         query_parameter:
             enabled: false
             name:    bearer
+        
+        # check token in a cookie
+        split_cookie:
+            enabled: false
+            cookies:
+                - jwt_hp
+                - jwt_s
 ```
 
 #### Encoder configuration
@@ -102,7 +109,42 @@ set_cookies:
 #      path: /
 #      domain: null (null means automatically set by symfony)
 #      secure: true (default to true)
+#      httpOnly: true
 
+```
+
+### Automatically generating split cookies
+You are also able to automatically generate split cookies. Benefits of this approach are in [this post](https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3).
+
+Keep in mind, that SameSite attribute is **not supported** in [some browsers](https://caniuse.com/#feat=same-site-cookie-attribute)
+
+```
+token_extractors:
+    split_cookie:
+        enabled: true
+        cookies:
+            - jwt_hp
+            - jwt_s
+
+set_cookies:
+    jwt_hp:
+        lifetime: null
+        samesite: strict
+        path: /
+        domain: null
+        httpOnly: false
+        split:
+            - header
+            - payload
+
+    jwt_s:
+        lifetime: null
+        samesite: strict
+        path: /
+        domain: null
+        httpOnly: true
+        split:
+            - signature
 ```
 
 Security configuration
