@@ -11,6 +11,7 @@
             <argument/> <!-- Default samesite -->
             <argument/> <!-- Default path -->
             <argument>null</argument> <!-- Default domain -->
+            <argument/> <!-- Default secure -->
         </service>
     </services>
 </container>
