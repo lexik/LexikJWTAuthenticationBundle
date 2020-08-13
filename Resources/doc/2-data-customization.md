@@ -158,7 +158,7 @@ public function onJWTDecoded(JWTDecodedEvent $event)
 
     $payload['custom_user_data'] = $user->getCustomUserInformations();
 
-    $event->setPayload($user); // Don't forget to regive the payload for next event / step
+    $event->setPayload($payload); // Don't forget to regive the payload for next event / step
 }
 ```
 
