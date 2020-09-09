@@ -9,7 +9,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +27,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     protected $jwtEncoder;
 
     /**
-     * @var EventDispatcherInterface
+     * @var BackwardsCompatibleEventDispatcher
      */
     protected $dispatcher;
 
@@ -50,7 +49,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $userIdClaim = null)
     {
         $this->jwtEncoder        = $encoder;
-        $this->dispatcher        = $dispatcher;
+        $this->dispatcher        = BackwardsCompatibleEventDispatcher::create($dispatcher);
         $this->userIdentityField = 'username';
         $this->userIdClaim       = $userIdClaim;
     }
@@ -64,12 +63,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $this->addUserIdentityToPayload($user, $payload);
 
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
-
-        }
+        $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
 
         if ($this->jwtEncoder instanceof HeaderAwareJWTEncoderInterface) {
             $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData(), $jwtCreatedEvent->getHeader());
@@ -78,12 +72,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         }
 
         $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
-
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($jwtEncodedEvent, Events::JWT_ENCODED);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
-        }
+        $this->dispatcher->dispatch($jwtEncodedEvent, Events::JWT_ENCODED);
 
         return $jwtString;
     }
@@ -98,11 +87,8 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         }
 
         $event = new JWTDecodedEvent($payload);
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($event, Events::JWT_DECODED);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_DECODED, $event);
-        }
+        $this->dispatcher->dispatch($event, Events::JWT_DECODED);
+
 
         if (!$event->isValid()) {
             return false;

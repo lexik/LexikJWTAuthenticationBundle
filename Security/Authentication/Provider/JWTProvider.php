@@ -7,9 +7,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BackwardsCompatibleEventDispatcher;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -36,7 +36,7 @@ class JWTProvider implements AuthenticationProviderInterface
     protected $jwtManager;
 
     /**
-     * @var EventDispatcherInterface
+     * @var BackwardsCompatibleEventDispatcher
      */
     protected $dispatcher;
 
@@ -66,7 +66,7 @@ class JWTProvider implements AuthenticationProviderInterface
 
         $this->userProvider      = $userProvider;
         $this->jwtManager        = $jwtManager;
-        $this->dispatcher        = $dispatcher;
+        $this->dispatcher        = BackwardsCompatibleEventDispatcher::create($dispatcher);
         $this->userIdentityField = 'username';
         $this->userIdClaim       = $userIdClaim;
     }
@@ -91,11 +91,7 @@ class JWTProvider implements AuthenticationProviderInterface
         $authToken->setRawToken($token->getCredentials());
 
         $event = new JWTAuthenticatedEvent($payload, $authToken);
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($event, Events::JWT_AUTHENTICATED);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, $event);
-        }
+        $this->dispatcher->dispatch($event, Events::JWT_AUTHENTICATED);
 
         return $authToken;
     }

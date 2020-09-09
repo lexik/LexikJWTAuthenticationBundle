@@ -8,10 +8,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BackwardsCompatibleEventDispatcher;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -41,7 +41,7 @@ class JWTListener extends AbstractListener
     protected $authenticationManager;
 
     /**
-     * @var EventDispatcherInterface
+     * @var BackwardsCompatibleEventDispatcher
      */
     protected $dispatcher;
 
@@ -82,12 +82,7 @@ class JWTListener extends AbstractListener
 
         if (null === $requestToken) {
             $jwtNotFoundEvent = new JWTNotFoundEvent();
-            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-                $this->dispatcher->dispatch($jwtNotFoundEvent, Events::JWT_NOT_FOUND);
-            } else {
-                $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
-            }
-
+            $this->dispatcher->dispatch($jwtNotFoundEvent, Events::JWT_NOT_FOUND);
 
             if ($response = $jwtNotFoundEvent->getResponse()) {
                 $event->setResponse($response);
@@ -112,12 +107,7 @@ class JWTListener extends AbstractListener
             $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
             $jwtInvalidEvent = new JWTInvalidEvent($failed, $response);
-            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-                $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
-            } else {
-                $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);
-            }
-
+            $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
 
             $event->setResponse($jwtInvalidEvent->getResponse());
         }
@@ -136,7 +126,7 @@ class JWTListener extends AbstractListener
      */
     public function setDispatcher(EventDispatcherInterface $dispatcher)
     {
-        $this->dispatcher = $dispatcher;
+        $this->dispatcher = BackwardsCompatibleEventDispatcher::create($dispatcher);
     }
 
     /**
