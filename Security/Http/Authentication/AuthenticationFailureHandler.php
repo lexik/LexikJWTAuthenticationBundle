@@ -6,7 +6,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\BackwardsCompatibleEventDispatcher;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -24,9 +24,9 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     protected $dispatcher;
 
     /**
-     * @param ContractsEventDispatcherInterface $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(ContractsEventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = BackwardsCompatibleEventDispatcher::create($dispatcher);
     }
