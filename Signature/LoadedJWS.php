@@ -118,7 +118,7 @@ final class LoadedJWS
             return $this->state = self::INVALID;
         }
 
-        if ($this->clockSkew <= (new \DateTime())->format('U') - $this->payload['exp']) {
+        if ($this->clockSkew <= time() - $this->payload['exp']) {
             $this->state = self::EXPIRED;
         }
     }
