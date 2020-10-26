@@ -16,8 +16,10 @@ Table of contents
 * [Customizing the response on token not found](#eventsjwt_not_found---customizing-the-response-on-token-not-found)
 * [Customizing the response on expired token](#eventsjwt_expired---customizing-the-response-message-on-expired-token)
 
-Events::JWT_CREATED - Adding custom data or headers to the JWT
+Adding custom data or headers to the JWT
 --------------------------------------------------------------
+
+#### Using Events::JWT_CREATED
 
 By default the JWT payload will contain the username and the token TTL,
 but you can add your own data.
@@ -34,7 +36,7 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 ```
 
-#### Example: Add client ip to the encoded payload
+##### Example: Add client ip to the encoded payload
 
 ``` php
 // src/App/EventListener/JWTCreatedListener.php
@@ -76,7 +78,7 @@ public function onJWTCreated(JWTCreatedEvent $event)
 }
 ```
 
-#### Example: Override token expiration date calculation to be more flexible
+##### Example: Override token expiration date calculation to be more flexible
 
 ``` php
 // src/App/EventListener/JWTCreatedListener.php
@@ -99,6 +101,16 @@ public function onJWTCreated(JWTCreatedEvent $event)
     $event->setData($payload);
 }
 ```
+
+#### Using a custom payload at JWT creation
+
+If you [create JWT tokens programmatically](./7-manual-token-creation.md), you can add custom data to the JWT using the method `createFromPayload(UserInterface $user, array $payload)`
+
+```php
+$payload = ['foo' => 'bar'];
+
+$jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->createFromPayload($user);
+``` 
 
 Events::JWT_DECODED - Validating data in the JWT payload
 --------------------------------------------------------
