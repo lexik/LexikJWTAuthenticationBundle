@@ -91,6 +91,39 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function createFromPayload(UserInterface $user, array $payload)
+    {
+        $payload = array_merge(['roles' => $user->getRoles()], $payload);
+        $this->addUserIdentityToPayload($user, $payload);
+
+        $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
+            $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
+
+        }
+
+        if ($this->jwtEncoder instanceof HeaderAwareJWTEncoderInterface) {
+            $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData(), $jwtCreatedEvent->getHeader());
+        } else {
+            $jwtString = $this->jwtEncoder->encode($jwtCreatedEvent->getData());
+        }
+
+        $jwtEncodedEvent = new JWTEncodedEvent($jwtString);
+
+        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
+            $this->dispatcher->dispatch($jwtEncodedEvent, Events::JWT_ENCODED);
+        } else {
+            $this->dispatcher->dispatch(Events::JWT_ENCODED, $jwtEncodedEvent);
+        }
+
+        return $jwtString;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function decode(TokenInterface $token)
     {
         if (!($payload = $this->jwtEncoder->decode($token->getCredentials()))) {
