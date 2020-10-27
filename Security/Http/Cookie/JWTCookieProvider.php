@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Helper\JWTSplitter;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
@@ -15,6 +16,8 @@ final class JWTCookieProvider
     private $defaultPath;
     private $defaultDomain;
     private $defaultSecure;
+    private $defaultHttpOnly;
+    private $defaultSplit;
 
     /**
      * @param string|null $defaultName
@@ -23,8 +26,10 @@ final class JWTCookieProvider
      * @param string|null $defaultDomain
      * @param string      $defaultSameSite
      * @param bool        $defaultSecure
+     * @param bool        $defaultHttpOnly
+     * @param array       $defaultSplit
      */
-    public function __construct($defaultName = null, $defaultLifetime = 0, $defaultSameSite = Cookie::SAMESITE_LAX, $defaultPath = '/', $defaultDomain = null, $defaultSecure = true)
+    public function __construct($defaultName = null, $defaultLifetime = 0, $defaultSameSite = Cookie::SAMESITE_LAX, $defaultPath = '/', $defaultDomain = null, $defaultSecure = true, $defaultHttpOnly = true, $defaultSplit = [])
     {
         $this->defaultName = $defaultName;
         $this->defaultLifetime = $defaultLifetime;
@@ -32,6 +37,8 @@ final class JWTCookieProvider
         $this->defaultPath = $defaultPath;
         $this->defaultDomain = $defaultDomain;
         $this->defaultSecure = $defaultSecure;
+        $this->defaultHttpOnly = $defaultHttpOnly;
+        $this->defaultSplit = $defaultSplit;
     }
 
     /**
@@ -47,10 +54,12 @@ final class JWTCookieProvider
      * @param string|null                        $path
      * @param string|null                        $domain
      * @param bool|null                          $secure
+     * @param bool|null                          $httpOnly
+     * @param array                              $split
      *
      * @return Cookie
      */
-    public function createCookie($jwt, $name = null, $expiresAt = null, $sameSite = null, $path = null, $domain = null, $secure = null)
+    public function createCookie($jwt, $name = null, $expiresAt = null, $sameSite = null, $path = null, $domain = null, $secure = null, $httpOnly = null, $split = [])
     {
         if (!$name && !$this->defaultName) {
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
@@ -60,6 +69,9 @@ final class JWTCookieProvider
             throw new \LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
         }
 
+        $jwtParts = new JWTSplitter($jwt);
+        $jwt = $jwtParts->getParts($split ?: $this->defaultSplit);
+
         return new Cookie(
             $name ?: $this->defaultName,
             $jwt,
@@ -67,7 +79,7 @@ final class JWTCookieProvider
             $path ?: $this->defaultPath,
             $domain ?: $this->defaultDomain,
             $secure ?: $this->defaultSecure,
-            true,
+            $httpOnly ?: $this->defaultHttpOnly,
             false,
             $sameSite ?: $this->defaultSameSite
         );
