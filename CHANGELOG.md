@@ -1,7 +1,16 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.8.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.9.0
+
+## [2.9.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.9.0) (2020-10-27)
+
+* feature #769 Added support for composed cookies ([lukacovicadam](https://github.com/lukacovicadam))
+* bug #787 fix day saving transition php ([flaugere](https://github.com/flaugere))
+* bug #780 Add deprecation message argument to JWTFactory.php ([chrBrd](https://github.com/chrBrd))
+* feature #786 Allow token creation from an existing payload ([RicoLannez](https://github.com/RicoLannez))
+* feature #677 chore/implement-against-key-loader-interface ([TiMESPLiNTER](https://github.com/TiMESPLiNTER))
+* feature #767 Added the possibility to choose if the cookie is "secure" or not ([Mael-91](https://github.com/Mael-91))
 
 ## [2.8.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.8.0) (2020-06-14)
 
