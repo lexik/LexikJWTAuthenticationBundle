@@ -101,7 +101,7 @@ class JWTFactory implements SecurityFactoryInterface
     {
         $deprecationArgs = [];
         if (method_exists(BaseNode::class, 'getDeprecation')) {
-            $deprecationArgs = ['lexik/jwt-authentication-bundle', '2.7'];
+            $deprecationArgs = ['lexik/jwt-authentication-bundle', '2.7', 'The "%path%.%node%" configuration key is deprecated. Use the "lexik_jwt_authentication.jwt_token_authenticator" Guard authenticator instead.'];
         }
 
         if (method_exists($node, 'setDeprecated')) {
