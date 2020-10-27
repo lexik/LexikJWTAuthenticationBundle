@@ -61,17 +61,41 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      *
      * @return string The JWT token
      */
-    public function create(UserInterface $user, array $payload = [])
+    public function create(UserInterface $user)
+    {
+        $payload = ['roles' => $user->getRoles()];
+        $this->addUserIdentityToPayload($user, $payload);
+
+        return $this->generateJwtStringAndDispatchEvents($user, $payload);
+    }
+
+    /**
+     * @param UserInterface $user
+     * @param array $payload
+     *
+     * @return string The JWT token
+     */
+    public function createFromPayload(UserInterface $user, array $payload)
     {
         $payload = array_merge(['roles' => $user->getRoles()], $payload);
         $this->addUserIdentityToPayload($user, $payload);
 
+        return $this->generateJwtStringAndDispatchEvents($user, $payload);
+    }
+
+    /**
+     * @param UserInterface $user
+     * @param array $payload
+     *
+     * @return string The JWT token
+     */
+    private function generateJwtStringAndDispatchEvents(UserInterface $user, array $payload)
+    {
         $jwtCreatedEvent = new JWTCreatedEvent($payload, $user);
         if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
             $this->dispatcher->dispatch($jwtCreatedEvent, Events::JWT_CREATED);
         } else {
             $this->dispatcher->dispatch(Events::JWT_CREATED, $jwtCreatedEvent);
-
         }
 
         if ($this->jwtEncoder instanceof HeaderAwareJWTEncoderInterface) {

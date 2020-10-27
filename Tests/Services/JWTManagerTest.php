@@ -66,8 +66,58 @@ class JWTManagerTest extends TestCase
             ->willReturn('secrettoken');
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
+        $this->assertEquals('secrettoken', $manager->create(new User('user', 'password')));
+    }
+
+    /**
+     * test create.
+     */
+    public function testCreateFromPayload()
+    {
+        $dispatcher = $this->getEventDispatcherMock();
+
+        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
+            $dispatcher
+                ->expects($this->at(0))
+                ->method('dispatch')
+                ->with(
+                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent'),
+                    $this->equalTo(Events::JWT_CREATED)
+                );
+
+            $dispatcher
+                ->expects($this->at(1))
+                ->method('dispatch')
+                ->with(
+                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent'),
+                    $this->equalTo(Events::JWT_ENCODED)
+                );
+        } else {
+            $dispatcher
+                ->expects($this->at(0))
+                ->method('dispatch')
+                ->with(
+                    $this->equalTo(Events::JWT_CREATED),
+                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
+                );
+            $dispatcher
+                ->expects($this->at(1))
+                ->method('dispatch')
+                ->with(
+                    $this->equalTo(Events::JWT_ENCODED),
+                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
+                );
+        }
+
+        $encoder = $this->getJWTEncoderMock();
+        $encoder
+            ->expects($this->once())
+            ->method('encode')
+            ->willReturn('secrettoken');
+
+        $manager = new JWTManager($encoder, $dispatcher, 'username');
         $payload = ['foo' => 'bar'];
-        $this->assertEquals('secrettoken', $manager->create(new User('user', 'password'), $payload));
+        $this->assertEquals('secrettoken', $manager->createFromPayload(new User('user', 'password'), $payload));
     }
 
     /**
