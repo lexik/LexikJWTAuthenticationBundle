@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by RicoLannez at 2020-10-26T11:14:28Z
+
+Hi, as discussed in this [PR](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/609) it would be great to be able to create an AccessToken from an existing payload.
