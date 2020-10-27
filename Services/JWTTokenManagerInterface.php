@@ -11,17 +11,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  *
- * @method createFromPayload(UserInterface $user, array $payload = []);
+ * @method create(UserInterface $user, array $payload = []);
  */
 interface JWTTokenManagerInterface
 {
-    /**
-     * @param UserInterface $user
-     *
-     * @return string The JWT token
-     */
-    public function create(UserInterface $user);
-
     /**
      * @param TokenInterface $token
      *
