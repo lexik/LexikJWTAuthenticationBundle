@@ -39,7 +39,7 @@ return [
 ];
 ```
 
-#### Generate the SSH keys:
+#### Generate the SSL keys:
 
 ``` bash
 $ mkdir -p config/jwt
@@ -50,7 +50,7 @@ $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 Configuration
 -------------
 
-Configure the SSH keys path in your `config/packages/lexik_jwt_authentication.yaml` :
+Configure the SSL keys path in your `config/packages/lexik_jwt_authentication.yaml` :
 
 ``` yaml
 lexik_jwt_authentication:
