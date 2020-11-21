@@ -89,6 +89,7 @@ class AutowiringTest extends TestCase
             'kernel.project_dir'      => __DIR__,
             'kernel.container_class'  => 'AutowiringTestContainer',
             'kernel.charset'          => 'utf8',
+            'kernel.runtime_environment' => 'test',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
         ]));
 
