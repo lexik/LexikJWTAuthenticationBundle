@@ -3,6 +3,7 @@
 namespace Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
@@ -28,34 +29,19 @@ class JWTManagerTest extends TestCase
 
         if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent'),
-                    $this->equalTo(Events::JWT_CREATED)
-                );
-
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent'),
-                    $this->equalTo(Events::JWT_ENCODED)
+                ->withConsecutive(
+                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
                 );
         } else {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_CREATED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
-                );
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_ENCODED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
+                ->withConsecutive(
+                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
+                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
                 );
         }
 
@@ -78,34 +64,19 @@ class JWTManagerTest extends TestCase
 
         if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent'),
-                    $this->equalTo(Events::JWT_CREATED)
-                );
-
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent'),
-                    $this->equalTo(Events::JWT_ENCODED)
+                ->withConsecutive(
+                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
                 );
         } else {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_CREATED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
-                );
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_ENCODED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
+                ->withConsecutive(
+                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
+                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
                 );
         }
 
@@ -164,33 +135,19 @@ class JWTManagerTest extends TestCase
 
         if ($dispatcher instanceof ContractsEventDispatcherInterface) {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent'),
-                    $this->equalTo(Events::JWT_CREATED)
-                );
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent'),
-                    $this->equalTo(Events::JWT_ENCODED)
+                ->withConsecutive(
+                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
                 );
         } else {
             $dispatcher
-                ->expects($this->at(0))
+                ->expects($this->exactly(2))
                 ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_CREATED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent')
-                );
-            $dispatcher
-                ->expects($this->at(1))
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_ENCODED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent')
+                ->withConsecutive(
+                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
+                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
                 );
         }
 

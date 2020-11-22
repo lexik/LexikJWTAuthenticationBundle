@@ -25,7 +25,6 @@ class AppKernel extends Kernel
     {
         parent::__construct($environment, $debug);
 
-
         $this->testCase           = $testCase;
         $this->encoder            = getenv('ENCODER') ?: 'default';
         $this->userProvider       = getenv('PROVIDER') ?: 'in_memory';
@@ -75,7 +74,7 @@ class AppKernel extends Kernel
             // Symfony 4.2+
             $loader->load(__DIR__.'/config/config_router_utf8.yml');
         }
-        
+
         if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
             $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
 

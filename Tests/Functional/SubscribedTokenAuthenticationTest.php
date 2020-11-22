@@ -18,9 +18,9 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
 {
     private static $subscriber;
 
-    protected function setup()
+    protected function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
 
         self::$subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
     }

@@ -4,12 +4,14 @@ jobs:
   include:
     - php: 5.6
       env: SYMFONY_VERSION=3.4.* SYMFONY_PHPUNIT_VERSION=5.7
-    - php: 7.2
+    - php: 7.3
       env: SYMFONY_VERSION=4.4.*
     - php: 7.3
       env: SYMFONY_VERSION=5.1.*
     - php: 7.4
       env: SYMFONY_VERSION=5.2.x-dev
+    - php: '8.0snapshot'
+      env: SYMFONY_VERSION=5.x-dev
 
 cache:
   directories:

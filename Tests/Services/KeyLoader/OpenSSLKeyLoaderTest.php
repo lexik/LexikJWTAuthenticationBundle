@@ -16,11 +16,11 @@ class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function doSetUp()
     {
         $this->keyLoader = new OpenSSLKeyLoader('private.pem', 'public.pem', 'foobar');
 
-        parent::setup();
+        parent::doSetUp();
     }
 
     public function testLoadInvalidPublicKey()
