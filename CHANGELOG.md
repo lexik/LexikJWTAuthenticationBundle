@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.9.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.0
+
+## [2.10.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.0) (2020-11-23)
+
+* feature [\#790](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/790) Fix Symfony 5.2 getProviderKey deprecation ([ogizanagi](https://github.com/ogizanagi))
+* feature [\#792](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/792) PHP 8 Support ([chalasr](https://github.com/chalasr))
 
 ## [2.9.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.9.0) (2020-10-27)
 
