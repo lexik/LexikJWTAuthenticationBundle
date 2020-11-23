@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -66,7 +65,7 @@ abstract class TestCase extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function doSetUp()
     {
         $fs = new Filesystem();
         $fs->remove(sys_get_temp_dir().'/LexikJWTAuthenticationBundle/');

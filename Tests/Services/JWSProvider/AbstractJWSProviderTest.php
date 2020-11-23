@@ -114,21 +114,21 @@ vwIDAQAB
     {
         $keyLoader = $this->getKeyLoaderMock();
         $keyLoader
-            ->expects($this->at(0))
-            ->method('loadKey')
-            ->with('private')
-            ->willReturn(static::$privateKey);
-        $keyLoader
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('getPassphrase')
             ->willReturn('foobar');
 
         $keyLoader
-            ->expects($this->at(2))
+            ->expects($this->exactly(2))
             ->method('loadKey')
-            ->with('public')
-            ->willReturn(static::$publicKey);
-
+            ->withConsecutive(
+                ['private'],
+                ['public']
+            )
+            ->willReturnOnConsecutiveCalls(
+                static::$privateKey,
+                static::$publicKey
+            );
         $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
         $jws      = $provider->create(['username' => 'chalasr']);
 
