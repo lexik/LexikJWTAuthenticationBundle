@@ -2,12 +2,17 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\PermittedFor;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\Validator;
 use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
@@ -42,6 +47,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $clockSkew;
 
     /**
+     * @var bool
+     */
+    private $legacyJWTApi;
+
+    /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
@@ -68,6 +78,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
         $this->clockSkew = $clockSkew;
+        $this->legacyJWTApi = !method_exists(Builder::class, 'with');
     }
 
     /**
@@ -76,27 +87,47 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function create(array $payload, array $header = [])
     {
         $jws = new Builder();
-        foreach ($header as $k => $v) {
-            $jws->setHeader($k, $v);
-        }
-        $jws->setIssuedAt(time());
 
-        if (null !== $this->ttl && !isset($payload['exp'])) {
-            $jws->setExpiration(time() + $this->ttl);
+        foreach ($header as $k => $v) {
+            $jws->{$this->legacyJWTApi ? 'setHeader' : 'withHeader'}($k, $v);
+        }
+
+        $now = time();
+
+        if ($this->legacyJWTApi) {
+            $jws->setIssuedAt($now);
+        } else {
+            $jws->issuedAt(new \DateTimeImmutable("@{$now}"));
+        }
+
+        if (null !== $this->ttl || isset($payload['exp'])) {
+            $exp = isset($payload['exp']) ? $payload['exp'] : $now + $this->ttl;
+            unset($payload['exp']);
+
+            if ($this->legacyJWTApi) {
+                $jws->setExpiration($exp);
+            } else {
+                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : new \DateTimeImmutable("@$exp"));
+            }
+        }
+
+        if (isset($payload['sub'])) {
+            $jws->{$this->legacyJWTApi ? 'setSubject' : 'relatedTo'}($payload['sub']);
+            unset($payload['sub']);
         }
 
         foreach ($payload as $name => $value) {
-            $jws->set($name, $value);
+            $jws->{$this->legacyJWTApi ? 'set' : 'with'}($name, $value);
         }
 
         $e = null;
 
         try {
-            $this->sign($jws);
+            $token = $this->getSignedToken($jws);
         } catch (\InvalidArgumentException $e) {
         }
 
-        return new CreatedJWS((string) $jws->getToken(), null === $e);
+        return new CreatedJWS((string) $token, null === $e);
     }
 
     /**
@@ -105,13 +136,30 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function load($token)
     {
         $jws = (new Parser())->parse((string) $token);
-
         $payload = [];
-        foreach ($jws->getClaims() as $claim) {
-            $payload[$claim->getName()] = $claim->getValue();
+
+        if ($this->legacyJWTApi) {
+            foreach ($jws->getClaims() as $claim) {
+                $payload[$claim->getName()] = $claim->getValue();
+            }
+        } else {
+            foreach ($jws->claims()->all() as $name => $value) {
+                if ($value instanceof \DateTimeInterface) {
+                    $value = $value->getTimestamp();
+                }
+                $payload[$name] = $value;
+            }
         }
 
-        return new LoadedJWS($payload, $this->verify($jws), null !== $this->ttl, $jws->getHeaders(), $this->clockSkew);
+        $jws = new LoadedJWS(
+            $payload,
+            $this->verify($jws),
+            null !== $this->ttl,
+            $this->legacyJWTApi ? $jws->getHeaders() : $jws->headers()->all(),
+            $this->clockSkew
+        );
+
+        return $jws;
     }
 
     private function getSignerForAlgorithm($signatureAlgorithm)
@@ -139,28 +187,43 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new $signerClass();
     }
 
-    private function sign(Builder $jws)
+    private function getSignedToken(Builder $jws)
     {
-        if ($this->signer instanceof Hmac) {
-            return $jws->sign($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE));
+        if ($this->legacyJWTApi) {
+            $jws->sign(
+                $this->signer,
+                new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : $this->keyLoader->getPassphrase())
+            );
+
+            return $jws->getToken();
         }
 
-        return $jws->sign(
+        return $jws->getToken(
             $this->signer,
-            new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->keyLoader->getPassphrase())
+            new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : $this->keyLoader->getPassphrase())
         );
     }
 
     private function verify(Token $jwt)
     {
-        if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
-            return false;
+        if ($this->legacyJWTApi) {
+            if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
+                return false;
+            }
+
+            return $jwt->verify(
+                $this->signer,
+                $this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC)
+            );
         }
 
-        if ($this->signer instanceof Hmac) {
-            return $jwt->verify($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE));
-        }
+        $clock = SystemClock::fromSystemTimezone();
+        $validator = new Validator();
 
-        return $jwt->verify($this->signer, $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
+        return $validator->validate(
+            $jwt,
+            new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+            new SignedWith($this->signer, new Key($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC)))
+        );
     }
 }

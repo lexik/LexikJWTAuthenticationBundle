@@ -114,9 +114,10 @@ final class LoadedJWS
             return;
         }
 
-        if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
+        if (!isset($this->payload['exp'])) {
             return $this->state = self::INVALID;
         }
+
 
         if ($this->clockSkew <= time() - $this->payload['exp']) {
             $this->state = self::EXPIRED;
