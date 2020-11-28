@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2020-11-28T11:22:31Z
+
+I'm going to merge this one in order to fix some openssl-related issues on PHP 8.
+If you see something wrong here, please tell me.
+
+---------------------------------------------------------------------------
+
+by lcobucci at 2020-11-28T11:28:42Z
+
+@chalasr have you considered the usage of the configuration object? That removes the need for method_exists() checks you're using here. You'd need to change the requirements to `^3.4 || ^4.0` (which should be fine)
+
+---------------------------------------------------------------------------
+
+by lcobucci at 2020-11-28T11:36:00Z
+
+Here's an example https://github.com/thephpleague/oauth2-server/pull/1146
+
+---------------------------------------------------------------------------
+
+by chalasr at 2020-11-28T11:44:28Z
+
+@lcobucci Thanks for the link, that should simplify things considerably indeed.
+I plan to merge this one as-is as a bugfix and tag a point release for it, then open a new PR removing support for <3.4 and switching to that configuration object (it will be part of the next minor release, along with symfony 3.4 support removal)
