@@ -116,7 +116,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             if ($this->legacyJWTApi) {
                 $jws->setExpiration($exp);
             } else {
-                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : new \DateTimeImmutable("@$exp"));
+                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp->getTimestamp() : (new \DateTimeImmutable("@$exp"))->getTimestamp());
             }
         }
 
