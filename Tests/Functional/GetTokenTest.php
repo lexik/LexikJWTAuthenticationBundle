@@ -2,7 +2,9 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
@@ -68,8 +70,14 @@ class GetTokenTest extends TestCase
         $this->assertArrayHasKey('custom', $payload, 'The payload should contains a "custom" claim.');
         $this->assertSame('dummy', $payload['custom'], 'The "custom" claim should be equal to "dummy".');
 
-        $jws = (new Parser())->parse($token);
-        $this->assertArrayHasKey('foo', $jws->getHeaders(), 'The payload should contains a custom "foo" header.');
+        if (class_exists(JWTParser::class)) {
+            $parser = new JWTParser(new JoseEncoder());
+        } else {
+            $parser = new Parser();
+        }
+        $jws = $parser->parse($token);
+
+        $this->assertArrayHasKey('foo', method_exists($jws, 'headers') ? $jws->headers()->all() : $jws->getHeaders(), 'The payload should contains a custom "foo" header.');
     }
 
     public function testGetTokenFromInvalidCredentials()
