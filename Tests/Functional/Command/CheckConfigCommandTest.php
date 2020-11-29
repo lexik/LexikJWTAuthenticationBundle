@@ -21,6 +21,6 @@ class CheckConfigCommandTest extends TestCase
         $tester = new CommandTester($kernel->getContainer()->get('lexik_jwt_authentication.check_config_command'));
 
         $this->assertSame(0, $tester->execute([]));
-        $this->assertStringContainsString('The configuration seems correct.', $tester->getDisplay());
+        $this->{method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains'}('The configuration seems correct.', $tester->getDisplay());
     }
 }

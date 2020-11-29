@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -158,6 +159,26 @@ vwIDAQAB
         $this->expectExceptionMessage('The TTL should be a numeric value');
 
         new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl', 0);
+    }
+
+    public function testCreateWithExtraStandardClaims()
+    {
+        $keyLoaderMock = $this->getKeyLoaderMock();
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('loadKey')
+            ->with('private')
+            ->willReturn(static::$privateKey);
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('getPassphrase')
+            ->willReturn('foobar');
+
+        $payload     = ['username' => 'chalasr'];
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
+
+        $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
+        $this->assertNotEmpty($created->getToken());
     }
 
     private function getKeyLoaderMock()

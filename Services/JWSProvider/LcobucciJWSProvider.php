@@ -15,6 +15,7 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\Builder as JWTBuilder;
 use Lcobucci\JWT\Token\Plain;
+use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
@@ -123,6 +124,10 @@ class LcobucciJWSProvider implements JWSProviderInterface
         if (isset($payload['sub'])) {
             $jws->{$this->legacyJWTApi ? 'setSubject' : 'relatedTo'}($payload['sub']);
             unset($payload['sub']);
+        }
+
+        if (class_exists(RegisteredClaims::class)) {
+            $this->addStandardClaims($jws, $payload);
         }
 
         foreach ($payload as $name => $value) {
@@ -255,5 +260,31 @@ class LcobucciJWSProvider implements JWSProviderInterface
             new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
             new SignedWith($this->signer, $key)
         );
+    }
+
+    private function addStandardClaims(Builder $builder, array &$payload)
+    {
+        $mutatorMap = [
+            RegisteredClaims::AUDIENCE => 'permittedFor',
+            RegisteredClaims::ID => 'identifiedBy',
+            RegisteredClaims::ISSUER => 'issuedBy',
+            RegisteredClaims::NOT_BEFORE => 'canOnlyBeUsedAfter',
+        ];
+
+        foreach ($payload as $claim => $value) {
+            if (!\in_array($claim, $mutatorMap, true)) {
+                continue;
+            }
+
+            $mutator = $mutatorMap[$claim];
+            unset($payload[$claim]);
+
+            if (\is_array($value)) {
+                \call_user_func_array([$builder, $mutator], $value);
+                continue;
+            }
+
+            $builder->{$mutator}($value);
+        }
     }
 }
