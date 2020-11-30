@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.2
+
+## [2.10.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.1) (2020-11-30)
+
+* bug [\#801](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/801) Fix ability to set extra standard claims in the input payload ([chalasr](https://github.com/chalasr))
+* bug [\#796](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/796) Set Token on ExpiredTokenException ([AdrienBr](https://github.com/AdrienBr))
 
 ## [2.10.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.1) (2020-11-28)
 
