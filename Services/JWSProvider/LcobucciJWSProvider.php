@@ -7,6 +7,7 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion;
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\OpenSSL;
 use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac;
@@ -84,7 +85,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
         $this->clockSkew = $clockSkew;
-        $this->legacyJWTApi = !method_exists(Builder::class, 'withHeader');
+        $this->legacyJWTApi = !class_exists(OpenSSL::class);
     }
 
     /**
