@@ -1,9 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.3
 
-## [2.10.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.1) (2020-11-30)
+## [2.10.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.3) (2020-11-30)
+
+* bug [\#804](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/804) Fix ability to set extra standard claims in the input payload (bis) ([chalasr](https://github.com/chalasr))
+* bug [\#807](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/807) Fix compatibility with locbucci/jwt 3.2 ([chalasr](https://github.com/chalasr))
+
+## [2.10.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.2) (2020-11-30)
 
 * bug [\#801](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/801) Fix ability to set extra standard claims in the input payload ([chalasr](https://github.com/chalasr))
 * bug [\#796](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/796) Set Token on ExpiredTokenException ([AdrienBr](https://github.com/AdrienBr))
