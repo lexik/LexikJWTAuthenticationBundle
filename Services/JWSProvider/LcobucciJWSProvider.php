@@ -126,7 +126,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             unset($payload['sub']);
         }
 
-        if (class_exists(RegisteredClaims::class)) {
+        if (interface_exists(RegisteredClaims::class)) {
             $this->addStandardClaims($jws, $payload);
         }
 
@@ -272,7 +272,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         ];
 
         foreach ($payload as $claim => $value) {
-            if (!\in_array($claim, $mutatorMap, true)) {
+            if (!isset($mutatorMap[$claim])) {
                 continue;
             }
 
