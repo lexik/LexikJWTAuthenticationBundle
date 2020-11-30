@@ -118,7 +118,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             $preAuthToken->setPayload($payload);
         } catch (JWTDecodeFailureException $e) {
             if (JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason()) {
-                throw new ExpiredTokenException();
+                $expiredTokenException = new ExpiredTokenException();
+                $expiredTokenException->setToken($preAuthToken);
+                throw $expiredTokenException;
             }
 
             throw new InvalidTokenException('Invalid JWT Token', 0, $e);
