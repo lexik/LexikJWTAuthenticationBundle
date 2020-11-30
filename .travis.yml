@@ -20,6 +20,7 @@ cache:
 before_install:
   - phpenv config-rm xdebug.ini || true
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/phpunit-bridge:${SYMFONY_VERSION}" --no-update --dev; fi;
 
 install: composer update --no-interaction
 
