@@ -53,7 +53,6 @@ protected function createAuthenticatedClient($username = 'user', $password = 'pa
 
     $data = json_decode($client->getResponse()->getContent(), true);
 
-    $client = static::createClient();
     $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
 
     return $client;
