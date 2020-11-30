@@ -1,8 +1,7 @@
 LexikJWTAuthenticationBundle
 ============================
 
-[![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
-[![StyleCI](https://styleci.io/repos/18628501/shield?branch=master)](https://styleci.io/repos/18628501?branch=master)
+[![Build Status](https://github.com/lexik/LexikJWTAuthenticationBundle/workflows/ci/badge.svg)](https://github.com/lexik/LexikJWTAuthenticationBundle/actions)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 [![Latest Stable Version](https://poser.pugx.org/lexik/jwt-authentication-bundle/v/stable.svg)](https://packagist.org/packages/lexik/jwt-authentication-bundle)
