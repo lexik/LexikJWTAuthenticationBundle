@@ -91,6 +91,7 @@ class AutowiringTest extends TestCase
             'kernel.charset'          => 'utf8',
             'kernel.runtime_environment' => 'test',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
+            'kernel.build_dir' => __DIR__,
         ]));
 
         $container->registerExtension(new SecurityExtension());

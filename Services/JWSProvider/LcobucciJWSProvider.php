@@ -216,7 +216,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         if (class_exists(InMemory::class)) {
             $key = InMemory::plainText($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : $this->keyLoader->getPassphrase());
         } else {
-            new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : $this->keyLoader->getPassphrase());
+            $key = new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : $this->keyLoader->getPassphrase());
         }
 
         if ($this->legacyJWTApi) {
