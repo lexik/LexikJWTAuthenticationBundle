@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.4
+
+## [2.10.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.4) (2020-12-18)
+
+* bug [\#813](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/813) Fix undefined variable ([chalasr](https://github.com/chalasr))
 
 ## [2.10.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.3) (2020-11-30)
 
