@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.4
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.5
+
+## [2.10.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.5) (2020-12-19)
+
+* bug [\#815](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/815) Fix compatibility for lcobucci/jwt v3.x (bis) ([chalasr](https://github.com/chalasr))
 
 ## [2.10.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.4) (2020-12-18)
 
