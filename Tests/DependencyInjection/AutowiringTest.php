@@ -92,6 +92,9 @@ class AutowiringTest extends TestCase
             'kernel.runtime_environment' => 'test',
             'env(base64:default::SYMFONY_DECRYPTION_SECRET)' => 'dummy',
             'kernel.build_dir' => __DIR__,
+            'env(default::resolve:JWT_SECRET_KEY)' => __DIR__,
+            'env(default::resolve:JWT_PUBLIC_KEY)' => __DIR__,
+            'env(default::JWT_PASSPHRASE)' => 'dummy',
         ]));
 
         $container->registerExtension(new SecurityExtension());

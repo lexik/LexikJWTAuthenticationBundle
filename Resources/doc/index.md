@@ -42,10 +42,16 @@ return [
 #### Generate the SSL keys:
 
 ``` bash
-$ mkdir -p config/jwt
-$ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-$ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+$ php bin/console lexik:jwt:generate-keypair
 ```
+
+Your keys will land in `config/jwt/private.pem` and `config/jwt/public.pem` (unless you configured a different path).
+
+Available options: 
+- `--skip-if-exists` will silently do nothing if keys already exist.
+- `--overwrite` will overwrite your keys if they already exist.
+
+Otherwise, an error will be raised to prevent you from overwriting your keys accidentally.
 
 Configuration
 -------------
