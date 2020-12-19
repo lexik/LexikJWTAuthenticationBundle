@@ -153,14 +153,6 @@ vwIDAQAB
         new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600, 0);
     }
 
-    public function testInvalidTtl()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The TTL should be a numeric value');
-
-        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl', 0);
-    }
-
     public function testCreateWithExtraStandardClaims()
     {
         $keyLoaderMock = $this->getKeyLoaderMock();

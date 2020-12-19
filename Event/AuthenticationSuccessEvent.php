@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * AuthenticationSuccessEvent.

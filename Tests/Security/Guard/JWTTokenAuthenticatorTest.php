@@ -20,10 +20,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -386,12 +385,6 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     private function expectEvent($eventName, $event, $dispatcher)
     {
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
-
-            return;
-        }
-
-        $dispatcher->expects($this->once())->method('dispatch')->with($eventName, $event);
+        $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
     }
 }

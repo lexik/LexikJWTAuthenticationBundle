@@ -5,7 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="lexik_jwt_authentication.check_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand" public="true">
+        <service id="lexik_jwt_authentication.check_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand">
             <argument type="service" id="lexik_jwt_authentication.key_loader" />
             <argument type="string">%lexik_jwt_authentication.encoder.signature_algorithm%</argument> <!-- signature algorithm -->
             <tag name="console.command" command="lexik:jwt:check-config" />

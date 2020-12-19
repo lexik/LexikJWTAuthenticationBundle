@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
+use Symfony\Contracts\EventDispatcher\Event;
+
 /**
  * JWTDecodedEvent.
  *
@@ -54,7 +56,7 @@ class JWTDecodedEvent extends Event
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isValid()
     {

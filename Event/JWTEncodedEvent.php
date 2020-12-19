@@ -2,27 +2,17 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-/**
- * JWTEncodedEvent.
- */
+use Symfony\Contracts\EventDispatcher\Event;
+
 class JWTEncodedEvent extends Event
 {
-    /**
-     * @var string
-     */
     private $jwtString;
 
-    /**
-     * @param string $jwtString
-     */
-    public function __construct($jwtString)
+    public function __construct(string $jwtString)
     {
         $this->jwtString = $jwtString;
     }
 
-    /**
-     * @return string
-     */
     public function getJWTString()
     {
         return $this->jwtString;

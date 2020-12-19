@@ -37,20 +37,20 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.1",
         "ext-openssl": "*",
-        "lcobucci/jwt": "^3.2|^4.0",
-        "namshi/jose": "^7.2",
-        "symfony/framework-bundle": "^3.4|^4.0|^5.0",
-        "symfony/security-bundle": "^3.4|^4.0|^5.0"
+        "lcobucci/jwt": "^3.4|^4.0",
+        "symfony/framework-bundle": "^4.4|^5.1",
+        "symfony/security-bundle": "^4.4|^5.1"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.4|^4.0|^5.0",
-        "symfony/console": "^3.4|^4.0|^5.0",
-        "symfony/dom-crawler": "^3.4|^4.0|^5.0",
-        "symfony/phpunit-bridge": "^3.4|^4.0|^5.0",
-        "symfony/var-dumper": "^3.4|^4.0|^5.0",
-        "symfony/yaml": "^3.4|^4.0|^5.0"
+        "namshi/jose": "^7.2",
+        "symfony/browser-kit": "^4.4|^5.1",
+        "symfony/console": "^4.4|^5.1",
+        "symfony/dom-crawler": "^4.4|^5.1",
+        "symfony/phpunit-bridge": "^4.4|^5.1",
+        "symfony/var-dumper": "^4.4|^5.1",
+        "symfony/yaml": "^4.4|^5.1"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
