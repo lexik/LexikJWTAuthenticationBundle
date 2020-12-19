@@ -59,6 +59,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $legacyJWTApi;
 
     /**
+     * @var bool
+     */
+    private $useDateObjects;
+
+    /**
      * @param KeyLoaderInterface $keyLoader
      * @param string             $cryptoEngine
      * @param string             $signatureAlgorithm
@@ -85,7 +90,8 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl       = $ttl;
         $this->clockSkew = $clockSkew;
-        $this->legacyJWTApi = !class_exists(OpenSSL::class);
+        $this->legacyJWTApi = !class_exists(OpenSSL::class); // exists only on lcobucci/jwt 3.3+
+        $this->useDateObjects = method_exists(Token::class, 'payload') || class_exists(Plain::class);  // exists only on lcobucci/jwt 3.4+
     }
 
     /**
@@ -108,7 +114,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         if ($this->legacyJWTApi) {
             $jws->setIssuedAt($now);
         } else {
-            $jws->issuedAt(new \DateTimeImmutable("@{$now}"));
+            $jws->issuedAt($this->useDateObjects ? new \DateTimeImmutable("@{$now}") : $now);
         }
 
         if (null !== $this->ttl || isset($payload['exp'])) {
@@ -118,7 +124,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             if ($this->legacyJWTApi) {
                 $jws->setExpiration($exp);
             } else {
-                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : new \DateTimeImmutable("@$exp"));
+                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
             }
         }
 
@@ -162,7 +168,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
         $payload = [];
 
-        if ($this->legacyJWTApi) {
+        if ($this->legacyJWTApi || !$this->useDateObjects) {
             foreach ($jws->getClaims() as $claim) {
                 $payload[$claim->getName()] = $claim->getValue();
             }
@@ -179,7 +185,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $payload,
             $this->verify($jws),
             null !== $this->ttl,
-            $this->legacyJWTApi ? $jws->getHeaders() : $jws->headers()->all(),
+            $this->legacyJWTApi || !$this->useDateObjects ? $jws->getHeaders() : $jws->headers()->all(),
             $this->clockSkew
         );
 
@@ -220,7 +226,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         if ($this->legacyJWTApi) {
-            $jws->sign($key, $this->signer);
+            $jws->sign($this->signer, $key);
 
             return $jws->getToken();
         }
@@ -236,7 +242,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function verify(Token $jwt)
     {
-        if ($this->legacyJWTApi) {
+        if ($this->legacyJWTApi || !$this->useDateObjects) {
             if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
                 return false;
             }
