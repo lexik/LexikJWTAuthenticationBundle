@@ -13,17 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 final class JWTAuthenticationFailureResponse extends JsonResponse
 {
-    /**
-     * The response message.
-     *
-     * @var string
-     */
-    private $message;
-
-    /**
-     * @param string $message A failure message passed in the response body
-     */
-    public function __construct($message = 'Bad credentials', $statusCode = JsonResponse::HTTP_UNAUTHORIZED)
+    public function __construct(string $message = 'Bad credentials', string $statusCode = JsonResponse::HTTP_UNAUTHORIZED)
     {
         $this->message = $message;
 

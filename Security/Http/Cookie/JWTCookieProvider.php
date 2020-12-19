@@ -19,17 +19,7 @@ final class JWTCookieProvider
     private $defaultHttpOnly;
     private $defaultSplit;
 
-    /**
-     * @param string|null $defaultName
-     * @param int|null    $defaultLifetime
-     * @param string      $defaultPath
-     * @param string|null $defaultDomain
-     * @param string      $defaultSameSite
-     * @param bool        $defaultSecure
-     * @param bool        $defaultHttpOnly
-     * @param array       $defaultSplit
-     */
-    public function __construct($defaultName = null, $defaultLifetime = 0, $defaultSameSite = Cookie::SAMESITE_LAX, $defaultPath = '/', $defaultDomain = null, $defaultSecure = true, $defaultHttpOnly = true, $defaultSplit = [])
+    public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [])
     {
         $this->defaultName = $defaultName;
         $this->defaultLifetime = $defaultLifetime;
@@ -44,22 +34,10 @@ final class JWTCookieProvider
     /**
      * Creates a secure cookie containing the passed JWT.
      *
-     * For each argument (all args except $jwt), if it is omitted or set to null then the
+     * For each argument (all args except $jwt), if omitted or set to null then the
      * default value defined via the constructor will be used.
-     *
-     * @param string                             $jwt
-     * @param string|null                        $name
-     * @param int|string|\DateTimeInterface|null $expiresAt
-     * @param string|null                        $sameSite
-     * @param string|null                        $path
-     * @param string|null                        $domain
-     * @param bool|null                          $secure
-     * @param bool|null                          $httpOnly
-     * @param array                              $split
-     *
-     * @return Cookie
      */
-    public function createCookie($jwt, $name = null, $expiresAt = null, $sameSite = null, $path = null, $domain = null, $secure = null, $httpOnly = null, $split = [])
+    public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = []): Cookie
     {
         if (!$name && !$this->defaultName) {
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));

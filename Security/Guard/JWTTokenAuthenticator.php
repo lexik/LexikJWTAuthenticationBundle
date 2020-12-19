@@ -20,8 +20,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthen
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -184,11 +183,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             $eventName = Events::JWT_INVALID;
         }
 
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($event, $eventName);
-        } else {
-            $this->dispatcher->dispatch($eventName, $event);
-        }
+
+        $this->dispatcher->dispatch($event, $eventName);
 
         return $event->getResponse();
     }
@@ -211,11 +207,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
         $event     = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
 
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch($event, Events::JWT_NOT_FOUND);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
-        }
+        $this->dispatcher->dispatch($event, Events::JWT_NOT_FOUND);
 
         return $event->getResponse();
     }
@@ -243,11 +235,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         $authToken = new JWTUserToken($user->getRoles(), $user, $preAuthToken->getCredentials(), $providerKey);
 
-        if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-            $this->dispatcher->dispatch(new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken), Events::JWT_AUTHENTICATED);
-        } else {
-            $this->dispatcher->dispatch(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken));
-        }
+        $this->dispatcher->dispatch(new JWTAuthenticatedEvent($preAuthToken->getPayload(), $authToken), Events::JWT_AUTHENTICATED);
 
         $this->preAuthenticationTokenStorage->setToken(null);
 
