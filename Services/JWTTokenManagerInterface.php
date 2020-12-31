@@ -29,7 +29,7 @@ interface JWTTokenManagerInterface
     /**
      * Sets the field used as identifier to load an user from a JWT payload.
      *
-     * @param string
+     * @param string $field
      */
     public function setUserIdentityField($field);
 
