@@ -18,7 +18,7 @@ interface KeyLoaderInterface
     /**
      * Loads a key from a given type (public or private).
      *
-     * @param resource|string|null
+     * @param resource|string|null $type
      *
      * @return resource|string|null
      */
