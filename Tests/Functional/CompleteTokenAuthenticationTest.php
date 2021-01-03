@@ -27,7 +27,7 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::accessSecuredRoute();
 
         $response = static::$client->getResponse();
-        $content  = json_decode($response->getContent(), true);
+        $content = json_decode($response->getContent(), true);
 
         $this->assertSuccessful($response);
 

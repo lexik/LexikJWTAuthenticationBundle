@@ -9,45 +9,26 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class CreatedJWS
 {
+    /**
+     * @deprecated since v2.11
+     */
     const SIGNED = 'signed';
 
-    /**
-     * The JSON Web Token.
-     *
-     * @var string
-     */
     private $token;
+    private $signed;
 
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @param string $token
-     * @param bool   $isSigned
-     */
-    public function __construct($token, $isSigned)
+    public function __construct(string $token, bool $isSigned)
     {
         $this->token = $token;
-
-        if (true === $isSigned) {
-            $this->state = self::SIGNED;
-        }
+        $this->signed = $isSigned;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSigned()
+    public function isSigned(): bool
     {
-        return self::SIGNED === $this->state;
+        return $this->signed;
     }
 
-    /**
-     * @return string
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }

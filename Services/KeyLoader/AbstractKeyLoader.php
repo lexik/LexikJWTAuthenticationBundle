@@ -11,30 +11,14 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  */
 abstract class AbstractKeyLoader implements KeyLoaderInterface
 {
-    /**
-     * @var string
-     */
     private $signingKey;
-
-    /**
-     * @var string|null
-     */
     private $publicKey;
-
-    /**
-     * @var string|null
-     */
     private $passphrase;
 
-    /**
-     * @param string|null $signingKey
-     * @param string|null $publicKey
-     * @param string|null $passphrase
-     */
-    public function __construct($signingKey = null, $publicKey = null, $passphrase = null)
+    public function __construct(?string $signingKey = null, ?string $publicKey = null, ?string $passphrase = null)
     {
         $this->signingKey = $signingKey;
-        $this->publicKey  = $publicKey;
+        $this->publicKey = $publicKey;
         $this->passphrase = $passphrase;
     }
 
@@ -73,9 +57,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
         $path = self::TYPE_PUBLIC === $type ? $this->publicKey : $this->signingKey;
 
         if (!is_file($path) || !is_readable($path)) {
-            throw new \RuntimeException(
-                sprintf('%s key is not a file or is not readable.', ucfirst($type))
-            );
+            throw new \RuntimeException(sprintf('%s key is not a file or is not readable.', ucfirst($type)));
         }
 
         return $path;
@@ -84,16 +66,14 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     private function readKey($type)
     {
         $isPublic = self::TYPE_PUBLIC === $type;
-        $key      = $isPublic ? $this->publicKey : $this->signingKey;
+        $key = $isPublic ? $this->publicKey : $this->signingKey;
 
         if (!$key || !is_file($key) || !is_readable($key)) {
             if ($isPublic) {
                 return null;
             }
 
-            throw new \RuntimeException(
-                sprintf('Signature key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.signature_key" configuration key?', $key, $type)
-            );
+            throw new \RuntimeException(sprintf('Signature key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.signature_key" configuration key?', $key));
         }
 
         return file_get_contents($key);

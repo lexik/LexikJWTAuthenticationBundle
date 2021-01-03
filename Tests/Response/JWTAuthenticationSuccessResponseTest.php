@@ -16,7 +16,7 @@ final class JWTAuthenticationSuccessResponseTest extends TestCase
     {
         $data = [
             'username' => 'foobar',
-            'email'    => 'dev@lexik.fr',
+            'email' => 'dev@lexik.fr',
         ];
         $expected = ['token' => 'jwt'] + $data;
         $response = new JWTAuthenticationSuccessResponse($expected['token'], $data);

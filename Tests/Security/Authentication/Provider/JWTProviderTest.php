@@ -52,7 +52,7 @@ class JWTProviderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $userProvider    = $this->getUserProviderMock();
+        $userProvider = $this->getUserProviderMock();
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();
@@ -73,7 +73,7 @@ class JWTProviderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $userProvider    = $this->getUserProviderMock();
+        $userProvider = $this->getUserProviderMock();
         $eventDispatcher = $this->getEventDispatcherMock();
 
         $jwtManager = $this->getJWTManagerMock();

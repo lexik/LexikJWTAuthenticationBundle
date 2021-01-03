@@ -28,7 +28,7 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
     public function __construct($prefix, $name)
     {
         $this->prefix = $prefix;
-        $this->name   = $name;
+        $this->name = $name;
     }
 
     /**

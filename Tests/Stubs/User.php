@@ -33,10 +33,10 @@ final class User implements UserInterface
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
-        $this->username              = $username;
-        $this->password              = $password;
-        $this->roles                 = $roles;
-        $this->email                 = $email;
+        $this->username = $username;
+        $this->password = $password;
+        $this->roles = $roles;
+        $this->email = $email;
     }
 
     /**
@@ -76,10 +76,12 @@ final class User implements UserInterface
     public function eraseCredentials()
     {
     }
+
     public function getEmail()
     {
         return $this->email;
     }
+
     public function setEmail($email)
     {
         $this->email = $email;

@@ -26,7 +26,7 @@ class ChainTokenExtractorTest extends TestCase
     public function testAddExtractor()
     {
         $extractor = new ChainTokenExtractor($this->getTokenExtractorMap());
-        $custom    = $this->getTokenExtractorMock(null);
+        $custom = $this->getTokenExtractorMock(null);
         $extractor->addExtractor($custom);
 
         $map = [];
@@ -41,7 +41,7 @@ class ChainTokenExtractorTest extends TestCase
     public function testRemoveExtractor()
     {
         $extractor = new ChainTokenExtractor([]);
-        $custom    = $this->getTokenExtractorMock(null);
+        $custom = $this->getTokenExtractorMock(null);
 
         $extractor->addExtractor($custom);
         $result = $extractor->removeExtractor(function (TokenExtractorInterface $extractor) use ($custom) {

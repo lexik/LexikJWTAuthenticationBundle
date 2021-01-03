@@ -11,49 +11,21 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
 final class LoadedJWS
 {
     const VERIFIED = 'verified';
+    const EXPIRED = 'expired';
+    const INVALID = 'invalid';
 
-    const EXPIRED  = 'expired';
-
-    const INVALID  = 'invalid';
-
-    /**
-     * @var array
-     */
     private $header;
-
-    /**
-     * @var array
-     */
     private $payload;
-
-    /**
-     * @var string
-     */
     private $state;
-
-    /**
-     * @var int
-     */
     private $clockSkew;
-
-    /**
-     * @var bool
-     */
     private $hasLifetime;
 
-    /**
-     * @param array $payload
-     * @param bool  $isVerified
-     * @param bool  $hasLifetime
-     * @param int   $clockSkew
-     * @param array $header
-     */
-    public function __construct(array $payload, $isVerified, $hasLifetime = true, array $header = [], $clockSkew = 0)
+    public function __construct(array $payload, bool $isVerified, bool $hasLifetime = true, array $header = [], int $clockSkew = 0)
     {
-        $this->payload     = $payload;
-        $this->header      = $header;
+        $this->payload = $payload;
+        $this->header = $header;
         $this->hasLifetime = $hasLifetime;
-        $this->clockSkew   = $clockSkew;
+        $this->clockSkew = $clockSkew;
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
@@ -63,59 +35,43 @@ final class LoadedJWS
         $this->checkExpiration();
     }
 
-    /**
-     * @return array
-     */
-    public function getHeader()
+    public function getHeader(): array
     {
         return $this->header;
     }
 
-    /**
-     * @return array
-     */
-    public function getPayload()
+    public function getPayload(): array
     {
         return $this->payload;
     }
 
-    /**
-     * @return bool
-     */
-    public function isVerified()
+    public function isVerified(): bool
     {
         return self::VERIFIED === $this->state;
     }
 
-    /**
-     * @return bool
-     */
-    public function isExpired()
+    public function isExpired(): bool
     {
         $this->checkExpiration();
 
         return self::EXPIRED === $this->state;
     }
 
-    /**
-     * @return bool
-     */
-    public function isInvalid()
+    public function isInvalid(): bool
     {
         return self::INVALID === $this->state;
     }
 
-    /**
-     * Ensures that the signature is not expired.
-     */
-    private function checkExpiration()
+    private function checkExpiration(): void
     {
         if (!$this->hasLifetime) {
             return;
         }
 
         if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
-            return $this->state = self::INVALID;
+            $this->state = self::INVALID;
+
+            return;
         }
 
         if ($this->clockSkew <= time() - $this->payload['exp']) {

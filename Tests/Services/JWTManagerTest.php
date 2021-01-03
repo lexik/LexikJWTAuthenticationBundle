@@ -1,6 +1,6 @@
 <?php
 
-namespace Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
@@ -8,9 +8,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\Security\Core\User\User;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTManagerTest.
@@ -26,24 +25,13 @@ class JWTManagerTest extends TestCase
     public function testCreate()
     {
         $dispatcher = $this->getEventDispatcherMock();
-
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
-                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
-                );
-        } else {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
-                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
-                );
-        }
+        $dispatcher
+            ->expects($this->exactly(2))
+            ->method('dispatch')
+            ->withConsecutive(
+                [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
+            );
 
         $encoder = $this->getJWTEncoderMock();
         $encoder
@@ -62,23 +50,13 @@ class JWTManagerTest extends TestCase
     {
         $dispatcher = $this->getEventDispatcherMock();
 
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
-                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
-                );
-        } else {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
-                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
-                );
-        }
+        $dispatcher
+            ->expects($this->exactly(2))
+            ->method('dispatch')
+            ->withConsecutive(
+                [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
+            );
 
         $encoder = $this->getJWTEncoderMock();
         $encoder
@@ -97,24 +75,13 @@ class JWTManagerTest extends TestCase
     public function testDecode()
     {
         $dispatcher = $this->getEventDispatcherMock();
-
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher
-                ->expects($this->once())
-                ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent'),
-                    $this->equalTo(Events::JWT_DECODED)
-                );
-        } else {
-            $dispatcher
-                ->expects($this->once())
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::JWT_DECODED),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent')
-                );
-        }
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent'),
+                $this->equalTo(Events::JWT_DECODED)
+            );
 
         $encoder = $this->getJWTEncoderMock();
         $encoder
@@ -132,24 +99,13 @@ class JWTManagerTest extends TestCase
     public function testIdentityField()
     {
         $dispatcher = $this->getEventDispatcherMock();
-
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
-                    [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
-                );
-        } else {
-            $dispatcher
-                ->expects($this->exactly(2))
-                ->method('dispatch')
-                ->withConsecutive(
-                    [$this->equalTo(Events::JWT_CREATED), $this->isInstanceOf(JWTCreatedEvent::class)],
-                    [$this->equalTo(Events::JWT_ENCODED), $this->isInstanceOf(JWTEncodedEvent::class)]
-                );
-        }
+        $dispatcher
+            ->expects($this->exactly(2))
+            ->method('dispatch')
+            ->withConsecutive(
+                [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
+                [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
+            );
 
         $encoder = $this->getJWTEncoderMock();
         $encoder
@@ -197,19 +153,8 @@ class JWTManagerTest extends TestCase
     protected function getEventDispatcherMock()
     {
         return $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-    }
-
-    private function expectEvent($eventName, $eventClass, $dispatcher)
-    {
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
-
-            return;
-        }
-
-        $dispatcher->expects($this->once())->method('dispatch')->with($eventName, $this->isInstanceOf($eventClass));
     }
 }

@@ -11,24 +11,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class UserNotFoundException extends AuthenticationException
 {
-    /**
-     * @var string
-     */
     private $userIdentityField;
-
-    /**
-     * @var string
-     */
     private $identity;
 
-    /**
-     * @param string $userIdentityField
-     * @param string $identity
-     */
-    public function __construct($userIdentityField, $identity)
+    public function __construct(string $userIdentityField, string $identity)
     {
         $this->userIdentityField = $userIdentityField;
-        $this->identity          = $identity;
+        $this->identity = $identity;
     }
 
     /**

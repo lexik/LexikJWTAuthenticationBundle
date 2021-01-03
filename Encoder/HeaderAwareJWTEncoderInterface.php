@@ -10,9 +10,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 interface HeaderAwareJWTEncoderInterface extends JWTEncoderInterface
 {
     /**
-     * @param array $data
-     * @param array $header
-     *
      * @return string the encoded token string
      *
      * @throws JWTEncodeFailureException If an error occurred while trying to create

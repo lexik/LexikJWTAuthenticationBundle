@@ -20,9 +20,9 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('lexik_jwt_authentication');
-        $rootNode    = \method_exists(TreeBuilder::class, 'getRootNode') ? $treeBuilder->getRootNode() : $treeBuilder->root('lexik_jwt_authentication');
 
-        $rootNode
+        $treeBuilder
+            ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('private_key_path')
@@ -109,7 +109,7 @@ class Configuration implements ConfigurationInterface
     private function getTokenExtractorsNode()
     {
         $builder = new TreeBuilder('token_extractors');
-        $node = \method_exists(TreeBuilder::class, 'getRootNode') ? $builder->getRootNode() : $builder->root('token_extractors');
+        $node = $builder->getRootNode();
         $node
             ->addDefaultsIfNotSet()
             ->children()

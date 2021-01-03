@@ -5,8 +5,8 @@ on:
     push:
 
 jobs:
-    php-56:
-        name: PHP 5.6 / Symfony 3.4
+    php-71:
+        name: PHP 7.1 / Symfony 4.4
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout"
@@ -17,48 +17,14 @@ jobs:
             - name: "Install PHP"
               uses: "shivammathur/setup-php@v2"
               with:
-                  php-version: "5.6"
+                  php-version: "7.1"
 
             - name: "Cache composer packages"
               uses: "actions/cache@v2"
               with:
                   path: "~/.composer/cache"
-                  key: "php-5.6-composer-locked-${{ hashFiles('composer.lock') }}"
-                  restore-keys: "php-5.6-composer-locked-"
-
-            - name: "Install Symfony 3.4"
-              run: "composer require symfony/symfony:3.4.* --no-update"
-
-            - name: "Install Symfony PHPUnit Bridge 3.4"
-              run: "composer require symfony/phpunit-bridge:3.4.* --no-update"
-
-            - name: "Install dependencies with composer"
-              run: "composer update --no-interaction --prefer-dist --prefer-stable"
-
-            - name: "Run PHPUnit Tests"
-              env:
-                SYMFONY_PHPUNIT_VERSION: 5.7
-              run: "composer test"
-    php-72:
-        name: PHP 7.2 / Symfony 4.4
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout"
-              uses: "actions/checkout@v2"
-              with:
-                  fetch-depth: 2
-
-            - name: "Install PHP"
-              uses: "shivammathur/setup-php@v2"
-              with:
-                  php-version: "7.2"
-
-            - name: "Cache composer packages"
-              uses: "actions/cache@v2"
-              with:
-                  path: "~/.composer/cache"
-                  key: "php-7.2-composer-locked-${{ hashFiles('composer.lock') }}"
-                  restore-keys: "php-7.2-composer-locked-"
+                  key: "php-7.1-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-7.1-composer-locked-"
 
             - name: "Install Symfony 4.4"
               run: "composer require symfony/symfony:4.4.* --no-update"

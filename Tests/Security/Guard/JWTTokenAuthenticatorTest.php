@@ -20,13 +20,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class JWTTokenAuthenticatorTest extends TestCase
 {
@@ -102,9 +100,9 @@ class JWTTokenAuthenticatorTest extends TestCase
     public function testGetUser()
     {
         $userIdClaim = 'sub';
-        $payload     = [$userIdClaim => 'lexik'];
-        $rawToken    = 'token';
-        $userRoles   = ['ROLE_USER'];
+        $payload = [$userIdClaim => 'lexik'];
+        $rawToken = 'token';
+        $userRoles = ['ROLE_USER'];
 
         $userStub = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
 
@@ -162,7 +160,7 @@ class JWTTokenAuthenticatorTest extends TestCase
     public function testGetUserWithInvalidUserThrowsException()
     {
         $userIdClaim = 'username';
-        $payload     = [$userIdClaim => 'lexik'];
+        $payload = [$userIdClaim => 'lexik'];
 
         $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload($payload);
@@ -190,10 +188,10 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     public function testCreateAuthenticatedToken()
     {
-        $rawToken  = 'token';
+        $rawToken = 'token';
         $userRoles = ['ROLE_USER'];
-        $payload   = ['sub' => 'lexik'];
-        $userStub  = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
+        $payload = ['sub' => 'lexik'];
+        $userStub = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
 
         $decodedToken = new PreAuthenticationJWTUserToken($rawToken);
         $decodedToken->setPayload($payload);
@@ -249,7 +247,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     public function testOnAuthenticationFailureWithInvalidToken()
     {
-        $authException    = new InvalidTokenException();
+        $authException = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
 
         $dispatcher = $this->getEventDispatcherMock();
@@ -270,7 +268,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     public function testStart()
     {
-        $authException   = new MissingTokenException('JWT Token not found');
+        $authException = new MissingTokenException('JWT Token not found');
         $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessageKey());
 
         $dispatcher = $this->getEventDispatcherMock();
@@ -386,12 +384,6 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     private function expectEvent($eventName, $event, $dispatcher)
     {
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
-
-            return;
-        }
-
-        $dispatcher->expects($this->once())->method('dispatch')->with($eventName, $event);
+        $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
     }
 }

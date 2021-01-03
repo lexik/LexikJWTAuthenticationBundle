@@ -8,8 +8,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -25,7 +23,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccess()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher()))
             ->onAuthenticationSuccess($request, $token);
@@ -67,7 +65,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccessSetCookie()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $cookieProvider = new JWTCookieProvider('access_token', 60);
 
@@ -86,7 +84,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccessSetSplitCookie()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $headerPayloadCookieProvider = new JWTCookieProvider('jwt_hp', 60, null, null, null, true, false, ['header', 'payload']);
         $signatureCookieProvider = new JWTCookieProvider('jwt_s', 60, null, null, null, true, true, ['signature']);
@@ -174,23 +172,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        if ($dispatcher instanceof ContractsEventDispatcherInterface) {
-            $dispatcher
-                ->expects($this->once())
-                ->method('dispatch')
-                ->with(
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent'),
-                    $this->equalTo(Events::AUTHENTICATION_SUCCESS)
-                );
-        } else {
-            $dispatcher
-                ->expects($this->once())
-                ->method('dispatch')
-                ->with(
-                    $this->equalTo(Events::AUTHENTICATION_SUCCESS),
-                    $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent')
-                );
-        }
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent'),
+                $this->equalTo(Events::AUTHENTICATION_SUCCESS)
+            );
 
         return $dispatcher;
     }

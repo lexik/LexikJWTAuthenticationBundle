@@ -9,15 +9,13 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTListener.
@@ -28,7 +26,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  * @deprecated since 2.0, will be removed in 3.0. See
  *             {@link JWTTokenAuthenticator} instead
  */
-class JWTListener extends AbstractListener
+class JWTListener
 {
     /**
      * @var TokenStorageInterface
@@ -55,11 +53,6 @@ class JWTListener extends AbstractListener
      */
     protected $tokenExtractors;
 
-    /**
-     * @param TokenStorageInterface          $tokenStorage
-     * @param AuthenticationManagerInterface $authenticationManager
-     * @param array                          $config
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthenticationManagerInterface $authenticationManager,
@@ -67,27 +60,19 @@ class JWTListener extends AbstractListener
     ) {
         @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
 
-        $this->tokenStorage          = $tokenStorage;
+        $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->config                = array_merge(['throw_exceptions' => false], $config);
-        $this->tokenExtractors       = [];
+        $this->config = array_merge(['throw_exceptions' => false], $config);
+        $this->tokenExtractors = [];
     }
 
-    /**
-     * @param GetResponseEvent|RequestEvent $event
-     */
-    public function __invoke($event)
+    public function __invoke(RequestEvent $event)
     {
         $requestToken = $this->getRequestToken($event->getRequest());
 
         if (null === $requestToken) {
             $jwtNotFoundEvent = new JWTNotFoundEvent();
-            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-                $this->dispatcher->dispatch($jwtNotFoundEvent, Events::JWT_NOT_FOUND);
-            } else {
-                $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $jwtNotFoundEvent);
-            }
-
+            $this->dispatcher->dispatch($jwtNotFoundEvent, Events::JWT_NOT_FOUND);
 
             if ($response = $jwtNotFoundEvent->getResponse()) {
                 $event->setResponse($response);
@@ -112,36 +97,23 @@ class JWTListener extends AbstractListener
             $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
             $jwtInvalidEvent = new JWTInvalidEvent($failed, $response);
-            if ($this->dispatcher instanceof ContractsEventDispatcherInterface) {
-                $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
-            } else {
-                $this->dispatcher->dispatch(Events::JWT_INVALID, $jwtInvalidEvent);
-            }
-
+            $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
 
             $event->setResponse($jwtInvalidEvent->getResponse());
         }
     }
 
-    /**
-     * @param TokenExtractorInterface $extractor
-     */
     public function addTokenExtractor(TokenExtractorInterface $extractor)
     {
         $this->tokenExtractors[] = $extractor;
     }
 
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
     public function setDispatcher(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
-     * @param Request $request
-     *
      * @return string
      */
     protected function getRequestToken(Request $request)

@@ -50,7 +50,7 @@ abstract class AbstractTestKeyLoader extends TestCase
     protected function removeKeysIfExist()
     {
         $privateKey = 'private.pem';
-        $publicKey  = 'public.pem';
+        $publicKey = 'public.pem';
 
         if (file_exists($publicKey)) {
             unlink($publicKey);

@@ -22,7 +22,7 @@ class CheckConfigCommand extends Command
 
     public function __construct(KeyLoaderInterface $keyLoader, $signatureAlgorithm)
     {
-        $this->keyLoader          = $keyLoader;
+        $this->keyLoader = $keyLoader;
         $this->signatureAlgorithm = $signatureAlgorithm;
 
         parent::__construct();
