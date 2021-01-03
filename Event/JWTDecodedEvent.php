@@ -21,9 +21,6 @@ class JWTDecodedEvent extends Event
      */
     protected $isValid;
 
-    /**
-     * @param array $payload
-     */
     public function __construct(array $payload)
     {
         $this->payload = $payload;
@@ -38,9 +35,6 @@ class JWTDecodedEvent extends Event
         return $this->payload;
     }
 
-    /**
-     * @param array $payload
-     */
     public function setPayload(array $payload)
     {
         $this->payload = $payload;

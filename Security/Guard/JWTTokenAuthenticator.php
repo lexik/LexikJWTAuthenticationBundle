@@ -20,9 +20,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthen
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -31,6 +29,7 @@ use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTTokenAuthenticator (Guard implementation).
@@ -62,21 +61,15 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $preAuthenticationTokenStorage;
 
-    /**
-     * @param JWTTokenManagerInterface $jwtManager
-     * @param EventDispatcherInterface $dispatcher
-     * @param TokenExtractorInterface  $tokenExtractor
-     * @param TokenStorageInterface    $preAuthenticationTokenStorage
-     */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
         TokenExtractorInterface $tokenExtractor,
         TokenStorageInterface $preAuthenticationTokenStorage
     ) {
-        $this->jwtManager                    = $jwtManager;
-        $this->dispatcher                    = $dispatcher;
-        $this->tokenExtractor                = $tokenExtractor;
+        $this->jwtManager = $jwtManager;
+        $this->dispatcher = $dispatcher;
+        $this->tokenExtractor = $tokenExtractor;
         $this->preAuthenticationTokenStorage = $preAuthenticationTokenStorage;
     }
 
@@ -133,7 +126,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * {@inheritdoc}
      *
-     * @param PreAuthenticationJWTUserTokenInterface Implementation of the (Security) TokenInterface
+     * @param PreAuthenticationJWTUserTokenInterface $preAuthToken Implementation of the (Security) TokenInterface
      *
      * @throws \InvalidArgumentException If preAuthToken is not of the good type
      * @throws InvalidPayloadException   If the user identity field is not a key of the payload
@@ -142,14 +135,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
         if (!$preAuthToken instanceof PreAuthenticationJWTUserTokenInterface) {
-            throw new \InvalidArgumentException(
-                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserTokenInterface::class)
-            );
+            throw new \InvalidArgumentException(sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserTokenInterface::class));
         }
 
         $payload = $preAuthToken->getPayload();
         $idClaim = $this->jwtManager->getUserIdClaim();
-
 
         if (!isset($payload[$idClaim])) {
             throw new InvalidPayloadException($idClaim);
@@ -183,7 +173,6 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             $eventName = Events::JWT_INVALID;
         }
 
-
         $this->dispatcher->dispatch($event, $eventName);
 
         return $event->getResponse();
@@ -205,7 +194,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
-        $event     = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
+        $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
 
         $this->dispatcher->dispatch($event, Events::JWT_NOT_FOUND);
 

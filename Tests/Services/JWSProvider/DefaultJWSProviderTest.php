@@ -14,6 +14,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
  */
 final class DefaultJWSProviderTest extends AbstractJWSProviderTest
 {
-    protected static $providerClass  = DefaultJWSProvider::class;
+    protected static $providerClass = DefaultJWSProvider::class;
     protected static $keyLoaderClass = KeyLoaderInterface::class;
 }

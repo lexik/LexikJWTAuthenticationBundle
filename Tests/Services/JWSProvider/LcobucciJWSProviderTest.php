@@ -13,7 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
  */
 final class LcobucciJWSProviderTest extends AbstractJWSProviderTest
 {
-    protected static $providerClass  = LcobucciJWSProvider::class;
+    protected static $providerClass = LcobucciJWSProvider::class;
     protected static $keyLoaderClass = RawKeyLoader::class;
 
     public function testCreateWithEcdsa()

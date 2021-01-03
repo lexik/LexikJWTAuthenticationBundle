@@ -8,11 +8,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTProvider.
@@ -50,10 +50,7 @@ class JWTProvider implements AuthenticationProviderInterface
     private $userIdClaim;
 
     /**
-     * @param UserProviderInterface    $userProvider
-     * @param JWTManagerInterface      $jwtManager
-     * @param EventDispatcherInterface $dispatcher
-     * @param string                   $userIdClaim
+     * @param string $userIdClaim
      */
     public function __construct(
         UserProviderInterface $userProvider,
@@ -63,11 +60,11 @@ class JWTProvider implements AuthenticationProviderInterface
     ) {
         @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
 
-        $this->userProvider      = $userProvider;
-        $this->jwtManager        = $jwtManager;
-        $this->dispatcher        = $dispatcher;
+        $this->userProvider = $userProvider;
+        $this->jwtManager = $jwtManager;
+        $this->dispatcher = $dispatcher;
         $this->userIdentityField = 'username';
-        $this->userIdClaim       = $userIdClaim;
+        $this->userIdClaim = $userIdClaim;
     }
 
     /**
@@ -98,8 +95,6 @@ class JWTProvider implements AuthenticationProviderInterface
     /**
      * Load user from payload, using username by default.
      * Override this to load by another property.
-     *
-     * @param array $payload
      *
      * @return \Symfony\Component\Security\Core\User\UserInterface
      */

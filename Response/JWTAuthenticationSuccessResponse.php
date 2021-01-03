@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Response;
 
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

@@ -33,6 +33,7 @@ class JWTSplitter
 
     /**
      * @param array $parts
+     *
      * @return string
      */
     public function getParts($parts = [])

@@ -26,7 +26,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
         }
 
         $rawKey = file_get_contents($this->getKeyPath($type));
-        $key    = call_user_func_array("openssl_pkey_get_$type", self::TYPE_PRIVATE == $type ? [$rawKey, $this->getPassphrase()] : [$rawKey]);
+        $key = call_user_func_array("openssl_pkey_get_$type", self::TYPE_PRIVATE == $type ? [$rawKey, $this->getPassphrase()] : [$rawKey]);
 
         if (!$key) {
             $sslError = '';
@@ -37,9 +37,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
                 $sslError .= "\n $msg";
             }
 
-            throw new \RuntimeException(
-                sprintf('Failed to load %s key: %s', $type, $sslError)
-            );
+            throw new \RuntimeException(sprintf('Failed to load %s key: %s', $type, $sslError));
         }
 
         return $key;

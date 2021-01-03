@@ -42,11 +42,9 @@ class RawKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 
         // no public key provided, compute it from signing key
         try {
-            $publicKey  = openssl_pkey_get_details(openssl_pkey_get_private($signingKey, $this->getPassphrase()))['key'];
+            $publicKey = openssl_pkey_get_details(openssl_pkey_get_private($signingKey, $this->getPassphrase()))['key'];
         } catch (\Throwable $e) {
-            throw new \RuntimeException(
-                'Secret key either does not exist, is not readable or is invalid. Did you correctly set the "lexik_jwt_authentication.secret_key" config option?'
-            );
+            throw new \RuntimeException('Secret key either does not exist, is not readable or is invalid. Did you correctly set the "lexik_jwt_authentication.secret_key" config option?');
         }
 
         return $publicKey;

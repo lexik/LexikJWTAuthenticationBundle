@@ -158,9 +158,8 @@ class JWTFactory implements SecurityFactoryInterface
     /**
      * Create an entry point, by default it sends a 401 header and ends the request.
      *
-     * @param ContainerBuilder $container
-     * @param string           $id
-     * @param mixed            $defaultEntryPoint
+     * @param string $id
+     * @param mixed  $defaultEntryPoint
      *
      * @return string
      */

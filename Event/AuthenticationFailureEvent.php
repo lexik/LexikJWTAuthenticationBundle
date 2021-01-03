@@ -24,14 +24,10 @@ class AuthenticationFailureEvent extends Event
      */
     protected $response;
 
-    /**
-     * @param AuthenticationException $exception
-     * @param Response                $response
-     */
     public function __construct(AuthenticationException $exception, Response $response)
     {
         $this->exception = $exception;
-        $this->response  = $response;
+        $this->response = $response;
     }
 
     /**
@@ -50,9 +46,6 @@ class AuthenticationFailureEvent extends Event
         return $this->response;
     }
 
-    /**
-     * @param Response $response
-     */
     public function setResponse(Response $response)
     {
         $this->response = $response;

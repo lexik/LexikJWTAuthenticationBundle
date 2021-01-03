@@ -30,8 +30,6 @@ interface JWTFailureEventInterface
     /**
      * Calling this allows to return a custom Response immediately after
      * the corresponding implementation of this event is dispatched.
-     *
-     * @param Response $response
      */
     public function setResponse(Response $response);
 }

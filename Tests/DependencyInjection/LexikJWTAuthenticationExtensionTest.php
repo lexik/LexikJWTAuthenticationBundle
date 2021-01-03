@@ -6,11 +6,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticat
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Tests the bundle extension and the configuration of services.
@@ -21,7 +19,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
 {
     public function testEncoderConfiguration()
     {
-        $container  = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem', 'pass_phrase' => 'test']);
+        $container = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem', 'pass_phrase' => 'test']);
         $encoderDef = $container->findDefinition('lexik_jwt_authentication.encoder');
         $this->assertSame(LcobucciJWTEncoder::class, $encoderDef->getClass());
         $this->assertEquals(new Reference('lexik_jwt_authentication.jws_provider.lcobucci'), $encoderDef->getArgument(0));
@@ -48,10 +46,10 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
     public function testDeprecatedDefaultEncoderService()
     {
         $container = $this->getContainer([
-            'secret_key'  => 'private.pem',
-            'public_key'  => 'public.pem',
+            'secret_key' => 'private.pem',
+            'public_key' => 'public.pem',
             'pass_phrase' => 'test',
-            'encoder'     => ['service' => 'lexik_jwt_authentication.encoder.default'],
+            'encoder' => ['service' => 'lexik_jwt_authentication.encoder.default'],
         ]);
         $encoderDef = $container->findDefinition('lexik_jwt_authentication.encoder');
         $this->assertSame(DefaultEncoder::class, $encoderDef->getClass());

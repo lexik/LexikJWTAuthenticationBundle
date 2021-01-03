@@ -1,0 +1,4 @@
+parameters:
+    excludes_analyse:
+        - vendor/*
+        - Tests/*

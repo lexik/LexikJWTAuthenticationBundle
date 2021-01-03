@@ -17,7 +17,7 @@ class UserNotFoundException extends AuthenticationException
     public function __construct(string $userIdentityField, string $identity)
     {
         $this->userIdentityField = $userIdentityField;
-        $this->identity          = $identity;
+        $this->identity = $identity;
     }
 
     /**
