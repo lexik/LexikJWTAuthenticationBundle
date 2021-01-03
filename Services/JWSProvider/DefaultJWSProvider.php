@@ -47,11 +47,10 @@ class DefaultJWSProvider implements JWSProviderInterface
     private $clockSkew;
 
     /**
-     * @param KeyLoaderInterface $keyLoader
-     * @param string             $cryptoEngine
-     * @param string             $signatureAlgorithm
-     * @param int                $ttl
-     * @param int                $clockSkew
+     * @param string $cryptoEngine
+     * @param string $signatureAlgorithm
+     * @param int    $ttl
+     * @param int    $clockSkew
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
@@ -68,16 +67,14 @@ class DefaultJWSProvider implements JWSProviderInterface
         $cryptoEngine = 'openssl' == $cryptoEngine ? 'OpenSSL' : 'SecLib';
 
         if (!$this->isAlgorithmSupportedForEngine($cryptoEngine, $signatureAlgorithm)) {
-            throw new \InvalidArgumentException(
-                sprintf('The algorithm "%s" is not supported for %s', $signatureAlgorithm, $cryptoEngine)
-            );
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported for %s', $signatureAlgorithm, $cryptoEngine));
         }
 
-        $this->keyLoader          = $keyLoader;
-        $this->cryptoEngine       = $cryptoEngine;
+        $this->keyLoader = $keyLoader;
+        $this->cryptoEngine = $cryptoEngine;
         $this->signatureAlgorithm = $signatureAlgorithm;
-        $this->ttl                = $ttl;
-        $this->clockSkew          = $clockSkew;
+        $this->ttl = $ttl;
+        $this->clockSkew = $clockSkew;
     }
 
     /**
@@ -86,8 +83,8 @@ class DefaultJWSProvider implements JWSProviderInterface
     public function create(array $payload, array $header = [])
     {
         $header['alg'] = $this->signatureAlgorithm;
-        $jws           = new JWS($header, $this->cryptoEngine);
-        $claims        = ['iat' => time()];
+        $jws = new JWS($header, $this->cryptoEngine);
+        $claims = ['iat' => time()];
 
         if (null !== $this->ttl && !isset($payload['exp'])) {
             $claims['exp'] = time() + $this->ttl;

@@ -12,9 +12,6 @@ interface JWSProviderInterface
     /**
      * Creates a new JWS signature from a given payload.
      *
-     * @param array $payload
-     * @param array $header
-     *
      * @return \Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS
      */
     public function create(array $payload, array $header = []);

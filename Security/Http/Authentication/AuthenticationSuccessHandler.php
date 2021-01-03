@@ -7,11 +7,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * AuthenticationSuccessHandler.
@@ -58,7 +58,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $response = new JWTAuthenticationSuccessResponse($jwt, [], $jwtCookies);
-        $event    = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
+        $event = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
 
         $this->dispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);
         $responseData = $event->getData();

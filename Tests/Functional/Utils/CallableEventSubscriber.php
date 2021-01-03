@@ -15,16 +15,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CallableEventSubscriber implements EventSubscriberInterface
 {
-    private static $listeners     = [];
+    private static $listeners = [];
 
     private static $eventClassMap = [
-        Events::JWT_CREATED       => JWTCreatedEvent::class,
-        Events::JWT_DECODED       => JWTDecodedEvent::class,
-        Events::JWT_INVALID       => JWTInvalidEvent::class,
-        Events::JWT_NOT_FOUND     => JWTNotFoundEvent::class,
-        Events::JWT_ENCODED       => JWTEncodedEvent::class,
+        Events::JWT_CREATED => JWTCreatedEvent::class,
+        Events::JWT_DECODED => JWTDecodedEvent::class,
+        Events::JWT_INVALID => JWTInvalidEvent::class,
+        Events::JWT_NOT_FOUND => JWTNotFoundEvent::class,
+        Events::JWT_ENCODED => JWTEncodedEvent::class,
         Events::JWT_AUTHENTICATED => JWTAuthenticatedEvent::class,
-        Events::JWT_EXPIRED       => JWTExpiredEvent::class,
+        Events::JWT_EXPIRED => JWTExpiredEvent::class,
     ];
 
     public static function getSubscribedEvents()
@@ -42,7 +42,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
      * Executes the good listener depending on the passed event.
      *
      * @param object $event An instance of one of the events
-     *                     defined in {@link self::$eventClassMap}
+     *                      defined in {@link self::$eventClassMap}
      */
     public function handleEvent($event)
     {

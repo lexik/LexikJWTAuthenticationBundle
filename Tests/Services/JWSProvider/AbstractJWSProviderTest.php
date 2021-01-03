@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -79,7 +78,7 @@ vwIDAQAB
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
+        $payload = ['username' => 'chalasr'];
         $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
@@ -102,7 +101,7 @@ vwIDAQAB
             ->willReturn(static::$publicKey);
 
         $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
-        $loadedJWS   = $jwsProvider->load($jwt);
+        $loadedJWS = $jwsProvider->load($jwt);
         $this->assertInstanceOf(LoadedJWS::class, $loadedJWS);
 
         $payload = $loadedJWS->getPayload();
@@ -131,7 +130,7 @@ vwIDAQAB
                 static::$publicKey
             );
         $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
-        $jws      = $provider->create(['username' => 'chalasr']);
+        $jws = $provider->create(['username' => 'chalasr']);
 
         $this->assertInstanceOf(CreatedJWS::class, $jws);
         $this->assertTrue($jws->isSigned());
@@ -166,7 +165,7 @@ vwIDAQAB
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
+        $payload = ['username' => 'chalasr'];
         $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));

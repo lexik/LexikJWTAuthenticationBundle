@@ -15,7 +15,7 @@ final class JWTAuthenticationFailureResponseTest extends TestCase
     public function testResponse()
     {
         $expected = [
-            'code'    => 401,
+            'code' => 401,
             'message' => 'message',
         ];
 

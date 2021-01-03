@@ -11,7 +11,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  */
 interface KeyLoaderInterface
 {
-    const TYPE_PUBLIC  = 'public';
+    const TYPE_PUBLIC = 'public';
 
     const TYPE_PRIVATE = 'private';
 

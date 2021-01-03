@@ -31,7 +31,7 @@ abstract class TestCase extends WebTestCase
         }
 
         $client = static::$kernel->getContainer()->get('test.client');
-        $token  = null === $token ? self::getAuthenticatedToken() : $token;
+        $token = null === $token ? self::getAuthenticatedToken() : $token;
 
         if (null === $token) {
             throw new \LogicException('Unable to create an authenticated client from a null JWT token');

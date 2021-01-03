@@ -7,13 +7,13 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion;
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\Builder as JWTBuilder;
+use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
@@ -75,8 +75,8 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         $this->keyLoader = $keyLoader;
-        $this->signer    = $this->getSignerForAlgorithm($signatureAlgorithm);
-        $this->ttl       = $ttl;
+        $this->signer = $this->getSignerForAlgorithm($signatureAlgorithm);
+        $this->ttl = $ttl;
         $this->clockSkew = $clockSkew;
         $this->useDateObjects = method_exists(Token::class, 'payload') || class_exists(Plain::class);  // exists only on lcobucci/jwt 3.4+
     }
@@ -180,9 +180,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         ];
 
         if (!isset($signerMap[$signatureAlgorithm])) {
-            throw new \InvalidArgumentException(
-                sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, __CLASS__)
-            );
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, __CLASS__));
         }
 
         $signerClass = $signerMap[$signatureAlgorithm];

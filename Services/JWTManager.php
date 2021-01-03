@@ -8,10 +8,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides convenient methods to manage JWT creation/verification.
@@ -42,22 +42,17 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     protected $userIdClaim;
 
     /**
-     * @param JWTEncoderInterface      $encoder
-     * @param EventDispatcherInterface $dispatcher
-     * @param string|null              $userIdClaim
+     * @param string|null $userIdClaim
      */
     public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, $userIdClaim = null)
     {
-        $this->jwtEncoder        = $encoder;
-        $this->dispatcher        = $dispatcher;
+        $this->jwtEncoder = $encoder;
+        $this->dispatcher = $dispatcher;
         $this->userIdentityField = 'username';
-        $this->userIdClaim       = $userIdClaim;
+        $this->userIdClaim = $userIdClaim;
     }
 
     /**
-     * @param UserInterface $user
-     * @param array $payload
-     *
      * @return string The JWT token
      */
     public function create(UserInterface $user)
@@ -69,9 +64,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     }
 
     /**
-     * @param UserInterface $user
-     * @param array $payload
-     *
      * @return string The JWT token
      */
     public function createFromPayload(UserInterface $user, array $payload)
@@ -83,9 +75,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     }
 
     /**
-     * @param UserInterface $user
-     * @param array $payload
-     *
      * @return string The JWT token
      */
     private function generateJwtStringAndDispatchEvents(UserInterface $user, array $payload)
@@ -129,12 +118,11 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      * Add user identity to payload, username by default.
      * Override this if you need to identify it by another property.
      *
-     * @param UserInterface $user
-     * @param array         &$payload
+     * @param array &$payload
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor                    = PropertyAccess::createPropertyAccessor();
+        $accessor = PropertyAccess::createPropertyAccessor();
         $payload[$this->userIdClaim ?: $this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
     }
 

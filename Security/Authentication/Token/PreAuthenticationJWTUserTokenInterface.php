@@ -6,9 +6,7 @@ use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
 
 interface PreAuthenticationJWTUserTokenInterface extends GuardTokenInterface
 {
-
     /**
-     * @param array $payload
      * @return void
      */
     public function setPayload(array $payload);

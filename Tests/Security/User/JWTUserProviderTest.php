@@ -29,7 +29,7 @@ class JWTUserProviderTest extends TestCase
     public function testLoadUserByUsername()
     {
         $userProvider = new JWTUserProvider(JWTUser::class);
-        $user         = $userProvider->loadUserByUsername('lexik');
+        $user = $userProvider->loadUserByUsername('lexik');
 
         $this->assertInstanceOf(JWTUser::class, $user);
         $this->assertSame('lexik', $user->getUsername());

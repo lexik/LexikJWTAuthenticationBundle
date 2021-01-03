@@ -9,6 +9,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * Tests the CreatedJWS model class.
+ *
  * @group time-sensitive
  */
 final class LoadedJWSTest extends TestCase
@@ -24,8 +25,8 @@ final class LoadedJWSTest extends TestCase
     {
         $this->goodPayload = [
             'username' => 'chalasr',
-            'exp'      => time() + 3600,
-            'iat'      => time(),
+            'exp' => time() + 3600,
+            'iat' => time(),
         ];
     }
 
@@ -110,8 +111,8 @@ final class LoadedJWSTest extends TestCase
 
         $dstPayload = [
             'username' => 'test',
-            'exp'      => $timestamp + 3600,
-            'iat'      => $timestamp,
+            'exp' => $timestamp + 3600,
+            'iat' => $timestamp,
         ];
 
         $jws = new LoadedJWS($dstPayload, true);

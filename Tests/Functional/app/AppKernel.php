@@ -25,9 +25,9 @@ class AppKernel extends Kernel
     {
         parent::__construct($environment, $debug);
 
-        $this->testCase           = $testCase;
-        $this->encoder            = getenv('ENCODER') ?: 'default';
-        $this->userProvider       = getenv('PROVIDER') ?: 'in_memory';
+        $this->testCase = $testCase;
+        $this->encoder = getenv('ENCODER') ?: 'default';
+        $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
         $this->signatureAlgorithm = getenv('ALGORITHM');
     }
 

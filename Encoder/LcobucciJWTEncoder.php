@@ -18,9 +18,6 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
      */
     protected $jwsProvider;
 
-    /**
-     * @param JWSProviderInterface $jwsProvider
-     */
     public function __construct(JWSProviderInterface $jwsProvider)
     {
         $this->jwsProvider = $jwsProvider;

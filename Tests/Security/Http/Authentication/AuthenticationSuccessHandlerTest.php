@@ -23,7 +23,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccess()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher()))
             ->onAuthenticationSuccess($request, $token);
@@ -65,7 +65,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccessSetCookie()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $cookieProvider = new JWTCookieProvider('access_token', 60);
 
@@ -84,7 +84,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testOnAuthenticationSuccessSetSplitCookie()
     {
         $request = $this->getRequest();
-        $token   = $this->getToken();
+        $token = $this->getToken();
 
         $headerPayloadCookieProvider = new JWTCookieProvider('jwt_hp', 60, null, null, null, true, false, ['header', 'payload']);
         $signatureCookieProvider = new JWTCookieProvider('jwt_s', 60, null, null, null, true, true, ['signature']);

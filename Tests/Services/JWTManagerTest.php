@@ -8,7 +8,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

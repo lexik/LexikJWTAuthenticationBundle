@@ -28,7 +28,7 @@ class GenerateTokenCommand extends Command
     {
         parent::__construct();
 
-        $this->tokenManager  = $tokenManager;
+        $this->tokenManager = $tokenManager;
         $this->userProviders = $userProviders;
     }
 
