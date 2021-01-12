@@ -56,11 +56,19 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
         }
 
         if ($jws->isInvalid()) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', null, $jws->getPayload());
+            $message = 'Invalid JWT Token';
+            if ($jws->getStateDescription() !== '') {
+                $message .= ": {$jws->getStateDescription()}";
+            }
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, $message, null, $jws->getPayload());
         }
 
         if ($jws->isExpired()) {
-            throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token', null, $jws->getPayload());
+            $message = 'Expired JWT Token';
+            if ($jws->getStateDescription() !== '') {
+                $message .= ": {$jws->getStateDescription()}";
+            }
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, $message, null, $jws->getPayload());
         }
 
         if (!$jws->isVerified()) {

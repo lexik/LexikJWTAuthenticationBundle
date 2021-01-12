@@ -32,6 +32,11 @@ final class LoadedJWS
     private $state;
 
     /**
+     * @var string
+     */
+    private $stateDescription;
+
+    /**
      * @var int
      */
     private $clockSkew;
@@ -57,6 +62,7 @@ final class LoadedJWS
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
+            $this->stateDescription = 'Created as verified';
         }
 
         $this->checkIssuedAt();
@@ -115,10 +121,12 @@ final class LoadedJWS
         }
 
         if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
+            $this->stateDescription = "Expiration timestamp is not set";
             return $this->state = self::INVALID;
         }
 
         if ($this->clockSkew <= time() - $this->payload['exp']) {
+            $this->stateDescription = "Signature is expired";
             $this->state = self::EXPIRED;
         }
     }
@@ -129,7 +137,16 @@ final class LoadedJWS
     private function checkIssuedAt()
     {
         if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
+            $this->stateDescription = "Field 'iat' claim is in the future";
             return $this->state = self::INVALID;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateDescription()
+    {
+        return (string)$this->stateDescription;
     }
 }
