@@ -137,7 +137,7 @@ final class LoadedJWS
     private function checkIssuedAt()
     {
         if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
-            $this->stateDescription = "Field 'iat' claim is in the future";
+            $this->stateDescription = "Field 'iat' claim identifies the future time";
             return $this->state = self::INVALID;
         }
     }
