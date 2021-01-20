@@ -79,7 +79,7 @@ vwIDAQAB
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
+        $payload     = ['username' => 'chalasr', 'iat' => time()];
         $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
