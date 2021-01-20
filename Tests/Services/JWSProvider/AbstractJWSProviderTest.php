@@ -181,7 +181,7 @@ vwIDAQAB
         $this->assertNotEmpty($created->getToken());
     }
 
-    private function getKeyLoaderMock()
+    protected function getKeyLoaderMock()
     {
         return $this
             ->getMockBuilder(static::$keyLoaderClass)

@@ -26,4 +26,8 @@
             </exclude>
         </whitelist>
     </filter>
+
+    <php>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"></env>
+    </php>
 </phpunit>
