@@ -1,7 +1,15 @@
+a759036 bug #827 Use named constructor for lcobucci/jwt Ecdsa signers (chalasr)
+c765af7 bug #826 Fix creating tokens when iat is already set in the payload (chalasr)
+
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.5
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.6
+
+## [2.10.6](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.6) (2020-01-20)
+
+* bug [\#827](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/827) Use named constructor for lcobucci/jwt Ecdsa signers ([chalasr](https://github.com/chalasr))
+* bug [\#826](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/826) Fix creating tokens when iat is already set in the payload ([chalasr](https://github.com/chalasr))
 
 ## [2.10.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.5) (2020-12-19)
 
