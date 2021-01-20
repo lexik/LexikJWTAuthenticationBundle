@@ -217,6 +217,10 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
         $signerClass = $signerMap[$signatureAlgorithm];
 
+        if (is_subclass_of($signerClass, Signer\Ecdsa::class) && method_exists($signerClass, 'create')) {
+            return $signerClass::create();
+        }
+
         return new $signerClass();
     }
 
