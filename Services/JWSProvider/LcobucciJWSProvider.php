@@ -101,11 +101,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $issuedAt = isset($payload['iat']) ? $payload['iat'] : $now;
         unset($payload['iat']);
 
-        if ($this->legacyJWTApi) {
-            $jws->setIssuedAt($issuedAt);
-        } else {
-            $jws->issuedAt($this->useDateObjects && !$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
-        }
+        $jws->issuedAt($this->useDateObjects && !$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
 
         if (null !== $this->ttl || isset($payload['exp'])) {
             $exp = isset($payload['exp']) ? $payload['exp'] : $now + $this->ttl;
