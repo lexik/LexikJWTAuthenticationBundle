@@ -57,7 +57,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
 
     /**
      * @param UserInterface $user
-     * @param array $payload
      *
      * @return string The JWT token
      */
