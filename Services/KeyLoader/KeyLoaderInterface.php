@@ -7,7 +7,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  *
- * @internal
+ * @method string|null getPublicKey()
+ * @method string|null getSigningKey()
  */
 interface KeyLoaderInterface
 {
