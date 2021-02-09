@@ -16,6 +16,15 @@
             <argument type="collection" /> <!-- user providers -->
             <tag name="console.command" command="lexik:jwt:generate-token" />
         </service>
+
+        <service id="lexik_jwt_authentication.generate_keypair_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateKeyPairCommand">
+            <argument type="service" id="filesystem" />
+            <argument />
+            <argument />
+            <argument />
+            <argument />
+            <tag name="console.command" command="lexik:jwt:generate-keypair" />
+        </service>
     </services>
 
 </container>

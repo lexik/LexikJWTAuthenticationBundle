@@ -120,6 +120,13 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
                 ->replaceArgument(2, new IteratorArgument($cookieProviders));
         }
+
+        $container
+            ->getDefinition('lexik_jwt_authentication.generate_keypair_command')
+            ->replaceArgument(1, $config['secret_key'])
+            ->replaceArgument(2, $config['public_key'])
+            ->replaceArgument(3, $config['pass_phrase'])
+            ->replaceArgument(4, $encoderConfig['signature_algorithm']);
     }
 
     private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
