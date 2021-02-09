@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2020-12-19T22:56:15Z
+
+Hey,
+
+Don't worry about the failing build, it will go away with PHP 5.6 support in #816.
+I'm going to think about the best way to leverage this with flex, but I'm 👍 on the idea.
+Thanks for the PR.
+
+---------------------------------------------------------------------------
+
+by bpolaszek at 2021-01-20T18:58:38Z
+
+Thanks @chalasr 👍
