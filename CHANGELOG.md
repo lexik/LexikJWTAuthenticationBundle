@@ -4,7 +4,14 @@ c765af7 bug #826 Fix creating tokens when iat is already set in the payload (cha
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.10.6
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.0
+
+## [2.11.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.0) (2020-02-9)
+
+* bug [\#833](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/833) KeyLoaderInterface::getPassphrase() might return null and we need a string ([drupol](https://github.com/drupol))
+* feature [\#832](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/832) Make AbstractKeyLoader::getSigningKey() and AbstractKeyLoader::getPublicKey public ([drupol](https://github.com/drupol))
+* feature [\#817](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/817) Feat: add keypair generation command ([bpolaszek](https://github.com/bpolaszek))
+* feature [\#816](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/816) Remove support for lcobucci/jwt <3.4 & symfony/* <4.4 ([chalasr](https://github.com/chalasr))
 
 ## [2.10.6](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.6) (2020-01-20)
 
