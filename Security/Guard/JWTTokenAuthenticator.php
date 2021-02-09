@@ -16,6 +16,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserTokenInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -65,16 +67,18 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param TokenExtractorInterface  $tokenExtractor
+     * @param TokenStorageInterface    $preAuthenticationTokenStorage
      */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
-        TokenExtractorInterface $tokenExtractor
+        TokenExtractorInterface $tokenExtractor,
+        TokenStorageInterface $preAuthenticationTokenStorage
     ) {
         $this->jwtManager                    = $jwtManager;
         $this->dispatcher                    = $dispatcher;
         $this->tokenExtractor                = $tokenExtractor;
-        $this->preAuthenticationTokenStorage = new TokenStorage();
+        $this->preAuthenticationTokenStorage = $preAuthenticationTokenStorage;
     }
 
     public function supports(Request $request)
@@ -87,7 +91,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * {@inheritdoc}
      *
-     * @return PreAuthenticationJWTUserToken
+     * @return PreAuthenticationJWTUserTokenInterface
      *
      * @throws InvalidTokenException If an error occur while decoding the token
      * @throws ExpiredTokenException If the request token is expired
@@ -114,7 +118,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             $preAuthToken->setPayload($payload);
         } catch (JWTDecodeFailureException $e) {
             if (JWTDecodeFailureException::EXPIRED_TOKEN === $e->getReason()) {
-                throw new ExpiredTokenException();
+                $expiredTokenException = new ExpiredTokenException();
+                $expiredTokenException->setToken($preAuthToken);
+                throw $expiredTokenException;
             }
 
             throw new InvalidTokenException('Invalid JWT Token', 0, $e);
@@ -128,7 +134,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      *
      * {@inheritdoc}
      *
-     * @param PreAuthenticationJWTUserToken Implementation of the (Security) TokenInterface
+     * @param PreAuthenticationJWTUserTokenInterface Implementation of the (Security) TokenInterface
      *
      * @throws \InvalidArgumentException If preAuthToken is not of the good type
      * @throws InvalidPayloadException   If the user identity field is not a key of the payload
@@ -136,9 +142,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
-        if (!$preAuthToken instanceof PreAuthenticationJWTUserToken) {
+        if (!$preAuthToken instanceof PreAuthenticationJWTUserTokenInterface) {
             throw new \InvalidArgumentException(
-                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserToken::class)
+                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserTokenInterface::class)
             );
         }
 
@@ -283,6 +289,24 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     {
         if ($userProvider instanceof PayloadAwareUserProviderInterface) {
             return $userProvider->loadUserByUsernameAndPayload($identity, $payload);
+        }
+
+        if ($userProvider instanceof ChainUserProvider) {
+            foreach ($userProvider->getProviders() as $provider) {
+                try {
+                    if ($provider instanceof PayloadAwareUserProviderInterface) {
+                        return $provider->loadUserByUsernameAndPayload($identity, $payload);
+                    }
+
+                    return $provider->loadUserByUsername($identity);
+                } catch (UsernameNotFoundException $e) {
+                    // try next one
+                }
+            }
+
+            $ex = new UsernameNotFoundException(sprintf('There is no user with name "%s".', $identity));
+            $ex->setUsername($identity);
+            throw $ex;
         }
 
         return $userProvider->loadUserByUsername($identity);

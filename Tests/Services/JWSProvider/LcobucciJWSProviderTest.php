@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 
 /**
  * Tests the LcobucciJWSProvider.
@@ -12,9 +13,27 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
  */
 final class LcobucciJWSProviderTest extends AbstractJWSProviderTest
 {
-    public static function setUpBeforeClass()
+    protected static $providerClass  = LcobucciJWSProvider::class;
+    protected static $keyLoaderClass = RawKeyLoader::class;
+
+    public function testCreateWithEcdsa()
     {
-        self::$providerClass  = LcobucciJWSProvider::class;
-        self::$keyLoaderClass = RawKeyLoader::class;
+        $keyLoaderMock = $this->getKeyLoaderMock();
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('loadKey')
+            ->with('private')
+            ->willReturn(self::$privateKey);
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('getPassphrase')
+            ->willReturn('foobar');
+
+        $payload     = ['username' => 'chalasr'];
+        $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'openssl', 'EC512', 3600, 0);
+
+        $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
+
+        return $created->getToken();
     }
 }

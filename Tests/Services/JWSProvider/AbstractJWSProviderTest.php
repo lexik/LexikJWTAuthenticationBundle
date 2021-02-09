@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -78,7 +79,7 @@ vwIDAQAB
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
+        $payload     = ['username' => 'chalasr', 'iat' => time()];
         $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
@@ -114,21 +115,21 @@ vwIDAQAB
     {
         $keyLoader = $this->getKeyLoaderMock();
         $keyLoader
-            ->expects($this->at(0))
-            ->method('loadKey')
-            ->with('private')
-            ->willReturn(static::$privateKey);
-        $keyLoader
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('getPassphrase')
             ->willReturn('foobar');
 
         $keyLoader
-            ->expects($this->at(2))
+            ->expects($this->exactly(2))
             ->method('loadKey')
-            ->with('public')
-            ->willReturn(static::$publicKey);
-
+            ->withConsecutive(
+                ['private'],
+                ['public']
+            )
+            ->willReturnOnConsecutiveCalls(
+                static::$privateKey,
+                static::$publicKey
+            );
         $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
         $jws      = $provider->create(['username' => 'chalasr']);
 
@@ -160,7 +161,27 @@ vwIDAQAB
         new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 'invalid_ttl', 0);
     }
 
-    private function getKeyLoaderMock()
+    public function testCreateWithExtraStandardClaims()
+    {
+        $keyLoaderMock = $this->getKeyLoaderMock();
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('loadKey')
+            ->with('private')
+            ->willReturn(static::$privateKey);
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('getPassphrase')
+            ->willReturn('foobar');
+
+        $payload     = ['username' => 'chalasr'];
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
+
+        $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
+        $this->assertNotEmpty($created->getToken());
+    }
+
+    protected function getKeyLoaderMock()
     {
         return $this
             ->getMockBuilder(static::$keyLoaderClass)

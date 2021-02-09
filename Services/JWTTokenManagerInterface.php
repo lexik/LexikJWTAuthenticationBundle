@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * JWT tokens.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ * @author Eric Lannez <eric.lannez@gmail.com>
+ *
+ * @method createFromPayload(UserInterface $user, array $payload = []);
  */
 interface JWTTokenManagerInterface
 {

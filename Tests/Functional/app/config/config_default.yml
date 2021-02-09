@@ -5,3 +5,6 @@ lexik_jwt_authentication:
     secret_key: '%kernel.root_dir%/../config/jwt/private.pem'
     public_key: '%kernel.root_dir%/../config/jwt/public.pem'
     pass_phrase: testing
+    set_cookies:
+        token:
+            samesite: strict

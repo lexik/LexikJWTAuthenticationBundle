@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -98,6 +99,15 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        $deprecationArgs = [];
+        if (method_exists(BaseNode::class, 'getDeprecation')) {
+            $deprecationArgs = ['lexik/jwt-authentication-bundle', '2.7', 'The "%path%.%node%" configuration key is deprecated. Use the "lexik_jwt_authentication.jwt_token_authenticator" Guard authenticator instead.'];
+        }
+
+        if (method_exists($node, 'setDeprecated')) {
+            $node->setDeprecated(...$deprecationArgs);
+        }
+
         $node
             ->children()
                 ->arrayNode('authorization_header')

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
@@ -18,9 +19,9 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
 {
     private static $subscriber;
 
-    protected function setup()
+    protected function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
 
         self::$subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
     }
@@ -71,6 +72,20 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
         $this->assertSame('Invalid JWT Token', $responseBody['message']);
 
         self::$subscriber->unsetListener(Events::JWT_DECODED);
+    }
+
+    public function testAccessSecuredRouteWithExtraStandardClaim()
+    {
+        self::$subscriber->setListener(Events::JWT_CREATED, function (JWTCreatedEvent $e) {
+            $e->setData(['jti' => 'some-unique-id'] + $e->getData());
+        });
+
+        static::$client = static::createAuthenticatedClient();
+        static::accessSecuredRoute();
+
+        $this->assertSuccessful(static::$client->getResponse());
+
+        self::$subscriber->unsetListener(Events::JWT_CREATED);
     }
 
     /**

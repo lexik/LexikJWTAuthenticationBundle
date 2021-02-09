@@ -37,9 +37,9 @@
         }
     ],
     "require": {
-        "php": "^5.5|^7.0",
+        "php": ">=5.6",
         "ext-openssl": "*",
-        "lcobucci/jwt": "^3.2",
+        "lcobucci/jwt": "^3.2|^4.0",
         "namshi/jose": "^7.2",
         "symfony/framework-bundle": "^3.4|^4.0|^5.0",
         "symfony/security-bundle": "^3.4|^4.0|^5.0"
@@ -57,8 +57,12 @@
         "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
     },
     "autoload": {
-        "psr-4": { "Lexik\\Bundle\\JWTAuthenticationBundle\\": "" },
-        "exclude-from-classmap": ["/Tests/"]
+        "psr-4": {
+            "Lexik\\Bundle\\JWTAuthenticationBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {

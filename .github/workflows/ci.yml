@@ -1,0 +1,157 @@
+name: "CI Tests"
+
+on:
+    pull_request:
+    push:
+
+jobs:
+    php-56:
+        name: PHP 5.6 / Symfony 3.4
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "5.6"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-5.6-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-5.6-composer-locked-"
+
+            - name: "Install Symfony 3.4"
+              run: "composer require symfony/symfony:3.4.* --no-update"
+
+            - name: "Install Symfony PHPUnit Bridge 3.4"
+              run: "composer require symfony/phpunit-bridge:3.4.* --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction --prefer-dist --prefer-stable"
+
+            - name: "Run PHPUnit Tests"
+              env:
+                SYMFONY_PHPUNIT_VERSION: 5.7
+              run: "composer test"
+    php-72:
+        name: PHP 7.2 / Symfony 4.4
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "7.2"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-7.2-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-7.2-composer-locked-"
+
+            - name: "Install Symfony 4.4"
+              run: "composer require symfony/symfony:4.4.* --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction"
+
+            - name: "Run PHPUnit Tests"
+              run: "composer test"
+    php-73:
+        name: PHP 7.3 / Symfony 5.1
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP 7.3"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "7.3"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-7.3-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-7.3-composer-locked-"
+
+            - name: "Install Symfony 5.1"
+              run: "composer require symfony/symfony:5.1.* --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction"
+
+            - name: "Run PHPUnit Tests"
+              run: "composer test"
+    php-74:
+        name: PHP 7.4 / Symfony 5.2
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP 7.4"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "7.4"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-7.4-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-7.4-composer-locked-"
+
+            - name: "Install Symfony 5.1"
+              run: "composer require symfony/symfony:5.2.* --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction"
+
+            - name: "Run PHPUnit Tests"
+              run: "composer test"
+    php8:
+        name: PHP 8 / Symfony 5.x-dev
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP 8"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "8"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-8-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-8-composer-locked-"
+
+            - name: "Install Symfony 5.4"
+              run: "composer require symfony/symfony:5.x-dev --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction"
+
+            - name: "Run PHPUnit Tests"
+              run: "composer test"

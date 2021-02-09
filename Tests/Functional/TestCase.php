@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -48,9 +47,15 @@ abstract class TestCase extends WebTestCase
         $client = static::$client ?: static::$kernel->getContainer()->get('test.client');
 
         $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
-        $responseBody = json_decode($client->getResponse()->getContent(), true);
+        $response = $client->getResponse();
+        $responseBody = json_decode($response->getContent(), true);
 
         if (!isset($responseBody['token'])) {
+            $cookies = $response->headers->getCookies();
+            if (isset($cookies[0]) && 'token' === $cookies[0]->getName()) {
+                return $cookies[0]->getValue();
+            }
+
             throw new \LogicException('Unable to get a JWT Token through the "/login_check" route.');
         }
 
@@ -60,7 +65,7 @@ abstract class TestCase extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function doSetUp()
     {
         $fs = new Filesystem();
         $fs->remove(sys_get_temp_dir().'/LexikJWTAuthenticationBundle/');

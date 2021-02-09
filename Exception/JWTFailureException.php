@@ -15,13 +15,19 @@ class JWTFailureException extends \Exception
     private $reason;
 
     /**
+     * @var array|null
+     */
+    private $payload;
+
+    /**
      * @param string          $reason
      * @param string          $message
      * @param \Exception|null $previous
      */
-    public function __construct($reason, $message, \Exception $previous = null)
+    public function __construct($reason, $message, \Exception $previous = null, array $payload = null)
     {
         $this->reason = $reason;
+        $this->payload = $payload;
 
         parent::__construct($message, 0, $previous);
     }
@@ -32,5 +38,13 @@ class JWTFailureException extends \Exception
     public function getReason()
     {
         return $this->reason;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getPayload()
+    {
+        return $this->payload;
     }
 }

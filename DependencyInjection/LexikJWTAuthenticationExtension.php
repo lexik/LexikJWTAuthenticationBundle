@@ -7,6 +7,8 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -33,7 +35,11 @@ class LexikJWTAuthenticationExtension extends Extension
             $loader->load('console.xml');
         }
 
-        $loader->load('deprecated.xml');
+        if (method_exists(Alias::class, 'getDeprecation')) {
+            $loader->load('deprecated_51.xml');
+        } else {
+            $loader->load('deprecated.xml');
+        }
         $loader->load('jwt_manager.xml');
         $loader->load('key_loader.xml');
         $loader->load('namshi.xml');
@@ -88,9 +94,33 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
+        $tokenExtractors = $this->createTokenExtractors($container, $config['token_extractors']);
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
-            ->replaceArgument(0, $this->createTokenExtractors($container, $config['token_extractors']));
+            ->replaceArgument(0, $tokenExtractors);
+
+        if ($config['set_cookies']) {
+            $loader->load('cookie.xml');
+
+            $cookieProviders = [];
+            foreach ($config['set_cookies'] as $name => $attributes) {
+                $container
+                    ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
+                    ->replaceArgument(0, $name)
+                    ->replaceArgument(1, $attributes['lifetime'] ?: ($config['token_ttl'] ?: 0))
+                    ->replaceArgument(2, $attributes['samesite'])
+                    ->replaceArgument(3, $attributes['path'])
+                    ->replaceArgument(4, $attributes['domain'])
+                    ->replaceArgument(5, $attributes['secure'])
+                    ->replaceArgument(6, $attributes['httpOnly'])
+                    ->replaceArgument(7, $attributes['split']);
+                $cookieProviders[] = new Reference($id);
+            }
+
+            $container
+                ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
+                ->replaceArgument(2, new IteratorArgument($cookieProviders));
+        }
     }
 
     private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
@@ -121,6 +151,15 @@ class LexikJWTAuthenticationExtension extends Extension
             $container
                 ->getDefinition($cookieExtractorId)
                 ->replaceArgument(0, $tokenExtractorsConfig['cookie']['name']);
+
+            $map[] = new Reference($cookieExtractorId);
+        }
+
+        if ($tokenExtractorsConfig['split_cookie']['enabled']) {
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.split_cookie_extractor';
+            $container
+                ->getDefinition($cookieExtractorId)
+                ->replaceArgument(0, $tokenExtractorsConfig['split_cookie']['cookies']);
 
             $map[] = new Reference($cookieExtractorId);
         }

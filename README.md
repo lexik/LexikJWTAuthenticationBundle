@@ -1,15 +1,13 @@
 LexikJWTAuthenticationBundle
 ============================
 
-[![Build Status](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle.svg?branch=master)](https://travis-ci.org/lexik/LexikJWTAuthenticationBundle)
-[![StyleCI](https://styleci.io/repos/18628501/shield?branch=master)](https://styleci.io/repos/18628501?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6/mini.png)](https://insight.sensiolabs.com/projects/67573b6f-e182-4394-b26a-649c323784f6)
 [![Latest Stable Version](https://poser.pugx.org/lexik/jwt-authentication-bundle/v/stable.svg)](https://packagist.org/packages/lexik/jwt-authentication-bundle)
 
 This bundle provides JWT (Json Web Token) authentication for your Symfony API.
 
-It is compatible and tested with PHP 5.5, 7.2, 7.3, on Symfony 3.4 and 4.2.
+It is compatible and tested with PHP 5.6, 7.3, 7.4, 8.0 on Symfony 3.4, 4.x and 5.x.
 
 Documentation
 -------------

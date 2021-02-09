@@ -65,6 +65,13 @@ lexik_jwt_authentication:
         query_parameter:
             enabled: false
             name:    bearer
+        
+        # check token in a cookie
+        split_cookie:
+            enabled: false
+            cookies:
+                - jwt_hp
+                - jwt_s
 ```
 
 #### Encoder configuration
@@ -84,6 +91,63 @@ One of the algorithms supported by the default encoder for the configured [crypt
 - HS256, HS384, HS512 (HMAC)
 - RS256, RS384, RS512 (RSA)
 - ES256, ES384, ES512 (ECDSA)
+
+#### Automatically generating cookies
+You are now able to automatically generate secure and httpOnly cookies when the cookie token extractor is enabled [#753](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/753).
+
+```
+token_extractors: 
+    cookie: 
+        enabled: true
+        name: BEARER
+# ...
+set_cookies:
+    BEARER: ~
+
+# Full config with defaults:
+#  BEARER:
+#      lifetime: null (defaults to token ttl)
+#      samesite: lax
+#      path: /
+#      domain: null (null means automatically set by symfony)
+#      secure: true (default to true)
+#      httpOnly: true
+
+```
+
+### Automatically generating split cookies
+You are also able to automatically generate split cookies. Benefits of this approach are in [this post](https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3).
+
+Keep in mind, that SameSite attribute is **not supported** in [some browsers](https://caniuse.com/#feat=same-site-cookie-attribute)
+
+```
+token_extractors:
+    split_cookie:
+        enabled: true
+        cookies:
+            - jwt_hp
+            - jwt_s
+
+set_cookies:
+    jwt_hp:
+        lifetime: null
+        samesite: strict
+        path: /
+        domain: null
+        httpOnly: false
+        split:
+            - header
+            - payload
+
+    jwt_s:
+        lifetime: null
+        samesite: strict
+        path: /
+        domain: null
+        httpOnly: true
+        split:
+            - signature
+```
 
 Security configuration
 -----------------------
