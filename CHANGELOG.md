@@ -4,7 +4,11 @@ c765af7 bug #826 Fix creating tokens when iat is already set in the payload (cha
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.1
+
+## [2.11.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.1) (2020-02-10)
+
+* bug [\#835](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/835) Fix #834: Re-add namshi/jose as required dependency until v3 ([filisko](https://github.com/filisko))
 
 ## [2.11.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.0) (2020-02-9)
 
