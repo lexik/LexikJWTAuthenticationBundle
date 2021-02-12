@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,12 +35,12 @@ final class GenerateKeyPairCommand extends Command
     private $filesystem;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $secretKey;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $publicKey;
 
@@ -53,7 +54,7 @@ final class GenerateKeyPairCommand extends Command
      */
     private $algorithm;
 
-    public function __construct(Filesystem $filesystem, string $secretKey, string $publicKey, ?string $passphrase, string $algorithm)
+    public function __construct(Filesystem $filesystem, ?string $secretKey, ?string $publicKey, ?string $passphrase, string $algorithm)
     {
         parent::__construct();
         $this->filesystem = $filesystem;
@@ -95,9 +96,13 @@ final class GenerateKeyPairCommand extends Command
             return 0;
         }
 
+        if (!$this->secretKey || !$this->publicKey) {
+            throw new LogicException(sprintf('The "lexik_jwt_authentication.secret_key" and "lexik_jwt_authentication.public_key" config options must not be empty for using the "%s" command.', self::$defaultName));
+        }
+
         $alreadyExists = $this->filesystem->exists($this->secretKey) || $this->filesystem->exists($this->publicKey);
 
-        if (true === $alreadyExists) {
+        if ($alreadyExists) {
             try {
                 $this->handleExistingKeys($input);
             } catch (\RuntimeException $e) {
