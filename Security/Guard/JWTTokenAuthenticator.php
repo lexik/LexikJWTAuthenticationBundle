@@ -163,7 +163,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
-        $response = new JWTAuthenticationFailureResponse($authException->getMessageKey());
+        $errorMessage = strtr($authException->getMessageKey(), $authException->getMessageData());
+        $response = new JWTAuthenticationFailureResponse($errorMessage);
 
         if ($authException instanceof ExpiredTokenException) {
             $event = new JWTExpiredEvent($authException, $response);
