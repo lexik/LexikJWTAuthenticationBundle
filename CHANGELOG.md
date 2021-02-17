@@ -1,10 +1,14 @@
-a759036 bug #827 Use named constructor for lcobucci/jwt Ecdsa signers (chalasr)
-c765af7 bug #826 Fix creating tokens when iat is already set in the payload (chalasr)
-
 CHANGELOG
 =========
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.1
+
+## [2.11.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.1) (2020-02-17)
+1cdcc65 - bug #840 [Security] On Authentication failure, replace MessageData (mpiot)
+bb1e6c3 - bug #838 Fix wiring GenerateKeyPairCommand when key paths are null (chalasr)
+
+* bug [\#840](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/840) [Security] On Authentication failure, replace MessageData ([mpiot](https://github.com/mpiot))
+* bug [\#838](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/838) Fix wiring GenerateKeyPairCommand when key paths are null ([chalasr](https://github.com/chalasr))
 
 ## [2.11.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.1) (2020-02-10)
 
