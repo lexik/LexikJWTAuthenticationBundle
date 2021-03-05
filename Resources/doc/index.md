@@ -66,6 +66,14 @@ lexik_jwt_authentication:
     token_ttl:        3600
 ```
 
+* Configure without SSH keys
+
+``` yaml
+lexik_jwt_authentication:
+    secret_key: yoursecret
+    encoder:
+        signature_algorithm: HS256 
+```
 Configure your `config/packages/security.yaml` :
 
 ``` yaml
