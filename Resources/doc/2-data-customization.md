@@ -109,7 +109,7 @@ If you [create JWT tokens programmatically](./7-manual-token-creation.md), you c
 ```php
 $payload = ['foo' => 'bar'];
 
-$jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->createFromPayload($user);
+$jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->createFromPayload($user, $payload);
 ``` 
 
 Events::JWT_DECODED - Validating data in the JWT payload
