@@ -183,8 +183,8 @@ class JWTTokenAuthenticatorTest extends TestCase
             ))->getUser($decodedToken, $userProvider);
 
             $this->fail(sprintf('Expected exception of type "%s" to be thrown.', UserNotFoundException::class));
-        } catch (UserNotFoundException $e) {
-            $this->assertSame('Unable to load an user with property "username" = "lexik". If the user identity has changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $e->getMessageKey());
+        } catch (UsernameNotFoundException $e) {
+            $this->assertSame('lexik', $e->getUsername());
         }
     }
 
