@@ -145,13 +145,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
             throw new InvalidPayloadException($idClaim);
         }
 
-        $identity = $payload[$idClaim];
-
-        try {
-            $user = $this->loadUser($userProvider, $payload, $identity);
-        } catch (UsernameNotFoundException $e) {
-            throw new UserNotFoundException($idClaim, $identity);
-        }
+        $user = $this->loadUser($userProvider, $payload, $payload[$idClaim]);
 
         $this->preAuthenticationTokenStorage->setToken($preAuthToken);
 

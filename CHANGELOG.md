@@ -21,6 +21,10 @@ bb1e6c3 - bug #838 Fix wiring GenerateKeyPairCommand when key paths are null (ch
 * feature [\#817](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/817) Feat: add keypair generation command ([bpolaszek](https://github.com/bpolaszek))
 * feature [\#816](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/816) Remove support for lcobucci/jwt <3.4 & symfony/* <4.4 ([chalasr](https://github.com/chalasr))
 
+## [2.10.7](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.7) (2020-05-12)
+
+* bug [a175d6dab9](https://github.com/lexik/LexikJWTAuthenticationBundle/commit/a175d6dab968d93e96a3e4f80c495435f71d5eb7) Prevent user enumeration via response content ([chalasr](https://github.com/chalasr))
+
 ## [2.10.6](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.10.6) (2020-01-20)
 
 * bug [\#827](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/827) Use named constructor for lcobucci/jwt Ecdsa signers ([chalasr](https://github.com/chalasr))
