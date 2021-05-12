@@ -1,11 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.3
 
-## [2.11.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.1) (2020-02-17)
-1cdcc65 - bug #840 [Security] On Authentication failure, replace MessageData (mpiot)
-bb1e6c3 - bug #838 Fix wiring GenerateKeyPairCommand when key paths are null (chalasr)
+## [2.11.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.3) (2020-05-12)
+
+* bug [a175d6dab9](https://github.com/lexik/LexikJWTAuthenticationBundle/commit/a175d6dab968d93e96a3e4f80c495435f71d5eb7) Prevent user enumeration via response content ([chalasr](https://github.com/chalasr))
+
+## [2.11.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.2) (2020-02-17)
 
 * bug [\#840](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/840) [Security] On Authentication failure, replace MessageData ([mpiot](https://github.com/mpiot))
 * bug [\#838](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/838) Fix wiring GenerateKeyPairCommand when key paths are null ([chalasr](https://github.com/chalasr))
