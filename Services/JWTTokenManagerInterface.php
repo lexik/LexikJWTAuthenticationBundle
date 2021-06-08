@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,8 +24,15 @@ interface JWTTokenManagerInterface
 
     /**
      * @return array|false The JWT token payload or false if an error occurs
+     * @throws JWTDecodeFailureException
      */
     public function decode(TokenInterface $token);
+
+    /**
+     * @return array|false The JWT token payload or false if an error occurs
+     * @throws JWTDecodeFailureException
+     */
+    public function decodeFromJsonWebToken(string $jwtToken);
 
     /**
      * Sets the field used as identifier to load an user from a JWT payload.

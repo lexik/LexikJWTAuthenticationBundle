@@ -22,18 +22,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 final class User implements UserInterface
 {
-    private $username;
+    private $userIdentifier;
     private $password;
     private $roles;
     private $email;
 
-    public function __construct($username, $password, $email = '', array $roles = [])
+    public function __construct($userIdentifier, $password, $email = '', array $roles = [])
     {
-        if (empty($username)) {
+        if (empty($userIdentifier)) {
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
-        $this->username = $username;
+        $this->userIdentifier = $userIdentifier;
         $this->password = $password;
         $this->roles = $roles;
         $this->email = $email;
@@ -67,7 +67,12 @@ final class User implements UserInterface
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->getUserIdentifier();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->userIdentifier;
     }
 
     /**

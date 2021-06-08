@@ -11,15 +11,15 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
  */
 class JWTUser implements JWTUserInterface
 {
-    private $username;
+    private $userIdentifier;
     private $roles;
 
     /**
      * @final
      */
-    public function __construct(string $username, array $roles = [])
+    public function __construct(string $userIdentifier, array $roles = [])
     {
-        $this->username = $username;
+        $this->userIdentifier = $userIdentifier;
         $this->roles = $roles;
     }
 
@@ -38,15 +38,20 @@ class JWTUser implements JWTUserInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername(): string
     {
-        return $this->username;
+        return $this->getUserIdentifier();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->userIdentifier;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
@@ -54,7 +59,7 @@ class JWTUser implements JWTUserInterface
     /**
      * {@inheritdoc}
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return null;
     }
@@ -62,7 +67,7 @@ class JWTUser implements JWTUserInterface
     /**
      * {@inheritdoc}
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }
