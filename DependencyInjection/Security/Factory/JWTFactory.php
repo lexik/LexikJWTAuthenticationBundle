@@ -7,7 +7,6 @@ use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -27,12 +26,12 @@ class JWTFactory implements SecurityFactoryInterface
     {
         $providerId = 'security.authentication.provider.jwt.'.$id;
         $container
-            ->setDefinition($providerId, $this->createChildDefinition($config['authentication_provider']))
+            ->setDefinition($providerId, new ChildDefinition($config['authentication_provider']))
             ->replaceArgument(0, new Reference($userProvider));
 
         $listenerId = 'security.authentication.listener.jwt.'.$id;
         $container
-            ->setDefinition($listenerId, $this->createChildDefinition($config['authentication_listener']))
+            ->setDefinition($listenerId, new ChildDefinition($config['authentication_listener']))
             ->replaceArgument(2, $config);
 
         $entryPointId = $defaultEntryPoint;
@@ -44,7 +43,7 @@ class JWTFactory implements SecurityFactoryInterface
         if ($config['authorization_header']['enabled']) {
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.'.$id;
             $container
-                ->setDefinition($authorizationHeaderExtractorId, $this->createChildDefinition('lexik_jwt_authentication.extractor.authorization_header_extractor'))
+                ->setDefinition($authorizationHeaderExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.authorization_header_extractor'))
                 ->replaceArgument(0, $config['authorization_header']['prefix'])
                 ->replaceArgument(1, $config['authorization_header']['name']);
 
@@ -56,7 +55,7 @@ class JWTFactory implements SecurityFactoryInterface
         if ($config['query_parameter']['enabled']) {
             $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.'.$id;
             $container
-                ->setDefinition($queryParameterExtractorId, $this->createChildDefinition('lexik_jwt_authentication.extractor.query_parameter_extractor'))
+                ->setDefinition($queryParameterExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.query_parameter_extractor'))
                 ->replaceArgument(0, $config['query_parameter']['name']);
 
             $container
@@ -67,7 +66,7 @@ class JWTFactory implements SecurityFactoryInterface
         if ($config['cookie']['enabled']) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.'.$id;
             $container
-                ->setDefinition($cookieExtractorId, $this->createChildDefinition('lexik_jwt_authentication.extractor.cookie_extractor'))
+                ->setDefinition($cookieExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.cookie_extractor'))
                 ->replaceArgument(0, $config['cookie']['name']);
 
             $container
@@ -99,16 +98,13 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
-        $deprecationArgs = [];
+        $deprecationArgs = ['The "%path%.%node%" configuration key is deprecated. Use the "lexik_jwt_authentication.jwt_token_authenticator" Guard authenticator instead.'];
         if (method_exists(BaseNode::class, 'getDeprecation')) {
             $deprecationArgs = ['lexik/jwt-authentication-bundle', '2.7', 'The "%path%.%node%" configuration key is deprecated. Use the "lexik_jwt_authentication.jwt_token_authenticator" Guard authenticator instead.'];
         }
 
-        if (method_exists($node, 'setDeprecated')) {
-            $node->setDeprecated(...$deprecationArgs);
-        }
-
         $node
+            ->setDeprecated(...$deprecationArgs)
             ->children()
                 ->arrayNode('authorization_header')
                 ->addDefaultsIfNotSet()
@@ -166,17 +162,8 @@ class JWTFactory implements SecurityFactoryInterface
     protected function createEntryPoint(ContainerBuilder $container, $id, $defaultEntryPoint)
     {
         $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.'.$id;
-        $container->setDefinition($entryPointId, $this->createChildDefinition('lexik_jwt_authentication.security.authentication.entry_point'));
+        $container->setDefinition($entryPointId, new ChildDefinition('lexik_jwt_authentication.security.authentication.entry_point'));
 
         return $entryPointId;
-    }
-
-    private function createChildDefinition($parent)
-    {
-        if (class_exists('Symfony\Component\DependencyInjection\ChildDefinition')) {
-            return new ChildDefinition($parent);
-        }
-
-        return new DefinitionDecorator($parent);
     }
 }

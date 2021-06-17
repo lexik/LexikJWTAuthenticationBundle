@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 
 /**
  * JWTProviderTest.
@@ -85,7 +87,11 @@ class JWTProviderTest extends TestCase
 
     public function testAuthenticateWithNotExistingUser()
     {
-        $this->expectException(UsernameNotFoundException::class);
+        if (class_exists(UserNotFoundException::class)) {
+            $this->expectException(UserNotFoundException::class);
+        } else {
+            $this->expectException(UsernameNotFoundException::class);
+        }
 
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
@@ -94,7 +100,7 @@ class JWTProviderTest extends TestCase
             ->getMock();
 
         $userProvider = $this->getUserProviderMock();
-        $userProvider->expects($this->any())->method('loadUserByUsername')->willThrowException(new UsernameNotFoundException());
+        $userProvider->expects($this->any())->method($this->getUserProviderLoadMethodName())->willThrowException(new UsernameNotFoundException());
 
         $eventDispatcher = $this->getEventDispatcherMock();
 
@@ -123,7 +129,7 @@ class JWTProviderTest extends TestCase
         $user->expects($this->any())->method('getRoles')->will($this->returnValue([]));
 
         $userProvider = $this->getUserProviderMock();
-        $userProvider->expects($this->any())->method('loadUserByUsername')->will($this->returnValue($user));
+        $userProvider->expects($this->any())->method($this->getUserProviderLoadMethodName())->will($this->returnValue($user));
 
         $eventDispatcher = $this->getEventDispatcherMock();
 
@@ -179,6 +185,18 @@ class JWTProviderTest extends TestCase
         return $this->getMockBuilder('Symfony\Component\Security\Core\User\InMemoryUserProvider')
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUserProviderLoadMethodName()
+    {
+        if (method_exists(InMemoryUserProvider::class, 'loadUserByIdentifier')) {
+            return 'loadUserByIdentifier';
+        }
+
+        return 'loadUserByUsername';
     }
 
     /**

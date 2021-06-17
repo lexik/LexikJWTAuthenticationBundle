@@ -22,6 +22,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException as SecurityUserNotFoundException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -165,12 +166,20 @@ class JWTTokenAuthenticatorTest extends TestCase
         $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload($payload);
 
+        if (class_exists(SecurityUserNotFoundException::class)) {
+            $exception = new SecurityUserNotFoundException();
+            $exception->setUserIdentifier($payload[$userIdClaim]);
+        } else {
+            $exception = new UsernameNotFoundException();
+            $exception->setUsername($payload[$userIdClaim]);
+        }
+
         $userProvider = $this->getUserProviderMock();
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
             ->with($payload[$userIdClaim])
-            ->will($this->throwException(new UsernameNotFoundException()));
+            ->will($this->throwException($exception));
 
         try {
             (new JWTTokenAuthenticator(
@@ -180,9 +189,15 @@ class JWTTokenAuthenticatorTest extends TestCase
                 $this->getTokenStorageMock()
             ))->getUser($decodedToken, $userProvider);
 
-            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', UserNotFoundException::class));
-        } catch (UsernameNotFoundException $e) {
-            $this->assertSame('lexik', $e->getUsername());
+            $this->fail(sprintf('Expected exception of type "%s" to be thrown.', class_exists(SecurityUserNotFoundException::class) ? SecurityUserNotFoundException::class : UsernameNotFoundException::class));
+        } catch (SecurityUserNotFoundException | UsernameNotFoundException $e) {
+            if (method_exists($e, 'getUserIdentifier')) {
+                $userIdentifier = $e->getUserIdentifier();
+            } else {
+                $userIdentifier = $e->getUsername();
+            }
+
+            $this->assertSame('lexik', $userIdentifier);
         }
     }
 

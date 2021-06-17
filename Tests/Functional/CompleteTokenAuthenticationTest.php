@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -33,6 +34,8 @@ class CompleteTokenAuthenticationTest extends TestCase
 
         if ('lexik_jwt' === static::$kernel->getUserProvider()) {
             $this->assertSame(JWTUser::class, $content['class']);
+        } elseif (class_exists(InMemoryUser::class)) {
+            $this->assertSame(InMemoryUser::class, $content['class']);
         } else {
             $this->assertSame(User::class, $content['class']);
         }

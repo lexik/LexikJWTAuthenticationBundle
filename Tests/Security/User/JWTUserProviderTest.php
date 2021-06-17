@@ -32,7 +32,7 @@ class JWTUserProviderTest extends TestCase
         $user = $userProvider->loadUserByUsername('lexik');
 
         $this->assertInstanceOf(JWTUser::class, $user);
-        $this->assertSame('lexik', $user->getUsername());
+        $this->assertSame('lexik', method_exists($user, 'getUserIdentifier') ? $user->getUserIdentifier() : $user->getUsername());
 
         $this->assertSame($userProvider->loadUserByUsername('lexik'), $user, 'User instances should be cached.');
     }
