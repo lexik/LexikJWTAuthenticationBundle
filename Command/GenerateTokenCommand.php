@@ -76,9 +76,13 @@ class GenerateTokenCommand extends Command
             }
         }
 
-        $token = $this->tokenManager->create(
-            $userProvider->loadUserByUsername($input->getArgument('username'))
-        );
+        if (method_exists($userProvider, 'loadUserByIdentifier')) {
+            $user = $userProvider->loadUserByIdentifier($input->getArgument('username'));
+        } else {
+            $user = $userProvider->loadUserByUsername($input->getArgument('username'));
+        }
+
+        $token = $this->tokenManager->create($user);
 
         $output->writeln([
             '',

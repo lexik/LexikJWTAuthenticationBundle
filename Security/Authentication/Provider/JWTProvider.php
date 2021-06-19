@@ -104,6 +104,10 @@ class JWTProvider implements AuthenticationProviderInterface
             throw $this->createAuthenticationException();
         }
 
+        if (method_exists($this->userProvider, 'loadUserByIdentifier')) {
+            return $this->userProvider->loadUserByIdentifier($payload[$this->userIdClaim]);
+        }
+
         return $this->userProvider->loadUserByUsername($payload[$this->userIdClaim]);
     }
 

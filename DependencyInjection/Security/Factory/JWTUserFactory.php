@@ -8,7 +8,6 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\UserProvider\User
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
 /**
  * Creates the `lexik_jwt` user provider.
@@ -21,14 +20,8 @@ final class JWTUserFactory implements UserProviderFactoryInterface
 {
     public function create(ContainerBuilder $container, $id, $config)
     {
-        if (class_exists(ChildDefinition::class)) {
-            $definition = new ChildDefinition('lexik_jwt_authentication.security.jwt_user_provider');
-        } else {
-            $definition = new DefinitionDecorator('lexik_jwt_authentication.security.jwt_user_provider');
-        }
-
-        $definition = $container->setDefinition($id, $definition);
-        $definition->replaceArgument(0, $config['class']);
+        $container->setDefinition($id, new ChildDefinition('lexik_jwt_authentication.security.jwt_user_provider'))
+            ->replaceArgument(0, $config['class']);
     }
 
     public function getKey()

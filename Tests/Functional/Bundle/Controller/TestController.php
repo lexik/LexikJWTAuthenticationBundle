@@ -12,7 +12,7 @@ class TestController
         return new JsonResponse([
             'class' => get_class($user),
             'roles' => $user->getRoles(),
-            'username' => $user->getUsername(),
+            'username' => method_exists($user, 'getUserIdentifier') ? $user->getUserIdentifier() : $user->getUsername(),
         ]);
     }
 }

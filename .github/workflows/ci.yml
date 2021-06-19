@@ -34,8 +34,37 @@ jobs:
 
             - name: "Run PHPUnit Tests"
               run: "composer test"
+    php-72:
+        name: PHP 7.2 / Symfony 5.1
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@v2"
+              with:
+                  fetch-depth: 2
+
+            - name: "Install PHP 7.2"
+              uses: "shivammathur/setup-php@v2"
+              with:
+                  php-version: "7.2"
+
+            - name: "Cache composer packages"
+              uses: "actions/cache@v2"
+              with:
+                  path: "~/.composer/cache"
+                  key: "php-7.2-composer-locked-${{ hashFiles('composer.lock') }}"
+                  restore-keys: "php-7.2-composer-locked-"
+
+            - name: "Install Symfony 5.1"
+              run: "composer require symfony/symfony:5.1.* --no-update"
+
+            - name: "Install dependencies with composer"
+              run: "composer update --no-interaction"
+
+            - name: "Run PHPUnit Tests"
+              run: "composer test"
     php-73:
-        name: PHP 7.3 / Symfony 5.1
+        name: PHP 7.3 / Symfony 5.2
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout"
@@ -55,8 +84,8 @@ jobs:
                   key: "php-7.3-composer-locked-${{ hashFiles('composer.lock') }}"
                   restore-keys: "php-7.3-composer-locked-"
 
-            - name: "Install Symfony 5.1"
-              run: "composer require symfony/symfony:5.1.* --no-update"
+            - name: "Install Symfony 5.2"
+              run: "composer require symfony/symfony:5.2.* --no-update"
 
             - name: "Install dependencies with composer"
               run: "composer update --no-interaction"
@@ -64,7 +93,7 @@ jobs:
             - name: "Run PHPUnit Tests"
               run: "composer test"
     php-74:
-        name: PHP 7.4 / Symfony 5.2
+        name: PHP 7.4 / Symfony 5.3
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout"
@@ -84,8 +113,8 @@ jobs:
                   key: "php-7.4-composer-locked-${{ hashFiles('composer.lock') }}"
                   restore-keys: "php-7.4-composer-locked-"
 
-            - name: "Install Symfony 5.1"
-              run: "composer require symfony/symfony:5.2.* --no-update"
+            - name: "Install Symfony 5.3"
+              run: "composer require symfony/symfony:5.3.* --no-update"
 
             - name: "Install dependencies with composer"
               run: "composer update --no-interaction"
@@ -93,7 +122,7 @@ jobs:
             - name: "Run PHPUnit Tests"
               run: "composer test"
     php8:
-        name: PHP 8 / Symfony 5.x-dev
+        name: PHP 8 / Symfony 5.4@dev
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout"
@@ -114,7 +143,7 @@ jobs:
                   restore-keys: "php-8-composer-locked-"
 
             - name: "Install Symfony 5.4"
-              run: "composer require symfony/symfony:5.x-dev --no-update"
+              run: "composer require symfony/symfony:5.4.*@dev --no-update"
 
             - name: "Install dependencies with composer"
               run: "composer update --no-interaction"

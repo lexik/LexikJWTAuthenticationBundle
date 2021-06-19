@@ -9,6 +9,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * AuthenticationSuccessHandlerTest.
@@ -136,18 +139,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
         return $token;
     }
 
-    private function getUser()
+    private function getUser(): UserInterface
     {
-        $user = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')
-            ->getMock();
+        if (class_exists(InMemoryUser::class)) {
+            return new InMemoryUser('username', 'password');
+        }
 
-        $user
-            ->expects($this->any())
-            ->method('getUsername')
-            ->will($this->returnValue('username'));
-
-        return $user;
+        return new User('username', 'password');
     }
 
     private function getJWTManager($token = null)

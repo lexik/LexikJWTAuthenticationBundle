@@ -8,7 +8,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -40,7 +42,7 @@ class JWTManagerTest extends TestCase
             ->willReturn('secrettoken');
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
-        $this->assertEquals('secrettoken', $manager->create(new User('user', 'password')));
+        $this->assertEquals('secrettoken', $manager->create($this->createUser('user', 'password')));
     }
 
     /**
@@ -66,7 +68,7 @@ class JWTManagerTest extends TestCase
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
         $payload = ['foo' => 'bar'];
-        $this->assertEquals('secrettoken', $manager->createFromPayload(new User('user', 'password'), $payload));
+        $this->assertEquals('secrettoken', $manager->createFromPayload($this->createUser('user', 'password'), $payload));
     }
 
     /**
@@ -156,5 +158,14 @@ class JWTManagerTest extends TestCase
             ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    private function createUser(string $username, string $password): UserInterface
+    {
+        if (class_exists(InMemoryUser::class)) {
+            return new InMemoryUser($username, $password);
+        }
+
+        return new User($username, $password);
     }
 }
