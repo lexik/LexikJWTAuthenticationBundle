@@ -78,14 +78,6 @@ final class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getUserIdentifier(): string
-    {
-        return $this->username;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function eraseCredentials()
     {
     }

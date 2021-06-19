@@ -15,5 +15,13 @@
                 <service class="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage" />
             </argument>
         </service>
+
+        <service id="lexik_jwt_authentication.security.jwt_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator" abstract="true">
+            <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
+            <argument /> <!-- User Provider -->
+        </service>
+
     </services>
 </container>

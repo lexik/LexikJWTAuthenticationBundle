@@ -19,6 +19,13 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class JWTFactory implements SecurityFactoryInterface
 {
+    public function __construct($triggerDeprecation = true)
+    {
+        if ($triggerDeprecation) {
+            trigger_deprecation('lexik/jwt-authentication-bundle', '2.0', 'Class "%s" is deprecated, use "%s" instead.', self::class, JWTAuthenticatorFactory::class);
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

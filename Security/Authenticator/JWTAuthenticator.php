@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
@@ -14,7 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
@@ -34,7 +35,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class JWTTokenAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
+class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     /**
      * @var TokenExtractorInterface
@@ -88,10 +89,10 @@ class JWTTokenAuthenticator extends AbstractAuthenticator implements Authenticat
 
     public function authenticate(Request $request): PassportInterface
     {
-        $tokenExtractor = $this->getTokenExtractor();
+        $token = $this->getTokenExtractor()->extract($request);
 
         try {
-            if (!$payload = $this->jwtManager->decodeFromJsonWebToken($tokenExtractor->extract($request))) {
+            if (!$payload = $this->jwtManager->decodeFromJsonWebToken($token)) {
                 throw new InvalidTokenException('Invalid JWT Token');
             }
         } catch (JWTDecodeFailureException $e) {
@@ -107,12 +108,16 @@ class JWTTokenAuthenticator extends AbstractAuthenticator implements Authenticat
             throw new InvalidPayloadException($idClaim);
         }
 
-        return new SelfValidatingPassport(
+        $passport = new SelfValidatingPassport(
             new UserBadge($payload[$idClaim],
             function ($userIdentifier) use($payload) {
                 return $this->loadUser($payload, $userIdentifier);
             })
         );
+
+        $passport->setAttribute('payload', $payload);
+
+        return $passport;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -159,12 +164,11 @@ class JWTTokenAuthenticator extends AbstractAuthenticator implements Authenticat
     protected function loadUser(array $payload, string $identity): UserInterface
     {
         if ($this->userProvider instanceof PayloadAwareUserProviderInterface) {
-            if (method_exists(PayloadAwareUserProviderInterface::class, 'loadUserByIdentifierAndPayload')) {
+            if (method_exists($this->userProvider, 'loadUserByIdentifierAndPayload')) {
                 return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
             } else {
                 return $this->userProvider->loadUserByUsernameAndPayload($identity, $payload);
             }
-
         }
 
         if ($this->userProvider instanceof ChainUserProvider) {
@@ -196,10 +200,23 @@ class JWTTokenAuthenticator extends AbstractAuthenticator implements Authenticat
             throw $ex;
         }
 
-        if (method_exists(UserProviderInterface::class, 'loadUserByIdentifier')) {
-            return $this->userProvider->loadUserByIdentifierAndPayload($identity);
+        if (method_exists($this->userProvider, 'loadUserByIdentifier')) {
+            return $this->userProvider->loadUserByIdentifier($identity);
         } else {
-            return $this->userProvider->loadUserByUsernameAndPayload($identity);
+            return $this->userProvider->loadUserByUsername($identity);
         }
+    }
+
+    public function createAuthenticatedToken(PassportInterface $passport, string $firewallName): TokenInterface
+    {
+        $token = parent::createAuthenticatedToken($passport, $firewallName);
+
+        if (!$passport instanceof SelfValidatingPassport) {
+            throw new \LogicException(sprintf('Expected "%s" but got "%s".', SelfValidatingPassport::class, get_debug_type($passport)));
+        }
+
+        $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
+
+        return $token;
     }
 }

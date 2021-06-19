@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Guard\AuthenticatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -40,7 +41,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTTokenAuthenticator extends AbstractGuardAuthenticator
+class JWTTokenAuthenticator implements AuthenticatorInterface
 {
     /**
      * @var JWTTokenManagerInterface
