@@ -1,0 +1,121 @@
+---------------------------------------------------------------------------
+
+by TristanPouliquen at 2021-06-08T16:15:06Z
+
+Added unit tests to my new authenticator.
+
+The only point that frustrates me is being forced to inject the UserProvider & store the payload as a property of the class to be able to pass them down to the `loadUser` method that calls the `loadXXXAndPayload` methods.
+
+I didn't find a way to work around this issue and rely simply on the UserProvider structure & pass only the identifier to the UserBadge to let the magic work it all!
+
+If anyone has an idea, I'm open to it :)
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-06-08T16:18:26Z
+
+@TristanPouliquen Thank you very much for this PR! You just made my day :)
+I can't review it right now but I'll be back at the very end of the week to hopefully help moving forward as quickly as possible.
+
+---------------------------------------------------------------------------
+
+by TristanPouliquen at 2021-06-09T09:24:20Z
+
+@chalasr Np! Still fighting with getting it to pass all the different CIs & make it backwards compatible though
+
+---------------------------------------------------------------------------
+
+by mbabker at 2021-06-10T13:52:30Z
+
+> The only point that frustrates me is being forced to inject the UserProvider & store the payload as a property of the class to be able to pass them down to the `loadUser` method that calls the `loadXXXAndPayload` methods.
+>
+> I didn't find a way to work around this issue and rely simply on the UserProvider structure & pass only the identifier to the UserBadge to let the magic work it all!
+>
+> If anyone has an idea, I'm open to it :)
+
+I bounced this PR around in one of my apps yesterday to see if there was a way to just use Symfony's authenticator manager without the authenticator needing to be aware of the user provider, and I couldn't come up with anything.  It's basically stuck like this thanks to `PayloadAwareUserProviderInterface` and the authenticator manager not passing any information from the passport into the user loader.
+
+---------------------------------------------------------------------------
+
+by mbabker at 2021-06-10T13:57:02Z
+
+> make it backwards compatible though
+
+One of the biggest things that'll help will be to check if `loadUserByIdentifier` exists on the provider and fall back to the legacy `loadUserByUsername`.  Similar to [this check](https://github.com/symfony/security-http/blob/195f7207dec4519ca8b0e407ba921ec239aa5cee/EventListener/UserProviderListener.php#L48-L55) in the `UserProviderListener`.
+
+---------------------------------------------------------------------------
+
+by TristanPouliquen at 2021-06-11T12:53:18Z
+
+Tests are passing on all scenarii except for PHP8 & SF5.x-dev => composer does not seem to be able to resolve a correct set of dependencies.
+
+Someone has any idea of why?
+
+---------------------------------------------------------------------------
+
+by TristanPouliquen at 2021-06-11T13:30:51Z
+
+> Tests are passing on all scenarii except for PHP8 & SF5.x-dev => composer does not seem to be able to resolve a correct set of dependencies.
+>
+> Someone has any idea of why?
+
+In the meantime, I've switched it to a more reasonable `5.3.x-dev` to test against the latest SF5.3
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-06-11T13:36:53Z
+
+Sounds good 👍
+
+---------------------------------------------------------------------------
+
+by mbabker at 2021-06-11T13:39:16Z
+
+> Someone has any idea of why?
+
+There isn’t a 5.x branch anymore, so it can always use a version string and work right.
+
+---------------------------------------------------------------------------
+
+by TristanPouliquen at 2021-06-16T08:32:42Z
+
+What's the next step on this PR now? :)
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-06-20T09:37:16Z
+
+Now green and deprecation-free! (well, one remaining notice but purely testing/internal, should not impact developers).
+Here is how this PR should be used.
+
+Before:
+```yaml
+# config/packages/security.yaml
+security:
+   # ...
+    firewalls:
+        api:
+            pattern:  ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+```
+
+After:
+```yaml
+# config/packages/security.yaml
+security:
+    enable_authenticator_manager: true
+    # ...
+    firewalls:
+        api:
+            pattern:  ^/api
+            stateless: true
+            jwt: ~
+```
+
+We might add more configuration under the `jwt` key, for now there is not.
+Btw, the documentation needs an update , PR welcome and much appreciated!
+
+I'm going to merge this and draft a new release later today.
