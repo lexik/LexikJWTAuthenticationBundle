@@ -1,7 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.11.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.0
+
+## [2.12.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.0) (2020-06-23)
+
+* feature [\#872](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/872) Add new `jwt` authenticator for Symfony 5.3+ Security system ([TristanPouliquen](https://github.com/TristanPouliquen), [chalasr](https://github.com/chalasr))
+* bug [\#878](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/878) Handle misc. Symfony 5.3 deprecations, update CI config ([mbabker](https://github.com/mbabker))
+* bug [\#864](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/864) Remove development files from releases ([phansys](https://github.com/phansys))
 
 ## [2.11.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.11.3) (2020-05-12)
 
