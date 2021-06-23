@@ -1,10 +1,6 @@
 framework:
     secret: test
-    router:
-        resource: '%kernel.root_dir%/config/routing.yml'
     test: ~
-    session:
-        storage_id: session.storage.mock_file
 
 services:
     lexik_jwt_authentication.test.jwt_event_subscriber:
@@ -18,7 +14,6 @@ services:
         class: Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder
         arguments: ['@lexik_jwt_authentication.jws_provider.lcobucci']
         public: true
-
 
     Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController:
         arguments: ['@security.token_storage']

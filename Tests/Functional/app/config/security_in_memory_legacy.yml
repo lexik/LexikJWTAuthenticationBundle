@@ -2,15 +2,14 @@ imports:
   - { resource: base_security.yml }
 
 security:
-    enable_authenticator_manager: true
-
-    password_hashers:
+    encoders:
         Symfony\Component\Security\Core\User\UserInterface: plaintext
 
     firewalls:
         login:
             pattern:  ^/login
             stateless: true
+            anonymous: true
             provider: in_memory
             form_login:
                 check_path: /login_check
@@ -21,5 +20,8 @@ security:
         api:
             pattern:  ^/api
             stateless: true
-            provider: jwt
-            jwt: ~
+            anonymous: false
+            provider: in_memory
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator

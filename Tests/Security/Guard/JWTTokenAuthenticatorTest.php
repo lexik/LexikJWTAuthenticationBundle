@@ -24,9 +24,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException as SecurityUserNotFoundException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ *
+ * @group legacy
+ */
 class JWTTokenAuthenticatorTest extends TestCase
 {
     public function testGetCredentials()
@@ -113,7 +118,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->with($payload[$userIdClaim])
             ->willReturn($userStub);
 
@@ -177,7 +182,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->with($payload[$userIdClaim])
             ->will($this->throwException($exception));
 
@@ -231,7 +236,7 @@ class JWTTokenAuthenticatorTest extends TestCase
         $userProvider = $this->getUserProviderMock();
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->with($payload['sub'])
             ->willReturn($userStub);
 
@@ -382,9 +387,7 @@ class JWTTokenAuthenticatorTest extends TestCase
 
     private function getUserProviderMock()
     {
-        return $this->getMockBuilder(UserProviderInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->getMockBuilder(DummyUserProvider::class)->getMock();
     }
 
     /**
@@ -400,5 +403,12 @@ class JWTTokenAuthenticatorTest extends TestCase
     private function expectEvent($eventName, $event, $dispatcher)
     {
         $dispatcher->expects($this->once())->method('dispatch')->with($event, $eventName);
+    }
+}
+
+abstract class DummyUserProvider implements UserProviderInterface
+{
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
     }
 }

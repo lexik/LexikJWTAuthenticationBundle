@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 /**
  * AppKernel.
@@ -70,18 +71,37 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        if (\method_exists(TreeBuilder::class, 'getRootNode')) {
-            // Symfony 4.2+
-            $loader->load(__DIR__.'/config/config_router_utf8.yml');
+        $loader->load(__DIR__.'/config/config_router_utf8.yml');
+
+        // 5.3+ session config
+        if (class_exists(UserNotFoundException::class)) {
+            $sessionConfig = [
+                'storage_factory_id' => 'session.storage.factory.mock_file',
+            ];
+        } else {
+            $sessionConfig = [
+                'handler_id' => null,
+                'cookie_secure' => 'auto',
+                'cookie_samesite' => 'lax',
+                'storage_id' => 'session.storage.mock_file',
+            ];
         }
+
+        $loader->load(function (ContainerBuilder $container) use ($sessionConfig) {
+            $container->prependExtensionConfig('framework', [
+                'router' => [
+                    'resource' => '%kernel.root_dir%/config/routing.yml',
+                    'utf8' => true,
+                ],
+                'session' => $sessionConfig
+            ]);
+        });
 
         if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
             $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
-
-            return;
         }
 
-        $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider));
+        $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider . (class_exists(UserNotFoundException::class) ? '' : '_legacy')));
 
         if ($this->signatureAlgorithm && file_exists($file = __DIR__.sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
             $loader->load($file);
