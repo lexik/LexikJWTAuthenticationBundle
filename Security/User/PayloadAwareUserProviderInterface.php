@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * @method UserInterface loadUserByIdentifierAndPayload(string $identifier) Loads a user from an identifier and JWT token payload.
+ * @method UserInterface loadUserByIdentifierAndPayload(string $identifier, array $payload) Loads a user from an identifier and JWT token payload.
  */
 interface PayloadAwareUserProviderInterface extends UserProviderInterface
 {
