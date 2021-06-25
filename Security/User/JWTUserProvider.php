@@ -48,23 +48,23 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
      */
     public function loadUserByUsernameAndPayload(string $username, array $payload): UserInterface
     {
-        $class = $this->class;
-
         if (isset($this->cache[$username])) {
             return $this->cache[$username];
         }
+        
+        $class = $this->class;
 
         return $this->cache[$username] = $class::createFromPayload($username, $payload);
     }
 
     public function loadUserByIdentifierAndPayload(string $userIdentifier, array $payload): UserInterface
     {
-        $class = $this->class;
-
         if (isset($this->cache[$userIdentifier])) {
             return $this->cache[$userIdentifier];
         }
-
+        
+        $class = $this->class;
+        
         return $this->cache[$userIdentifier] = $class::createFromPayload($userIdentifier, $payload);
     }
 
