@@ -92,7 +92,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         $token = $this->getTokenExtractor()->extract($request);
 
         try {
-            if (!$payload = $this->jwtManager->decodeFromJsonWebToken($token)) {
+            if (!$payload = $this->jwtManager->parse($token)) {
                 throw new InvalidTokenException('Invalid JWT Token');
             }
         } catch (JWTDecodeFailureException $e) {

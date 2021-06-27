@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
@@ -93,6 +94,27 @@ class JWTManagerTest extends TestCase
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
         $this->assertEquals(['foo' => 'bar'], $manager->decode($this->getJWTUserTokenMock()));
+    }
+
+    public function testParse()
+    {
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf(JWTDecodedEvent::class),
+                $this->equalTo(Events::JWT_DECODED)
+            );
+
+        $encoder = $this->getJWTEncoderMock();
+        $encoder
+            ->expects($this->once())
+            ->method('decode')
+            ->willReturn(['foo' => 'bar']);
+
+        $manager = new JWTManager($encoder, $dispatcher, 'username');
+        $this->assertEquals(['foo' => 'bar'], $manager->parse('jwt'));
     }
 
     /**

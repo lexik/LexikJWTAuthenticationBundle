@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -117,20 +118,17 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     }
 
     /**
-     * @inheritDoc
-     * @throws JWTDecodeFailureException
+     * {@inheritdoc}
      */
-    public function decodeFromJsonWebToken(string $jwtToken)
+    public function parse(string $jwtToken): array
     {
-        if (!($payload = $this->jwtEncoder->decode($jwtToken))) {
-            return false;
-        }
+        $payload = $this->jwtEncoder->decode($jwtToken);
 
         $event = new JWTDecodedEvent($payload);
         $this->dispatcher->dispatch($event, Events::JWT_DECODED);
 
         if (!$event->isValid()) {
-            return false;
+            throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'The token was marked as invalid by an event listener after successful decoding.');
         }
 
         return $event->getPayload();
