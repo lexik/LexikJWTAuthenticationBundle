@@ -17,11 +17,11 @@ use Symfony\Component\DependencyInjection\Reference;
 class JWTAuthenticatorFactory implements SecurityFactoryInterface, AuthenticatorFactoryInterface
 {
     /**
-     * {@inheritdoc}
+     * @throws \LogicException
      */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
-        return [];
+        throw new \LogicException('This method is implemented for BC purpose and should never be called.');
     }
 
     /**

@@ -46,7 +46,7 @@ class JWTAuthenticatorTest extends TestCase
 
         $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
         $jwtManager
-            ->method('decodeFromJsonWebToken')
+            ->method('parse')
             ->willReturn(['sub' => 'lexik']);
 
         $userProvider = $this->getUserProviderMock();
@@ -67,7 +67,7 @@ class JWTAuthenticatorTest extends TestCase
 
     public function testAuthenticateWithExpiredTokenThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->method('decodeFromJsonWebToken')
+        $jwtManager->method('parse')
             ->will($this->throwException(new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token')));
 
         $this->expectException(ExpiredTokenException::class);
@@ -84,7 +84,7 @@ class JWTAuthenticatorTest extends TestCase
 
     public function testAuthenticateWithInvalidTokenThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->method('decodeFromJsonWebToken')
+        $jwtManager->method('parse')
             ->willThrowException(new JWTDecodeFailureException(
                 JWTDecodeFailureException::INVALID_TOKEN,
                 'Invalid JWT Token')
@@ -103,8 +103,12 @@ class JWTAuthenticatorTest extends TestCase
 
     public function testAuthenticateWithUndecodableTokenThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->method('decodeFromJsonWebToken')
-            ->willReturn(null);
+        $jwtManager->method('parse')
+            ->willThrowException(new JWTDecodeFailureException(
+                JWTDecodeFailureException::INVALID_TOKEN,
+                'The token was marked as invalid by an event listener after successful decoding.'
+            ));
+
         $authenticator = new JWTAuthenticator(
             $jwtManager,
             $this->getEventDispatcherMock(),
@@ -119,7 +123,7 @@ class JWTAuthenticatorTest extends TestCase
 
     public function testAuthenticationWithInvalidPayloadThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->method('decodeFromJsonWebToken')
+        $jwtManager->method('parse')
             ->willReturn(['foo' => 'bar']);
         $jwtManager->method('getUserIdClaim')
             ->willReturn('identifier');
@@ -137,7 +141,7 @@ class JWTAuthenticatorTest extends TestCase
 
     public function testAuthenticateWithInvalidUserThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
-        $jwtManager->method('decodeFromJsonWebToken')
+        $jwtManager->method('parse')
             ->willReturn(['identifier' => 'bar']);
         $jwtManager->method('getUserIdClaim')
             ->willReturn('identifier');
@@ -201,7 +205,7 @@ class JWTAuthenticatorTest extends TestCase
 
     private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
     {
-        $jwtManager = $this->getMockBuilder(JWTTokenManagerInterface::class)
+        $jwtManager = $this->getMockBuilder(DummyJWTManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -271,6 +275,13 @@ abstract class DummyUserProvider implements UserProviderInterface, PayloadAwareU
     }
 
     public function loadUserByIdentifierAndPayload(string $identifier): UserInterface
+    {
+    }
+}
+
+abstract class DummyJWTManager implements JWTTokenManagerInterface
+{
+    public function parse(string $token): array
     {
     }
 }
