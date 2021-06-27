@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.1
+
+## [2.12.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.1) (2021-06-28)
+
+* bug [\#884](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/884) Remove development files from releases ([chalasr](https://github.com/chalasr))
 
 ## [2.12.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.0) (2021-06-23)
 
