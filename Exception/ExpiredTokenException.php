@@ -2,12 +2,11 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Exception;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * Exception that should be thrown from a {@link JWTTokenAuthenticator} implementation during
- * an authentication process.
+ * Exception that should be thrown from an authenticator during the authentication process
+ * if a token is expired.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
