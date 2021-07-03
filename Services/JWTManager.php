@@ -8,10 +8,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -143,6 +143,13 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
+
+        if ($user instanceof InMemoryUser && ('username' === $this->userIdClaim || 'username' === $this->userIdentityField)) {
+            $payload[$this->userIdClaim ?: $this->userIdentityField] = $accessor->getValue($user, 'userIdentifier');
+
+            return;
+        }
+
         $payload[$this->userIdClaim ?: $this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
     }
 

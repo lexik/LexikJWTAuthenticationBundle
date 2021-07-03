@@ -55,6 +55,14 @@ class JWTAuthenticatorFactory implements SecurityFactoryInterface, Authenticator
             ->setDefinition($authenticatorId, new ChildDefinition('lexik_jwt_authentication.security.jwt_authenticator'))
             ->replaceArgument(3, new Reference($userProviderId));
 
+        $this->removeLegacyGuardServices($container);
+
         return $authenticatorId;
+    }
+
+    private function removeLegacyGuardServices(ContainerBuilder $container)
+    {
+        $container->removeAlias('lexik_jwt_authentication.jwt_token_authenticator');
+        $container->removeDefinition('lexik_jwt_authentication.security.guard.jwt_token_authenticator');
     }
 }
