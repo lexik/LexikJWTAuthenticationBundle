@@ -70,25 +70,22 @@ Configure your `config/packages/security.yaml` :
 
 ``` yaml
 security:
+    enable_authenticator_manager: true
     # ...
     
     firewalls:
-
         login:
-            pattern:  ^/api/login
+            pattern: ^/api/login
             stateless: true
-            anonymous: true
             json_login:
-                check_path:               /api/login_check
-                success_handler:          lexik_jwt_authentication.handler.authentication_success
-                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
             pattern:   ^/api
             stateless: true
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
 
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

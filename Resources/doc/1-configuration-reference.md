@@ -150,23 +150,29 @@ set_cookies:
 Security configuration
 -----------------------
 
+For Symfony 5.3 and higher, use the `jwt` authenticator:
+
 ```yaml
 # config/packages/security.yaml
 security:
-    # ...
-    providers:
+    enable_authenticator_manager: true
+    firewalls:
+        api:
+            # ...
+            jwt: ~ # enables the jwt authenticator
         # ...
-        jwt: # optional, any user provider can be used
-            lexik_jwt:
-                class: App\Security\JWTUser
+```
+
+For Symfony versions prior to 5.3, use the Guard authenticator:
+
+```yaml
     firewalls:
         # ...
         api:
             # ...
             guard:
-                authenticators: 
-                    - lexik_jwt_authentication.jwt_token_authenticator
-            provider: jwt # optional
+                authenticators:
+                    - 'lexik_jwt_authentication.jwt_token_authenticator'
 ```
 
 ##### authenticator
