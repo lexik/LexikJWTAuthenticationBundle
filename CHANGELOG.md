@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.2
+
+## [2.12.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.2) (2021-07-3)
+
+* bug [\#886](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/886) Fix remaining deprecations on Symfony 5.3 ([chalasr](https://github.com/chalasr))
 
 ## [2.12.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.1) (2021-06-28)
 
