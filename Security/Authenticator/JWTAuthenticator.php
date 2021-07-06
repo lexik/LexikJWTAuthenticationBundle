@@ -189,7 +189,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
                 }
             }
 
-            if(!class_exists(UsernameNotFoundException::class)) {
+            if(!class_exists(UserNotFoundException::class)) {
                 $ex = new UsernameNotFoundException(sprintf('There is no user with username "%s".', $identity));
                 $ex->setUsername($identity);
             } else {
