@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.3
+
+## [2.12.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.2) (2021-07-7)
+
+* bug [\#887](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/887) JWTAuthenticator logic fix ([ergnuor](https://github.com/ergnuor))
 
 ## [2.12.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.2) (2021-07-3)
 
