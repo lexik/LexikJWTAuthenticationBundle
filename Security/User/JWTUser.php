@@ -14,9 +14,6 @@ class JWTUser implements JWTUserInterface
     private $userIdentifier;
     private $roles;
 
-    /**
-     * @final
-     */
     public function __construct(string $userIdentifier, array $roles = [])
     {
         $this->userIdentifier = $userIdentifier;
