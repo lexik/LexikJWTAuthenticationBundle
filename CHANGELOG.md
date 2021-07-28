@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.4
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.5
+
+## [2.12.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.5) (2021-07-29)
+
+* bug [\#897](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/897) Fix unexpected deprecation about Guard (bis) ([chalasr](https://github.com/chalasr))
 
 ## [2.12.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.4) (2021-07-28)
 
