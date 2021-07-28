@@ -1,9 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.4
 
-## [2.12.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.2) (2021-07-7)
+## [2.12.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.4) (2021-07-28)
+
+* bug [\#895](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/895) Fix unexpected deprecation about Guard ([chalasr](https://github.com/chalasr))
+
+## [2.12.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.3) (2021-07-7)
 
 * bug [\#887](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/887) JWTAuthenticator logic fix ([ergnuor](https://github.com/ergnuor))
 
