@@ -47,6 +47,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $loader->load('response_interceptor.xml');
         $loader->load('token_authenticator.xml');
         $loader->load('token_extractor.xml');
+        $loader->load('guard_authenticator.xml');
 
         if (isset($config['private_key_path'])) {
             $config['secret_key'] = $config['private_key_path'];
