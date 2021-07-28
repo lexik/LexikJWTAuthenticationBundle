@@ -22,6 +22,10 @@ final class JWTUserFactory implements UserProviderFactoryInterface
     {
         $container->setDefinition($id, new ChildDefinition('lexik_jwt_authentication.security.jwt_user_provider'))
             ->replaceArgument(0, $config['class']);
+
+        // Compile-time parameter removed by RemoveLegacyAuthenticatorPass
+        // Stop setting it when guard support gets removed (aka when removing Symfony<5.3 support)
+        $container->setParameter('lexik_jwt_authentication.authenticator_manager_enabled', true);
     }
 
     public function getKey()

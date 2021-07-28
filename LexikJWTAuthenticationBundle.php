@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle;
 
+use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\RegisterLegacyGuardAuthenticatorPass;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\WireGenerateTokenCommandPass;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTAuthenticatorFactory;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTFactory;
@@ -27,6 +28,7 @@ class LexikJWTAuthenticationBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new WireGenerateTokenCommandPass());
+        $container->addCompilerPass(new RegisterLegacyGuardAuthenticatorPass());
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
