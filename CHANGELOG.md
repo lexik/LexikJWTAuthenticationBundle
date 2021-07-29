@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.5
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.12.6
+
+## [2.12.6](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.6) (2021-07-30)
+
+* bug 66ec1e0 Fix missing import ([chalasr](https://github.com/chalasr))
 
 ## [2.12.5](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.5) (2021-07-29)
 
