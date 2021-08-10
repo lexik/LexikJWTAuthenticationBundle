@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authenticator;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -22,6 +23,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** @requires PHP >= 7.2 */
@@ -201,6 +206,32 @@ class JWTAuthenticatorTest extends TestCase
 
         $this->assertEquals($failureResponse, $response);
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());
+    }
+
+    public function testCreateAuthenticatedToken()
+    {
+        $user = $this->createMock(UserInterface::class);
+        $user->method('getRoles')->willReturn(['ROLE_USER']);
+
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new PostAuthenticationToken($user, 'dummy', ['ROLE_USER']))), Events::JWT_AUTHENTICATED);
+
+        $authenticator = new JWTAuthenticator(
+            $this->getJWTManagerMock(),
+            $dispatcher,
+            $this->getTokenExtractorMock(),
+            $this->getUserProviderMock()
+        );
+
+        $passport = $this->createMock(SelfValidatingPassport::class);
+        $passport->method('getUser')->willReturn($user);
+        $passport->method('getAttribute')->with('payload')->willReturn(['claim' => 'val']);
+
+        if (method_exists(FormLoginAuthenticator::class, 'createToken')) {
+            $authenticator->createToken($passport, 'dummy');
+        } else {
+            $authenticator->createAuthenticatedToken($passport, 'dummy');
+        }
     }
 
     private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
