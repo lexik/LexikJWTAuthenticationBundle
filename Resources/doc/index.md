@@ -4,7 +4,7 @@ Getting started
 Prerequisites
 -------------
 
-This bundle requires Symfony 3.4+ and the openssl extension.
+This bundle requires Symfony 4.4+ and the openssl extension.
 
 **Protip:** Though the bundle doesn't enforce you to do so, it is highly recommended to use HTTPS. 
 
