@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -214,6 +215,15 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         if (!$passport instanceof SelfValidatingPassport) {
             throw new \LogicException(sprintf('Expected "%s" but got "%s".', SelfValidatingPassport::class, get_debug_type($passport)));
         }
+
+        $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
+
+        return $token;
+    }
+
+    public function createToken(Passport $passport, string $firewallName): TokenInterface
+    {
+        $token = parent::createToken($passport, $firewallName);
 
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
 
