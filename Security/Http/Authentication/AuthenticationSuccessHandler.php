@@ -27,15 +27,17 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
     protected $jwtManager;
     protected $dispatcher;
+    protected $removeTokenFromBodyWhenCookiesUsed;
 
     /**
      * @param iterable|JWTCookieProvider[] $cookieProviders
      */
-    public function __construct(JWTTokenManagerInterface $jwtManager, EventDispatcherInterface $dispatcher, $cookieProviders = [])
+    public function __construct(JWTTokenManagerInterface $jwtManager, EventDispatcherInterface $dispatcher, $cookieProviders = [], bool $removeTokenFromBodyWhenCookiesUsed = true)
     {
         $this->jwtManager = $jwtManager;
         $this->dispatcher = $dispatcher;
         $this->cookieProviders = $cookieProviders;
+        $this->removeTokenFromBodyWhenCookiesUsed = $removeTokenFromBodyWhenCookiesUsed;
     }
 
     /**
@@ -63,7 +65,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->dispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);
         $responseData = $event->getData();
 
-        if ($jwtCookies) {
+        if ($jwtCookies && $this->removeTokenFromBodyWhenCookiesUsed) {
             unset($responseData['token']);
         }
 
