@@ -72,7 +72,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * {@inheritdoc}
      */
-    public function start(Request $request, AuthenticationException $authException = null): JWTAuthenticationFailureResponse
+    public function start(Request $request, AuthenticationException $authException = null): Response
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
         $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
