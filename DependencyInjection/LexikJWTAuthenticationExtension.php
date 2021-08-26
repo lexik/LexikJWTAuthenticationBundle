@@ -31,10 +31,6 @@ class LexikJWTAuthenticationExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        if (class_exists(Application::class)) {
-            $loader->load('console.xml');
-        }
-
         if (method_exists(Alias::class, 'getDeprecation')) {
             $loader->load('deprecated_51.xml');
         } else {
@@ -122,12 +118,17 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(2, new IteratorArgument($cookieProviders));
         }
 
-        $container
-            ->getDefinition('lexik_jwt_authentication.generate_keypair_command')
-            ->replaceArgument(1, $config['secret_key'])
-            ->replaceArgument(2, $config['public_key'])
-            ->replaceArgument(3, $config['pass_phrase'])
-            ->replaceArgument(4, $encoderConfig['signature_algorithm']);
+        if (class_exists(Application::class)) {
+            $loader->load('console.xml');
+
+            $container
+                ->getDefinition('lexik_jwt_authentication.generate_keypair_command')
+                ->replaceArgument(1, $config['secret_key'])
+                ->replaceArgument(2, $config['public_key'])
+                ->replaceArgument(3, $config['pass_phrase'])
+                ->replaceArgument(4, $encoderConfig['signature_algorithm']);
+        }
+
     }
 
     private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
