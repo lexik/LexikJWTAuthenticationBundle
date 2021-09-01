@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -45,15 +46,22 @@ class JWTAuthenticatorFactory implements SecurityFactoryInterface, Authenticator
      */
     public function addConfiguration(NodeDefinition $node)
     {
-        // no-op - no config here for now
+        $node
+            ->children()
+                ->scalarNode('authenticator')
+                    ->defaultValue('lexik_jwt_authentication.security.jwt_authenticator')
+                ->end()
+            ->end()
+        ;
     }
 
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
     {
         $authenticatorId = 'security.authenticator.jwt.'.$firewallName;
         $container
-            ->setDefinition($authenticatorId, new ChildDefinition('lexik_jwt_authentication.security.jwt_authenticator'))
-            ->replaceArgument(3, new Reference($userProviderId));
+            ->setDefinition($authenticatorId, new ChildDefinition($config['authenticator']))
+            ->replaceArgument(3, new Reference($userProviderId))
+        ;
 
         // Compile-time parameter removed by RemoveLegacyAuthenticatorPass
         // Stop setting it when guard support gets removed (aka when removing Symfony<5.3 support)
