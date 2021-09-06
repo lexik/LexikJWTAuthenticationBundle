@@ -24,7 +24,7 @@ final class LoadedJWS
     {
         $this->payload = $payload;
         $this->header = $header;
-        $this->hasLifetime = $hasLifetime;
+        $this->hasLifetime = isset($payload['exp']) ? true : false;
         $this->clockSkew = $clockSkew;
 
         if (true === $isVerified) {
