@@ -36,7 +36,7 @@ final class LoadedJWSTest extends TestCase
 
         $this->assertSame($payload, $jws->getPayload());
         $this->assertFalse($jws->isVerified());
-        $this->assertFalse($jws->isExpired());
+        $this->assertTrue($jws->isExpired());
     }
 
     public function testUnverifiedWithGoodPayload()
