@@ -30,6 +30,10 @@ final class LoadedJWS
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
         }
+        
+        if (empty($payload)) {
+            $this->state = self::INVALID;
+        }
 
         $this->checkIssuedAt();
         $this->checkExpiration();
