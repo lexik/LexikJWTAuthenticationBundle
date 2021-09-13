@@ -157,6 +157,30 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     }
 
     /**
+     * Gets the jwt manager.
+     */
+    protected function getJwtManager(): JWTTokenManagerInterface
+    {
+        return $this->jwtManager;
+    }
+
+    /**
+     * Gets the event dispatcher.
+     */
+    protected function getEventDispatcher(): EventDispatcherInterface
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
+     * Gets the user provider.
+     */
+    protected function getUserProvider(): UserProviderInterface
+    {
+        return $this->userProvider;
+    }
+
+    /**
      * Loads the user to authenticate.
      *
      * @param array                 $payload      The token payload
