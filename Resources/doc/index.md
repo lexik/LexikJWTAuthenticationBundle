@@ -17,20 +17,7 @@ to your `composer.json` file:
     php composer.phar require "lexik/jwt-authentication-bundle"
 
 #### Register the bundle: 
-
-**Symfony 3 Version:**  
-Register bundle into `app/AppKernel.php`:
-
-``` php
-public function registerBundles()
-{
-    return array(
-        // ...
-        new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
-    );
-}
-```
-**Symfony 4 Version :**   
+ 
 Register bundle into `config/bundles.php` (Flex did it automatically):  
 ```php 
 return [
@@ -69,6 +56,33 @@ lexik_jwt_authentication:
 Configure your `config/packages/security.yaml` :
 
 ``` yaml
+# Symfony versions prior to 5.3
+security:
+    # ...
+    
+    firewalls:
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+```
+
+``` yaml
+# Symfony 5.3 and higher
 security:
     enable_authenticator_manager: true
     # ...
@@ -88,7 +102,7 @@ security:
             jwt: ~
 
     access_control:
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 ```
 
@@ -180,6 +194,7 @@ The following documents are available:
 - [Functionally testing a JWT protected api](3-functional-testing.md)
 - [Working with CORS requests](4-cors-requests.md)
 - [JWT encoder service customization](5-encoder-service.md)
-- [Extending JWTTokenAuthenticator](6-extending-jwt-authenticator.md)
+- [Extending Authenticator](6-extending-jwt-authenticator.md)
 - [Creating JWT tokens programmatically](7-manual-token-creation.md)
 - [A database-less user provider](8-jwt-user-provider.md)
+- [Accessing the authenticated JWT token](9-access-authenticated-jwt-token.md)

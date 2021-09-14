@@ -28,6 +28,7 @@ security:
 Then, use it on your JWT protected firewall:
 
 ```yaml
+# Symfony versions prior to 5.3
 security:
     firewalls:
         api:
@@ -36,10 +37,19 @@ security:
                 # ...
 ```
 
+```yaml
+# Symfony 5.3 and higher
+security:
+    firewalls:
+        api:
+            provider: jwt
+            jwt: ~
+```
+
 What does it change?
 --------------------
 
-Now that the provider is configured, it will automatically be used by the `JWTGuardAuthenticator` when authenticating a token.
+Now that the provider is configured, it will automatically be used by the `JWTTokenAuthenticator` (Symfony < 5.3) or `JWTAuthenticator` (Symfony >= 5.3) when authenticating a token.
 Instead of loading the user from a "datastore" (i.e. memory or any database engine), a `JWTUserInterface` instance will be created from the JWT payload, will be cached for a request and be authenticated.
 We provide a simple  `JWTUser` class implementing this interface, which is used by default when configuring the provider.
 

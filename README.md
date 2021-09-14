@@ -26,9 +26,10 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Functional testing](Resources/doc/3-functional-testing.md)
   * [Working with CORS requests](Resources/doc/4-cors-requests.md)
   * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
-  * [Extending JWTTokenAuthenticator](Resources/doc/6-extending-jwt-authenticator.md)
+  * [Extending Authenticator](Resources/doc/6-extending-jwt-authenticator.md)
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
   * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
+  * [Accessing the authenticated JWT token](Resources/doc/9-access-authenticated-jwt-token.md)
 
 Community Support
 -----------------
