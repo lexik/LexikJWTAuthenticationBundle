@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+
+by fd6130 at 2021-09-16T07:55:25Z
+
+The test got issue, i don't know how can i make it pass. Hope someone can help me to solve it.
+
+I tried this PR along with custom authenticator in my fresh project, having no issue so far.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-09-16T09:07:38Z
+
+Thanks for the PR!
+Here is a patch that fixes the failing test:
+```diff
+diff --git a/Security/Authenticator/JWTAuthenticator.php b/Security/Authenticator/JWTAuthenticator.php
+index 7d7ffc7..f27b4e3 100644
+--- a/Security/Authenticator/JWTAuthenticator.php
++++ b/Security/Authenticator/JWTAuthenticator.php
+@@ -248,7 +248,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
+
+     public function createToken(Passport $passport, string $firewallName): TokenInterface
+     {
+-        $token = parent::createToken($passport, $firewallName);
++        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
+
+         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
+
+diff --git a/Tests/Security/Authenticator/JWTAuthenticatorTest.php b/Tests/Security/Authenticator/JWTAuthenticatorTest.php
+index 348d66b..1a16874 100644
+--- a/Tests/Security/Authenticator/JWTAuthenticatorTest.php
++++ b/Tests/Security/Authenticator/JWTAuthenticatorTest.php
+@@ -14,6 +14,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+ use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
+ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
++use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
+ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
+ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
+@@ -214,7 +215,7 @@ class JWTAuthenticatorTest extends TestCase
+         $user->method('getRoles')->willReturn(['ROLE_USER']);
+
+         $dispatcher = $this->getEventDispatcherMock();
+-        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new PostAuthenticationToken($user, 'dummy', ['ROLE_USER']))), Events::JWT_AUTHENTICATED);
++        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new JWTPostAuthenticationToken($user, 'dummy', ['ROLE_USER'], 'dummytoken'))), Events::JWT_AUTHENTICATED);
+
+         $authenticator = new JWTAuthenticator(
+             $this->getJWTManagerMock(),
+@@ -225,13 +226,18 @@ class JWTAuthenticatorTest extends TestCase
+
+         $passport = $this->createMock(SelfValidatingPassport::class);
+         $passport->method('getUser')->willReturn($user);
+-        $passport->method('getAttribute')->with('payload')->willReturn(['claim' => 'val']);
++        $passport->method('getAttribute')
++            ->withConsecutive(['token', null], ['payload', null])
++            ->willReturnOnConsecutiveCalls('dummytoken', ['claim' => 'val']);
+
+         if (method_exists(FormLoginAuthenticator::class, 'createToken')) {
+-            $authenticator->createToken($passport, 'dummy');
++            $token = $authenticator->createToken($passport, 'dummy');
+         } else {
+-            $authenticator->createAuthenticatedToken($passport, 'dummy');
++            $token = $authenticator->createAuthenticatedToken($passport, 'dummy');
+         }
++
++        $this->assertInstanceOf(JWTPostAuthenticationToken::class, $token);
++        $this->assertSame('dummytoken', $token->getCredentials());
+     }
+
+     private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
+```
+
+Could you apply it?
+
+---------------------------------------------------------------------------
+
+by fd6130 at 2021-09-16T09:25:21Z
+
+Alright, done for the test.
+
+_update_
+
+But the `5.4@dev` test fail, not sure why.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-09-16T09:32:30Z
+
+Woops, sorry! We need to patch `createToken()` as well:
+```diff
+diff --git a/Security/Authenticator/JWTAuthenticator.php b/Security/Authenticator/JWTAuthenticator.php
+index 7d7ffc7..f27b4e3 100644
+--- a/Security/Authenticator/JWTAuthenticator.php
++++ b/Security/Authenticator/JWTAuthenticator.php
+@@ -248,7 +248,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
+
+     public function createToken(Passport $passport, string $firewallName): TokenInterface
+     {
+-        $token = parent::createToken($passport, $firewallName);
++        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
+
+         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
+
+```
+
+(FYI `createToken()` is the replacement for `createAuthenticatedToken()`, the latter is deprecated in 5.4)
