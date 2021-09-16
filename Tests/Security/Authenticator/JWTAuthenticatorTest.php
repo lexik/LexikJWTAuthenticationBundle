@@ -14,6 +14,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
@@ -214,7 +215,7 @@ class JWTAuthenticatorTest extends TestCase
         $user->method('getRoles')->willReturn(['ROLE_USER']);
 
         $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new PostAuthenticationToken($user, 'dummy', ['ROLE_USER']))), Events::JWT_AUTHENTICATED);
+        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new JWTPostAuthenticationToken($user, 'dummy', ['ROLE_USER'], 'dummytoken'))), Events::JWT_AUTHENTICATED);
 
         $authenticator = new JWTAuthenticator(
             $this->getJWTManagerMock(),
@@ -225,13 +226,18 @@ class JWTAuthenticatorTest extends TestCase
 
         $passport = $this->createMock(SelfValidatingPassport::class);
         $passport->method('getUser')->willReturn($user);
-        $passport->method('getAttribute')->with('payload')->willReturn(['claim' => 'val']);
-
+        $passport->method('getAttribute')
+            ->withConsecutive(['token', null], ['payload', null])
+            ->willReturnOnConsecutiveCalls('dummytoken', ['claim' => 'val']);
+        
         if (method_exists(FormLoginAuthenticator::class, 'createToken')) {
-            $authenticator->createToken($passport, 'dummy');
+            $token = $authenticator->createToken($passport, 'dummy');
         } else {
-            $authenticator->createAuthenticatedToken($passport, 'dummy');
+            $token = $authenticator->createAuthenticatedToken($passport, 'dummy');
         }
+
+        $this->assertInstanceOf(JWTPostAuthenticationToken::class, $token);
+        $this->assertSame('dummytoken', $token->getCredentials());
     }
 
     private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
