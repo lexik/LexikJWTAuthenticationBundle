@@ -177,7 +177,7 @@ For Symfony versions prior to 5.3, use the Guard authenticator:
 
 ##### authenticator
 
-For more details about the `lexik_jwt_authentication.jwt_token_authenticator` service and how to customize it, see ["Extending the Guard JWTTokenAuthenticator"](6-extending-jwt-authenticator.md)
+For more details about using custom authenticator in your application, see ["Extending Authenticator"](6-extending-jwt-authenticator.md)
 
 ##### database-less user provider
 
