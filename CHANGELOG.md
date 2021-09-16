@@ -5,7 +5,7 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.13.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.13) (2021-09-15)
 
-* bug [\#916](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/916) Allow to use custom authenticator by extending JWTAuthenticator ([fd6130](https://github.com/fd6130))
+* feature [\#916](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/916) Allow to use custom authenticator by extending JWTAuthenticator ([fd6130](https://github.com/fd6130))
 * bug [\#914](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/914) Bundle breaks application if Symfony Console not installed ([yivi](https://github.com/yivi))
 * feature [\#912](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/912) Added argument to AuthenticationSuccessHandler to stop token from being removed from response  ([naitsirch](https://github.com/naitsirch))
 * bug [\#905](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/905) Changed `JWTAuthenticator::start` method return type to more generic `Response` type ([aurimasniekis](https://github.com/aurimasniekis))
