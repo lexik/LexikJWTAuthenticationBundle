@@ -160,7 +160,13 @@ security:
         api:
             # ...
             jwt: ~ # enables the jwt authenticator
+
+        # Full config with defaults:
+        #    jwt:
+        #        provider: null  (you can put provider here or just ignore this config)
+        #        authenticator: lexik_jwt_authentication.security.jwt_authenticator (default jwt authenticator)
         # ...
+
 ```
 
 For Symfony versions prior to 5.3, use the Guard authenticator:
