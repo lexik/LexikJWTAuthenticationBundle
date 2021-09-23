@@ -14,12 +14,14 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     private $signingKey;
     private $publicKey;
     private $passphrase;
+    private $additionalPublicKeys;
 
-    public function __construct(?string $signingKey = null, ?string $publicKey = null, ?string $passphrase = null)
+    public function __construct(?string $signingKey = null, ?string $publicKey = null, ?string $passphrase = null, array $additionalPublicKeys = [])
     {
         $this->signingKey = $signingKey;
         $this->publicKey = $publicKey;
         $this->passphrase = $passphrase;
+        $this->additionalPublicKeys = $additionalPublicKeys;
     }
 
     /**
@@ -38,6 +40,21 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     public function getPublicKey()
     {
         return is_file($this->publicKey) ? $this->readKey(self::TYPE_PUBLIC) : $this->publicKey;
+    }
+
+    public function getAdditionalPublicKeys(): array
+    {
+        $contents = [];
+
+        foreach ($this->additionalPublicKeys as $key) {
+            if (!$key || !is_file($key) || !is_readable($key)) {
+                throw new \RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
+            }
+
+            $contents[] = is_file($key) ? file_get_contents($key) : $key;
+        }
+
+        return $contents;
     }
 
     /**

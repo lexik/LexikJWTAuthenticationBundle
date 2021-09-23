@@ -19,7 +19,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
 {
     public function testEncoderConfiguration()
     {
-        $container = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem', 'pass_phrase' => 'test']);
+        $container = $this->getContainer(['secret_key' => 'private.pem', 'public_key' => 'public.pem', 'additional_public_keys' => ['public1.pem', 'public2.pem'], 'pass_phrase' => 'test']);
         $encoderDef = $container->findDefinition('lexik_jwt_authentication.encoder');
         $this->assertSame(LcobucciJWTEncoder::class, $encoderDef->getClass());
         $this->assertEquals(new Reference('lexik_jwt_authentication.jws_provider.lcobucci'), $encoderDef->getArgument(0));
@@ -34,7 +34,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
             $container->getDefinition('lexik_jwt_authentication.jws_provider.lcobucci')->getArguments()
         );
         $this->assertSame(
-            ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%'],
+            ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%', ['public1.pem', 'public2.pem']],
             $container->getDefinition('lexik_jwt_authentication.key_loader.raw')->getArguments()
         );
     }
@@ -65,7 +65,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
             $container->getDefinition('lexik_jwt_authentication.jws_provider.default')->getArguments()
         );
         $this->assertSame(
-            ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%'],
+            ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%', []],
             $container->findDefinition('lexik_jwt_authentication.key_loader')->getArguments()
         );
     }

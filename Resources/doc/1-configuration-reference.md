@@ -15,6 +15,11 @@ lexik_jwt_authentication:
     secret_key: '%kernel.project_dir%/config/jwt/private.pem' # path to the secret key OR raw secret key, required for creating tokens
     public_key: '%kernel.project_dir%/config/jwt/public.pem'  # path to the public key OR raw public key, required for verifying tokens
     pass_phrase: 'yourpassphrase' # required for creating tokens
+    # Additional public keys are used to verify signature of incoming tokens, if the key provided in "public_key" configuration node doesn't verify the token
+    additional_public_keys:
+        - '%kernel.project_dir%/config/jwt/public1.pem'
+        - '%kernel.project_dir%/config/jwt/public2.pem'
+        - '%kernel.project_dir%/config/jwt/public3.pem'
 ```
 
 #### Using HMAC
