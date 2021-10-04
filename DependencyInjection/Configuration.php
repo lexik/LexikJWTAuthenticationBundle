@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\BaseNode;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -17,7 +18,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('lexik_jwt_authentication');
 
@@ -106,7 +107,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function getTokenExtractorsNode()
+    private function getTokenExtractorsNode(): ArrayNodeDefinition
     {
         $builder = new TreeBuilder('token_extractors');
         $node = $builder->getRootNode();
@@ -159,13 +160,8 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Returns the correct deprecation parameters for setDeprecated.
-     *
-     * @param string $message
-     * @param string $version
-     *
-     * @return string[]
      */
-    private function getDeprecationParameters($message, $version)
+    private function getDeprecationParameters(string $message, string $version): array
     {
         if (method_exists(BaseNode::class, 'getDeprecation')) {
             return ['lexik/jwt-authentication-bundle', $version, $message];
