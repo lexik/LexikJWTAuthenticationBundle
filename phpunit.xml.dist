@@ -28,6 +28,6 @@
     </filter>
 
     <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"></env>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=27"></env>
     </php>
 </phpunit>

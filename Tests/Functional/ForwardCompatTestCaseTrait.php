@@ -2,44 +2,19 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-if (70000 <= \PHP_VERSION_ID && (new \ReflectionMethod(WebTestCase::class, 'tearDown'))->hasReturnType()) {
-    eval('
-        namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
-
-        /**
-         * @internal
-         */
-        trait ForwardCompatTestCaseTrait
-        {
-            protected function tearDown(): void
-            {
-                static::ensureKernelShutdown();
-                static::$kernel = null;
-            }
-            
-            protected function setUp(): void
-            {
-                $this->doSetUp();
-            }
-        }
-    ');
-} else {
-    /**
-     * @internal
-     */
-    trait ForwardCompatTestCaseTrait
+/**
+ * @internal
+ */
+trait ForwardCompatTestCaseTrait
+{
+    protected function tearDown(): void
     {
-        protected function tearDown()
-        {
-            static::ensureKernelShutdown();
-            static::$kernel = null;
-        }
+        static::ensureKernelShutdown();
+        static::$kernel = null;
+    }
 
-        protected function setUp()
-        {
-            $this->doSetUp();
-        }
+    protected function setUp(): void
+    {
+        $this->doSetUp();
     }
 }

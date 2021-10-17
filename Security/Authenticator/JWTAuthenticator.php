@@ -88,7 +88,10 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         return false !== $this->getTokenExtractor()->extract($request);
     }
 
-    public function authenticate(Request $request): PassportInterface
+    /**
+     * @return Passport
+     */
+    public function authenticate(Request $request) /*: Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
 
@@ -238,9 +241,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         if (!$passport instanceof SelfValidatingPassport) {
             throw new \LogicException(sprintf('Expected "%s" but got "%s".', SelfValidatingPassport::class, get_debug_type($passport)));
         }
-        
+
         $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
-        
+
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
 
         return $token;
@@ -251,7 +254,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         if (!$passport instanceof SelfValidatingPassport) {
             throw new \LogicException(sprintf('Expected "%s" but got "%s".', SelfValidatingPassport::class, get_debug_type($passport)));
         }
-        
+
         $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
 
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);

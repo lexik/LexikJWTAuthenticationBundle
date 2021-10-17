@@ -2,13 +2,16 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authentication;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -114,7 +117,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     protected function getRequest()
     {
         $request = $this
-            ->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+            ->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -127,7 +130,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     protected function getToken()
     {
         $token = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -174,7 +177,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with(
-                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent'),
+                $this->isInstanceOf(AuthenticationSuccessEvent::class),
                 $this->equalTo(Events::AUTHENTICATION_SUCCESS)
             );
 

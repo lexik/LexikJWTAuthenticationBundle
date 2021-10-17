@@ -11,7 +11,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidPayloadException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingTokenException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
@@ -26,6 +25,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException as SecurityU
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Guard\AuthenticatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -34,6 +34,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class JWTTokenAuthenticatorTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        if (!class_exists(AuthenticatorInterface::class)) {
+            self::markTestSkipped('Test only applies to symfony/security-guard 5.4 and earlier');
+        }
+    }
+
     public function testGetCredentials()
     {
         $jwtManager = $this->getJWTManagerMock();

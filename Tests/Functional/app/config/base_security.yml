@@ -9,7 +9,3 @@ security:
         jwt:
             lexik_jwt:
                 class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser
-
-    access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

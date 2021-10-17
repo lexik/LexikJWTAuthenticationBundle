@@ -6,12 +6,26 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
 
+if (interface_exists(GuardTokenInterface::class)) {
+    /**
+     * Compatibility layer ensuring the guard token interface is applied when available.
+     *
+     * @internal
+     */
+    abstract class JWTCompatUserToken extends AbstractToken implements GuardTokenInterface {}
+} else {
+    /**
+     * @internal
+     */
+    abstract class JWTCompatUserToken extends AbstractToken {}
+}
+
 /**
  * JWTUserToken.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTUserToken extends AbstractToken implements GuardTokenInterface
+class JWTUserToken extends JWTCompatUserToken
 {
     /**
      * @var string
@@ -35,7 +49,10 @@ class JWTUserToken extends AbstractToken implements GuardTokenInterface
         }
 
         $this->setRawToken($rawToken);
-        $this->setAuthenticated(true);
+
+        if (method_exists($this, 'setAuthenticated')) {
+            $this->setAuthenticated(true);
+        }
 
         $this->providerKey = $firewallName;
     }

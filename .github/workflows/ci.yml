@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         continue-on-error: ${{ matrix.can-fail }}
         strategy:
-            fail-fast: true
+            fail-fast: false
             matrix:
                 include:
                     # Lowest Deps
@@ -27,23 +27,23 @@ jobs:
                       symfony: 4.4.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                    # Development Symfony branches
                     - php: 7.3
-                      symfony: 5.3.*
-                      composer-flags: '--prefer-stable'
+                      symfony: 5.4.*@dev
+                      composer-flags: '--prefer-stable' # Needed to force `lcobucci/jwt` to install a usable version
                       can-fail: false
                     - php: 7.4
-                      symfony: 5.3.*
-                      composer-flags: '--prefer-stable'
+                      symfony: 5.4.*@dev
+                      composer-flags: ''
                       can-fail: false
-                    - php: 8.0
-                      symfony: 5.3.*
-                      composer-flags: '--prefer-stable'
-                      can-fail: false
-                    # Development Symfony branches
                     - php: 8.0
                       symfony: 5.4.*@dev
                       composer-flags: ''
-                      can-fail: true
+                      can-fail: false
+                    - php: 8.0
+                      symfony: 6.0.*@dev
+                      composer-flags: ''
+                      can-fail: false
 
         name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
 
@@ -65,6 +65,14 @@ jobs:
               with:
                   php-version: "${{ matrix.php }}"
                   tools: "composer:v2,flex"
+
+            - name: "Set Composer stability"
+              if: "matrix.symfony == '5.4.*@dev' || matrix.symfony == '6.0.*@dev'"
+              run: "composer config minimum-stability dev"
+
+            - name: "Remove symfony/security-guard"
+              if: "matrix.symfony == '6.0.*@dev'"
+              run: "composer remove --dev --no-update symfony/security-guard"
 
             - name: "Install dependencies"
               run: "composer update ${{ matrix.composer-flags }} --prefer-dist"

@@ -2,9 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,7 +13,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTAuthenticatorFactory implements SecurityFactoryInterface, AuthenticatorFactoryInterface
+class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
 {
     /**
      * @throws \LogicException
@@ -28,15 +26,15 @@ class JWTAuthenticatorFactory implements SecurityFactoryInterface, Authenticator
     /**
      * {@inheritdoc}
      */
-    public function getPosition()
+    public function getPriority(): int
     {
-        return 'pre_auth';
+        return -10;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getKey()
+    public function getKey(): string
     {
         return 'jwt';
     }
@@ -55,7 +53,7 @@ class JWTAuthenticatorFactory implements SecurityFactoryInterface, Authenticator
         ;
     }
 
-    public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
+    public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string
     {
         $authenticatorId = 'security.authenticator.jwt.'.$firewallName;
         $container
