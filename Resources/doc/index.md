@@ -43,17 +43,26 @@ Otherwise, an error will be raised to prevent you from overwriting your keys acc
 Configuration
 -------------
 
-Configure the SSL keys path in your `config/packages/lexik_jwt_authentication.yaml` :
+Configure the SSL keys path and passphrase in your `.env`:
 
-``` yaml
+```
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+JWT_PASSPHRASE=
+```
+
+```yaml
+# config/packages/lexik_jwt_authentication.yaml
 lexik_jwt_authentication:
-    secret_key:       '%kernel.project_dir%/config/jwt/private.pem' # required for token creation
-    public_key:       '%kernel.project_dir%/config/jwt/public.pem'  # required for token verification
-    pass_phrase:      'your_secret_passphrase' # required for token creation, usage of an environment variable is recommended
-    token_ttl:        3600
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%' # required for token creation
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%' # required for token verification
+    pass_phrase: '%env(JWT_PASSPHRASE)%' # required for token creation
+    token_ttl: 3600 # in seconds, default is 3600
 ```
 
 Configure your `config/packages/security.yaml` :
+
+**Make sure the firewall `login` is place before `api`, otherwise you will encounter `/api/login_check` route not found.**
 
 ``` yaml
 # Symfony versions prior to 5.3
@@ -65,7 +74,7 @@ security:
             pattern: ^/api/login
             stateless: true
             json_login:
-                check_path: /api/login_check
+                check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
@@ -121,8 +130,14 @@ Usage
 The first step is to authenticate the user using its credentials.
 
 You can test getting the token with a simple curl command like this (adapt host and port):
+
+Linux or macOS
 ```bash
 curl -X POST -H "Content-Type: application/json" http://localhost/api/login_check -d '{"username":"johndoe","password":"test"}'
+```
+Windows
+```bash
+curl -X POST -H "Content-Type: application/json" http://localhost/api/login_check --data {\"username\":\"johndoe\",\"password\":\"test\"}
 ```
 
 If it works, you will receive something like this:
