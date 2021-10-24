@@ -27,7 +27,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
         Events::JWT_EXPIRED => JWTExpiredEvent::class,
     ];
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $subscriberMap = [];
 

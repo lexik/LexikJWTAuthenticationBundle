@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * TestCase.
@@ -17,11 +18,11 @@ abstract class TestCase extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected static function createKernel(array $options = [])
+    protected static function createKernel(array $options = []): KernelInterface
     {
         require_once __DIR__.'/app/AppKernel.php';
 
-        return new AppKernel('test', true, isset($options['test_case']) ? $options['test_case'] : null);
+        return new AppKernel('test', true, $options['test_case'] ?? null);
     }
 
     protected static function createAuthenticatedClient($token = null)

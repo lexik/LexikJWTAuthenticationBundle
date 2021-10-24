@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -21,6 +22,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class JWTListenerTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        if (!interface_exists(AuthenticationManagerInterface::class)) {
+            self::markTestSkipped('Test only applies to symfony/security-core 5.4 and earlier');
+        }
+    }
+
     /**
      * @group time-sensitive
      */
@@ -84,7 +92,7 @@ class JWTListenerTest extends TestCase
     public function getAuthenticationManagerMock()
     {
         return $this
-            ->getMockBuilder('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface')
+            ->getMockBuilder(AuthenticationManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

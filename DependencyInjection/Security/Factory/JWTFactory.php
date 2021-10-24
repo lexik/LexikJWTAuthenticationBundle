@@ -28,6 +28,8 @@ class JWTFactory implements SecurityFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
@@ -86,6 +88,8 @@ class JWTFactory implements SecurityFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function getPosition()
     {
@@ -94,6 +98,8 @@ class JWTFactory implements SecurityFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function getKey()
     {

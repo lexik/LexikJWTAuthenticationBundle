@@ -2,13 +2,20 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authentication\Provider;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider\JWTProvider;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * JWTProviderTest.
@@ -19,6 +26,13 @@ use Symfony\Component\Security\Core\User\InMemoryUserProvider;
  */
 class JWTProviderTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        if (!interface_exists(AuthenticationProviderInterface::class)) {
+            self::markTestSkipped('Test only applies to symfony/security-core 5.4 and earlier');
+        }
+    }
+
     /**
      * test supports method.
      */
@@ -28,7 +42,7 @@ class JWTProviderTest extends TestCase
 
         /** @var TokenInterface $usernamePasswordToken */
         $usernamePasswordToken = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken')
+            ->getMockBuilder(UsernamePasswordToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,7 +50,7 @@ class JWTProviderTest extends TestCase
 
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -50,7 +64,7 @@ class JWTProviderTest extends TestCase
 
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -71,7 +85,7 @@ class JWTProviderTest extends TestCase
 
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -95,7 +109,7 @@ class JWTProviderTest extends TestCase
 
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -118,12 +132,12 @@ class JWTProviderTest extends TestCase
     {
         /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $user = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')
+            ->getMockBuilder(UserInterface::class)
             ->getMock();
 
         $user->expects($this->any())->method('getRoles')->will($this->returnValue([]));
@@ -139,7 +153,7 @@ class JWTProviderTest extends TestCase
         $provider = new JWTProvider($userProvider, $jwtManager, $eventDispatcher, 'username');
 
         $this->assertInstanceOf(
-            'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
+            JWTUserToken::class,
             $provider->authenticate($jwtUserToken)
         );
 
@@ -152,7 +166,7 @@ class JWTProviderTest extends TestCase
         $provider->setUserIdentityField('uid');
 
         $this->assertInstanceOf(
-            'Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken',
+            JWTUserToken::class,
             $provider->authenticate($jwtUserToken)
         );
     }
@@ -162,7 +176,7 @@ class JWTProviderTest extends TestCase
      */
     protected function getJWTManagerMock()
     {
-        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager')
+        return $this->getMockBuilder(JWTManager::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -172,7 +186,7 @@ class JWTProviderTest extends TestCase
      */
     protected function getJWTEncoderMock()
     {
-        return $this->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface')
+        return $this->getMockBuilder(JWTEncoderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -182,7 +196,7 @@ class JWTProviderTest extends TestCase
      */
     protected function getUserProviderMock()
     {
-        return $this->getMockBuilder('Symfony\Component\Security\Core\User\InMemoryUserProvider')
+        return $this->getMockBuilder(InMemoryUserProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -204,7 +218,7 @@ class JWTProviderTest extends TestCase
      */
     protected function getEventDispatcherMock()
     {
-        return $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+        return $this->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

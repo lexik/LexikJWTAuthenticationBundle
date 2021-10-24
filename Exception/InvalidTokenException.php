@@ -13,6 +13,8 @@ class InvalidTokenException extends AuthenticationException
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function getMessageKey()
     {

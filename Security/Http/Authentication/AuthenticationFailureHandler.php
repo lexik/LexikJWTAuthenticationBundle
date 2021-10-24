@@ -31,7 +31,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());
         $statusCode = self::mapExceptionCodeToStatusCode($exception->getCode());

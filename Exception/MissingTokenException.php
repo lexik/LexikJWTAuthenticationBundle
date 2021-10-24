@@ -13,6 +13,8 @@ class MissingTokenException extends AuthenticationException
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function getMessageKey()
     {

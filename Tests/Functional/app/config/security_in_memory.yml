@@ -21,6 +21,10 @@ security:
         api:
             pattern:  ^/api
             stateless: true
-            anonymous: false
+            lazy: true
             provider: in_memory
             jwt: ~
+
+    access_control:
+      - { path: ^/login, roles: PUBLIC_ACCESS }
+      - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
