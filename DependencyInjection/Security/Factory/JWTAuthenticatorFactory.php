@@ -46,6 +46,9 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
     {
         $node
             ->children()
+                ->scalarNode('provider')
+                    ->defaultNull()
+                ->end()
                 ->scalarNode('authenticator')
                     ->defaultValue('lexik_jwt_authentication.security.jwt_authenticator')
                 ->end()
@@ -56,6 +59,9 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string
     {
         $authenticatorId = 'security.authenticator.jwt.'.$firewallName;
+        
+        $userProviderId = empty($config['provider']) ? $userProviderId : 'security.user.provider.concrete.' . $config['provider'];
+
         $container
             ->setDefinition($authenticatorId, new ChildDefinition($config['authenticator']))
             ->replaceArgument(3, new Reference($userProviderId))
