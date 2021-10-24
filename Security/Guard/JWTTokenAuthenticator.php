@@ -250,6 +250,30 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
     }
 
     /**
+     * @return JWTTokenManagerInterface
+     */
+    protected function getJwtManager()
+    {
+        return $this->jwtManager;
+    }
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    protected function getDispatcher()
+    {
+        return $this->dispatcher;
+    }
+
+    /**
+     * @return TokenStorageInterface
+     */
+    protected function getPreAuthenticationTokenStorage()
+    {
+        return $this->preAuthenticationTokenStorage;
+    }
+
+    /**
      * Loads the user to authenticate.
      *
      * @param UserProviderInterface $userProvider An user provider
