@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2021-10-18T15:09:44Z
+
+🙏 Thanks a lot for working on this!
+
+Given the diff on the public API is quite small, I think we can afford the added typehints without releasing a new major.
+About the `Response::setData(): static`, I fear we have to use the same `eval()` trick that you removed in `ForwardCompatTestCaseTrait`. Ok for you?
+
+---------------------------------------------------------------------------
+
+by mbabker at 2021-10-18T17:06:02Z
+
+> I fear we have to use the same `eval()` trick that you removed in `ForwardCompatTestCaseTrait`. Ok for you?
+
+Yeah, that would probably work out best.  I can mess with that later on.
