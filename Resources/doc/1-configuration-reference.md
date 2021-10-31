@@ -70,6 +70,9 @@ lexik_jwt_authentication:
             cookies:
                 - jwt_hp
                 - jwt_s
+                
+    # remove the token from the response body when using cookies
+    remove_token_from_body_when_cookies_used: true
 ```
 
 #### Encoder configuration
@@ -145,6 +148,15 @@ set_cookies:
         httpOnly: true
         split:
             - signature
+```
+
+### Keep the token in the body when using cookies
+When using cookies the response defaults to an empty body and result code 204. It is possible to modify this behaviour.
+
+Keep in mind, this invalidates a requirement from the [previously mentioned post](https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3), namely "JavaScript/front-end should never have access to the full JWT".
+
+```
+remove_token_from_body_when_cookies_used: false
 ```
 
 Security configuration
