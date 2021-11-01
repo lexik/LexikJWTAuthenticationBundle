@@ -38,6 +38,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
+    use ForwardCompatAuthenticatorTrait;
+
     /**
      * @var TokenExtractorInterface
      */
@@ -91,7 +93,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * @return Passport
      */
-    public function authenticate(Request $request) /*: Passport */
+    public function doAuthenticate(Request $request) /*: Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
 
