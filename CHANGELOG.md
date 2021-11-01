@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.13.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.0
 
 ## [2.14.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-11-01)
 
