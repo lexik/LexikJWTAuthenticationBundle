@@ -27,11 +27,11 @@ jobs:
                       symfony: 4.4.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
-                    # Development Symfony branches
                     - php: 7.3
-                      symfony: 5.4.*@dev
+                      symfony: 5.3.*
                       composer-flags: '--prefer-stable' # Needed to force `lcobucci/jwt` to install a usable version
                       can-fail: false
+                    # Development Symfony branches
                     - php: 7.4
                       symfony: 5.4.*@dev
                       composer-flags: ''

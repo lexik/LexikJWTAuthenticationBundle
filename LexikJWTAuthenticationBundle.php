@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JW
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTSecurityFactory;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTUserFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -40,9 +41,18 @@ class LexikJWTAuthenticationBundle extends Bundle
         // Authenticator factory for Symfony 5.4 and later
         if (method_exists($extension, 'addAuthenticatorFactory')) {
             $extension->addAuthenticatorFactory(new JWTAuthenticatorFactory());
+
+            return;
         }
 
-        // Security listener factory for Symfony 5.4 and earlier
+        // Security listener factory for Symfony 5.3 and earlier
+        if (method_exists($extension, 'addSecurityListenerFactory')) {
+            $extension->addSecurityListenerFactory(new JWTAuthenticatorFactory());
+
+            return;
+        }
+
+        // Security listener factory for Symfony 4.4
         if (method_exists($extension, 'addSecurityListenerFactory')) {
             $extension->addSecurityListenerFactory(new JWTFactory(false)); // BC 1.x, to be removed in 3.0
         }
