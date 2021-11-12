@@ -26,8 +26,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** @requires PHP >= 7.2 */
@@ -224,12 +222,12 @@ class JWTAuthenticatorTest extends TestCase
             $this->getUserProviderMock()
         );
 
-        $passport = $this->createMock(SelfValidatingPassport::class);
+        $passport = $this->createMock(Passport::class);
         $passport->method('getUser')->willReturn($user);
         $passport->method('getAttribute')
             ->withConsecutive(['token', null], ['payload', null])
             ->willReturnOnConsecutiveCalls('dummytoken', ['claim' => 'val']);
-        
+
         if (method_exists(FormLoginAuthenticator::class, 'createToken')) {
             $token = $authenticator->createToken($passport, 'dummy');
         } else {
