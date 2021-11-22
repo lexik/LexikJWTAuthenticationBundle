@@ -116,6 +116,8 @@ set_cookies:
 ### Automatically generating split cookies
 You are also able to automatically generate split cookies. Benefits of this approach are in [this post](https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3).
 
+Set the signature cookie (jwt_s) lifetime to 0 to create session cookies.
+
 Keep in mind, that SameSite attribute is **not supported** in [some browsers](https://caniuse.com/#feat=same-site-cookie-attribute)
 
 ```
@@ -138,7 +140,7 @@ set_cookies:
             - payload
 
     jwt_s:
-        lifetime: null
+        lifetime: 0
         samesite: strict
         path: /
         domain: null

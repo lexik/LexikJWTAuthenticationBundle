@@ -103,7 +103,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 $container
                     ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
                     ->replaceArgument(0, $name)
-                    ->replaceArgument(1, $attributes['lifetime'] ?: ($config['token_ttl'] ?: 0))
+                    ->replaceArgument(1, $attributes['lifetime'] ?? ($config['token_ttl'] ?: 0))
                     ->replaceArgument(2, $attributes['samesite'])
                     ->replaceArgument(3, $attributes['path'])
                     ->replaceArgument(4, $attributes['domain'])

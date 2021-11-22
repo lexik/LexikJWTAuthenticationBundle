@@ -43,17 +43,21 @@ final class JWTCookieProvider
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
         }
 
-        if (!$expiresAt && !$this->defaultLifetime) {
+        if (!$expiresAt && null === $this->defaultLifetime) {
             throw new \LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
         }
 
         $jwtParts = new JWTSplitter($jwt);
         $jwt = $jwtParts->getParts($split ?: $this->defaultSplit);
 
+        if (null === $expiresAt) {
+            $expiresAt = 0 === $this->defaultLifetime ? 0 : (time() + $this->defaultLifetime);
+        }
+        
         return new Cookie(
             $name ?: $this->defaultName,
             $jwt,
-            null === $expiresAt ? (time() + $this->defaultLifetime) : $expiresAt,
+            $expiresAt,
             $path ?: $this->defaultPath,
             $domain ?: $this->defaultDomain,
             $secure ?: $this->defaultSecure,
