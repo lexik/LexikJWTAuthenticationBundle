@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.2
+
+## [2.14.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-12-05)
+
+* bug [\#961](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/961) Allow symfony/deprecations-contract v3.0 ([bravik](https://github.com/bravik))
+* bug [\#951](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/951) Test  instanceof Passport instead of more restrictive SelfValidatingPassport ([TristanPouliquen](https://github.com/TristanPouliquen))
 
 ## [2.14.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-11-02)
 
