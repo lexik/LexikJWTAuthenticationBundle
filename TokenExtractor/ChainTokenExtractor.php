@@ -83,10 +83,9 @@ class ChainTokenExtractor implements \IteratorAggregate, TokenExtractorInterface
     /**
      * Iterates over the mapped token extractors while generating them.
      *
-     * An extractor is initialized only if we really need it (at
-     * the corresponding iteration).
+     * #[\ReturnTypeWillChange]
      *
-     * @return \Generator The generated {@link TokenExtractorInterface} implementations
+     * @return \Traversable|TokenExtractorInterface[]
      */
     public function getIterator()
     {
