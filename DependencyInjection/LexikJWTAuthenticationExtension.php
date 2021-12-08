@@ -101,6 +101,12 @@ class LexikJWTAuthenticationExtension extends Extension
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
 
+        if (false === $config['remove_token_from_body_when_cookies_used']) {
+            $container
+                ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
+                ->replaceArgument(3, false);
+        }
+
         if ($config['set_cookies']) {
             $loader->load('cookie.xml');
 
