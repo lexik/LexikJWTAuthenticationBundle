@@ -83,10 +83,9 @@ class ChainTokenExtractor implements \IteratorAggregate, TokenExtractorInterface
     /**
      * Iterates over the mapped token extractors while generating them.
      *
-     * #[\ReturnTypeWillChange]
-     *
      * @return \Traversable|TokenExtractorInterface[]
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         foreach ($this->map as $extractor) {
