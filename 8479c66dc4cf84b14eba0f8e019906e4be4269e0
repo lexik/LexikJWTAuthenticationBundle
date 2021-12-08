@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2021-10-11T18:51:55Z
+
+Thanks for the PR.
+#707 is about allowing per-firewall configuration (including keys). Would that match your use case? Or do you need to support multiple keys for your entire application as this PR currently suggests?
+
+---------------------------------------------------------------------------
+
+by alexandre-daubois at 2021-10-22T06:59:03Z
+
+Thanks for your reply! I don't think this would match our use case. Indeed, we would need to support multiple public keys for a single firewall. Tokens are coming from many providers, each with their own key, passing to a single firewall on a common endpoint.
+
+---------------------------------------------------------------------------
+
+by HidouriAnis at 2021-10-31T15:00:30Z
+
+I currently have the same needs as you, what did you do as a solution?
+
+---------------------------------------------------------------------------
+
+by alexandre-daubois at 2021-11-02T07:58:46Z
+
+@HidouriAnis for now, we did it like as it's in #707, in [this comment](https://github.com/lexik/LexikJWTAuthenticationBundle/issues/707#issuecomment-678762286). Even if this works, this is not super convenient to redefine all services like this. It's also very verbose.
