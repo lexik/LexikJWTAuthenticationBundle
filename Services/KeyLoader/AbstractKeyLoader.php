@@ -32,12 +32,12 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
 
     public function getSigningKey()
     {
-        return is_file($this->signingKey) ? $this->readKey(self::TYPE_PRIVATE) : $this->signingKey;
+        return $this->signingKey && is_file($this->signingKey) ? $this->readKey(self::TYPE_PRIVATE) : $this->signingKey;
     }
 
     public function getPublicKey()
     {
-        return is_file($this->publicKey) ? $this->readKey(self::TYPE_PUBLIC) : $this->publicKey;
+        return $this->publicKey && is_file($this->publicKey) ? $this->readKey(self::TYPE_PUBLIC) : $this->publicKey;
     }
 
     /**
