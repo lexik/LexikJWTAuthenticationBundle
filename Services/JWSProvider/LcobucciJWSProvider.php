@@ -220,10 +220,22 @@ class LcobucciJWSProvider implements JWSProviderInterface
                 return false;
             }
 
-            return $jwt->verify(
-                $this->signer,
-                $this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC)
-            );
+            if ($this->signer instanceof Hmac) {
+                return $jwt->verify(
+                    $this->signer,
+                    $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE)
+                );
+            }
+
+            if (!empty($keys = $this->keyLoader->getAdditionalPublicKeys())) {
+                foreach ($keys as $key) {
+                    if ($jwt->verify($this->signer, $key)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
 
         if (class_exists(InMemory::class)) {
@@ -235,11 +247,31 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $clock = SystemClock::fromUTC();
         $validator = new Validator();
 
-        return $validator->validate(
+        $isValid = $validator->validate(
             $jwt,
             new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
             new SignedWith($this->signer, $key)
         );
+
+        $publicKeys = $this->keyLoader->getAdditionalPublicKeys();
+        if ($isValid || $this->signer instanceof Hmac || empty($publicKeys)) {
+            return $isValid;
+        }
+
+        // If the key used to verify the token is invalid, and it's not Hmac algorithm, try with additional public keys
+        foreach ($publicKeys as $key) {
+            $isValid = $validator->validate(
+                $jwt,
+                new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+                new SignedWith($this->signer, InMemory::plainText($key))
+            );
+
+            if ($isValid) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function addStandardClaims(Builder $builder, array &$payload)

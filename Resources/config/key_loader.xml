@@ -9,6 +9,7 @@
             <argument/> <!-- private key -->
             <argument/> <!-- public key -->
             <argument>%lexik_jwt_authentication.pass_phrase%</argument>
+            <argument type="collection" /> <!-- additional public keys -->
         </service>
         <service id="lexik_jwt_authentication.key_loader.raw" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader" parent="lexik_jwt_authentication.key_loader.abstract"/>
     </services>

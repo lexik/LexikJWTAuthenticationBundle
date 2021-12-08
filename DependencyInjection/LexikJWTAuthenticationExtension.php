@@ -87,6 +87,12 @@ class LexikJWTAuthenticationExtension extends Extension
             ->replaceArgument(0, $config['secret_key'])
             ->replaceArgument(1, $config['public_key']);
 
+        if (isset($config['additional_public_keys'])) {
+            $container
+                ->findDefinition('lexik_jwt_authentication.key_loader')
+                ->replaceArgument(3, $config['additional_public_keys']);
+        }
+
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 

@@ -9,6 +9,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  *
  * @method string|null getPublicKey()
  * @method string|null getSigningKey()
+ * @method array getAdditionalPublicKeys()
  */
 interface KeyLoaderInterface
 {
