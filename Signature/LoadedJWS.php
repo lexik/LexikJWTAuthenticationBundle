@@ -10,6 +10,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class LoadedJWS
 {
+    const UNKNOWN = 'unknown';
     const VERIFIED = 'verified';
     const EXPIRED = 'expired';
     const INVALID = 'invalid';
@@ -26,6 +27,7 @@ final class LoadedJWS
         $this->header = $header;
         $this->allowEmptyTtl = $allowEmptyTtl;
         $this->clockSkew = $clockSkew;
+        $this->state = self::UNKNOWN;
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
@@ -49,6 +51,11 @@ final class LoadedJWS
         return $this->payload;
     }
 
+    public function isUnknown(): bool
+    {
+        return self::UNKNOWN === $this->state;
+    }
+
     public function isVerified(): bool
     {
         return self::VERIFIED === $this->state;
@@ -56,8 +63,6 @@ final class LoadedJWS
 
     public function isExpired(): bool
     {
-        $this->checkExpiration();
-
         return self::EXPIRED === $this->state;
     }
 
@@ -69,6 +74,7 @@ final class LoadedJWS
     private function checkExpiration(): void
     {
         if (!isset($this->payload['exp']) && $this->allowEmptyTtl) {
+
             return;
         }
 
@@ -86,10 +92,10 @@ final class LoadedJWS
     /**
      * Ensures that the iat claim is not in the future.
      */
-    private function checkIssuedAt()
+    private function checkIssuedAt(): void
     {
         if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
-            return $this->state = self::INVALID;
+            $this->state = self::INVALID;
         }
     }
 }
