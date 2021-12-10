@@ -129,7 +129,7 @@ vwIDAQAB
                 static::$privateKey,
                 static::$publicKey
             );
-        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
+        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0, true);
         $jws = $provider->create(['username' => 'chalasr']);
 
         $this->assertInstanceOf(CreatedJWS::class, $jws);
@@ -139,6 +139,40 @@ vwIDAQAB
 
         $this->assertInstanceOf(LoadedJWS::class, $jws);
         $this->assertFalse($jws->isInvalid());
+        $this->assertFalse($jws->isExpired());
+        $this->assertTrue($jws->isVerified());
+        $this->assertArrayNotHasKey('exp', $jws->getPayload());
+    }
+    
+    public function testNotAllowEmptyTtl()
+    {
+        $keyLoader = $this->getKeyLoaderMock();
+        $keyLoader
+            ->expects($this->once())
+            ->method('getPassphrase')
+            ->willReturn('foobar');
+
+        $keyLoader
+            ->expects($this->exactly(2))
+            ->method('loadKey')
+            ->withConsecutive(
+                ['private'],
+                ['public']
+            )
+            ->willReturnOnConsecutiveCalls(
+                static::$privateKey,
+                static::$publicKey
+            );
+        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
+        $jws = $provider->create(['username' => 'chalasr']);
+
+        $this->assertInstanceOf(CreatedJWS::class, $jws);
+        $this->assertTrue($jws->isSigned());
+
+        $jws = $provider->load($jws->getToken());
+
+        $this->assertInstanceOf(LoadedJWS::class, $jws);
+        $this->assertTrue($jws->isInvalid());
         $this->assertFalse($jws->isExpired());
         $this->assertTrue($jws->isVerified());
         $this->assertArrayNotHasKey('exp', $jws->getPayload());
