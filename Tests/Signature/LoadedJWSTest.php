@@ -69,7 +69,7 @@ final class LoadedJWSTest extends TestCase
     public function testAllowNoExpWithGoodPayload()
     {
         $payload = $this->goodPayload;
-        unset($payload['exp'])
+        unset($payload['exp']);
 
         $jws = new LoadedJWS($payload, true, true);
 
@@ -79,7 +79,7 @@ final class LoadedJWSTest extends TestCase
     public function testNoExpWithGoodPayload()
     {
         $payload = $this->goodPayload;
-        unset($payload['exp'])
+        unset($payload['exp']);
 
         $jws = new LoadedJWS($payload, true, false);
 
