@@ -138,8 +138,7 @@ vwIDAQAB
         $jws = $provider->load($jws->getToken());
 
         $this->assertInstanceOf(LoadedJWS::class, $jws);
-        $this->assertFalse($jws->isInvalid());
-        $this->assertFalse($jws->isExpired());
+        $this->assertFalse($jws->isUnknown());
         $this->assertTrue($jws->isVerified());
         $this->assertArrayNotHasKey('exp', $jws->getPayload());
     }
@@ -172,9 +171,8 @@ vwIDAQAB
         $jws = $provider->load($jws->getToken());
 
         $this->assertInstanceOf(LoadedJWS::class, $jws);
+        $this->assertFalse($jws->isUnknown());
         $this->assertTrue($jws->isInvalid());
-        $this->assertFalse($jws->isExpired());
-        $this->assertTrue($jws->isVerified());
         $this->assertArrayNotHasKey('exp', $jws->getPayload());
     }
 
