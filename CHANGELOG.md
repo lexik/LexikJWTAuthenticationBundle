@@ -1,7 +1,15 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.2
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.3
+
+## [2.14.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-12-15)
+
+* feature [\#940](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/940) Add `remove_token_from_body_when_cookies_used` config option ([TjorvenB](https://github.com/TjorvenB))
+* feature [\#928](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/928) Add support of multiple public keys to verify tokens with a set of keys ([alexandre-daubois](https://github.com/alexandre-daubois))
+* feature [\#958](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/958) Allowing session cookie (split cookie) ([JeremyPasco](https://github.com/JeremyPasco))
+* bug [\#969](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/969) Fix PHP 8.1 deprecation - avoid passing null to is_file() ([chalasr](https://github.com/chalasr))
+* bug [\#966](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/966) fix getIterator compatible with php 8.1 ([eerison](https://github.com/eerison))
 
 ## [2.14.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-12-05)
 
