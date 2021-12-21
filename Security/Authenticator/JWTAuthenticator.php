@@ -207,9 +207,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
                 try {
                     if ($provider instanceof PayloadAwareUserProviderInterface) {
                         if (method_exists(PayloadAwareUserProviderInterface::class, 'loadUserByIdentifierAndPayload')) {
-                            return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
+                            return $provider->loadUserByIdentifierAndPayload($identity, $payload);
                         } else {
-                            return $this->userProvider->loadUserByUsernameAndPayload($identity, $payload);
+                            return $provider->loadUserByUsernameAndPayload($identity, $payload);
                         }
                     }
 
