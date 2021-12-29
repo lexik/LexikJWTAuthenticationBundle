@@ -31,6 +31,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AuthenticatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * JWTTokenAuthenticator (Guard implementation).
@@ -62,16 +63,23 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
      */
     private $preAuthenticationTokenStorage;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
         TokenExtractorInterface $tokenExtractor,
-        TokenStorageInterface $preAuthenticationTokenStorage
+        TokenStorageInterface $preAuthenticationTokenStorage,
+        TranslatorInterface $translator = null
     ) {
         $this->jwtManager = $jwtManager;
         $this->dispatcher = $dispatcher;
         $this->tokenExtractor = $tokenExtractor;
         $this->preAuthenticationTokenStorage = $preAuthenticationTokenStorage;
+        $this->translator = $translator;
     }
 
     public function supports(Request $request)
@@ -159,6 +167,9 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
         $errorMessage = strtr($authException->getMessageKey(), $authException->getMessageData());
+        if (null !== $this->translator) {
+            $errorMessage = $this->translator->trans($authException->getMessageKey(), $authException->getMessageData());
+        }
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 
         if ($authException instanceof ExpiredTokenException) {
