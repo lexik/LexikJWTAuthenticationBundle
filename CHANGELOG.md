@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.3
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.4
+
+## [2.14.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2022-01-05)
+
+* bug [\#972](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/972) Typo-Fix in the ChainUserProvider ([KhorneHoly](https://github.com/KhorneHoly))
 
 ## [2.14.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2021-12-15)
 
