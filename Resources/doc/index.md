@@ -62,7 +62,7 @@ lexik_jwt_authentication:
 
 Configure your `config/packages/security.yaml` :
 
-**Make sure the firewall `login` is place before `api`, otherwise you will encounter `/api/login_check` route not found.**
+**Make sure the firewall `login` is place before `api`, and if `main` exists, put it after `api`, otherwise you will encounter `/api/login_check` route not found.**
 
 ``` yaml
 # Symfony versions prior to 5.3
