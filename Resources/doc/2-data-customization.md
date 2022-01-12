@@ -292,6 +292,7 @@ Example: Set a custom response on authentication failure
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @param AuthenticationFailureEvent $event
@@ -299,11 +300,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event)
 {
     $data = [
-        'status'  => '401 Unauthorized',
-        'message' => 'Bad credentials, please verify that your username/password are correctly set',
+        'name' => 'John Doe',
+        'foo'  => 'bar',
     ];
 
-    $response = new JWTAuthenticationFailureResponse($data);
+    $response = new JWTAuthenticationFailureResponse('Bad credentials, please verify that your username/password are correctly set', JsonResponse::HTTP_UNAUTHORIZED);
+    $response->setData($data);
 
     $event->setResponse($response);
 }
