@@ -46,7 +46,7 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
             return $authorizationHeader;
         }
 
-        $headerParts = explode(' ', $authorizationHeader);
+        $headerParts = explode(' ', (string) $authorizationHeader);
 
         if (!(2 === count($headerParts) && 0 === strcasecmp($headerParts[0], $this->prefix))) {
             return false;
