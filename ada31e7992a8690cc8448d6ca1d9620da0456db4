@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by fd6130 at 2022-01-27T10:30:12Z
+
+Good catch, mostly it will affect Symfony >= 5.2 with new authenticator system enabled.
