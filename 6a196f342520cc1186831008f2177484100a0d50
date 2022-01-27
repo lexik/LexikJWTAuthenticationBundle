@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by flohw at 2021-12-29T14:18:29Z
+
+I just noted that on the original PR translations are made in the authenticator. It may be a better choice as the listener can be changed by the developer.
+
+Let me know if I missed something and should update to translate in the authenticators too or only in them.
+
+Thank you
+
+[EDIT] also, not sure why the tests fail...
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-12-29T14:26:28Z
+
+Don't worry about the failing tests, it's unrelated. I need to look into them, sorry about that.
+
+---------------------------------------------------------------------------
+
+by flohw at 2021-12-29T14:44:30Z
+
+Thank you for this quick review! I updated the code accordingly. (sorry for the multiple push force, I struggled with my gpg key...)
+
+Also note about this comment above:
+> I just noted that on the original PR translations are made in the authenticator. It may be a better choice as the listener can be changed by the developer.
+>
+> Let me know if I missed something and should update to translate in the authenticators too or only in them.
+
+Should I update the other place where `strtr` is used?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-12-29T17:46:44Z
+
+Sorry I was unsure to understand your question, got it now.
+If you could do the same in the jwt authenticator that would be awesome (both are good, so what you already did is valid!)
+
+---------------------------------------------------------------------------
+
+by flohw at 2021-12-30T08:16:17Z
+
+Hi @chalasr,
+
+Thanks I just added translator in both authenticators (JWT and JWTToken).
+
+---------------------------------------------------------------------------
+
+by flohw at 2022-01-05T08:16:18Z
+
+Hi @chalasr
+I just saw the new release and rebase my branch.
+The failing tests have changed. I am not sure if it's on my side to repair especially for the PHP8/SF5.3 couple.
+
+Thanks
+
+---------------------------------------------------------------------------
+
+by chalasr at 2022-01-05T13:58:40Z
+
+No worries, it's due to a Symfony bug revealed by your changes. See https://github.com/symfony/symfony/pull/44918 for the fix.
