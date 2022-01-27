@@ -123,7 +123,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         }
 
         $passport = new SelfValidatingPassport(
-            new UserBadge($payload[$idClaim],
+            new UserBadge((string)$payload[$idClaim],
             function ($userIdentifier) use($payload) {
                 return $this->loadUser($payload, $userIdentifier);
             })

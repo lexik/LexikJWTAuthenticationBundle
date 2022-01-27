@@ -70,6 +70,35 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
     }
 
+    public function testAuthenticateWithIntegerIdentifier() {
+        $userIdClaim = 'sub';
+        $payload = [$userIdClaim => 1];
+        $rawToken = 'token';
+        $userRoles = ['ROLE_USER'];
+
+        $userStub = new AdvancedUserStub(1, 'password', 'user@gmail.com', $userRoles);
+
+        $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
+        $jwtManager
+            ->method('parse')
+            ->willReturn(['sub' => 1]);
+
+        $userProvider = $this->getUserProviderMock();
+        $userProvider
+            ->method('loadUserByIdentifierAndPayload')
+            ->with($payload['sub'], $payload)
+            ->willReturn($userStub);
+
+        $authenticator = new JWTAuthenticator(
+            $jwtManager,
+            $this->getEventDispatcherMock(),
+            $this->getTokenExtractorMock($rawToken),
+            $userProvider
+        );
+
+        $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
+    }
+
     public function testAuthenticateWithExpiredTokenThrowsException() {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
