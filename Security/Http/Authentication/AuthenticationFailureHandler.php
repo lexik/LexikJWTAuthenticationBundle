@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * AuthenticationFailureHandler.
@@ -23,9 +24,15 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     protected $dispatcher;
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
+    public function __construct(EventDispatcherInterface $dispatcher, TranslatorInterface $translator = null)
     {
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     /**
@@ -35,6 +42,9 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     {
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());
         $statusCode = self::mapExceptionCodeToStatusCode($exception->getCode());
+        if ($this->translator) {
+            $errorMessage = $this->translator->trans($exception->getMessageKey(), $exception->getMessageData(), 'security');
+        }
 
         $event = new AuthenticationFailureEvent(
             $exception,

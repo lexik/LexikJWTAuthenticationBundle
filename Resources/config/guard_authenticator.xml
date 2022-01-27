@@ -14,6 +14,7 @@
             <argument type="service">
                 <service class="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage" />
             </argument>
+            <argument type="service" id="translator" on-invalid="null" />
         </service>
     </services>
 </container>

@@ -35,6 +35,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
@@ -60,16 +61,23 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
      */
     private $userProvider;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $eventDispatcher,
         TokenExtractorInterface $tokenExtractor,
-        UserProviderInterface $userProvider
+        UserProviderInterface $userProvider,
+        TranslatorInterface $translator = null
     ) {
         $this->tokenExtractor = $tokenExtractor;
         $this->jwtManager = $jwtManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->userProvider = $userProvider;
+        $this->translator = $translator;
     }
 
     /**
@@ -135,6 +143,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());
+        if (null !== $this->translator) {
+            $errorMessage = $this->translator->trans($exception->getMessageKey(), $exception->getMessageData());
+        }
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 
         if ($exception instanceof ExpiredTokenException) {

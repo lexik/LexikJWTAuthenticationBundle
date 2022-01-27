@@ -17,6 +17,7 @@
         <service id="lexik_jwt_authentication.handler.authentication_failure" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler">
             <tag name="monolog.logger" channel="security" />
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="translator" on-invalid="null" />
         </service>
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler" alias="lexik_jwt_authentication.handler.authentication_failure" />
     </services>

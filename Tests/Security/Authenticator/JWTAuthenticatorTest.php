@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /** @requires PHP >= 7.2 */
 class JWTAuthenticatorTest extends TestCase
@@ -186,6 +187,33 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($expectedResponse->getMessage(), $response->getMessage());
     }
 
+    public function testOnAuthenticationFailureWithInvalidTokenTranslatedMessage() {
+        $authException = new InvalidTokenException();
+        $expectedResponse = new JWTAuthenticationFailureResponse('translated message');
+
+        $dispatcher = $this->getEventDispatcherMock();
+        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse), $dispatcher);
+
+        $translator = $this->getTranslatorMock();
+        $translator->expects($this->once())
+            ->method('trans')
+            ->with('Invalid JWT Token', [])
+            ->willReturn('translated message');
+
+        $authenticator = new JWTAuthenticator(
+            $this->getJWTManagerMock(),
+            $dispatcher,
+            $this->getTokenExtractorMock(),
+            $this->getUserProviderMock(),
+            $translator
+        );
+
+        $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException);
+
+        $this->assertEquals($expectedResponse, $response);
+        $this->assertSame('translated message', $response->getMessage());
+    }
+
     public function testStart()
     {
         $authException = new MissingTokenException('JWT Token not found');
@@ -293,6 +321,13 @@ class JWTAuthenticatorTest extends TestCase
     private function getUserProviderMock()
     {
         return $this->getMockBuilder(DummyUserProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    private function getTranslatorMock()
+    {
+        return $this->getMockBuilder(TranslatorInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

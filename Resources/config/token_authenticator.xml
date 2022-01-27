@@ -10,6 +10,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
             <argument /> <!-- User Provider -->
+            <argument type="service" id="translator" on-invalid="null" />
         </service>
 
     </services>
