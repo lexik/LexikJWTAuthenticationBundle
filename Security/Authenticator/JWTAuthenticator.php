@@ -62,7 +62,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     private $userProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|null
      */
     private $translator;
 
