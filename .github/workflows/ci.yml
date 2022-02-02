@@ -28,10 +28,6 @@ jobs:
                       composer-flags: '--prefer-stable'
                       can-fail: false
                     - php: 8.0
-                      symfony: 5.3.*
-                      composer-flags: '--prefer-stable'
-                      can-fail: false
-                    - php: 8.0
                       symfony: 6.0.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
