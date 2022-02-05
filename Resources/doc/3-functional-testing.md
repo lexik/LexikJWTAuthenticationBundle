@@ -83,3 +83,4 @@ protected static function createAuthenticatedClient(array $claims)
 
     return $client;
 }
+```
