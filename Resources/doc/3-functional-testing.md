@@ -77,7 +77,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 protected static function createAuthenticatedClient(array $claims)
 {
     $client = self::createClient();
-    $encoder = self::getContainer()->get(JWTEncoderInterface::class);
+    $encoder = $client->getContainer()->get(JWTEncoderInterface::class);
 
     $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $encoder->encode($claims)));
 
