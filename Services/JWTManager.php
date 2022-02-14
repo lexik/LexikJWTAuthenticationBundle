@@ -35,6 +35,8 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
 
     /**
      * @var string
+     *
+     * @deprecated since v2.15
      */
     protected $userIdentityField;
 
@@ -150,7 +152,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
             return;
         }
 
-        $payload[$this->userIdClaim ?: $this->userIdentityField] = $accessor->getValue($user, $this->userIdentityField);
+        $payload[$this->userIdClaim ?: $this->userIdentityField] = $accessor->getValue($user, $accessor->isReadable($user, $this->userIdentityField) ? $this->userIdentityField : 'user_identifier');
     }
 
     /**
@@ -158,6 +160,10 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      */
     public function getUserIdentityField(): string
     {
+        if (0 === func_num_args() || func_get_arg(0)) {
+            trigger_deprecation('lexik/jwt-authentication-bundle', '2.15', 'The "%s()" method is deprecated.', __METHOD__);
+        }
+
         return $this->userIdentityField;
     }
 
@@ -166,6 +172,10 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      */
     public function setUserIdentityField($field)
     {
+        if (1 >= func_num_args() || func_get_arg(1)) {
+            trigger_deprecation('lexik/jwt-authentication-bundle', '2.15', 'The "%s()" method is deprecated.', __METHOD__);
+        }
+
         $this->userIdentityField = $field;
     }
 

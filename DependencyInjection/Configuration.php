@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * LexikJWTAuthenticationBundle Configuration.
@@ -78,6 +79,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('user_identity_field')
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.15, implement "'.UserInterface::class.'::getUserIdentifier()" instead.', '2.5'))
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()

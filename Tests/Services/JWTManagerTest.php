@@ -118,7 +118,7 @@ class JWTManagerTest extends TestCase
     }
 
     /**
-     * test identity field.
+     * @group legacy
      */
     public function testIdentityField()
     {
