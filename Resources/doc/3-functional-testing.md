@@ -42,14 +42,14 @@ protected function createAuthenticatedClient($username = 'user', $password = 'pa
     $client->request(
       'POST',
       '/api/login_check',
-      array(),
-      array(),
-      array('CONTENT_TYPE' => 'application/json'),
-      json_encode(array(
+      [],
+      [],
+      ['CONTENT_TYPE' => 'application/json'],
+      json_encode([
         '_username' => $username,
         '_password' => $password,
-        ))
-      );
+      ])
+    );
 
     $data = json_decode($client->getResponse()->getContent(), true);
 
@@ -66,5 +66,21 @@ public function testGetPages()
     $client = $this->createAuthenticatedClient();
     $client->request('GET', '/api/pages');
     // ... 
+}
+```
+
+Or manually generate a JWT token for end-to-end testing:
+
+``` php
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+
+protected static function createAuthenticatedClient(array $claims)
+{
+    $client = self::createClient();
+    $encoder = $client->getContainer()->get(JWTEncoderInterface::class);
+
+    $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $encoder->encode($claims)));
+
+    return $client;
 }
 ```
