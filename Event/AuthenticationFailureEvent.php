@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -24,10 +25,16 @@ class AuthenticationFailureEvent extends Event
      */
     protected $response;
 
-    public function __construct(AuthenticationException $exception, Response $response)
+    /**
+     * @var Request|null
+     */
+    private $request;
+
+    public function __construct(AuthenticationException $exception, Response $response, ?Request $request = null)
     {
         $this->exception = $exception;
         $this->response = $response;
+        $this->request = $request;
     }
 
     /**
@@ -46,8 +53,16 @@ class AuthenticationFailureEvent extends Event
         return $this->response;
     }
 
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): void
     {
         $this->response = $response;
+    }
+
+    public function getRequest(): ?Request {
+        return $this->request;
+    }
+
+    public function setRequest(Request $request) {
+        $this->request = $request;
     }
 }

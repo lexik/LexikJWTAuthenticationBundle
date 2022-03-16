@@ -86,7 +86,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
-        $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
+        $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()), $request);
 
         $this->eventDispatcher->dispatch($event, Events::JWT_NOT_FOUND);
 
@@ -149,10 +149,10 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 
         if ($exception instanceof ExpiredTokenException) {
-            $event = new JWTExpiredEvent($exception, $response);
+            $event = new JWTExpiredEvent($exception, $response, $request);
             $eventName = Events::JWT_EXPIRED;
         } else {
-            $event = new JWTInvalidEvent($exception, $response);
+            $event = new JWTInvalidEvent($exception, $response, $request);
             $eventName = Events::JWT_INVALID;
         }
 

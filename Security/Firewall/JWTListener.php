@@ -95,7 +95,7 @@ class JWTListener
 
             $response = new JWTAuthenticationFailureResponse($failed->getMessage());
 
-            $jwtInvalidEvent = new JWTInvalidEvent($failed, $response);
+            $jwtInvalidEvent = new JWTInvalidEvent($failed, $response, $event->getRequest());
             $this->dispatcher->dispatch($jwtInvalidEvent, Events::JWT_INVALID);
 
             $event->setResponse($jwtInvalidEvent->getResponse());

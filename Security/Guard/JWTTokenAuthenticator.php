@@ -173,10 +173,10 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 
         if ($authException instanceof ExpiredTokenException) {
-            $event = new JWTExpiredEvent($authException, $response);
+            $event = new JWTExpiredEvent($authException, $response, $request);
             $eventName = Events::JWT_EXPIRED;
         } else {
-            $event = new JWTInvalidEvent($authException, $response);
+            $event = new JWTInvalidEvent($authException, $response, $request);
             $eventName = Events::JWT_INVALID;
         }
 
@@ -201,7 +201,7 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
-        $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()));
+        $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()), $request);
 
         $this->dispatcher->dispatch($event, Events::JWT_NOT_FOUND);
 

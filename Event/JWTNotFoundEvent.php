@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Event;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{Response, Request};
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -13,9 +13,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class JWTNotFoundEvent extends AuthenticationFailureEvent implements JWTFailureEventInterface
 {
-    public function __construct(AuthenticationException $exception = null, Response $response = null)
+    public function __construct(AuthenticationException $exception = null, Response $response = null, Request $request = null)
     {
         $this->exception = $exception;
         $this->response = $response;
+        $this->request = $request;
     }
 }
