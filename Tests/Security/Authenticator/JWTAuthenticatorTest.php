@@ -199,9 +199,9 @@ class JWTAuthenticatorTest extends TestCase
     public function testOnAuthenticationFailureWithInvalidToken() {
         $authException = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
-
+        $request = $this->getRequestMock();
         $dispatcher = $this->getEventDispatcherMock();
-        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse), $dispatcher);
+        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse, $request), $dispatcher);
 
         $authenticator = new JWTAuthenticator(
             $this->getJWTManagerMock(),
@@ -210,7 +210,7 @@ class JWTAuthenticatorTest extends TestCase
             $this->getUserProviderMock()
         );
 
-        $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException);
+        $response = $authenticator->onAuthenticationFailure($request, $authException);
 
         $this->assertEquals($expectedResponse, $response);
         $this->assertSame($expectedResponse->getMessage(), $response->getMessage());
@@ -219,9 +219,9 @@ class JWTAuthenticatorTest extends TestCase
     public function testOnAuthenticationFailureWithInvalidTokenTranslatedMessage() {
         $authException = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('translated message');
-
+        $request = $this->getRequestMock();
         $dispatcher = $this->getEventDispatcherMock();
-        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse), $dispatcher);
+        $this->expectEvent(Events::JWT_INVALID, new JWTInvalidEvent($authException, $expectedResponse, $request), $dispatcher);
 
         $translator = $this->getTranslatorMock();
         $translator->expects($this->once())
@@ -237,7 +237,7 @@ class JWTAuthenticatorTest extends TestCase
             $translator
         );
 
-        $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException);
+        $response = $authenticator->onAuthenticationFailure($request, $authException);
 
         $this->assertEquals($expectedResponse, $response);
         $this->assertSame('translated message', $response->getMessage());
@@ -247,9 +247,9 @@ class JWTAuthenticatorTest extends TestCase
     {
         $authException = new MissingTokenException('JWT Token not found');
         $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessageKey());
-
+        $request = $this->getRequestMock();
         $dispatcher = $this->getEventDispatcherMock();
-        $this->expectEvent(Events::JWT_NOT_FOUND, new JWTNotFoundEvent($authException, $failureResponse), $dispatcher);
+        $this->expectEvent(Events::JWT_NOT_FOUND, new JWTNotFoundEvent($authException, $failureResponse, $request), $dispatcher);
 
         $authenticator = new JWTAuthenticator(
             $this->getJWTManagerMock(),
@@ -258,7 +258,7 @@ class JWTAuthenticatorTest extends TestCase
             $this->getUserProviderMock()
         );
 
-        $response = $authenticator->start($this->getRequestMock());
+        $response = $authenticator->start($request);
 
         $this->assertEquals($failureResponse, $response);
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());
