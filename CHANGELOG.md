@@ -1,7 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.14.4
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.15.0
+
+## [2.15.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-04)
+
+* feature [\#995](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/995) Add Request object into AuthenticationFailureEvent ([dmytro-shulyakov](https://github.com/dmytro-shulyakov))
+* bug [\#982](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/982) Fix a type related depreciation with php 8.1 ([RiffFred](https://github.com/RiffFred))
+* feature [\#973](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/973) Translate message errors ([flohw](https://github.com/flohw))
+* bug [\#976](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/976) Fix authentication with integer as useridentifier ([Floruzus](https://github.com/Floruzus))
 
 ## [2.14.4](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.14) (2022-01-05)
 
