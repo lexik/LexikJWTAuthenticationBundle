@@ -3,17 +3,22 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * CheckConfigCommand.
- *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
+ *
+ * @final
  */
+#[AsCommand(name: 'lexik:jwt:check-config', description: 'Checks that the bundle is properly configured.')]
 class CheckConfigCommand extends Command
 {
+    /**
+     * @deprecated
+     */
     protected static $defaultName = 'lexik:jwt:check-config';
 
     private $keyLoader;

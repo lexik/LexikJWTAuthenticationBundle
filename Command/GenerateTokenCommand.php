@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,8 +16,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @author Samuel Roze <samuel.roze@gmail.com>
  */
+#[AsCommand(name: 'lexik:jwt:generate-token', description: 'Generates a JWT token for a given user.')]
 class GenerateTokenCommand extends Command
 {
+    /**
+     * @deprecated
+     */
     protected static $defaultName = 'lexik:jwt:generate-token';
 
     private $tokenManager;
