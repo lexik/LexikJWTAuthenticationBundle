@@ -4,8 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Encoding\MicrosecondBasedDateConversion;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac;
@@ -87,7 +87,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function create(array $payload, array $header = [])
     {
         if (class_exists(JWTBuilder::class)) {
-            $jws = new JWTBuilder(new JoseEncoder(), new MicrosecondBasedDateConversion());
+            $jws = new JWTBuilder(new JoseEncoder(), ChainedFormatter::default());
         } else {
             $jws = new Builder();
         }
