@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by jordisala1991 at 2022-04-01T10:10:33Z
+
+This change is needed to be compatible with software that only accepts audiences generated as strings like https://github.com/jitsi
