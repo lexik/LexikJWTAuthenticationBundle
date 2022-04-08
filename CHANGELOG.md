@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.15.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.15.1
+
+## [2.15.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-06)
+
+* bug [\#999](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/999) Unify audience claim ([aerrasti](https://github.com/aerrasti))
 
 ## [2.15.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-04)
 
