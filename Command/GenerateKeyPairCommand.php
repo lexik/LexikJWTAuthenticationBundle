@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * @author Beno!t POLASZEK <bpolaszek@gmail.com>
  */
+#[AsCommand(name: 'lexik:jwt:generate-keypair', description: 'Generate public/private keys for use in your application.')]
 final class GenerateKeyPairCommand extends Command
 {
     private const ACCEPTED_ALGORITHMS = [
@@ -27,6 +29,9 @@ final class GenerateKeyPairCommand extends Command
         'ES512',
     ];
 
+    /**
+     * @deprecated
+     */
     protected static $defaultName = 'lexik:jwt:generate-keypair';
 
     /**
