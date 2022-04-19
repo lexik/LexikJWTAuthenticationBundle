@@ -105,9 +105,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $exp = isset($payload['exp']) ? $payload['exp'] : $now + $this->ttl;
             unset($payload['exp']);
 
-            if($exp) {
-                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
-            }
+            $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
         }
 
         if (isset($payload['sub'])) {
@@ -161,7 +159,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $jws = new LoadedJWS(
             $payload,
             $this->verify($jws),
-            $this->validateTokensWithoutTtl,
+            null !== $this->ttl || (!isset($payload['exp']) && $this->validateTokensWithoutTtl),
             $this->useDateObjects ? $jws->headers()->all() : $jws->getHeaders(),
             $this->clockSkew
         );

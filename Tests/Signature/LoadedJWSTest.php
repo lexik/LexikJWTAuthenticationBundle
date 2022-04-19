@@ -43,7 +43,6 @@ final class LoadedJWSTest extends TestCase
         $jws = new LoadedJWS($this->goodPayload, false);
 
         $this->assertSame($this->goodPayload, $jws->getPayload());
-        $this->assertTrue($jws->isUnknown());
         $this->assertFalse($jws->isVerified());
     }
 
@@ -71,7 +70,7 @@ final class LoadedJWSTest extends TestCase
         $payload = $this->goodPayload;
         unset($payload['exp']);
 
-        $jws = new LoadedJWS($payload, true, true);
+        $jws = new LoadedJWS($payload, true, false);
 
         $this->assertTrue($jws->isVerified());
     }
@@ -81,7 +80,7 @@ final class LoadedJWSTest extends TestCase
         $payload = $this->goodPayload;
         unset($payload['exp']);
 
-        $jws = new LoadedJWS($payload, true, false);
+        $jws = new LoadedJWS($payload, true, true);
 
         $this->assertTrue($jws->isInvalid());
         $this->assertFalse($jws->isVerified());

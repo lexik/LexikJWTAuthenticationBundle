@@ -10,7 +10,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class LoadedJWS
 {
-    const UNKNOWN = 'unknown';
     const VERIFIED = 'verified';
     const EXPIRED = 'expired';
     const INVALID = 'invalid';
@@ -19,22 +18,17 @@ final class LoadedJWS
     private $payload;
     private $state;
     private $clockSkew;
-    private $allowEmptyTtl;
+    private $shouldCheckExpiration;
 
-    public function __construct(array $payload, bool $isVerified, bool $allowEmptyTtl = false, array $header = [], int $clockSkew = 0)
+    public function __construct(array $payload, bool $isVerified, bool $shouldCheckExpiration = true, array $header = [], int $clockSkew = 0)
     {
         $this->payload = $payload;
         $this->header = $header;
-        $this->allowEmptyTtl = $allowEmptyTtl;
+        $this->shouldCheckExpiration = $shouldCheckExpiration;
         $this->clockSkew = $clockSkew;
-        $this->state = self::UNKNOWN;
 
         if (true === $isVerified) {
             $this->state = self::VERIFIED;
-        }
-        
-        if (empty($payload)) {
-            $this->state = self::INVALID;
         }
 
         $this->checkIssuedAt();
@@ -51,11 +45,6 @@ final class LoadedJWS
         return $this->payload;
     }
 
-    public function isUnknown(): bool
-    {
-        return self::UNKNOWN === $this->state;
-    }
-
     public function isVerified(): bool
     {
         return self::VERIFIED === $this->state;
@@ -63,6 +52,8 @@ final class LoadedJWS
 
     public function isExpired(): bool
     {
+        $this->checkExpiration();
+
         return self::EXPIRED === $this->state;
     }
 
@@ -73,8 +64,7 @@ final class LoadedJWS
 
     private function checkExpiration(): void
     {
-        if (!isset($this->payload['exp']) && $this->allowEmptyTtl) {
-
+        if (!$this->shouldCheckExpiration) {
             return;
         }
 
@@ -92,10 +82,10 @@ final class LoadedJWS
     /**
      * Ensures that the iat claim is not in the future.
      */
-    private function checkIssuedAt(): void
+    private function checkIssuedAt()
     {
         if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
-            $this->state = self::INVALID;
+            return $this->state = self::INVALID;
         }
     }
 }
