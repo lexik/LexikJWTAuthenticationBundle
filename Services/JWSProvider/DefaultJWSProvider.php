@@ -97,6 +97,10 @@ class DefaultJWSProvider implements JWSProviderInterface
             $claims['exp'] = time() + $this->ttl;
         }
 
+        if($payload['exp'] == '0') {
+            unset($payload['exp']);
+        }
+
         $jws->setPayload($payload + $claims);
         $jws->sign(
             $this->keyLoader->loadKey('private'),
