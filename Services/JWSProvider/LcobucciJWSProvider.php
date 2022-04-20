@@ -65,7 +65,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $validateTokensWithoutTtl = false)
+    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $validateTokensWithoutTtl = true)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
@@ -159,7 +159,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $jws = new LoadedJWS(
             $payload,
             $this->verify($jws),
-            null !== $this->ttl || (!isset($payload['exp']) && $this->validateTokensWithoutTtl),
+            (isset($payload['exp']) || $this->validateTokensWithoutTtl),
             $this->useDateObjects ? $jws->headers()->all() : $jws->getHeaders(),
             $this->clockSkew
         );
