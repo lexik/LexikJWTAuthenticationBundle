@@ -42,4 +42,9 @@ class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
 
         $this->keyLoader->loadKey('private');
     }
+
+    protected function getClassName(): string
+    {
+        return OpenSSLKeyLoader::class;
+    }
 }

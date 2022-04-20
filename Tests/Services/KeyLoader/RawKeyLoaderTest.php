@@ -27,4 +27,9 @@ class RawKeyLoaderTest extends AbstractTestKeyLoader
     {
         $this->assertSame('private.pem', $this->keyLoader->loadKey('private'));
     }
+
+    protected function getClassName(): string
+    {
+        return RawKeyLoader::class;
+    }
 }

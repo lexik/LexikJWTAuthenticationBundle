@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\KeyLoader;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\AbstractKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\ForwardCompatTestCaseTrait;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,17 @@ abstract class AbstractTestKeyLoader extends TestCase
         $this->keyLoader->loadKey('wrongType');
     }
 
+    public function testLoadingNullAdditionalPublicKey()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Additional public key is not set correctly. Check the "lexik_jwt_authentication.additional_public_keys" configuration key');
+
+        $className = $this->getClassName();
+        /** @var AbstractKeyLoader $loader */
+        $loader = new $className('private.pem', 'public.pem', 'foobar', [null]);
+        $loader->getAdditionalPublicKeys();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -60,4 +72,6 @@ abstract class AbstractTestKeyLoader extends TestCase
             unlink($privateKey);
         }
     }
+
+    abstract protected function getClassName(): string;
 }
