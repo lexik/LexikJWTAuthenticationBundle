@@ -107,7 +107,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $exp = isset($payload['exp']) ? $payload['exp'] : $now + $this->ttl;
             unset($payload['exp']);
 
-            $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
+            if($exp) {
+                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
+            }
         }
 
         if (isset($payload['sub'])) {
