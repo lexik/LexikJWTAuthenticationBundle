@@ -54,7 +54,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(3600)
                 ->end()
                 ->booleanNode('validate_tokens_without_ttl')
-                    ->defaultFalse()
+                    ->defaultTrue()
                 ->end()
                 ->scalarNode('clock_skew')
                     ->defaultValue(0)
