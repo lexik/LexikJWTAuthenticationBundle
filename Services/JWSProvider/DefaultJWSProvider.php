@@ -113,10 +113,12 @@ class DefaultJWSProvider implements JWSProviderInterface
     {
         $jws = JWS::load($token, false, null, $this->cryptoEngine);
 
+        $payload = $jws->getPayload();
+
         return new LoadedJWS(
-            $jws->getPayload(),
+            $payload,
             $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm),
-            $this->validateTokensWithoutTtl,
+            (isset($payload['exp']) || $this->validateTokensWithoutTtl),
             $jws->getHeader(),
             $this->clockSkew
         );
