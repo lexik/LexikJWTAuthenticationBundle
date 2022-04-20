@@ -35,15 +35,12 @@ abstract class AbstractTestKeyLoader extends TestCase
         $this->keyLoader->loadKey('wrongType');
     }
 
-    public function testLoadingNullAdditionalPublicKey()
+    public function testFalsyAdditionalPublicKeysSkipped()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Additional public key is not set correctly. Check the "lexik_jwt_authentication.additional_public_keys" configuration key');
-
         $className = $this->getClassName();
         /** @var AbstractKeyLoader $loader */
-        $loader = new $className('private.pem', 'public.pem', 'foobar', [null]);
-        $loader->getAdditionalPublicKeys();
+        $loader = new $className('private.pem', 'public.pem', 'foobar', [null, false, '']);
+        $this->assertSame([], $loader->getAdditionalPublicKeys());
     }
 
     public function testLoadingAdditionalPublicKeysAsStrings()

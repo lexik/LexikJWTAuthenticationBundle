@@ -48,7 +48,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
 
         foreach ($this->additionalPublicKeys as $key) {
             if (!$key) {
-                throw new \RuntimeException(sprintf('Additional public key is not set correctly. Check the "lexik_jwt_authentication.additional_public_keys" configuration key', $key));
+                continue;
             }
             if (is_file($key) && !is_readable($key)) {
                 throw new \RuntimeException(sprintf('Additional public key "%s" is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
