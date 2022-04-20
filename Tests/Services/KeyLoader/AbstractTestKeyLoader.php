@@ -46,6 +46,40 @@ abstract class AbstractTestKeyLoader extends TestCase
         $loader->getAdditionalPublicKeys();
     }
 
+    public function testLoadingAdditionalPublicKeysAsStrings()
+    {
+        $additionalPublicKeys = ['myKeyText1', 'myKeyText2'];
+
+        $className = $this->getClassName();
+        /** @var AbstractKeyLoader $loader */
+        $loader = new $className('private.pem', 'public.pem', 'foobar', $additionalPublicKeys);
+
+        $this->assertSame($additionalPublicKeys, $loader->getAdditionalPublicKeys());
+    }
+
+    public function testLoadingAdditionalPublicKeysFromFiles()
+    {
+        file_put_contents('additional-public-1.pem', 'myKeyTextFromFile1');
+        file_put_contents('additional-public-2.pem', 'myKeyTextFromFile2');
+
+        $className = $this->getClassName();
+        /** @var AbstractKeyLoader $loader */
+        $loader = new $className('private.pem', 'public.pem', 'foobar', ['additional-public-1.pem', 'additional-public-2.pem']);
+
+        $this->assertSame(['myKeyTextFromFile1', 'myKeyTextFromFile2'], $loader->getAdditionalPublicKeys());
+    }
+
+    public function testLoadingAdditionalPublicKeysFromFilesAndAsStrings()
+    {
+        file_put_contents('additional-public-1.pem', 'myKeyTextFromFile1');
+
+        $className = $this->getClassName();
+        /** @var AbstractKeyLoader $loader */
+        $loader = new $className('private.pem', 'public.pem', 'foobar', ['additional-public-1.pem', 'myKeyText2']);
+
+        $this->assertSame(['myKeyTextFromFile1', 'myKeyText2'], $loader->getAdditionalPublicKeys());
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -61,15 +95,11 @@ abstract class AbstractTestKeyLoader extends TestCase
      */
     protected function removeKeysIfExist()
     {
-        $privateKey = 'private.pem';
-        $publicKey = 'public.pem';
-
-        if (file_exists($publicKey)) {
-            unlink($publicKey);
-        }
-
-        if (file_exists($privateKey)) {
-            unlink($privateKey);
+        $keys = ['private.pem', 'public.pem', 'additional-public-1.pem', 'additional-public-2.pem'];
+        foreach ($keys as $key) {
+            if (file_exists($key)) {
+                unlink($key);
+            }
         }
     }
 
