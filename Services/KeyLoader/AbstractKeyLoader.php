@@ -47,7 +47,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
         $contents = [];
 
         foreach ($this->additionalPublicKeys as $key) {
-            if (!$key || !is_file($key) || !is_readable($key)) {
+            if (!$key && (!is_file($key) || !is_readable($key))) {
                 throw new \RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
             }
 
