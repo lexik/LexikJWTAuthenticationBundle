@@ -1,4 +1,5 @@
 .* export-ignore
+*.rst export-ignore
 *.md export-ignore
 Resources/doc export-ignore
 Tests export-ignore
