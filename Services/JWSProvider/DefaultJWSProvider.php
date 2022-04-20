@@ -60,7 +60,7 @@ class DefaultJWSProvider implements JWSProviderInterface
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew, bool $validateTokensWithoutTtl = false)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew, bool $validateTokensWithoutTtl = true)
     {
         if (null !== $ttl && !is_numeric($ttl)) {
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
