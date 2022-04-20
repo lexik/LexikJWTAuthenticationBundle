@@ -134,7 +134,7 @@ vwIDAQAB
                 static::$privateKey,
                 static::$publicKey
             );
-        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0);
+        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0, false);
         $jws = $provider->create(['username' => 'chalasr']);
 
         $this->assertInstanceOf(CreatedJWS::class, $jws);
