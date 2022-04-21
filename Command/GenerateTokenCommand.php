@@ -44,9 +44,11 @@ class GenerateTokenCommand extends Command
     {
         $this
             ->setName(static::$defaultName)
-            ->setDescription('Generates a JWT token')
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED)
+            ->setDescription('Generates a JWT token with optional payload')
+            ->addArgument('username', InputArgument::REQUIRED, 'Username of user to be retreived from user provider')
+            ->addArgument('ttl', InputArgument::OPTIONAL, 'Ttl in seconds to be added to current time. If not provided, the ttl configured in the bundle will be used', null)
+            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED, 'Userclass is used to determine which user provider to use')
+            ->addOption('payload', 'p', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, "Payload as name-value pair separated by ':' Use exp:0 to generate token without exp")
         ;
     }
 
@@ -89,7 +91,21 @@ class GenerateTokenCommand extends Command
             $user = $userProvider->loadUserByUsername($input->getArgument('username'));
         }
 
-        $token = $this->tokenManager->create($user);
+        $payload = [];
+        foreach($input->getOption('payload') as $key => $payloadOptions) {
+            if(false !== stristr($payloadOptions, ':')) {
+                $payloadOption = explode(':', $payloadOptions);
+                $payload[$payloadOption[0]] = $payloadOption[1];
+            } else {
+                throw new \RuntimeException('Payload must use a : as a separator between name and value.');
+            }
+        }
+
+        if($input->getArgument('ttl')) {
+            $payload['exp'] = time() + $input->getArgument('ttl');
+        }
+
+        $token = $this->tokenManager->createFromPayload($user, $payload);
 
         $output->writeln([
             '',
