@@ -45,11 +45,6 @@ class DefaultJWSProvider implements JWSProviderInterface
      * @var int
      */
     private $clockSkew;
-    
-    /**
-     * @var bool
-     */
-    private $validateTokensWithoutTtl;
 
     /**
      * @param string $cryptoEngine
@@ -60,7 +55,7 @@ class DefaultJWSProvider implements JWSProviderInterface
      *
      * @throws \InvalidArgumentException If the given algorithm is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew, bool $validateTokensWithoutTtl = true)
+    public function __construct(KeyLoaderInterface $keyLoader, $cryptoEngine, $signatureAlgorithm, $ttl, $clockSkew)
     {
         if (null !== $ttl && !is_numeric($ttl)) {
             throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
@@ -81,7 +76,6 @@ class DefaultJWSProvider implements JWSProviderInterface
         $this->signatureAlgorithm = $signatureAlgorithm;
         $this->ttl = $ttl;
         $this->clockSkew = $clockSkew;
-        $this->validateTokensWithoutTtl = $validateTokensWithoutTtl;
     }
 
     /**
@@ -118,7 +112,7 @@ class DefaultJWSProvider implements JWSProviderInterface
         return new LoadedJWS(
             $payload,
             $jws->verify($this->keyLoader->loadKey('public'), $this->signatureAlgorithm),
-            (isset($payload['exp']) || $this->validateTokensWithoutTtl),
+            null !== $this->ttl,
             $jws->getHeader(),
             $this->clockSkew
         );
