@@ -7,11 +7,10 @@ From `jwt.io <https://jwt.io/introduction>`__:
    about the user, avoiding the need to query the database more than
    once. https://jwt.io/introduction
 
-| A JWT is *self-contained*, meaning that we can trust into its payload
-  for processing the authentication. In a nutshell, there should be no
-  need for loading the user from the database when authenticating a JWT
-  Token,
-| the database should be hit only once for delivering the token.
+A JWT is *self-contained*, meaning that we can trust into its payload
+for processing the authentication. In a nutshell, there should be no
+need for loading the user from the database when authenticating a JWT Token,
+the database should be hit only once for delivering the token.
 
 That's why we decided to provide a user provider which is able to create
 User instances from the JWT payload.
@@ -23,32 +22,38 @@ To work, the provider just needs a few lines of configuration:
 
 .. code-block:: yaml
 
-   # config/packages/security.yaml
-   security:
-       providers:
-           jwt:
-               lexik_jwt: ~
+    # config/packages/security.yaml
+    security:
+        providers:
+            jwt:
+                lexik_jwt: ~
 
 Then, use it on your JWT protected firewall:
 
-.. code-block:: yaml
-
-   # Symfony versions prior to 5.3
-   security:
-       firewalls:
-           api:
-               provider: jwt
-               guard:
-                   # ...
+Symfony versions prior to 5.3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: yaml
 
-   # Symfony 5.3 and higher
-   security:
-       firewalls:
-           api:
-               provider: jwt
-               jwt: ~
+    # config/packages/security.yaml
+    security:
+        firewalls:
+            api:
+                provider: jwt
+                guard:
+                    # ...
+
+Symfony 5.3 and higher
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: yaml
+
+    # config/packages/security.yaml
+    security:
+        firewalls:
+            api:
+                provider: jwt
+                jwt: ~
 
 What does it change?
 --------------------
@@ -71,46 +76,47 @@ username and the JWT token payload as arguments and returns an instance
 of the class.
 
 Sample implementation
-'''''''''''''''''''''
+---------------------
 
 .. code-block:: php
 
-   namespace App\Security;
+    namespace App\Security;
 
-   final class User implements JWTUserInterface
-   {
-       // Your own logic
-       
-       public function __construct($username, array $roles, $email)
-       {
-           $this->username = $username;
-           $this->roles = $roles;
-           $this->email = $email;
-       }
-       
-       public static function createFromPayload($username, array $payload)
-       {
-           return new self(
-               $username,
-               $payload['roles'], // Added by default
-               $payload['email']  // Custom
-           );
-       }
-   }
+    final class User implements JWTUserInterface
+    {
+        // Your own logic
 
-*Note*: You can extend the default ``JWTUser`` class if that fits your
-needs.
+        public function __construct($username, array $roles, $email)
+        {
+            $this->username = $username;
+            $this->roles = $roles;
+            $this->email = $email;
+        }
+
+        public static function createFromPayload($username, array $payload)
+        {
+            return new self(
+                $username,
+                $payload['roles'], // Added by default
+                $payload['email']  // Custom
+            );
+        }
+    }
+
+.. note::
+
+    You can extend the default ``JWTUser`` class if that fits your needs.
 
 Configuration
-'''''''''''''
+-------------
 
 .. code-block:: yaml
 
-   # config/packages/security.yaml
-   providers:
-       # ...
-       jwt:
-           lexik_jwt:
-               class: App\Security\User
+    # config/packages/security.yaml
+    providers:
+        # ...
+        jwt:
+            lexik_jwt:
+                class: App\Security\User
 
 And voilà!

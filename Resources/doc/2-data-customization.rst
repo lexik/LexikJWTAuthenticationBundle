@@ -4,38 +4,28 @@ Data customization and validation
 **Careful**: Before you add your own custom data, know that the **JWT
 payload is not encrypted, it is only base64 encoded**. The token
 signature ensures its integrity (meaning it cannot be modified), but
-anyone can read its content (try it using a simple tool like
-https://jwt.io/).
+anyone can read its content (try it using a simple tool like https://jwt.io/).
 
 Table of contents
 -----------------
 
--  :ref:`Adding custom data or headers to the JWT
-   payload <eventsjwt_created>`
--  :ref:`Validating data in the JWT
-   payload <eventsjwt_decoded>`
--  :ref:`Customize your security
-   token <eventsjwt_authenticated`
--  :ref:`Adding public data to the JWT
-   response <eventsauthentication_success>`
--  :ref:`Getting the JWT token string after
-   encoding <eventsjwt_encoded>`
--  :ref:`Customizing the response on invalid
-   credentials <eventsauthentication_failure>`
--  :ref:`Customizing the response on invalid
-   token <#eventsjwt_invalid---customizing-the-invalid-token-response>`
--  :ref:`Customizing the response on token not
-   found <eventsjwt_not_found>`
--  :ref:`Customizing the response on expired
-   token <eventsjwt_expired>`
+-  :ref:`Adding custom data or headers to the JWT payload <eventsjwt_created>`
+-  :ref:`Validating data in the JWT payload <eventsjwt_decoded>`
+-  :ref:`Customize your security token <eventsjwt_authenticated`
+-  :ref:`Adding public data to the JWT response <eventsauthentication_success>`
+-  :ref:`Getting the JWT token string after encoding <eventsjwt_encoded>`
+-  :ref:`Customizing the response on invalid credentials <eventsauthentication_failure>`
+-  :ref:`Customizing the response on invalid token <#eventsjwt_invalid---customizing-the-invalid-token-response>`
+-  :ref:`Customizing the response on token not found <eventsjwt_not_found>`
+-  :ref:`Customizing the response on expired token <eventsjwt_expired>`
 
 Adding custom data or headers to the JWT
 ----------------------------------------
 
-.. eventsjwt_created:
+.. _eventsjwt_created:
 
 Using Events::JWT_CREATED
-^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default the JWT payload will contain the username and the token TTL,
 but you can add your own data.
@@ -44,97 +34,96 @@ You can also modify the header to fit on your application context.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_created_listener:
-           class: App\EventListener\JWTCreatedListener
-           arguments: [ '@request_stack' ]
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_created_listener:
+            class: App\EventListener\JWTCreatedListener
+            arguments: [ '@request_stack' ]
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 
-Example: Add client ip to the encoded payload
-'''''''''''''''''''''''''''''''''''''''''''''
+Example: Add client IP address to the encoded payload
+.....................................................
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTCreatedListener.php
+    // src/App/EventListener/JWTCreatedListener.php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
-   use Symfony\Component\HttpFoundation\RequestStack;
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+    use Symfony\Component\HttpFoundation\RequestStack;
 
-   /**
-    * @var RequestStack
-    */
-   private $requestStack;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
-   /**
-    * @param RequestStack $requestStack
-    */
-   public function __construct(RequestStack $requestStack)
-   {
-       $this->requestStack = $requestStack;
-   }
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
 
-   /**
-    * @param JWTCreatedEvent $event
-    *
-    * @return void
-    */
-   public function onJWTCreated(JWTCreatedEvent $event)
-   {
-       $request = $this->requestStack->getCurrentRequest();
+    /**
+     * @param JWTCreatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTCreated(JWTCreatedEvent $event)
+    {
+        $request = $this->requestStack->getCurrentRequest();
 
-       $payload       = $event->getData();
-       $payload['ip'] = $request->getClientIp();
+        $payload       = $event->getData();
+        $payload['ip'] = $request->getClientIp();
 
-       $event->setData($payload);
-       
-       $header        = $event->getHeader();
-       $header['cty'] = 'JWT';
+        $event->setData($payload);
 
-       $event->setHeader($header);
-   }
+        $header        = $event->getHeader();
+        $header['cty'] = 'JWT';
+
+        $event->setHeader($header);
+    }
 
 Example: Override token expiration date calculation to be more flexible
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+.......................................................................
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTCreatedListener.php
+    // src/App/EventListener/JWTCreatedListener.php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
-   /**
-    * @param JWTCreatedEvent $event
-    *
-    * @return void
-    */
-   public function onJWTCreated(JWTCreatedEvent $event)
-   {
-       $expiration = new \DateTime('+1 day');
-       $expiration->setTime(2, 0, 0);
+    /**
+     * @param JWTCreatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTCreated(JWTCreatedEvent $event)
+    {
+        $expiration = new \DateTime('+1 day');
+        $expiration->setTime(2, 0, 0);
 
-       $payload        = $event->getData();
-       $payload['exp'] = $expiration->getTimestamp();
+        $payload        = $event->getData();
+        $payload['exp'] = $expiration->getTimestamp();
 
-       $event->setData($payload);
-   }
+        $event->setData($payload);
+    }
 
 Using a custom payload at JWT creation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you :doc:`create JWT tokens
-programmatically </7-manual-token-creation>`, you can add custom
-data to the JWT using the method
+If you :doc:`create JWT tokens programmatically </7-manual-token-creation>`,
+you can add custom data to the JWT using the method
 ``createFromPayload(UserInterface $user, array $payload)``
 
 .. code-block:: php
 
-   $payload = ['foo' => 'bar'];
+    $payload = ['foo' => 'bar'];
 
-   $jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->createFromPayload($user, $payload);
+    $jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->createFromPayload($user, $payload);
 
-.. eventsjwt_decoded:
+.. _eventsjwt_decoded:
 
 Events::JWT_DECODED - Validating data in the JWT payload
 --------------------------------------------------------
@@ -144,64 +133,63 @@ own additional validation.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_decoded_listener:
-           class: App\EventListener\JWTDecodedListener
-           arguments: [ '@request_stack' ]
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_decoded_listener:
+            class: App\EventListener\JWTDecodedListener
+            arguments: [ '@request_stack' ]
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
 
 Example: Check client ip the decoded payload (from example 1)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTDecodedListener.php
+    // src/App/EventListener/JWTDecodedListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+    /**
+     * @param JWTDecodedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTDecoded(JWTDecodedEvent $event)
+    {
+        $request = $this->requestStack->getCurrentRequest();
 
-   /**
-    * @param JWTDecodedEvent $event
-    *
-    * @return void
-    */
-   public function onJWTDecoded(JWTDecodedEvent $event)
-   {
-       $request = $this->requestStack->getCurrentRequest();
-       
-       $payload = $event->getPayload();
+        $payload = $event->getPayload();
 
-       if (!isset($payload['ip']) || $payload['ip'] !== $request->getClientIp()) {
-           $event->markAsInvalid();
-       }
-   }
+        if (!isset($payload['ip']) || $payload['ip'] !== $request->getClientIp()) {
+            $event->markAsInvalid();
+        }
+    }
 
-Example: Add additional data to payload - to get it in your `custom UserProvider <8-jwt-user-provider>`__
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example: Add additional data to payload - to get it in your :doc:`custom UserProvider </8-jwt-user-provider>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTDecodedListener.php
+    // src/App/EventListener/JWTDecodedListener.php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 
-   /**
-    * @param JWTDecodedEvent $event
-    *
-    * @return void
-    */
-   public function onJWTDecoded(JWTDecodedEvent $event)
-   {
-       $payload = $event->getPayload();
-       $user = $this->userRepository->findOneByUsername($payload['username']);
+    /**
+     * @param JWTDecodedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTDecoded(JWTDecodedEvent $event)
+    {
+        $payload = $event->getPayload();
+        $user = $this->userRepository->findOneByUsername($payload['username']);
 
-       $payload['custom_user_data'] = $user->getCustomUserInformations();
+        $payload['custom_user_data'] = $user->getCustomUserInformations();
 
-       $event->setPayload($payload); // Don't forget to regive the payload for next event / step
-   }
+        $event->setPayload($payload); // Don't forget to regive the payload for next event / step
+    }
 
-.. eventsjwt_authenticated:
+.. _eventsjwt_authenticated:
 
 Events::JWT_AUTHENTICATED - Customizing your security token
 -----------------------------------------------------------
@@ -211,36 +199,35 @@ allow JWT properties to be used by your application.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_authenticated_listener:
-           class: App\EventListener\JWTAuthenticatedListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_authenticated, method: onJWTAuthenticated }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_authenticated_listener:
+            class: App\EventListener\JWTAuthenticatedListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_authenticated, method: onJWTAuthenticated }
 
 Example: Keep a UUID that was set into the JWT in the authenticated token
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTAuthenticatedListener.php
+    // src/App/EventListener/JWTAuthenticatedListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
+    /**
+     * @param JWTAuthenticatedEvent $event
+     *
+     * @return void
+     */
+    public function onJWTAuthenticated(JWTAuthenticatedEvent $event)
+    {
+        $token = $event->getToken();
+        $payload = $event->getPayload();
 
-   /**
-    * @param JWTAuthenticatedEvent $event
-    *
-    * @return void
-    */
-   public function onJWTAuthenticated(JWTAuthenticatedEvent $event)
-   {
-       $token = $event->getToken();
-       $payload = $event->getPayload();
+        $token->setAttribute('uuid', $payload['uuid']);
+    }
 
-       $token->setAttribute('uuid', $payload['uuid']);
-   }
-
-.. eventsauthentication_success:
+.. _eventsauthentication_success:
 
 Events::AUTHENTICATION_SUCCESS - Adding public data to the JWT response
 -----------------------------------------------------------------------
@@ -250,42 +237,41 @@ JWT but you can add your own public data to it.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.authentication_success_listener:
-           class: App\EventListener\AuthenticationSuccessListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+    # config/services.yaml
+    services:
+        acme_api.event.authentication_success_listener:
+            class: App\EventListener\AuthenticationSuccessListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 
 Example: Add user roles to the response body
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/AuthenticationSuccessListener.php
+    // src/App/EventListener/AuthenticationSuccessListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
+    /**
+     * @param AuthenticationSuccessEvent $event
+     */
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
+    {
+        $data = $event->getData();
+        $user = $event->getUser();
 
-   /**
-    * @param AuthenticationSuccessEvent $event
-    */
-   public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
-   {
-       $data = $event->getData();
-       $user = $event->getUser();
+        if (!$user instanceof UserInterface) {
+            return;
+        }
 
-       if (!$user instanceof UserInterface) {
-           return;
-       }
+        $data['data'] = array(
+            'roles' => $user->getRoles(),
+        );
 
-       $data['data'] = array(
-           'roles' => $user->getRoles(),
-       );
+        $event->setData($data);
+    }
 
-       $event->setData($data);
-   }
-
-.. eventsjwt_encoded:
+.. _eventsjwt_encoded:
 
 Events::JWT_ENCODED - Getting the JWT token string after encoding
 -----------------------------------------------------------------
@@ -293,23 +279,22 @@ Events::JWT_ENCODED - Getting the JWT token string after encoding
 You may need to get JWT after its creation.
 
 Example: Obtain JWT string
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTEncodedListener.php
+    // src/App/EventListener/JWTEncodedListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
+    /**
+     * @param JWTEncodedEvent $event
+     */
+    public function onJwtEncoded(JWTEncodedEvent $event)
+    {
+        $token = $event->getJWTString();
+    }
 
-   /**
-    * @param JWTEncodedEvent $event
-    */
-   public function onJwtEncoded(JWTEncodedEvent $event)
-   {
-       $token = $event->getJWTString();
-   }
-
-.. eventsauthentication_failure:
+.. _eventsauthentication_failure:
 
 Events::AUTHENTICATION_FAILURE - Customizing the failure response body
 ----------------------------------------------------------------------
@@ -320,40 +305,39 @@ custom response.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.authentication_failure_listener:
-           class: App\EventListener\AuthenticationFailureListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+    # config/services.yaml
+    services:
+        acme_api.event.authentication_failure_listener:
+            class: App\EventListener\AuthenticationFailureListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
 
 Example: Set a custom response on authentication failure
 
 .. code-block:: php
 
-   // src/App/EventListener/AuthenticationFailureListener.php
+    // src/App/EventListener/AuthenticationFailureListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
+    use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+    use Symfony\Component\HttpFoundation\JsonResponse;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
-   use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
-   use Symfony\Component\HttpFoundation\JsonResponse;
+    /**
+     * @param AuthenticationFailureEvent $event
+     */
+    public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event)
+    {
+        $data = [
+            'name' => 'John Doe',
+            'foo'  => 'bar',
+        ];
 
-   /**
-    * @param AuthenticationFailureEvent $event
-    */
-   public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event)
-   {
-       $data = [
-           'name' => 'John Doe',
-           'foo'  => 'bar',
-       ];
+        $response = new JWTAuthenticationFailureResponse('Bad credentials, please verify that your username/password are correctly set', JsonResponse::HTTP_UNAUTHORIZED);
+        $response->setData($data);
 
-       $response = new JWTAuthenticationFailureResponse('Bad credentials, please verify that your username/password are correctly set', JsonResponse::HTTP_UNAUTHORIZED);
-       $response->setData($data);
+        $event->setResponse($response);
+    }
 
-       $event->setResponse($response);
-   }
-
-.. eventsjwt_invalid:
+.. _eventsjwt_invalid:
 
 Events::JWT_INVALID - Customizing the invalid token response
 ------------------------------------------------------------
@@ -364,79 +348,79 @@ you can set a custom response.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_invalid_listener:
-           class: App\EventListener\JWTInvalidListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_invalid_listener:
+            class: App\EventListener\JWTInvalidListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
 
 Example: Set a custom response message and status code on invalid token
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTInvalidListener.php
+    // src/App/EventListener/JWTInvalidListener.php
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
+    use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
-   use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+    /**
+     * @param JWTInvalidEvent $event
+     */
+    public function onJWTInvalid(JWTInvalidEvent $event)
+    {
+        $response = new JWTAuthenticationFailureResponse('Your token is invalid, please login again to get a new one', 403);
 
-   /**
-    * @param JWTInvalidEvent $event
-    */
-   public function onJWTInvalid(JWTInvalidEvent $event)
-   {
-       $response = new JWTAuthenticationFailureResponse('Your token is invalid, please login again to get a new one', 403);
+        $event->setResponse($response);
+    }
 
-       $event->setResponse($response);
-   }
-
-.. eventsjwt_not_found:
+.. _eventsjwt_not_found:
 
 Events::JWT_NOT_FOUND - Customizing the response on token not found
 -------------------------------------------------------------------
 
-| By default, if no token is found in a request, the authentication
-  listener will either call the entry point that returns a unauthorized
-  (401) json response, or (if the firewall allows anonymous requests),
-  just let the request continue.
-| Thanks to this event, you can set a custom response.
+By default, if no token is found in a request, the authentication
+listener will either call the entry point that returns a unauthorized
+(401) json response, or (if the firewall allows anonymous requests),
+just let the request continue.
+
+Thanks to this event, you can set a custom response.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_notfound_listener:
-           class: App\EventListener\JWTNotFoundListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_notfound_listener:
+            class: App\EventListener\JWTNotFoundListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
 Example: Set a custom response message on token not found
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTNotFoundListener.php
+    // src/App/EventListener/JWTNotFoundListener.php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
-   use Symfony\Component\HttpFoundation\JsonResponse;
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
+    use Symfony\Component\HttpFoundation\JsonResponse;
 
-   /**
-    * @param JWTNotFoundEvent $event
-    */
-   public function onJWTNotFound(JWTNotFoundEvent $event)
-   {
-       $data = [
-           'status'  => '403 Forbidden',
-           'message' => 'Missing token',
-       ];
+    /**
+     * @param JWTNotFoundEvent $event
+     */
+    public function onJWTNotFound(JWTNotFoundEvent $event)
+    {
+        $data = [
+            'status'  => '403 Forbidden',
+            'message' => 'Missing token',
+        ];
 
-       $response = new JsonResponse($data, 403);
+        $response = new JsonResponse($data, 403);
 
-       $event->setResponse($response);
-   }
+        $event->setResponse($response);
+    }
 
-.. eventsjwt_expired:
+.. _eventsjwt_expired:
 
 Events::JWT_EXPIRED - Customizing the response message on expired token
 -----------------------------------------------------------------------
@@ -448,33 +432,33 @@ custom response or simply change the response message.
 
 .. code-block:: yaml
 
-   # config/services.yaml
-   services:
-       acme_api.event.jwt_expired_listener:
-           class: App\EventListener\JWTExpiredListener
-           tags:
-               - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
+    # config/services.yaml
+    services:
+        acme_api.event.jwt_expired_listener:
+            class: App\EventListener\JWTExpiredListener
+            tags:
+                - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
 
 Example: Customize the response in case of expired token
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
-   // src/App/EventListener/JWTExpiredListener.php
+    // src/App/EventListener/JWTExpiredListener.php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
-   use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+    use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
+    use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 
-   /**
-    * @param JWTExpiredEvent $event
-    */
-   public function onJWTExpired(JWTExpiredEvent $event)
-   {
-       /** @var JWTAuthenticationFailureResponse */
-       $response = $event->getResponse();
+    /**
+     * @param JWTExpiredEvent $event
+     */
+    public function onJWTExpired(JWTExpiredEvent $event)
+    {
+        /** @var JWTAuthenticationFailureResponse */
+        $response = $event->getResponse();
 
-       $response->setMessage('Your token is expired, please renew it.');
-   }
+        $response->setMessage('Your token is expired, please renew it.');
+    }
 
 **Protip:** You might want to use the same method for customizing the
 response on both ``JWT_INVALID``, ``JWT_NOT_FOUND`` and/or

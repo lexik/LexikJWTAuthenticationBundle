@@ -8,22 +8,22 @@ directly:
 
 .. code-block:: php
 
-   namespace App\Controller;
+    namespace App\Controller;
 
-   use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-   use Symfony\Component\HttpFoundation\JsonResponse;
-   use Symfony\Component\Security\Core\User\UserInterface;
-   use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Symfony\Component\HttpFoundation\JsonResponse;
+    use Symfony\Component\Security\Core\User\UserInterface;
+    use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
-   class ApiController extends Controller
-   {
-       public function getTokenUser(UserInterface $user, JWTTokenManagerInterface $JWTManager)
-       {
-           // ...
+    class ApiController extends Controller
+    {
+        public function getTokenUser(UserInterface $user, JWTTokenManagerInterface $JWTManager)
+        {
+            // ...
 
-           return new JsonResponse(['token' => $JWTManager->create($user)]);
-       }
-   }
+            return new JsonResponse(['token' => $JWTManager->create($user)]);
+        }
+    }
 
 This dispatches the ``Events::JWT_CREATED``, ``Events::JWT_ENCODED``
 events and returns a JWT token, but the
@@ -35,18 +35,18 @@ your login form:
 
 .. code-block:: php
 
-   public function fooAction(UserInterface $user)
-   {    
-       $authenticationSuccessHandler = $this->container->get('lexik_jwt_authentication.handler.authentication_success');
-       
-       return $authenticationSuccessHandler->handleAuthenticationSuccess($user);
-   }
+    public function fooAction(UserInterface $user)
+    {
+        $authenticationSuccessHandler = $this->container->get('lexik_jwt_authentication.handler.authentication_success');
+
+        return $authenticationSuccessHandler->handleAuthenticationSuccess($user);
+    }
 
 You can also pass an existing JWT to the ``handleAuthenticationSuccess``
 method:
 
 .. code-block:: php
 
-   $jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->create($user);
+    $jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->create($user);
 
-   return $authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwt);
+    return $authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwt);
