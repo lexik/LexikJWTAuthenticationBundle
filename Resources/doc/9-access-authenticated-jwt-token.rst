@@ -6,23 +6,21 @@ Service for some purposes, you can:
 
 #. Inject *TokenStorageInterface* and *JWTTokenManagerInterface*:
 
-.. code-block:: php
+   .. code-block:: php
 
-   use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-   use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+       use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+       use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-   public function __construct(TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
-   {
-       $this->jwtManager = $jwtManager;
-       $this->tokenStorageInterface = $tokenStorageInterface;
-   }
+       public function __construct(TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+       {
+           $this->jwtManager = $jwtManager;
+           $this->tokenStorageInterface = $tokenStorageInterface;
+       }
 
-#. Call ``decode()`` in jwtManager, and ``getToken()`` in
-   tokenStorageInterface.
+#. Call ``decode()`` in jwtManager, and ``getToken()`` in TokenStorageInterface.
 
-.. code-block:: php
+   .. code-block:: php
 
-   $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
+       $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
 
-This returns the decoded information of the JWT token sent in the
-current request.
+This returns the decoded information of the JWT token sent in the current request.

@@ -10,18 +10,18 @@ without having to modify your server configuration. See the
 documentation for installation and usage instructions.
 
 Example usage with the LexikJWTAuthenticationBundle
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: yaml
 
-   nelmio_cors:
-       ...
-       paths:
-           '^/api/':
-               allow_origin: ['*']
-               allow_headers: ['*']
-               allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
-               max_age: 3600
+    nelmio_cors:
+        ...
+        paths:
+            '~/api/':
+                allow_origin: ['*']
+                allow_headers: ['*']
+                allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+                max_age: 3600
 
 The important thing to note here is that both the ``login`` and ``api``
 firewalls paths (in our example ``/api/login_check`` and ``/api``) must
