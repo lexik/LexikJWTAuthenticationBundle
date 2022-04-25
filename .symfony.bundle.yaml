@@ -1,0 +1,6 @@
+branches: ['1.x', '2.x']
+maintained_branches: ['2.x']
+current_branch: "2.x"
+dev_branch: "2.x"
+doc_dir: 'Resources/doc/'
+dev_branch_alias: '2.x'
