@@ -85,7 +85,7 @@ rT9kcwLvwUGRmm5HVAz06a9t6gOj0pvoR2oOn9GS7zWCxd3f8vL7nA==
             ->willReturn('foobar');
 
         $payload     = ['username' => 'chalasr'];
-        $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'openssl', 'EC512', 3600, 0);
+        $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'openssl', 'ES512', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
