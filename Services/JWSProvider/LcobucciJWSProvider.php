@@ -178,9 +178,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
             'RS256' => Signer\Rsa\Sha256::class,
             'RS384' => Signer\Rsa\Sha384::class,
             'RS512' => Signer\Rsa\Sha512::class,
-            'EC256' => Signer\Ecdsa\Sha256::class,
-            'EC384' => Signer\Ecdsa\Sha384::class,
-            'EC512' => Signer\Ecdsa\Sha512::class,
+            'ES256' => Signer\Ecdsa\Sha256::class,
+            'ES384' => Signer\Ecdsa\Sha384::class,
+            'ES512' => Signer\Ecdsa\Sha512::class,
         ];
 
         if (!isset($signerMap[$signatureAlgorithm])) {
