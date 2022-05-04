@@ -55,29 +55,27 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @var bool
      */
+    private $allowNoExpiration;
+
+    /**
+     * @var bool
+     */
     private $useDateObjects;
 
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew)
+    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
-        }
-
-        if (null !== $ttl && !is_numeric($ttl)) {
-            throw new \InvalidArgumentException(sprintf('The TTL should be a numeric value, got %s instead.', $ttl));
-        }
-
-        if (null !== $clockSkew && !is_numeric($clockSkew)) {
-            throw new \InvalidArgumentException(sprintf('The clock skew should be a numeric value, got %s instead.', $clockSkew));
         }
 
         $this->keyLoader = $keyLoader;
         $this->signer = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl = $ttl;
         $this->clockSkew = $clockSkew;
+        $this->allowNoExpiration = $allowNoExpiration;
         $this->useDateObjects = method_exists(Token::class, 'payload') || class_exists(Plain::class);  // exists only on lcobucci/jwt 3.4+
     }
 
@@ -161,7 +159,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $jws = new LoadedJWS(
             $payload,
             $this->verify($jws),
-            null !== $this->ttl,
+            false == $this->allowNoExpiration,
             $this->useDateObjects ? $jws->headers()->all() : $jws->getHeaders(),
             $this->clockSkew
         );

@@ -18,13 +18,13 @@ final class LoadedJWS
     private $payload;
     private $state;
     private $clockSkew;
-    private $hasLifetime;
+    private $shouldCheckExpiration;
 
-    public function __construct(array $payload, bool $isVerified, bool $hasLifetime = true, array $header = [], int $clockSkew = 0)
+    public function __construct(array $payload, bool $isVerified, bool $shouldCheckExpiration = true, array $header = [], int $clockSkew = 0)
     {
         $this->payload = $payload;
         $this->header = $header;
-        $this->hasLifetime = $hasLifetime;
+        $this->shouldCheckExpiration = $shouldCheckExpiration;
         $this->clockSkew = $clockSkew;
 
         if (true === $isVerified) {
@@ -64,7 +64,7 @@ final class LoadedJWS
 
     private function checkExpiration(): void
     {
-        if (!$this->hasLifetime) {
+        if (!$this->shouldCheckExpiration) {
             return;
         }
 

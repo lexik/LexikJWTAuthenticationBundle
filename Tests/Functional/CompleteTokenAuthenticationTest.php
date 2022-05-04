@@ -103,6 +103,7 @@ class CompleteTokenAuthenticationTest extends TestCase
         $jwsProvider = $r->getValue($encoder);
         \Closure::bind(function () {
             $this->ttl = null;
+            $this->allowNoExpiration = true;
         }, $jwsProvider, get_class($jwsProvider))->__invoke();
 
         $token = $encoder->encode([$idClaim => 'lexik']);

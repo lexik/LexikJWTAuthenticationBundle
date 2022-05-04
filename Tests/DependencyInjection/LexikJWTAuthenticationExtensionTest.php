@@ -30,6 +30,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
                 '%lexik_jwt_authentication.encoder.signature_algorithm%',
                 '%lexik_jwt_authentication.token_ttl%',
                 '%lexik_jwt_authentication.clock_skew%',
+                '%lexik_jwt_authentication.allow_no_expiration%',
             ],
             $container->getDefinition('lexik_jwt_authentication.jws_provider.lcobucci')->getArguments()
         );
