@@ -45,7 +45,7 @@ For Symfony versions prior to 5.3
         firewalls:
             # ...
             api:
-                pattern:   ~/api
+                pattern:   ^/api
                 stateless: true
                 guard:
                     authenticators:
@@ -81,7 +81,7 @@ For Symfony 5.3 and higher
         firewalls:
             # ...
             api:
-                pattern:   ~/api
+                pattern:   ^/api
                 stateless: true
                 jwt:
                     authenticator: app.custom_authenticator

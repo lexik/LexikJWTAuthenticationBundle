@@ -17,7 +17,7 @@ Example usage with the LexikJWTAuthenticationBundle
     nelmio_cors:
         ...
         paths:
-            '~/api/':
+            '^/api/':
                 allow_origin: ['*']
                 allow_headers: ['*']
                 allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
