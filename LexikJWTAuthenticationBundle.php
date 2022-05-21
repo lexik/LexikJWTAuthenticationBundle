@@ -9,10 +9,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JW
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTFactory;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTSecurityFactory;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Factory\JWTUserFactory;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -30,8 +30,8 @@ class LexikJWTAuthenticationBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new WireGenerateTokenCommandPass());
-        $container->addCompilerPass(new DeprecateLegacyGuardAuthenticatorPass());
+        $container->addCompilerPass(new WireGenerateTokenCommandPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
+        $container->addCompilerPass(new DeprecateLegacyGuardAuthenticatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');

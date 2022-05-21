@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
+use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 /**
  * Interface for classes that are able to create and load JSON web signatures (JWS).
  *
@@ -12,7 +14,7 @@ interface JWSProviderInterface
     /**
      * Creates a new JWS signature from a given payload.
      *
-     * @return \Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS
+     * @return CreatedJWS
      */
     public function create(array $payload, array $header = []);
 
@@ -21,7 +23,7 @@ interface JWSProviderInterface
      *
      * @param string $token
      *
-     * @return \Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS
+     * @return LoadedJWS
      */
     public function load($token);
 }

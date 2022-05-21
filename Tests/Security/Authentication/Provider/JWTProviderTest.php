@@ -40,7 +40,6 @@ class JWTProviderTest extends TestCase
     {
         $provider = new JWTProvider($this->getUserProviderMock(), $this->getJWTManagerMock(), $this->getEventDispatcherMock(), 'username');
 
-        /** @var TokenInterface $usernamePasswordToken */
         $usernamePasswordToken = $this
             ->getMockBuilder(UsernamePasswordToken::class)
             ->disableOriginalConstructor()
@@ -48,7 +47,6 @@ class JWTProviderTest extends TestCase
 
         $this->assertFalse($provider->supports($usernamePasswordToken));
 
-        /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
@@ -62,7 +60,6 @@ class JWTProviderTest extends TestCase
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('Invalid JWT Token');
 
-        /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
@@ -83,7 +80,6 @@ class JWTProviderTest extends TestCase
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('Invalid JWT Token');
 
-        /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
@@ -107,7 +103,6 @@ class JWTProviderTest extends TestCase
             $this->expectException(UsernameNotFoundException::class);
         }
 
-        /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
@@ -130,7 +125,6 @@ class JWTProviderTest extends TestCase
      */
     public function testAuthenticate()
     {
-        /** @var TokenInterface $jwtUserToken */
         $jwtUserToken = $this
             ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
@@ -156,8 +150,6 @@ class JWTProviderTest extends TestCase
             JWTUserToken::class,
             $provider->authenticate($jwtUserToken)
         );
-
-        // test changing user identity field
 
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->expects($this->any())->method('decode')->will($this->returnValue(['uid' => 'user']));

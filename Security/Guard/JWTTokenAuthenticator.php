@@ -102,7 +102,7 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         $tokenExtractor = $this->getTokenExtractor();
 
         if (!$tokenExtractor instanceof TokenExtractorInterface) {
-            throw new \RuntimeException(sprintf('Method "%s::getTokenExtractor()" must return an instance of "%s".', __CLASS__, TokenExtractorInterface::class));
+            throw new \RuntimeException(sprintf('Method "%s::getTokenExtractor()" must return an instance of "%s".', self::class, TokenExtractorInterface::class));
         }
 
         if (false === ($jsonWebToken = $tokenExtractor->extract($request))) {

@@ -48,7 +48,7 @@ class CheckConfigCommand extends Command
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);

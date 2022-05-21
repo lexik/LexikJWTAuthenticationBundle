@@ -55,7 +55,7 @@ class GenerateTokenCommand extends Command
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->userProviders instanceof \Countable && 0 === \count($this->userProviders)) {
             throw new \RuntimeException('You must have at least 1 configured user provider to generate a token.');

@@ -2,6 +2,10 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Hmac\Sha384;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Ecdsa;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -68,7 +72,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false)
     {
         if ('openssl' !== $cryptoEngine) {
-            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', __CLASS__));
+            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', self::class));
         }
 
         $this->keyLoader = $keyLoader;
@@ -96,13 +100,13 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
         $now = time();
 
-        $issuedAt = isset($payload['iat']) ? $payload['iat'] : $now;
+        $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
 
         $jws->issuedAt($this->useDateObjects && !$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
 
         if (null !== $this->ttl || isset($payload['exp'])) {
-            $exp = isset($payload['exp']) ? $payload['exp'] : $now + $this->ttl;
+            $exp = $payload['exp'] ?? $now + $this->ttl;
             unset($payload['exp']);
 
             $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
@@ -170,9 +174,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private function getSignerForAlgorithm($signatureAlgorithm)
     {
         $signerMap = [
-            'HS256' => Signer\Hmac\Sha256::class,
-            'HS384' => Signer\Hmac\Sha384::class,
-            'HS512' => Signer\Hmac\Sha512::class,
+            'HS256' => Sha256::class,
+            'HS384' => Sha384::class,
+            'HS512' => Sha512::class,
             'RS256' => Signer\Rsa\Sha256::class,
             'RS384' => Signer\Rsa\Sha384::class,
             'RS512' => Signer\Rsa\Sha512::class,
@@ -182,12 +186,12 @@ class LcobucciJWSProvider implements JWSProviderInterface
         ];
 
         if (!isset($signerMap[$signatureAlgorithm])) {
-            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, __CLASS__));
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported by %s', $signatureAlgorithm, self::class));
         }
 
         $signerClass = $signerMap[$signatureAlgorithm];
 
-        if (is_subclass_of($signerClass, Signer\Ecdsa::class) && method_exists($signerClass, 'create')) {
+        if (is_subclass_of($signerClass, Ecdsa::class) && method_exists($signerClass, 'create')) {
             return $signerClass::create();
         }
 

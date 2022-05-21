@@ -9,7 +9,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Exception;
  */
 class JWTEncodeFailureException extends JWTFailureException
 {
-    const INVALID_CONFIG = 'invalid_config';
+    public const INVALID_CONFIG = 'invalid_config';
 
-    const UNSIGNED_TOKEN = 'unsigned_token';
+    public const UNSIGNED_TOKEN = 'unsigned_token';
 }

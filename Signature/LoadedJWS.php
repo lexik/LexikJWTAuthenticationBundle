@@ -10,9 +10,9 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class LoadedJWS
 {
-    const VERIFIED = 'verified';
-    const EXPIRED = 'expired';
-    const INVALID = 'invalid';
+    public const VERIFIED = 'verified';
+    public const EXPIRED = 'expired';
+    public const INVALID = 'invalid';
 
     private $header;
     private $payload;

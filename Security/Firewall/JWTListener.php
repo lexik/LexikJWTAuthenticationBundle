@@ -57,7 +57,7 @@ class JWTListener
         AuthenticationManagerInterface $authenticationManager,
         array $config = []
     ) {
-        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTAuthenticator::class), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', self::class, JWTAuthenticator::class), E_USER_DEPRECATED);
 
         $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;

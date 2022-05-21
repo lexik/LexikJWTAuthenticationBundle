@@ -2,9 +2,12 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authentication;
 
-use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -21,7 +24,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     public function testOnAuthenticationFailure()
     {
         $dispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -31,8 +34,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
         $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
     }
@@ -43,7 +46,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     public function testOnAuthenticationFailureWithANonDefaultHttpFailureStatusCode()
     {
         $dispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -53,8 +56,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
         $this->assertEquals(403, $content['code']);
         $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
     }
@@ -69,7 +72,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     public function testOnAuthenticationFailureWithANonHttpStatusCode($nonHttpStatusCode)
     {
         $dispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -79,8 +82,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
         $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
     }
@@ -88,7 +91,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     public function testOnAuthenticationFailureWithTranslator()
     {
         $dispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+            ->getMockBuilder(EventDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -106,8 +109,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
         $content = json_decode($response->getContent(), true);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertEquals(401, $content['code']);
         $this->assertEquals('translated message', $content['message']);
     }
@@ -127,7 +130,7 @@ class AuthenticationFailureHandlerTest extends TestCase
     protected function getRequest()
     {
         return $this
-            ->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+            ->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

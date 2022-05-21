@@ -97,7 +97,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
-        $tokenExtractors = $this->createTokenExtractors($container, $config['token_extractors']);
+        $tokenExtractors = self::createTokenExtractors($container, $config['token_extractors']);
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
