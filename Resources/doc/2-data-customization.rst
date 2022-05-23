@@ -27,7 +27,7 @@ Adding custom data or headers to the JWT
 Using Events::JWT_CREATED
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default the JWT payload will contain the username and the token TTL,
+By default the JWT payload will contain the username, the user's roles, the token creation date and expiration date,
 but you can add your own data.
 
 You can also modify the header to fit on your application context.
