@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by GErpeldinger at 2022-05-05T12:16:03Z
+
+I changed the `&&` to `AND` until the problem is solved on psalm side.
