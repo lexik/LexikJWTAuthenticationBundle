@@ -90,7 +90,7 @@ Symfony versions prior to 5.3
 
         firewalls:
             login:
-                pattern: ~/api/login
+                pattern: ^/api/login
                 stateless: true
                 json_login:
                     check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
@@ -98,15 +98,15 @@ Symfony versions prior to 5.3
                     failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             api:
-                pattern:   ~/api
+                pattern:   ^/api
                 stateless: true
                 guard:
                     authenticators:
                         - lexik_jwt_authentication.jwt_token_authenticator
 
         access_control:
-            - { path: ~/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ~/api,       roles: IS_AUTHENTICATED_FULLY }
+            - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 Symfony 5.3 and higher
 ......................
@@ -120,7 +120,7 @@ Symfony 5.3 and higher
 
         firewalls:
             login:
-                pattern: ~/api/login
+                pattern: ^/api/login
                 stateless: true
                 json_login:
                     check_path: /api/login_check
@@ -128,13 +128,13 @@ Symfony 5.3 and higher
                     failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             api:
-                pattern:   ~/api
+                pattern:   ^/api
                 stateless: true
                 jwt: ~
 
         access_control:
-            - { path: ~/api/login, roles: PUBLIC_ACCESS }
-            - { path: ~/api,       roles: IS_AUTHENTICATED_FULLY }
+            - { path: ^/api/login, roles: PUBLIC_ACCESS }
+            - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 Configure application routing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
