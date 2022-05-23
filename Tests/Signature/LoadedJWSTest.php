@@ -68,6 +68,27 @@ final class LoadedJWSTest extends TestCase
         $this->assertTrue($jws->isExpired());
     }
 
+    public function testAllowNoExpWithGoodPayload()
+    {
+        $payload = $this->goodPayload;
+        unset($payload['exp']);
+
+        $jws = new LoadedJWS($payload, true, false);
+
+        $this->assertTrue($jws->isVerified());
+    }
+
+    public function testNoExpWithGoodPayload()
+    {
+        $payload = $this->goodPayload;
+        unset($payload['exp']);
+
+        $jws = new LoadedJWS($payload, true, true);
+
+        $this->assertTrue($jws->isInvalid());
+        $this->assertFalse($jws->isVerified());
+    }
+
     public function testVerifiedWithExpiredPayloadAccountedForByClockSkew()
     {
         $payload = $this->goodPayload;
