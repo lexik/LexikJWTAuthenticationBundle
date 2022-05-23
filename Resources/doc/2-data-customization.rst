@@ -11,11 +11,11 @@ Table of contents
 
 -  :ref:`Adding custom data or headers to the JWT payload <eventsjwt_created>`
 -  :ref:`Validating data in the JWT payload <eventsjwt_decoded>`
--  :ref:`Customize your security token <eventsjwt_authenticated`
+-  :ref:`Customize your security token <eventsjwt_authenticated>`
 -  :ref:`Adding public data to the JWT response <eventsauthentication_success>`
 -  :ref:`Getting the JWT token string after encoding <eventsjwt_encoded>`
 -  :ref:`Customizing the response on invalid credentials <eventsauthentication_failure>`
--  :ref:`Customizing the response on invalid token <#eventsjwt_invalid---customizing-the-invalid-token-response>`
+-  :ref:`Customizing the response on invalid token <eventsjwt_invalid>`
 -  :ref:`Customizing the response on token not found <eventsjwt_not_found>`
 -  :ref:`Customizing the response on expired token <eventsjwt_expired>`
 
