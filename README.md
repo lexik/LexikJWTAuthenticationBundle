@@ -12,24 +12,24 @@ It is compatible (and tested) with PHP 7.1+ on Symfony 4.x, 5.x and 6.x.
 Documentation
 -------------
 
-The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/index.md) directory of this bundle:
+The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/index.rst) directory of this bundle:
 
-* [Getting started](Resources/doc/index.md#getting-started)
-  * [Prerequisites](Resources/doc/index.md#prerequisites)
-  * [Installation](Resources/doc/index.md#installation)
-  * [Configuration](Resources/doc/index.md#configuration)
-  * [Usage](Resources/doc/index.md#usage)
-  * [Notes](Resources/doc/index.md#notes)
-* [Further documentation](Resources/doc/index.md#further-documentation)
-  * [Configuration reference](Resources/doc/1-configuration-reference.md)
-  * [Data customization and validation](Resources/doc/2-data-customization.md)
-  * [Functional testing](Resources/doc/3-functional-testing.md)
-  * [Working with CORS requests](Resources/doc/4-cors-requests.md)
-  * [JWT encoder service customization](Resources/doc/5-encoder-service.md)
-  * [Extending Authenticator](Resources/doc/6-extending-jwt-authenticator.md)
-  * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.md)
-  * [A database-less user provider](Resources/doc/8-jwt-user-provider.md)
-  * [Accessing the authenticated JWT token](Resources/doc/9-access-authenticated-jwt-token.md)
+* [Getting started](Resources/doc/index.rst#getting-started)
+  * [Prerequisites](Resources/doc/index.rst#prerequisites)
+  * [Installation](Resources/doc/index.rst#installation)
+  * [Configuration](Resources/doc/index.rst#configuration)
+  * [Usage](Resources/doc/index.rst#usage)
+  * [Notes](Resources/doc/index.rst#notes)
+* [Further documentation](Resources/doc/index.rst#further-documentation)
+  * [Configuration reference](Resources/doc/1-configuration-reference.rst)
+  * [Data customization and validation](Resources/doc/2-data-customization.rst)
+  * [Functional testing](Resources/doc/3-functional-testing.rst)
+  * [Working with CORS requests](Resources/doc/4-cors-requests.rst)
+  * [JWT encoder service customization](Resources/doc/5-encoder-service.rst)
+  * [Extending Authenticator](Resources/doc/6-extending-jwt-authenticator.rst)
+  * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.rst)
+  * [A database-less user provider](Resources/doc/8-jwt-user-provider.rst)
+  * [Accessing the authenticated JWT token](Resources/doc/9-access-authenticated-jwt-token.rst)
 
 Community Support
 -----------------
@@ -41,12 +41,12 @@ Github Issues are dedicated to bug reports and feature requests.
 Contributing
 ------------
 
-See the [CONTRIBUTING](CONTRIBUTING.md) file.
+See the [CONTRIBUTING](CONTRIBUTING.rst) file.
 
 Upgrading from 1.x
 -------------------
 
-Please see the [UPGRADE](UPGRADE-2.0.md) file.
+Please see the [UPGRADE](UPGRADE-2.0.rst) file.
 
 Credits
 -------
