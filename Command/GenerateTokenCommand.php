@@ -44,9 +44,11 @@ class GenerateTokenCommand extends Command
     {
         $this
             ->setName(static::$defaultName)
-            ->setDescription('Generates a JWT token')
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED)
+            ->setDescription('Generates a JWT token with optional payload')
+            ->addArgument('username', InputArgument::REQUIRED, 'Username of user to be retreived from user provider')
+            ->addOption('ttl', 't', InputOption::VALUE_REQUIRED, 'Ttl in seconds to be added to current time. If not provided, the ttl configured in the bundle will be used. Use 0 to generate token without exp')
+            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED, 'Userclass is used to determine which user provider to use')
+            ->addOption('payload', 'p', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, "Payload as key-value pair separated by ':'")
         ;
     }
 
@@ -89,7 +91,25 @@ class GenerateTokenCommand extends Command
             $user = $userProvider->loadUserByUsername($input->getArgument('username'));
         }
 
-        $token = $this->tokenManager->create($user);
+        $payload = [];
+
+        if(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
+            $payload['exp'] = 0;
+        }
+        elseif(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {
+            $payload['exp'] = time() + $input->getOption('ttl');
+        }
+
+        foreach($input->getOption('payload') as $key => $payloadOptions) {
+            if(false !== stristr($payloadOptions, ':')) {
+                $payloadOption = explode(':', $payloadOptions);
+                $payload[$payloadOption[0]] = $payloadOption[1];
+            } else {
+                throw new \RuntimeException('Payload must use a : as a separator between key and value.');
+            }
+        }
+
+        $token = $this->tokenManager->createFromPayload($user, $payload);
 
         $output->writeln([
             '',
