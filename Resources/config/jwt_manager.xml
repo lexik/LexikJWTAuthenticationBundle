@@ -11,6 +11,7 @@
             <argument>%lexik_jwt_authentication.user_id_claim%</argument>
             <call method="setUserIdentityField">
                 <argument>%lexik_jwt_authentication.user_identity_field%</argument>
+                <argument>false</argument>
             </call>
         </service>
 
