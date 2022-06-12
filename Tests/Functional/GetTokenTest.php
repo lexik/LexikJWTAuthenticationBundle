@@ -90,7 +90,7 @@ class GetTokenTest extends TestCase
         $body = json_decode($response->getContent(), true);
 
         $this->assertFalse($response->isSuccessful());
-        $this->assertSame(401, $response->getStatusCode());
+        $this->assertResponseStatusCodeSame(401);
 
         $this->assertArrayHasKey('message', $body, 'The response should have a "message" key containing the failure reason.');
         $this->assertArrayHasKey('code', $body, 'The response should have a "code" key containing the response status code.');
@@ -101,7 +101,7 @@ class GetTokenTest extends TestCase
 
     private function getToken(Response $response)
     {
-        if (204 === $response->getStatusCode()) {
+        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
             $cookies = $response->headers->getCookies();
             if (isset($cookies[0]) && 'token' === $cookies[0]->getName()) {
                 $this->assertSame(Cookie::SAMESITE_STRICT, $cookies[0]->getSameSite());

@@ -7,10 +7,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Firewall\JWTListener;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * JWTListenerTest.
@@ -60,7 +64,7 @@ class JWTListenerTest extends TestCase
 
         // request token found : authentication fail
 
-        $invalidTokenException = new \Symfony\Component\Security\Core\Exception\AuthenticationException('Invalid JWT Token');
+        $invalidTokenException = new AuthenticationException('Invalid JWT Token');
         $authenticationManager = $this->getAuthenticationManagerMock();
         $authenticationManager
             ->expects($this->once())
@@ -116,7 +120,7 @@ class JWTListenerTest extends TestCase
     protected function getAuthorizationHeaderTokenExtractorMock($returnValue)
     {
         $extractor = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor')
+            ->getMockBuilder(AuthorizationHeaderTokenExtractor::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -134,7 +138,7 @@ class JWTListenerTest extends TestCase
     protected function getEvent()
     {
         $request = $this
-            ->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+            ->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -156,7 +160,7 @@ class JWTListenerTest extends TestCase
      */
     protected function getEventDispatcherMock()
     {
-        return $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+        return $this->getMockBuilder(EventDispatcher::class)
             ->disableOriginalConstructor()
             ->getMock();
     }

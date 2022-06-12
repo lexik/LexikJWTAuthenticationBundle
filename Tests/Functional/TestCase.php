@@ -27,12 +27,8 @@ abstract class TestCase extends WebTestCase
 
     protected static function createAuthenticatedClient($token = null)
     {
-        if (null === static::$kernel) {
-            static::bootKernel();
-        }
-
-        $client = static::$kernel->getContainer()->get('test.client');
-        $token = null === $token ? self::getAuthenticatedToken() : $token;
+        $client = static::$client ?: static::createClient();
+        $token = $token ?? self::getAuthenticatedToken();
 
         if (null === $token) {
             throw new \LogicException('Unable to create an authenticated client from a null JWT token');
@@ -45,7 +41,7 @@ abstract class TestCase extends WebTestCase
 
     protected static function getAuthenticatedToken()
     {
-        $client = static::$client ?: static::$kernel->getContainer()->get('test.client');
+        $client = static::$client ?: static::createClient();
 
         $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
         $response = $client->getResponse();

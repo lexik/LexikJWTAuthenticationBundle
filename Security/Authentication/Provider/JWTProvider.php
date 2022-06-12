@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Provider;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
@@ -58,7 +59,7 @@ class JWTProvider implements AuthenticationProviderInterface
         EventDispatcherInterface $dispatcher,
         $userIdClaim
     ) {
-        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', __CLASS__, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. See "%s" instead.', self::class, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
 
         $this->userProvider = $userProvider;
         $this->jwtManager = $jwtManager;
@@ -96,7 +97,7 @@ class JWTProvider implements AuthenticationProviderInterface
      * Load user from payload, using username by default.
      * Override this to load by another property.
      *
-     * @return \Symfony\Component\Security\Core\User\UserInterface
+     * @return UserInterface
      */
     protected function getUserFromPayload(array $payload)
     {

@@ -53,8 +53,8 @@ final class JWTCookieProvider
         if (null === $expiresAt) {
             $expiresAt = 0 === $this->defaultLifetime ? 0 : (time() + $this->defaultLifetime);
         }
-        
-        return new Cookie(
+
+        return Cookie::create(
             $name ?: $this->defaultName,
             $jwt,
             $expiresAt,

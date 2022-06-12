@@ -12,7 +12,7 @@ final class CreatedJWS
     /**
      * @deprecated since v2.11
      */
-    const SIGNED = 'signed';
+    public const SIGNED = 'signed';
 
     private $token;
     private $signed;

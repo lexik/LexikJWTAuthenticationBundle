@@ -27,6 +27,9 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::$client = static::createAuthenticatedClient();
         static::accessSecuredRoute();
 
+        static::assertResponseIsSuccessful();
+        static::assertResponseStatusCodeSame(Response::HTTP_OK);
+
         $response = static::$client->getResponse();
         $content = json_decode($response->getContent(), true);
 
@@ -75,8 +78,6 @@ class CompleteTokenAuthenticationTest extends TestCase
      */
     public function testAccessSecuredRouteWithExpiredToken($fail = true)
     {
-        static::bootKernel();
-
         $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $payload = ['exp' => time()];
 
@@ -94,7 +95,6 @@ class CompleteTokenAuthenticationTest extends TestCase
 
     public function testExpClaimIsNotSetIfNoTTL()
     {
-        static::bootKernel();
         $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $idClaim = static::$kernel->getContainer()->getParameter('lexik_jwt_authentication.user_id_claim');
 
@@ -118,13 +118,13 @@ class CompleteTokenAuthenticationTest extends TestCase
     protected function assertFailure(Response $response)
     {
         $this->assertFalse($response->isSuccessful());
-        $this->assertSame(401, $response->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     protected function assertSuccessful(Response $response)
     {
         $this->assertTrue($response->isSuccessful());
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     protected function accessSecuredRoute()

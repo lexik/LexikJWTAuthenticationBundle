@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Response;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the JWTAuthenticationSuccessResponse.
@@ -21,7 +22,7 @@ final class JWTAuthenticationSuccessResponseTest extends TestCase
         $expected = ['token' => 'jwt'] + $data;
         $response = new JWTAuthenticationSuccessResponse($expected['token'], $data);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame(json_encode($expected), $response->getContent());
 
         return $response;

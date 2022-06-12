@@ -83,7 +83,7 @@ class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
         static::$client = static::createAuthenticatedClient();
         static::accessSecuredRoute();
 
-        $this->assertSuccessful(static::$client->getResponse());
+        $this->assertResponseIsSuccessful();
 
         self::$subscriber->unsetListener(Events::JWT_CREATED);
     }

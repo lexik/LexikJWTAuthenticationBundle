@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 class Configuration implements ConfigurationInterface
 {
-    const INVALID_KEY_PATH = "The file %s doesn't exist or is not readable.\nIf the configured encoder doesn't need this to be configured, please don't set this option or leave it null.";
+    public const INVALID_KEY_PATH = "The file %s doesn't exist or is not readable.\nIf the configured encoder doesn't need this to be configured, please don't set this option or leave it null.";
 
     /**
      * {@inheritdoc}

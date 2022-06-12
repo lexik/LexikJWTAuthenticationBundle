@@ -2,10 +2,12 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 use PHPUnit\Framework\TestCase;
@@ -82,7 +84,7 @@ class JWTManagerTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with(
-                $this->isInstanceOf('Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent'),
+                $this->isInstanceOf(JWTDecodedEvent::class),
                 $this->equalTo(Events::JWT_DECODED)
             );
 
@@ -148,7 +150,7 @@ class JWTManagerTest extends TestCase
     protected function getJWTUserTokenMock()
     {
         $mock = $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken')
+            ->getMockBuilder(JWTUserToken::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -166,7 +168,7 @@ class JWTManagerTest extends TestCase
     protected function getJWTEncoderMock()
     {
         return $this
-            ->getMockBuilder('Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface')
+            ->getMockBuilder(JWTEncoderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
