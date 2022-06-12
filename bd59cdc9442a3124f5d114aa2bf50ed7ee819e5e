@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Spomky at 2022-06-11T16:52:01Z
+
+In the last commit, I took the opportunity to change the `$this->assertSame(xxx, $response->getStatusCode());` into `$this->assertResponseStatusCodeSame(xxx);`
