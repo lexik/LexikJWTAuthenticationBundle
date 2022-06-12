@@ -1,11 +1,21 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.15.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.16.0
 
-## [2.15.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-06)
+## [2.16.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.16) (2022-06-12)
+
+* feature [\#1037](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1037) Deprecate user_identity_field config option ([chalasr](https://github.com/chalasr))
+* feature [\#1020](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1020) Add `allow_no_expiration` option to allow validating tokens without ttl ([pluk77](https://github.com/pluk77))
+* bug [\#1019](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1019) Fix lexik#944: Separate CompatFailureResponse from FailureResponse ([GErpeldinger](https://github.com/GErpeldinger))
+* bug [\#1015](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1015) Fix ECDSA algo names in LcobucciJWSProvider ([lovenunu](https://github.com/lovenunu))
+* feature [\#1007](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1007) Allow for creation of tokens without exp ([pluk77](https://github.com/pluk77))
+* bug [\#1001](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1001) Fix deprecations on Symfony 6.1 ([chalasr](https://github.com/chalasr))
+
+_## [2.15.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-06)_
 
 * bug [\#999](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/999) Unify audience claim ([aerrasti](https://github.com/aerrasti))
+* feature [\#995](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/995) Add Request object into AuthenticationFailureEvent ([dmytro-shulyakov](https://github.com/dmytro-shulyakov))
 
 ## [2.15.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.15) (2022-04-04)
 
