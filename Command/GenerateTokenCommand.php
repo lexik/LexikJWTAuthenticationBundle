@@ -45,8 +45,9 @@ class GenerateTokenCommand extends Command
         $this
             ->setName(static::$defaultName)
             ->setDescription('Generates a JWT token')
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED)
+            ->addArgument('username', InputArgument::REQUIRED, 'Username of user to be retreived from user provider')
+            ->addOption('ttl', 't', InputOption::VALUE_REQUIRED, 'Ttl in seconds to be added to current time. If not provided, the ttl configured in the bundle will be used. Use 0 to generate token without exp')
+            ->addOption('user-class', 'c', InputOption::VALUE_REQUIRED, 'Userclass is used to determine which user provider to use')
         ;
     }
 
@@ -89,7 +90,16 @@ class GenerateTokenCommand extends Command
             $user = $userProvider->loadUserByUsername($input->getArgument('username'));
         }
 
-        $token = $this->tokenManager->create($user);
+        $payload = [];
+        
+        if(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
+            $payload['exp'] = 0;
+        }
+        elseif(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {
+            $payload['exp'] = time() + $input->getOption('ttl');
+        }
+
+        $token = $this->tokenManager->createFromPayload($user, $payload);
 
         $output->writeln([
             '',
