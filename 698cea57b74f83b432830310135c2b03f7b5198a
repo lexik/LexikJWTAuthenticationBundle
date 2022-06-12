@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by pluk77 at 2022-05-19T07:16:58Z
+
+Hello @chalasr . Any idea yet when you will have some time to review and consider this PR?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2022-05-23T17:29:58Z
+
+Can we use`--ttl=0` to skip adding the exp claim instead? And remove the `payload` option? I'm not sure we need it. At least it deserves its own discussion.
+
+---------------------------------------------------------------------------
+
+by pluk77 at 2022-05-24T05:32:53Z
+
+I can sure try and make it work with `--ttl=0`. As for the payload, to us it is important as we use the payload to encapsulate additional meta-data. Our system can not do without, but I can remove it and make my own command that includes this specific feature. I will separate the two features into separate PRs so you can decide.
+
+---------------------------------------------------------------------------
+
+by pluk77 at 2022-05-25T06:54:14Z
+
+I have removed the payload option from this patch. I still believe it is a good addition. We use a generated JWT token as an access token between two applications that reside on the same infrastructure. The token never leaves our network nor does it go to the user. But because we need a bit more context in the token, we add that via the payload. When we generate the token programmatically, we can add the payload without problems. Now I need a solution for the payload to be added by tokens generated from the command-line.
+
+I have created a second PR, but now with the additional payload option for your consideration. If you choose not to allow the additional payload, I can always create my own command to implement this, but I would really like this PR to be considered for next release.
