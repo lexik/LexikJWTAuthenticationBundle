@@ -17,6 +17,13 @@ Can't wait? Use the [symplify/easy-coding-standard](https://github.com/symplify/
 $ vendor/bin/ecs --fix
 ```
 
+In addition, we try to use the baseline code as close as the current PHP version features.
+For that, we use [Rector](https://github.com/rectorphp/rector-src).
+
+```
+$ vendor/bin/rector process
+```
+
 __Note:__ Never fix coding standards in some existing code as it makes code review more difficult.
 
 Running the test suite
