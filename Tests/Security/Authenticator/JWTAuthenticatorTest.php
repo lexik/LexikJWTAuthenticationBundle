@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Authenticator;
@@ -41,7 +42,8 @@ class JWTAuthenticatorTest extends TestCase
         }
     }
 
-    public function testAuthenticate() {
+    public function testAuthenticate()
+    {
         $userIdClaim = 'sub';
         $payload = [$userIdClaim => 'lexik'];
         $rawToken = 'token';
@@ -70,7 +72,8 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
     }
 
-    public function testAuthenticateWithIntegerIdentifier() {
+    public function testAuthenticateWithIntegerIdentifier()
+    {
         $userIdClaim = 'sub';
         $payload = [$userIdClaim => 1];
         $rawToken = 'token';
@@ -99,7 +102,8 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
     }
 
-    public function testAuthenticateWithExpiredTokenThrowsException() {
+    public function testAuthenticateWithExpiredTokenThrowsException()
+    {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
             ->will($this->throwException(new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token')));
@@ -116,12 +120,15 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    public function testAuthenticateWithInvalidTokenThrowsException() {
+    public function testAuthenticateWithInvalidTokenThrowsException()
+    {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
-            ->willThrowException(new JWTDecodeFailureException(
-                JWTDecodeFailureException::INVALID_TOKEN,
-                'Invalid JWT Token')
+            ->willThrowException(
+                new JWTDecodeFailureException(
+                    JWTDecodeFailureException::INVALID_TOKEN,
+                    'Invalid JWT Token'
+                )
             );
         $authenticator = new JWTAuthenticator(
             $jwtManager,
@@ -135,7 +142,8 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    public function testAuthenticateWithUndecodableTokenThrowsException() {
+    public function testAuthenticateWithUndecodableTokenThrowsException()
+    {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
             ->willThrowException(new JWTDecodeFailureException(
@@ -155,7 +163,8 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    public function testAuthenticationWithInvalidPayloadThrowsException() {
+    public function testAuthenticationWithInvalidPayloadThrowsException()
+    {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
             ->willReturn(['foo' => 'bar']);
@@ -173,7 +182,8 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    public function testAuthenticateWithInvalidUserThrowsException() {
+    public function testAuthenticateWithInvalidUserThrowsException()
+    {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
             ->willReturn(['identifier' => 'bar']);
@@ -196,7 +206,8 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock())->getUser();
     }
 
-    public function testOnAuthenticationFailureWithInvalidToken() {
+    public function testOnAuthenticationFailureWithInvalidToken()
+    {
         $authException = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
         $request = $this->getRequestMock();
@@ -216,7 +227,8 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($expectedResponse->getMessage(), $response->getMessage());
     }
 
-    public function testOnAuthenticationFailureWithInvalidTokenTranslatedMessage() {
+    public function testOnAuthenticationFailureWithInvalidTokenTranslatedMessage()
+    {
         $authException = new InvalidTokenException();
         $expectedResponse = new JWTAuthenticationFailureResponse('translated message');
         $request = $this->getRequestMock();

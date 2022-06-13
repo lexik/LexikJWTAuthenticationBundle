@@ -21,8 +21,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException as SecurityUserNotFoundException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException as SecurityUserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AuthenticatorInterface;
@@ -266,11 +266,11 @@ class JWTTokenAuthenticatorTest extends TestCase
         $tokenStorage->expects(self::once())->method('getToken')->willReturn(null);
 
         (new JWTTokenAuthenticator(
-           $this->getJWTManagerMock(),
-           $this->getEventDispatcherMock(),
-           $this->getTokenExtractorMock(),
-           $tokenStorage
-       ))->createAuthenticatedToken($userStub, 'lexik');
+            $this->getJWTManagerMock(),
+            $this->getEventDispatcherMock(),
+            $this->getTokenExtractorMock(),
+            $tokenStorage
+        ))->createAuthenticatedToken($userStub, 'lexik');
     }
 
     public function testOnAuthenticationFailureWithInvalidToken()

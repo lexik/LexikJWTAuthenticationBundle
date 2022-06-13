@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+
 /**
  * Interface for classes that are able to create and load JSON web signatures (JWS).
  *

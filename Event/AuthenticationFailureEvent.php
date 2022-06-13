@@ -58,11 +58,13 @@ class AuthenticationFailureEvent extends Event
         $this->response = $response;
     }
 
-    public function getRequest(): ?Request {
+    public function getRequest(): ?Request
+    {
         return $this->request;
     }
 
-    public function setRequest(Request $request) {
+    public function setRequest(Request $request)
+    {
         $this->request = $request;
     }
 }

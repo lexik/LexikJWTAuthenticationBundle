@@ -57,7 +57,7 @@ class CheckConfigCommand extends Command
                 $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
             }
         } catch (\RuntimeException $e) {
-            $output->writeln('<error>'.$e->getMessage().'</error>');
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
 
             return 1;
         }

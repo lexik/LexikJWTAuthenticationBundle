@@ -44,7 +44,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * @var TokenExtractorInterface
      */
-    private  $tokenExtractor;
+    private $tokenExtractor;
 
     /**
      * @var JWTTokenManagerInterface
@@ -123,10 +123,12 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         }
 
         $passport = new SelfValidatingPassport(
-            new UserBadge((string)$payload[$idClaim],
-            function ($userIdentifier) use($payload) {
-                return $this->loadUser($payload, $userIdentifier);
-            })
+            new UserBadge(
+                (string)$payload[$idClaim],
+                function ($userIdentifier) use ($payload) {
+                    return $this->loadUser($payload, $userIdentifier);
+                }
+            )
         );
 
         $passport->setAttribute('payload', $payload);
@@ -225,13 +227,13 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
                     }
 
                     return $provider->loadUserByIdentifier($identity);
-                // More generic call to catch both UsernameNotFoundException for SF<5.3 and new UserNotFoundException
+                    // More generic call to catch both UsernameNotFoundException for SF<5.3 and new UserNotFoundException
                 } catch (AuthenticationException $e) {
                     // try next one
                 }
             }
 
-            if(!class_exists(UserNotFoundException::class)) {
+            if (!class_exists(UserNotFoundException::class)) {
                 $ex = new UsernameNotFoundException(sprintf('There is no user with username "%s".', $identity));
                 $ex->setUsername($identity);
             } else {

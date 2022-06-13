@@ -29,7 +29,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         if (method_exists(Alias::class, 'getDeprecation')) {
             $loader->load('deprecated_51.xml');
@@ -80,7 +80,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
-            new Alias('lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
+            new Alias('lexik_jwt_authentication.key_loader.' . ('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
         );
 
         $container
@@ -141,7 +141,6 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(3, $config['pass_phrase'])
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
         }
-
     }
 
     private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)

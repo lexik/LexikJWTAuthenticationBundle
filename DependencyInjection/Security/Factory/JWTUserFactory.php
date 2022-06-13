@@ -40,7 +40,7 @@ final class JWTUserFactory implements UserProviderFactoryInterface
                         ->ifTrue(function ($class) {
                             return !(new \ReflectionClass($class))->implementsInterface(JWTUserInterface::class);
                         })
-                        ->thenInvalid('The %s class must implement '.JWTUserInterface::class.' for using the "lexik_jwt" user provider.')
+                        ->thenInvalid('The %s class must implement ' . JWTUserInterface::class . ' for using the "lexik_jwt" user provider.')
                     ->end()
                 ->end()
             ->end()
