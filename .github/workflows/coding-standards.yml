@@ -1,0 +1,39 @@
+name: Coding Standards
+
+on: [push]
+
+jobs:
+    tests:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['8.1']
+        name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                  ref: ${{ github.head_ref }}
+
+            - name: Setup PHP, with composer and extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: json, mbstring, openssl, sqlite3
+                  coverage: xdebug
+
+            - name: Install Composer dependencies
+              run: |
+                  composer install
+                  composer require rector/rector symplify/easy-coding-standard --dev
+
+            - name: CONDING STANDARDS (ECS)
+              run: |
+                  vendor/bin/ecs check
+
+            - name: CONDING STANDARDS (RECTOR)
+              run: |
+                  vendor/bin/rector process --ansi --dry-run --xdebug
+
