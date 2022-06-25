@@ -46,7 +46,7 @@ class GetTokenTest extends TestCase
         });
 
         static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$this->getToken(static::$client->getResponse())]);
+        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->getToken(static::$client->getResponse())]);
 
         $this->assertArrayHasKey('added_data', $payloadTested->payload, 'The payload should contains a "added_data" claim.');
         $this->assertSame('still visible after the event', $payloadTested->payload['added_data'], 'The "added_data" claim should be equal to "still visible after the event".');

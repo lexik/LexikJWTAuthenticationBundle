@@ -12,12 +12,16 @@ if (interface_exists(GuardTokenInterface::class)) {
      *
      * @internal
      */
-    abstract class JWTCompatUserToken extends AbstractToken implements GuardTokenInterface {}
+    abstract class JWTCompatUserToken extends AbstractToken implements GuardTokenInterface
+    {
+    }
 } else {
     /**
      * @internal
      */
-    abstract class JWTCompatUserToken extends AbstractToken {}
+    abstract class JWTCompatUserToken extends AbstractToken
+    {
+    }
 }
 
 /**

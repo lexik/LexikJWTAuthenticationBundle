@@ -92,10 +92,9 @@ class GenerateTokenCommand extends Command
 
         $payload = [];
         
-        if(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
+        if (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
             $payload['exp'] = 0;
-        }
-        elseif(null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {
+        } elseif (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {
             $payload['exp'] = time() + $input->getOption('ttl');
         }
 
@@ -103,7 +102,7 @@ class GenerateTokenCommand extends Command
 
         $output->writeln([
             '',
-            '<info>'.$token.'</info>',
+            '<info>' . $token . '</info>',
             '',
         ]);
 

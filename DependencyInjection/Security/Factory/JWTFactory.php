@@ -33,12 +33,12 @@ class JWTFactory implements SecurityFactoryInterface
      */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = 'security.authentication.provider.jwt.'.$id;
+        $providerId = 'security.authentication.provider.jwt.' . $id;
         $container
             ->setDefinition($providerId, new ChildDefinition($config['authentication_provider']))
             ->replaceArgument(0, new Reference($userProvider));
 
-        $listenerId = 'security.authentication.listener.jwt.'.$id;
+        $listenerId = 'security.authentication.listener.jwt.' . $id;
         $container
             ->setDefinition($listenerId, new ChildDefinition($config['authentication_listener']))
             ->replaceArgument(2, $config);
@@ -50,7 +50,7 @@ class JWTFactory implements SecurityFactoryInterface
         }
 
         if ($config['authorization_header']['enabled']) {
-            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.'.$id;
+            $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor.' . $id;
             $container
                 ->setDefinition($authorizationHeaderExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.authorization_header_extractor'))
                 ->replaceArgument(0, $config['authorization_header']['prefix'])
@@ -62,7 +62,7 @@ class JWTFactory implements SecurityFactoryInterface
         }
 
         if ($config['query_parameter']['enabled']) {
-            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.'.$id;
+            $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor.' . $id;
             $container
                 ->setDefinition($queryParameterExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.query_parameter_extractor'))
                 ->replaceArgument(0, $config['query_parameter']['name']);
@@ -73,7 +73,7 @@ class JWTFactory implements SecurityFactoryInterface
         }
 
         if ($config['cookie']['enabled']) {
-            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.'.$id;
+            $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor.' . $id;
             $container
                 ->setDefinition($cookieExtractorId, new ChildDefinition('lexik_jwt_authentication.extractor.cookie_extractor'))
                 ->replaceArgument(0, $config['cookie']['name']);
@@ -174,7 +174,7 @@ class JWTFactory implements SecurityFactoryInterface
      */
     protected function createEntryPoint(ContainerBuilder $container, $id, $defaultEntryPoint)
     {
-        $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.'.$id;
+        $entryPointId = 'lexik_jwt_authentication.security.authentication.entry_point.' . $id;
         $container->setDefinition($entryPointId, new ChildDefinition('lexik_jwt_authentication.security.authentication.entry_point'));
 
         return $entryPointId;

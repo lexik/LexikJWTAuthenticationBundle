@@ -2,17 +2,17 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Hmac\Sha384;
-use Lcobucci\JWT\Signer\Hmac\Sha512;
-use Lcobucci\JWT\Signer\Ecdsa;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Ecdsa;
 use Lcobucci\JWT\Signer\Hmac;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Hmac\Sha384;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
@@ -109,7 +109,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $exp = $payload['exp'] ?? $now + $this->ttl;
             unset($payload['exp']);
 
-            if($exp) {
+            if ($exp) {
                 $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
             }
         }

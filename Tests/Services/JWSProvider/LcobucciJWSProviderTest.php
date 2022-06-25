@@ -84,7 +84,7 @@ rT9kcwLvwUGRmm5HVAz06a9t6gOj0pvoR2oOn9GS7zWCxd3f8vL7nA==
             ->method('getPassphrase')
             ->willReturn('foobar');
 
-        $payload     = ['username' => 'chalasr'];
+        $payload = ['username' => 'chalasr'];
         $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'openssl', 'ES512', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
@@ -139,7 +139,7 @@ rT9kcwLvwUGRmm5HVAz06a9t6gOj0pvoR2oOn9GS7zWCxd3f8vL7nA==
             ->with('private')
             ->willReturn(self::$multiplePublicKeysTestTokenPrivateKey);
 
-        $payload     = ['username' => 'chalasr', 'iat' => time()];
+        $payload = ['username' => 'chalasr', 'iat' => time()];
         $jwsProvider = new self::$providerClass($keyLoaderMock, 'openssl', 'RS256', 3600, 0);
 
         return $jwsProvider->create($payload)->getToken();

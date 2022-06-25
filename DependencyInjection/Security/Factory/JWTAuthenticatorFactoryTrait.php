@@ -64,7 +64,7 @@ trait JWTAuthenticatorFactoryTrait
 
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string
     {
-        $authenticatorId = 'security.authenticator.jwt.'.$firewallName;
+        $authenticatorId = 'security.authenticator.jwt.' . $firewallName;
 
         $userProviderId = empty($config['provider']) ? $userProviderId : 'security.user.provider.concrete.' . $config['provider'];
 

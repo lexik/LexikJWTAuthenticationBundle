@@ -9,13 +9,19 @@ maintainers accept and merge your work.
 Coding standards
 ----------------
 
-You MUST follow the [PSR-1](http://www.php-fig.org/psr/1/) and
-[PSR-2](http://www.php-fig.org/psr/2/). If you don't know about any of them, you
-should really read the recommendations. Can't wait? Use the [PHP-CS-Fixer
-tool](http://cs.sensiolabs.org/):
+You MUST follow the [PSR-12](http://www.php-fig.org/psr/12/).
+If you don't know about any of them, you should really read the recommendations.
+Can't wait? Use the [symplify/easy-coding-standard](https://github.com/symplify/easy-coding-standard):
 
 ```
-$ vendor/bin/php-cs-fixer fix --config-file=.php_cs
+$ vendor/bin/ecs --fix
+```
+
+In addition, we try to use the baseline code as close as the current PHP version features.
+For that, we use [Rector](https://github.com/rectorphp/rector-src).
+
+```
+$ vendor/bin/rector process
 ```
 
 __Note:__ Never fix coding standards in some existing code as it makes code review more difficult.

@@ -57,7 +57,6 @@ class GenerateKeyPairCommandTest extends TestCase
         \openssl_public_encrypt($payload, $encryptedData, \openssl_pkey_get_public($publicKey));
         \openssl_private_decrypt($encryptedData, $decryptedData, \openssl_pkey_get_private($privateKey, $passphrase));
         $this->assertSame($payload, $decryptedData);*/
-
     }
 
     public function providePassphrase()
@@ -190,7 +189,7 @@ class GenerateKeyPairCommandTest extends TestCase
             )
         );
 
-        $this->assertSame(0, $tester->execute(['--skip-if-exists' =>  true], ['interactive' => false]));
+        $this->assertSame(0, $tester->execute(['--skip-if-exists' => true], ['interactive' => false]));
         $this->assertStringContainsString('Done!', $tester->getDisplay(true));
         $privateKey = \file_get_contents($privateKeyFile);
         $publicKey = \file_get_contents($publicKeyFile);
@@ -216,7 +215,7 @@ class GenerateKeyPairCommandTest extends TestCase
             )
         );
 
-        $this->assertSame(0, $tester->execute(['--skip-if-exists' =>  true], ['interactive' => false]));
+        $this->assertSame(0, $tester->execute(['--skip-if-exists' => true], ['interactive' => false]));
         $this->assertStringContainsString(
             'Your key files already exist, they won\'t be overriden.',
             $tester->getDisplay(true)
@@ -227,5 +226,4 @@ class GenerateKeyPairCommandTest extends TestCase
         $this->assertStringContainsString('foobar', $privateKey);
         $this->assertStringContainsString('foobar', $publicKey);
     }
-
 }

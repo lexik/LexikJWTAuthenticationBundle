@@ -30,4 +30,3 @@ class DeprecateLegacyGuardAuthenticatorPass implements CompilerPassInterface
             ->setDeprecated(...$deprecationArgs);
     }
 }
-
