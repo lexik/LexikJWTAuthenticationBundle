@@ -25,7 +25,15 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
             throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
         }
 
-        $rawKey = file_get_contents($this->getKeyPath($type));
+        $keyPath = $this->getKeyPath($type);
+        $rawKey  = @file_get_contents($keyPath);
+
+        if (false === $rawKey) {
+            // Try invalidating the realpath cache
+            clearstatcache(true, $keyPath);
+            $rawKey = file_get_contents($keyPath);
+        }
+
         $key = call_user_func_array("openssl_pkey_get_$type", self::TYPE_PRIVATE == $type ? [$rawKey, $this->getPassphrase()] : [$rawKey]);
 
         if (!$key) {
