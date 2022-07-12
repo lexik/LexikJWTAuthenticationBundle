@@ -43,6 +43,16 @@ Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.rst) file.
 
+
+Sponsoring
+----------
+
+Huge thanks to [Blackfire](https://blackfire.io) and [JetBrains](https://jetbrains.com) for providing this project with free open-source licenses.
+
+[![Blackfire](https://user-images.githubusercontent.com/7502063/178457752-520de30a-a2bc-4529-983b-6a3ff4f76045.png)](https://blackfire.io)
+
+If you or your company use this package, please consider [sponsoring its maintenance and development](https://github.com/sponsors/chalasr).
+
 Upgrading from 1.x
 -------------------
 
