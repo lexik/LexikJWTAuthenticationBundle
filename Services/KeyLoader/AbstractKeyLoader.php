@@ -51,7 +51,18 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
                 throw new \RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
             }
 
-            $contents[] = is_file($key) ? file_get_contents($key) : $key;
+            $rawKey = $key;
+
+            if (is_file($key)) {
+                $rawKey = @file_get_contents($key);
+
+                if (false === $rawKey) {
+                    // Try invalidating the realpath cache
+                    clearstatcache(true, $key);
+                    $rawKey = file_get_contents($key);
+                }
+            }
+            $contents[] = $rawKey;
         }
 
         return $contents;
@@ -93,6 +104,14 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
             throw new \RuntimeException(sprintf('Signature key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.signature_key" configuration key?', $key));
         }
 
-        return file_get_contents($key);
+        $rawKey = @file_get_contents($key);
+
+        if (false === $rawKey) {
+            // Try invalidating the realpath cache
+            clearstatcache(true, $key);
+            $rawKey = file_get_contents($key);
+        }
+
+        return $rawKey;
     }
 }
