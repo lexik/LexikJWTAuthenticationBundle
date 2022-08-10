@@ -39,8 +39,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
-    use ForwardCompatAuthenticatorTrait;
-
     /**
      * @var TokenExtractorInterface
      */
@@ -98,10 +96,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         return false !== $this->getTokenExtractor()->extract($request);
     }
 
-    /**
-     * @return Passport
-     */
-    public function doAuthenticate(Request $request) /*: Passport */
+    public function authenticate(Request $request): Passport
     {
         $token = $this->getTokenExtractor()->extract($request);
 
