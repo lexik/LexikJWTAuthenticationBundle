@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2022-08-10T14:17:07Z
+
+Awesome! Thanks for working on this @wouter-toppy.
+
+---------------------------------------------------------------------------
+
+by wouter-toppy at 2022-08-10T14:18:21Z
+
+@chalasr  still trying to test and fix the ci
+
+---------------------------------------------------------------------------
+
+by chalasr at 2022-08-10T14:39:58Z
+
+Looks good to me. I'll merge this very soon and send a follow-up PR to remove the whole security-guard integration.
+
+---------------------------------------------------------------------------
+
+by wouter-toppy at 2022-08-10T15:02:38Z
+
+@chalasr  tests completed. and on my part the issue is resolved
+
+---------------------------------------------------------------------------
+
+by wouter-toppy at 2022-08-12T13:05:38Z
+
+@chalasr any idea when i can expect this to be merged (and tagged in 3.x)
+Dont know if you still have other pulls/issues you want to merge into the 3.x branch
+
+the [JWTRefreshTokenBundle Pull](https://github.com/markitosgv/JWTRefreshTokenBundle/pull/338) is merged already, and hopefully gets a tag soon.
+
+after that this is the only thing that blocks our WMS upgrade to Symfony 6.1 and PHP 8.1. because we can't enable preloading because of the [original issue of this pull](https://github.com/lexik/LexikJWTAuthenticationBundle/issues/996)
