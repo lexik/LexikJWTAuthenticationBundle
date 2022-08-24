@@ -26,7 +26,7 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
         }
 
         $keyPath = $this->getKeyPath($type);
-        $rawKey  = @file_get_contents($keyPath);
+        $rawKey = @file_get_contents($keyPath);
 
         if (false === $rawKey) {
             // Try invalidating the realpath cache
