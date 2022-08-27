@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -44,6 +45,9 @@ class LexikJWTAuthenticationExtension extends Extension
         $loader->load('token_authenticator.xml');
         $loader->load('token_extractor.xml');
         $loader->load('guard_authenticator.xml');
+        if (interface_exists(AccessTokenHandlerInterface::class)) {
+            $loader->load('access_token_handler.xml');
+        }
 
         if (isset($config['private_key_path'])) {
             $config['secret_key'] = $config['private_key_path'];
