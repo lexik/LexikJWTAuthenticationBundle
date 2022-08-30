@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by misantron at 2022-08-25T09:55:47Z
+
+`lcobucci/jwt` 4.2.0 contains BC, for example: https://github.com/lcobucci/jwt/pull/835/files. Now all attempts to generate JWT with symmetric algorithms and small length keys will fail.
