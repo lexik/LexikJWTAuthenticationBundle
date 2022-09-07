@@ -87,7 +87,7 @@ c+pDtNlumEvaA05RzwAGHve4mIi7RWaRQ2yAZfElRRV5f73h8eaG8qyNp6OtpuUO
 TkeeWHzDF5tKLvuO0HGEX9N7Fn0dOBWZYVSDk/iaZw==
 -----END EC PRIVATE KEY-----
 EOF
-);
+        );
         $keyLoaderMock
             ->expects($this->once())
             ->method('getPassphrase')
