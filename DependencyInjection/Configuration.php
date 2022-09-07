@@ -79,7 +79,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('user_identity_field')
-                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, implement "' . UserInterface::class . '::getUserIdentifier()" instead.', '2.16'))
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, use "%path%.user_id_claim" or implement "' . UserInterface::class . '::getUserIdentifier()" instead.', '2.16'))
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()
