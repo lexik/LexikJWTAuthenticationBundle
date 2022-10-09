@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+use Lcobucci\Clock\Clock;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -42,6 +43,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $keyLoader;
 
     /**
+     * @var Clock
+     */
+    private $clock;
+
+    /**
      * @var Signer
      */
     private $signer;
@@ -69,13 +75,17 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false)
+    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', self::class));
         }
+        if (null === $clock) {
+            $clock = SystemClock::fromUTC();
+        }
 
         $this->keyLoader = $keyLoader;
+        $this->clock = $clock;
         $this->signer = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl = $ttl;
         $this->clockSkew = $clockSkew;
@@ -248,12 +258,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $key = new Key($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
         }
 
-        $clock = SystemClock::fromUTC();
         $validator = new Validator();
 
         $isValid = $validator->validate(
             $jwt,
-            new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+            new ValidAt($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
             new SignedWith($this->signer, $key)
         );
 
@@ -266,7 +275,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         foreach ($publicKeys as $key) {
             $isValid = $validator->validate(
                 $jwt,
-                new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+                new ValidAt($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
                 new SignedWith($this->signer, InMemory::plainText($key))
             );
 
