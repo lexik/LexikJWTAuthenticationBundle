@@ -213,7 +213,7 @@ the authentication process to obtain a new token.
 
 Maybe you want to use a **refresh token** to renew your JWT. In this
 case you can check
-`JWTRefreshTokenBundle <https://github.com/gesdinet/JWTRefreshTokenBundle>`__.
+`JWTRefreshTokenBundle <https://github.com/markitosgv/JWTRefreshTokenBundle>`__.
 
 Working with CORS requests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
