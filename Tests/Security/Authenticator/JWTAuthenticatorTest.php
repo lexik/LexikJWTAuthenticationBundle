@@ -320,7 +320,7 @@ class JWTAuthenticatorTest extends TestCase
             $this->getUserProviderMock()
         );
 
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\LogicException::class);
 
         $authenticator->authenticate($this->getRequestMock());
     }
