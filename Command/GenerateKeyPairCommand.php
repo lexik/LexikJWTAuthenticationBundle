@@ -123,10 +123,12 @@ final class GenerateKeyPairCommand extends Command
                 return 1;
             }
 
-            if (null === $input->getOption('yes') && !$io->confirm('You are about to replace your existing keys. Are you sure you wish to continue?')) {
-                $io->comment('Your action was canceled.');
-
-                return 0;
+            if (!$input->getOption('yes')) {
+                if (!$io->confirm('You are about to replace your existing keys. Are you sure you wish to continue?')) {
+                    $io->comment('Your action was canceled.');
+    
+                    return 0;
+                }
             }
         }
 
