@@ -75,6 +75,7 @@ final class GenerateKeyPairCommand extends Command
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not update key files.');
         $this->addOption('skip-if-exists', null, InputOption::VALUE_NONE, 'Do not update key files if they already exist.');
         $this->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite key files if they already exist.');
+        $this->addOption('yes', 'y', InputOption::VALUE_NONE, 'Set this parameter to execute this action.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -122,7 +123,7 @@ final class GenerateKeyPairCommand extends Command
                 return 1;
             }
 
-            if (!$io->confirm('You are about to replace your existing keys. Are you sure you wish to continue?')) {
+            if (null === $input->getOption('yes') && !$io->confirm('You are about to replace your existing keys. Are you sure you wish to continue?')) {
                 $io->comment('Your action was canceled.');
 
                 return 0;
