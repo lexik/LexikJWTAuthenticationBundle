@@ -112,6 +112,36 @@ class GenerateKeyPairCommandTest extends TestCase
         $this->assertStringContainsString('foobar', $publicKey);
     }
 
+    public function testYesMakesCommandNotInteractive()
+    {
+        $privateKeyFile = \tempnam(\sys_get_temp_dir(), 'private_');
+        $publicKeyFile = \tempnam(\sys_get_temp_dir(), 'public_');
+
+        \file_put_contents($privateKeyFile, 'foobar');
+        \file_put_contents($publicKeyFile, 'foobar');
+
+        $tester = new CommandTester(
+            new GenerateKeyPairCommand(
+                new Filesystem(),
+                $privateKeyFile,
+                $publicKeyFile,
+                null,
+                'RS256'
+            )
+        );
+        $input = ['--overwrite' => true, '--skip-if-exists' => true, '--yes' => true];
+        $returnCode = $tester->execute($input, []);
+        $this->assertSame(0, $returnCode);
+
+        $privateKey = \file_get_contents($privateKeyFile);
+        $publicKey = \file_get_contents($publicKeyFile);
+        $this->assertStringContainsString('Done!', $tester->getDisplay(true));
+        $this->assertNotFalse($privateKey);
+        $this->assertNotFalse($publicKey);
+        $this->assertStringContainsString('PRIVATE KEY', $privateKey);
+        $this->assertStringContainsString('PUBLIC KEY', $publicKey);
+    }
+
     public function testNoOverwriteDoesNotOverwrite()
     {
         $privateKeyFile = \tempnam(\sys_get_temp_dir(), 'private_');
