@@ -104,6 +104,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     public function doAuthenticate(Request $request) /*: Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
+        if ($token === false) {
+            throw new \LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
+        }
 
         try {
             if (!$payload = $this->jwtManager->parse($token)) {
