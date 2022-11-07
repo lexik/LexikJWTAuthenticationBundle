@@ -21,7 +21,7 @@ if ($r->hasReturnType() && Passport::class === $r->getReturnType()->getName()) {
          */
         trait ForwardCompatAuthenticatorTrait
         {
-            public function authenticate(Request $request): Passport
+            public function authenticate(?Request $request = null): Passport
             {
                 return $this->doAuthenticate($request);
             }
@@ -33,7 +33,7 @@ if ($r->hasReturnType() && Passport::class === $r->getReturnType()->getName()) {
      */
     trait ForwardCompatAuthenticatorTrait
     {
-        public function authenticate(Request $request): PassportInterface
+        public function authenticate(?Request $request = null): PassportInterface
         {
             return $this->doAuthenticate($request);
         }

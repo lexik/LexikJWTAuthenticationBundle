@@ -93,7 +93,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         return $event->getResponse();
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(?Request $request = null): ?bool
     {
         return false !== $this->getTokenExtractor()->extract($request);
     }
@@ -101,7 +101,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * @return Passport
      */
-    public function doAuthenticate(Request $request) /*: Passport */
+    public function doAuthenticate(?Request $request = null) /*: Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
         if ($token === false) {
