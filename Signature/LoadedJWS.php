@@ -68,7 +68,11 @@ final class LoadedJWS
             return;
         }
 
-        if (!isset($this->payload['exp']) || !is_numeric($this->payload['exp'])) {
+        if(!isset($this->payload['exp'])) {
+            return;
+        }
+
+        if (!is_numeric($this->payload['exp'])) {
             $this->state = self::INVALID;
 
             return;
