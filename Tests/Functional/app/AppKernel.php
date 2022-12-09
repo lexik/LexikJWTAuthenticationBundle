@@ -7,6 +7,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle\Security;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -89,6 +90,14 @@ class AppKernel extends Kernel
                 'cookie_samesite' => 'lax',
                 'storage_id' => 'session.storage.mock_file',
             ];
+        }
+
+        if (!class_exists(Security::class)) {
+            $loader->load(function (ContainerBuilder $container) {
+                $container->prependExtensionConfig('security', [
+                    'enable_authenticator_manager' => true,
+                ]);
+            });
         }
 
         $loader->load(function (ContainerBuilder $container) use ($sessionConfig) {
