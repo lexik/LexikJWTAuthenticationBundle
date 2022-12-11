@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2022-12-03T15:18:41Z
+
+Thanks for the PR. Did you actually test it? I suspect this is not enough to properly support setting it via an env variable:
+https://github.com/symfony/symfony/blob/043257f6fc1fceb28bc0c37c59f2bea4d9c8d79d/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L1945
+
+---------------------------------------------------------------------------
+
+by usu at 2022-12-03T16:36:10Z
+
+I tested successfully with my own application. Symfony DI automatically resolves the environment parameters when generating the DI factories. I assume this is the reason why environment variables already work for all the other config options.
+
+Happy to provide a test, but couldn't find a good test to hook into or to copy from. There was no test provided when introducing #940 and couldn't really find a test that already utilizes environment variables for other config options.
+
+---------------------------------------------------------------------------
+
+by usu at 2022-12-11T08:02:28Z
+
+Hi @chalasr, anything you'd want me to add to this PR to make this mergeable?
