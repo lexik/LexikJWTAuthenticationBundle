@@ -115,6 +115,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('api_platform')
+                    ->info('API Platform compatibility: add check_path in OpenApi documentation.')
+                    ->children()
+                        ->scalarNode('check_path')
+                            ->defaultNull()
+                            ->info('The login check path to document on OpenApi.')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
