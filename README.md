@@ -41,7 +41,7 @@ Github Issues are dedicated to bug reports and feature requests.
 Contributing
 ------------
 
-See the [CONTRIBUTING](CONTRIBUTING.rst) file.
+See the [CONTRIBUTING](CONTRIBUTING.md) file.
 
 
 Sponsoring

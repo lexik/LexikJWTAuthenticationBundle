@@ -1,0 +1,6 @@
+default:
+    resource: routing.yml
+
+api_platform:
+    resource: .
+    type: api_platform
