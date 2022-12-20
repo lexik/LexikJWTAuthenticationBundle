@@ -195,6 +195,16 @@ class LcobucciJWSProvider implements JWSProviderInterface
             'ES256' => Signer\Ecdsa\Sha256::class,
             'ES384' => Signer\Ecdsa\Sha384::class,
             'ES512' => Signer\Ecdsa\Sha512::class,
+            // Deprecated signers
+            'HS256_UNSAFE' => \Lcobucci\JWT\Signer\Hmac\UnsafeSha256::class,
+            'HS384_UNSAFE' => \Lcobucci\JWT\Signer\Hmac\UnsafeSha384::class,
+            'HS512_UNSAFE' => \Lcobucci\JWT\Signer\Hmac\UnsafeSha512::class,
+            'RS256_UNSAFE' => \Lcobucci\JWT\Signer\Rsa\UnsafeSha256::class,
+            'RS384_UNSAFE' => \Lcobucci\JWT\Signer\Rsa\UnsafeSha384::class,
+            'RS512_UNSAFE' => \Lcobucci\JWT\Signer\Rsa\UnsafeSha512::class,
+            'ES256_UNSAFE' => Signer\Ecdsa\UnsafeSha256::class,
+            'ES384_UNSAFE' => Signer\Ecdsa\UnsafeSha384::class,
+            'ES512_UNSAFE' => Signer\Ecdsa\UnsafeSha512::class,
         ];
 
         if (!isset($signerMap[$signatureAlgorithm])) {
