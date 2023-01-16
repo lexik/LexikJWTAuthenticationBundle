@@ -295,42 +295,32 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
      */
     protected function loadUser(UserProviderInterface $userProvider, array $payload, $identity)
     {
-        if ($userProvider instanceof PayloadAwareUserProviderInterface) {
-            return $userProvider->loadUserByUsernameAndPayload($identity, $payload);
-        }
+        $providers = $userProvider instanceof ChainUserProvider ? $userProvider->getProviders() : [$userProvider];
 
-        if ($userProvider instanceof ChainUserProvider) {
-            foreach ($userProvider->getProviders() as $provider) {
-                try {
-                    if ($provider instanceof PayloadAwareUserProviderInterface) {
-                        return $provider->loadUserByUsernameAndPayload($identity, $payload);
-                    }
-
-                    if (method_exists($provider, 'loadUserByIdentifier')) {
-                        return $provider->loadUserByIdentifier($identity);
-                    }
-
-                    return $provider->loadUserByUsername($identity);
-                } catch (SecurityUserNotFoundException | UsernameNotFoundException $e) {
-                    // try next one
+        foreach ($providers as $provider) {
+            try {
+                if ($provider instanceof PayloadAwareUserProviderInterface) {
+                    return $provider->loadUserByUsernameAndPayload($identity, $payload);
                 }
-            }
 
-            if (class_exists(SecurityUserNotFoundException::class)) {
-                $ex = new SecurityUserNotFoundException(sprintf('There is no user with name "%s".', $identity));
-                $ex->setUserIdentifier($identity);
-            } else {
-                $ex = new UsernameNotFoundException(sprintf('There is no user with name "%s".', $identity));
-                $ex->setUsername($identity);
-            }
+                if (method_exists($provider, 'loadUserByIdentifier')) {
+                    return $provider->loadUserByIdentifier($identity);
+                }
 
-            throw $ex;
+                return $provider->loadUserByUsername($identity);
+            } catch (SecurityUserNotFoundException | UsernameNotFoundException $e) {
+                // try next one
+            }
         }
 
-        if (method_exists($userProvider, 'loadUserByIdentifier')) {
-            return $userProvider->loadUserByIdentifier($identity);
+        if (class_exists(SecurityUserNotFoundException::class)) {
+            $ex = new SecurityUserNotFoundException(sprintf('There is no user with name "%s".', $identity));
+            $ex->setUserIdentifier($identity);
+        } else {
+            $ex = new UsernameNotFoundException(sprintf('There is no user with name "%s".', $identity));
+            $ex->setUsername($identity);
         }
 
-        return $userProvider->loadUserByUsername($identity);
+        throw $ex;
     }
 }
