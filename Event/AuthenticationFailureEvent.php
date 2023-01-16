@@ -28,7 +28,7 @@ class AuthenticationFailureEvent extends Event
     /**
      * @var Request|null
      */
-    private $request;
+    protected $request;
 
     public function __construct(?AuthenticationException $exception, ?Response $response, ?Request $request = null)
     {
