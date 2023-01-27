@@ -87,11 +87,9 @@ Use it as encoder service
 
 .. note::
 
-    You can use the ``lexik_jwt_authentication.encoder.crypto_engine`` and
-    ``lexik_jwt_authentication.encoder.signature_algorithm`` parameters
-    that represent the corresponding configuration options by injecting
-    them as argument of the encoder's service, then use them through the
-    library on which the encoder is based on.
+    You can use the ``lexik_jwt_authentication.encoder.signature_algorithm`` parameter
+    that represents the corresponding configuration option by injecting
+    this as argument of the encoder's service.
 
     See the :doc:`configuration reference <1-configuration-reference>` for
     more information.

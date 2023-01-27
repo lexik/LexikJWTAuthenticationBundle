@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\DefaultJWSProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -113,10 +112,6 @@ vwIDAQAB
 
     public function testAllowEmptyTtl()
     {
-        if (DefaultJWSProvider::class === static::$providerClass) {
-            $this->markTestSkipped('The deprecated namshi/jose provider does not support validating tokens without exp.');
-        }
-
         $keyLoader = $this->getKeyLoaderMock();
         $keyLoader
             ->expects($this->once())

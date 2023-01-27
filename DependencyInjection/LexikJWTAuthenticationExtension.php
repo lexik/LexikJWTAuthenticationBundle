@@ -40,7 +40,6 @@ class LexikJWTAuthenticationExtension extends Extension
         }
         $loader->load('jwt_manager.xml');
         $loader->load('key_loader.xml');
-        $loader->load('namshi.xml');
         $loader->load('lcobucci.xml');
         $loader->load('response_interceptor.xml');
         $loader->load('token_authenticator.xml');
@@ -74,15 +73,11 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.user_id_claim', $user_id_claim);
         $encoderConfig = $config['encoder'];
 
-        if ('lexik_jwt_authentication.encoder.default' === $encoderConfig['service']) {
-            @trigger_error('Using "lexik_jwt_authentication.encoder.default" as encoder service is deprecated since LexikJWTAuthenticationBundle 2.5, use "lexik_jwt_authentication.encoder.lcobucci" (default) or your own encoder service instead.', E_USER_DEPRECATED);
-        }
-
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));
         $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
-            new Alias('lexik_jwt_authentication.key_loader.' . ('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
+            new Alias('lexik_jwt_authentication.key_loader.raw', true)
         );
 
         $container
@@ -97,7 +92,6 @@ class LexikJWTAuthenticationExtension extends Extension
         }
 
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
-        $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
         $tokenExtractors = self::createTokenExtractors($container, $config['token_extractors']);
         $container
