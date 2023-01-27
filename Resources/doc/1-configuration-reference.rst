@@ -108,8 +108,7 @@ To create your own encoder service, see the
 signature_algorithm
 ...................
 
-One of the algorithms supported by the default encoder for the
-configured `crypto engine <#crypto_engine>`__.
+One of the encryption algorithms supported by the default encoder service.
 
 -  HS256, HS384, HS512 (HMAC)
 -  RS256, RS384, RS512 (RSA)

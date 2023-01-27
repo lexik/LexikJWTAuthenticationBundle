@@ -9,11 +9,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class CreatedJWS
 {
-    /**
-     * @deprecated since v2.11
-     */
-    public const SIGNED = 'signed';
-
     private $token;
     private $signed;
 

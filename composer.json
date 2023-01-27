@@ -41,7 +41,6 @@
         "ext-openssl": "*",
         "lcobucci/clock": "^1.2|^2.0|^3.0",
         "lcobucci/jwt": "^3.4|^4.1|^5.0",
-        "namshi/jose": "^7.2",
         "symfony/config": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0",
         "symfony/deprecation-contracts": "^2.4|^3.0",
@@ -86,8 +85,7 @@
     "scripts": {
         "test": [
             "vendor/bin/simple-phpunit",
-            "ENCODER=lcobucci vendor/bin/simple-phpunit",
-            "ENCODER=lcobucci ALGORITHM=HS256 vendor/bin/simple-phpunit",
+            "ALGORITHM=HS256 vendor/bin/simple-phpunit",
             "ENCODER=user_id_claim vendor/bin/simple-phpunit",
             "PROVIDER=lexik_jwt vendor/bin/simple-phpunit"
         ]

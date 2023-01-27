@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\DependencyInjection;
 
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\LexikJWTAuthenticationExtension;
-use Lexik\Bundle\JWTAuthenticationBundle\Encoder\DefaultEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
@@ -26,7 +25,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('lexik_jwt_authentication.key_loader.raw'),
-                '%lexik_jwt_authentication.encoder.crypto_engine%',
+                'openssl',
                 '%lexik_jwt_authentication.encoder.signature_algorithm%',
                 '%lexik_jwt_authentication.token_ttl%',
                 '%lexik_jwt_authentication.clock_skew%',
@@ -37,37 +36,6 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $this->assertSame(
             ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%', ['public1.pem', 'public2.pem']],
             $container->getDefinition('lexik_jwt_authentication.key_loader.raw')->getArguments()
-        );
-    }
-
-    /**
-     * @group legacy
-     * @expectedDeprecation Using "lexik_jwt_authentication.encoder.default" as encoder service is deprecated since LexikJWTAuthenticationBundle 2.5, use "lexik_jwt_authentication.encoder.lcobucci" (default) or your own encoder service instead.
-     */
-    public function testDeprecatedDefaultEncoderService()
-    {
-        $container = $this->getContainer([
-            'secret_key' => 'private.pem',
-            'public_key' => 'public.pem',
-            'pass_phrase' => 'test',
-            'encoder' => ['service' => 'lexik_jwt_authentication.encoder.default'],
-        ]);
-        $encoderDef = $container->findDefinition('lexik_jwt_authentication.encoder');
-        $this->assertSame(DefaultEncoder::class, $encoderDef->getClass());
-        $this->assertEquals(new Reference('lexik_jwt_authentication.jws_provider.default'), $encoderDef->getArgument(0));
-        $this->assertEquals(
-            [
-                new Reference('lexik_jwt_authentication.key_loader'),
-                '%lexik_jwt_authentication.encoder.crypto_engine%',
-                '%lexik_jwt_authentication.encoder.signature_algorithm%',
-                '%lexik_jwt_authentication.token_ttl%',
-                '%lexik_jwt_authentication.clock_skew%',
-            ],
-            $container->getDefinition('lexik_jwt_authentication.jws_provider.default')->getArguments()
-        );
-        $this->assertSame(
-            ['private.pem', 'public.pem', '%lexik_jwt_authentication.pass_phrase%', []],
-            $container->findDefinition('lexik_jwt_authentication.key_loader')->getArguments()
         );
     }
 
