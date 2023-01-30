@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -10,6 +11,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -102,10 +104,10 @@ class LexikJWTAuthenticationExtension extends Extension
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
 
-        if (false === $config['remove_token_from_body_when_cookies_used']) {
+        if (isset($config['remove_token_from_body_when_cookies_used'])) {
             $container
                 ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
-                ->replaceArgument(3, false);
+                ->replaceArgument(3, $config['remove_token_from_body_when_cookies_used']);
         }
 
         if ($config['set_cookies']) {
@@ -140,6 +142,17 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(2, $config['public_key'])
                 ->replaceArgument(3, $config['pass_phrase'])
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
+        }
+
+        if (isset($config['api_platform']['check_path'])) {
+            if (!class_exists(ApiPlatformBundle::class)) {
+                throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
+            }
+
+            $loader->load('api_platform.xml');
+            $container
+                ->getDefinition('lexik_jwt_authentication.api_platform.openapi.factory')
+                ->replaceArgument(1, $config['api_platform']['check_path']);
         }
     }
 

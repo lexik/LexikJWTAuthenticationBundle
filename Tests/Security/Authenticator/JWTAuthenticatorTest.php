@@ -307,6 +307,24 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame('dummytoken', $token->getCredentials());
     }
 
+    public function testParsingAnInvalidTokenThrowsException()
+    {
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager->method('parse')
+            ->willThrowException(new InvalidTokenException('Unable to extract JWT token'));
+
+        $authenticator = new JWTAuthenticator(
+            $jwtManager,
+            $this->getEventDispatcherMock(),
+            $this->getTokenExtractorMock(false),
+            $this->getUserProviderMock()
+        );
+
+        $this->expectException(\LogicException::class);
+
+        $authenticator->authenticate($this->getRequestMock());
+    }
+
     private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
     {
         $jwtManager = $this->getMockBuilder(DummyJWTManager::class)

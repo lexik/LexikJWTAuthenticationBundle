@@ -78,11 +78,20 @@ rT9kcwLvwUGRmm5HVAz06a9t6gOj0pvoR2oOn9GS7zWCxd3f8vL7nA==
             ->expects($this->once())
             ->method('loadKey')
             ->with('private')
-            ->willReturn(self::$privateKey);
+            ->willReturn(<<<EOF
+-----BEGIN EC PRIVATE KEY-----
+MIHcAgEBBEIB+EYtmPtvg88MzxsRzgDGlKh+Z/iU99nmgKUjnw7+3eePeNQjaALU
+DH+P7PNnF9nwfmQGTUBgQwtznmLAQcVdB3GgBwYFK4EEACOhgYkDgYYABAFp/WFf
+W/TDCvI1o0GS1QJ2ZO8wYRIdV3VNVwnkFNiVeILY4jeq1lanQIBCswc+HHOuv1II
+c+pDtNlumEvaA05RzwAGHve4mIi7RWaRQ2yAZfElRRV5f73h8eaG8qyNp6OtpuUO
+TkeeWHzDF5tKLvuO0HGEX9N7Fn0dOBWZYVSDk/iaZw==
+-----END EC PRIVATE KEY-----
+EOF
+        );
         $keyLoaderMock
             ->expects($this->once())
             ->method('getPassphrase')
-            ->willReturn('foobar');
+            ->willReturn(null);
 
         $payload = ['username' => 'chalasr'];
         $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'openssl', 'ES512', 3600, 0);

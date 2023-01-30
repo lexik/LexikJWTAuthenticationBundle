@@ -1,7 +1,7 @@
 LexikJWTAuthenticationBundle
 ============================
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lexik/LexikJWTAuthenticationBundle/?branch=2.x)
 
 [![Latest Stable Version](https://poser.pugx.org/lexik/jwt-authentication-bundle/v/stable.svg)](https://packagist.org/packages/lexik/jwt-authentication-bundle)
 
@@ -41,7 +41,7 @@ Github Issues are dedicated to bug reports and feature requests.
 Contributing
 ------------
 
-See the [CONTRIBUTING](CONTRIBUTING.rst) file.
+See the [CONTRIBUTING](CONTRIBUTING.md) file.
 
 
 Sponsoring

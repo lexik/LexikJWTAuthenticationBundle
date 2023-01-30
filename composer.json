@@ -49,8 +49,6 @@
         "symfony/http-kernel": "^5.4|^6.0",
         "symfony/property-access": "^5.4|^6.0",
         "symfony/security-bundle": "^5.4|^6.0",
-        "symfony/security-core": "^5.4|^6.0",
-        "symfony/security-http": "^5.4|^6.0",
         "symfony/translation-contracts": "^1.0|^2.0|^3.0"
     },
     "require-dev": {
