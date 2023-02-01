@@ -25,6 +25,9 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
         $this->class = $class;
     }
 
+    /**
+     * To be removed at the same time as symfony 5.4 support.
+     */
     public function loadUserByUsername(string $username): UserInterface
     {
         // to be removed at the same time as symfony 5.4 support

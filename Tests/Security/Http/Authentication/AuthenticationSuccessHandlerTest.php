@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAut
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -112,7 +113,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&Request
+     * @return MockObject&Request
      */
     protected function getRequest()
     {
@@ -120,7 +121,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&JWTPostAuthenticationToken
+     * @return MockObject&JWTPostAuthenticationToken
      */
     protected function getToken()
     {
@@ -139,7 +140,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&JWTManager
+     * @return MockObject&JWTManager
      */
     private function getJWTManager(string $token = null)
     {
@@ -155,7 +156,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&EventDispatcher
+     * @return MockObject&EventDispatcher
      */
     private function getDispatcher()
     {
