@@ -11,8 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * JWTProviderTest.
  *
- * @group legacy
- *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 class JWTUserProviderTest extends TestCase
@@ -29,12 +27,12 @@ class JWTUserProviderTest extends TestCase
     public function testLoadUserByUsername()
     {
         $userProvider = new JWTUserProvider(JWTUser::class);
-        $user = $userProvider->loadUserByUsername('lexik');
+        $user = $userProvider->loadUserByIdentifier('lexik');
 
         $this->assertInstanceOf(JWTUser::class, $user);
-        $this->assertSame('lexik', method_exists($user, 'getUserIdentifier') ? $user->getUserIdentifier() : $user->getUsername());
+        $this->assertSame('lexik', $user->getUserIdentifier());
 
-        $this->assertSame($userProvider->loadUserByUsername('lexik'), $user, 'User instances should be cached.');
+        $this->assertSame($userProvider->loadUserByIdentifier('lexik'), $user, 'User instances should be cached.');
     }
 
     public function testRefreshUser()

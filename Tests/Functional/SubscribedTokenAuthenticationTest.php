@@ -17,7 +17,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
  */
 class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
 {
-    private static $subscriber;
+    private static ?object $subscriber = null;
 
     protected function doSetUp()
     {

@@ -46,7 +46,6 @@ Full default configuration
         public_key: ~
         pass_phrase: ~
         token_ttl: 3600 # token TTL in seconds, defaults to 1 hour
-        user_identity_field: username # key under which the user identity will be stored in the token payload
         clock_skew: 0
         allow_no_expiration: false # set to true to allow tokens without exp claim
 

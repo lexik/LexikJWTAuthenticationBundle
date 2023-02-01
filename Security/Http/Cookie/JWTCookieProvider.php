@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Helper\JWTSplitter;
+use LogicException;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
@@ -10,14 +11,14 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 final class JWTCookieProvider
 {
-    private $defaultName;
-    private $defaultLifetime;
-    private $defaultSameSite;
-    private $defaultPath;
-    private $defaultDomain;
-    private $defaultSecure;
-    private $defaultHttpOnly;
-    private $defaultSplit;
+    private ?string $defaultName;
+    private ?int $defaultLifetime;
+    private ?string $defaultSameSite;
+    private ?string $defaultPath;
+    private ?string $defaultDomain;
+    private bool $defaultSecure;
+    private bool $defaultHttpOnly;
+    private array $defaultSplit;
 
     public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [])
     {
@@ -40,11 +41,11 @@ final class JWTCookieProvider
     public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = []): Cookie
     {
         if (!$name && !$this->defaultName) {
-            throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
+            throw new LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
         }
 
         if (!$expiresAt && null === $this->defaultLifetime) {
-            throw new \LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
+            throw new LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
         }
 
         $jwtParts = new JWTSplitter($jwt);

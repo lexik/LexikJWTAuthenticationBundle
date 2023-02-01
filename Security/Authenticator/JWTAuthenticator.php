@@ -19,11 +19,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAut
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
+use LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,7 +31,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -39,30 +38,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
-    /**
-     * @var TokenExtractorInterface
-     */
-    private $tokenExtractor;
+    private TokenExtractorInterface $tokenExtractor;
 
-    /**
-     * @var JWTTokenManagerInterface
-     */
-    private $jwtManager;
+    private JWTTokenManagerInterface $jwtManager;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
+    private UserProviderInterface $userProvider;
 
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
+    private ?TranslatorInterface $translator;
 
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
@@ -100,7 +84,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     {
         $token = $this->getTokenExtractor()->extract($request);
         if ($token === false) {
-            throw new \LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
+            throw new LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
         }
 
         try {
@@ -122,10 +106,8 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
         $passport = new SelfValidatingPassport(
             new UserBadge(
-                (string)$payload[$idClaim],
-                function ($userIdentifier) use ($payload) {
-                    return $this->loadUser($payload, $userIdentifier);
-                }
+                (string) $payload[$idClaim],
+                fn ($userIdentifier) => $this->loadUser($payload, $userIdentifier)
             )
         );
 
@@ -206,60 +188,29 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     protected function loadUser(array $payload, string $identity): UserInterface
     {
         if ($this->userProvider instanceof PayloadAwareUserProviderInterface) {
-            if (method_exists($this->userProvider, 'loadUserByIdentifierAndPayload')) {
-                return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
-            } else {
-                return $this->userProvider->loadUserByUsernameAndPayload($identity, $payload);
-            }
+            return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
         }
 
         if ($this->userProvider instanceof ChainUserProvider) {
             foreach ($this->userProvider->getProviders() as $provider) {
                 try {
                     if ($provider instanceof PayloadAwareUserProviderInterface) {
-                        if (method_exists(PayloadAwareUserProviderInterface::class, 'loadUserByIdentifierAndPayload')) {
-                            return $provider->loadUserByIdentifierAndPayload($identity, $payload);
-                        } else {
-                            return $provider->loadUserByUsernameAndPayload($identity, $payload);
-                        }
+                        return $provider->loadUserByIdentifierAndPayload($identity, $payload);
                     }
 
                     return $provider->loadUserByIdentifier($identity);
-                    // More generic call to catch both UsernameNotFoundException for SF<5.3 and new UserNotFoundException
                 } catch (AuthenticationException $e) {
                     // try next one
                 }
             }
 
-            if (!class_exists(UserNotFoundException::class)) {
-                $ex = new UsernameNotFoundException(sprintf('There is no user with username "%s".', $identity));
-                $ex->setUsername($identity);
-            } else {
-                $ex = new UserNotFoundException(sprintf('There is no user with identifier "%s".', $identity));
-                $ex->setUserIdentifier($identity);
-            }
+            $ex = new UserNotFoundException(sprintf('There is no user with identifier "%s".', $identity));
+            $ex->setUserIdentifier($identity);
 
             throw $ex;
         }
 
-        if (method_exists($this->userProvider, 'loadUserByIdentifier')) {
-            return $this->userProvider->loadUserByIdentifier($identity);
-        } else {
-            return $this->userProvider->loadUserByUsername($identity);
-        }
-    }
-
-    public function createAuthenticatedToken(PassportInterface $passport, string $firewallName): TokenInterface
-    {
-        if (!$passport instanceof Passport) {
-            throw new \LogicException(sprintf('Expected "%s" but got "%s".', Passport::class, get_debug_type($passport)));
-        }
-
-        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
-
-        $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
-
-        return $token;
+        return $this->userProvider->loadUserByIdentifier($identity);
     }
 
     public function createToken(Passport $passport, string $firewallName): TokenInterface

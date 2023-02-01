@@ -7,12 +7,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as CustomUser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -45,7 +43,7 @@ class JWTManagerTest extends TestCase
             ->willReturn('secrettoken');
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
-        $this->assertEquals('secrettoken', $manager->create($this->createUser('user', 'password')));
+        $this->assertSame('secrettoken', $manager->create($this->createUser()));
     }
 
     /**
@@ -71,7 +69,7 @@ class JWTManagerTest extends TestCase
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
         $payload = ['foo' => 'bar'];
-        $this->assertEquals('secrettoken', $manager->createFromPayload($this->createUser('user', 'password'), $payload));
+        $this->assertSame('secrettoken', $manager->createFromPayload($this->createUser(), $payload));
     }
 
     /**
@@ -95,7 +93,7 @@ class JWTManagerTest extends TestCase
             ->willReturn(['foo' => 'bar']);
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
-        $this->assertEquals(['foo' => 'bar'], $manager->decode($this->getJWTUserTokenMock()));
+        $this->assertSame(['foo' => 'bar'], $manager->decode($this->getJWTUserTokenMock()));
     }
 
     public function testParse()
@@ -116,43 +114,15 @@ class JWTManagerTest extends TestCase
             ->willReturn(['foo' => 'bar']);
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
-        $this->assertEquals(['foo' => 'bar'], $manager->parse('jwt'));
+        $this->assertSame(['foo' => 'bar'], $manager->parse('jwt'));
     }
 
     /**
-     * @group legacy
-     */
-    public function testIdentityField()
-    {
-        $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher
-            ->expects($this->exactly(2))
-            ->method('dispatch')
-            ->withConsecutive(
-                [$this->isInstanceOf(JWTCreatedEvent::class), $this->equalTo(Events::JWT_CREATED)],
-                [$this->isInstanceOf(JWTEncodedEvent::class), $this->equalTo(Events::JWT_ENCODED)]
-            );
-
-        $encoder = $this->getJWTEncoderMock();
-        $encoder
-            ->expects($this->once())
-            ->method('encode')
-            ->willReturn('secrettoken');
-
-        $manager = new JWTManager($encoder, $dispatcher, 'username');
-        $manager->setUserIdentityField('email');
-        $this->assertEquals('secrettoken', $manager->create(new CustomUser('user', 'password', 'victuxbb@gmail.com')));
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject&JWTPostAuthenticationToken
      */
     protected function getJWTUserTokenMock()
     {
-        $mock = $this
-            ->getMockBuilder(JWTUserToken::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mock = $this->createMock(JWTPostAuthenticationToken::class);
 
         $mock
             ->expects($this->once())
@@ -163,33 +133,23 @@ class JWTManagerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject&JWTEncoderInterface
      */
     protected function getJWTEncoderMock()
     {
-        return $this
-            ->getMockBuilder(JWTEncoderInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(JWTEncoderInterface::class);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
      */
     protected function getEventDispatcherMock()
     {
-        return $this
-            ->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(EventDispatcherInterface::class);
     }
 
-    private function createUser(string $username, string $password): UserInterface
+    private function createUser(): UserInterface
     {
-        if (class_exists(InMemoryUser::class)) {
-            return new InMemoryUser($username, $password);
-        }
-
-        return new User($username, $password);
+        return new InMemoryUser('user', 'password');
     }
 }

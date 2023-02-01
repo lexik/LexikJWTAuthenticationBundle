@@ -27,6 +27,6 @@ class SplitCookieTokenExtractorTest extends TestCase
         $request = new Request();
         $request->cookies->add(['jwt_hp' => 'testheader.testpayload']);
         $request->cookies->add(['jwt_s' => 'testsignature']);
-        $this->assertEquals('testheader.testpayload.testsignature', $extractor->extract($request));
+        $this->assertSame('testheader.testpayload.testsignature', $extractor->extract($request));
     }
 }

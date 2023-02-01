@@ -9,8 +9,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
  */
 final class CreatedJWS
 {
-    private $token;
-    private $signed;
+    private string $token;
+    private bool $signed;
 
     public function __construct(string $token, bool $isSigned)
     {

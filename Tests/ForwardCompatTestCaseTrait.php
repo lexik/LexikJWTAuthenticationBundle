@@ -3,8 +3,9 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
-if (70000 <= \PHP_VERSION_ID && (new \ReflectionMethod(TestCase::class, 'setUp'))->hasReturnType()) {
+if ((new ReflectionMethod(TestCase::class, 'setUp'))->hasReturnType()) {
     eval('
         namespace Lexik\Bundle\JWTAuthenticationBundle\Tests;
 

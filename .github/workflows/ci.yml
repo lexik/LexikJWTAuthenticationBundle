@@ -13,7 +13,7 @@ jobs:
             matrix:
                 include:
                     # Lowest Deps
-                    - php: 7.2
+                    - php: 8.1
                       symfony: 5.4.*
                       composer-flags: '--prefer-stable --prefer-lowest'
                       can-fail: false
@@ -28,10 +28,10 @@ jobs:
                       composer-flags: '--prefer-stable'
                       can-fail: false
                     # Development Symfony branches
-                    - php: 8.2
+                    - php: 8.3
                       symfony: 6.3.*@dev
                       composer-flags: ''
-                      can-fail: false
+                      can-fail: true
 
         name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
 
@@ -58,12 +58,8 @@ jobs:
               if: "matrix.symfony == '6.3.*@dev'"
               run: "composer config minimum-stability dev"
 
-            - name: "Remove symfony/security-guard"
-              if: "matrix.symfony == '6.0.*' || matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
-              run: "composer remove --dev --no-update symfony/security-guard"
-
             - name: "Install api-platform/core"
-              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
+              if: "matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
               run: "composer require --dev --no-update api-platform/core:^3.0"
 
             - name: "Install dependencies"

@@ -16,7 +16,7 @@ class JWTCookieProviderTest extends TestCase
         $cookieProvider = new JWTCookieProvider("default_name");
         $cookie = $cookieProvider->createCookie("header.payload.signature", "name", $expiresAt);
 
-        $this->assertEquals($expiresAt, $cookie->getExpiresTime());
+        $this->assertSame($expiresAt, $cookie->getExpiresTime());
     }
 
     public function testCreateCookieWithLifetime()
@@ -25,7 +25,7 @@ class JWTCookieProviderTest extends TestCase
         $cookieProvider = new JWTCookieProvider("default_name", $lifetime);
         $cookie = $cookieProvider->createCookie("header.payload.signature");
 
-        $this->assertEquals(time() + $lifetime, $cookie->getExpiresTime());
+        $this->assertSame(time() + $lifetime, $cookie->getExpiresTime());
     }
 
     public function testCreateSessionCookie()
@@ -33,6 +33,6 @@ class JWTCookieProviderTest extends TestCase
         $cookieProvider = new JWTCookieProvider("default_name", 0);
         $cookie = $cookieProvider->createCookie("header.payload.signature");
 
-        $this->assertEquals(0, $cookie->getExpiresTime());
+        $this->assertSame(0, $cookie->getExpiresTime());
     }
 }

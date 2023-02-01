@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
+use stdClass;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,7 +40,7 @@ class GetTokenTest extends TestCase
             $e->setPayload($payload);
         });
 
-        $payloadTested = new \stdClass();
+        $payloadTested = new stdClass();
         $payloadTested->payload = [];
         $subscriber->setListener(Events::JWT_AUTHENTICATED, function (JWTAuthenticatedEvent $e) use ($payloadTested) {
             $payloadTested->payload = $e->getPayload();

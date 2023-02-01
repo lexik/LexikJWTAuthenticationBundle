@@ -29,6 +29,6 @@ class CookieTokenExtractorTest extends TestCase
 
         $request = new Request();
         $request->cookies->add(['BEARER' => 'testheader.testpayload.testsignature']);
-        $this->assertEquals('testheader.testpayload.testsignature', $extractor->extract($request));
+        $this->assertSame('testheader.testpayload.testsignature', $extractor->extract($request));
     }
 }

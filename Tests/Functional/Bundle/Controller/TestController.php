@@ -7,12 +7,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TestController
 {
-    public function securedAction(UserInterface $user)
+    public function securedAction(UserInterface $user): JsonResponse
     {
         return new JsonResponse([
             'class' => get_class($user),
             'roles' => $user->getRoles(),
-            'username' => method_exists($user, 'getUserIdentifier') ? $user->getUserIdentifier() : $user->getUsername(),
+            'username' => $user->getUserIdentifier(),
         ]);
     }
 }

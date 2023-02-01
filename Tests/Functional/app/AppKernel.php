@@ -4,7 +4,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,9 +18,9 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
  */
 class AppKernel extends Kernel
 {
-    private $encoder;
+    private string $encoder;
 
-    private $userProvider;
+    private string $userProvider;
 
     private $signatureAlgorithm;
 
@@ -46,7 +45,6 @@ class AppKernel extends Kernel
             new FrameworkBundle(),
             new SecurityBundle(),
             new LexikJWTAuthenticationBundle(),
-            new Bundle(),
         ];
         if (class_exists(ApiPlatformBundle::class)) {
             $bundles[] = new ApiPlatformBundle();
@@ -138,7 +136,7 @@ class AppKernel extends Kernel
             $loader->load(__DIR__ . '/config/' . $this->testCase . '/config.yml');
         }
 
-        $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider . (class_exists(UserNotFoundException::class) ? '' : '_legacy')));
+        $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider));
 
         if ($this->signatureAlgorithm && file_exists($file = __DIR__ . sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
             $loader->load($file);

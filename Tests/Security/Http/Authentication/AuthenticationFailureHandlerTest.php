@@ -23,10 +23,7 @@ class AuthenticationFailureHandlerTest extends TestCase
      */
     public function testOnAuthenticationFailure()
     {
-        $dispatcher = $this
-            ->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $authenticationException = $this->getAuthenticationException();
 
@@ -35,9 +32,9 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        $this->assertEquals(401, $content['code']);
-        $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(401, $content['code']);
+        $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
 
     /**
@@ -45,10 +42,7 @@ class AuthenticationFailureHandlerTest extends TestCase
      */
     public function testOnAuthenticationFailureWithANonDefaultHttpFailureStatusCode()
     {
-        $dispatcher = $this
-            ->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $authenticationException = new AuthenticationException('', 403);
 
@@ -57,9 +51,9 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
-        $this->assertEquals(403, $content['code']);
-        $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame(403, $content['code']);
+        $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
 
     /**
@@ -71,10 +65,7 @@ class AuthenticationFailureHandlerTest extends TestCase
      */
     public function testOnAuthenticationFailureWithANonHttpStatusCode($nonHttpStatusCode)
     {
-        $dispatcher = $this
-            ->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $authenticationException = new AuthenticationException('', $nonHttpStatusCode);
 
@@ -83,22 +74,16 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        $this->assertEquals(401, $content['code']);
-        $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(401, $content['code']);
+        $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
 
     public function testOnAuthenticationFailureWithTranslator()
     {
-        $dispatcher = $this
-            ->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $translator = $this
-            ->getMockBuilder(TranslatorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $translator = $this->createMock(TranslatorInterface::class);
         $translator->expects($this->once())
             ->method('trans')->with('An authentication exception occurred.', [])
             ->willReturn('translated message');
@@ -110,9 +95,9 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        $this->assertEquals(401, $content['code']);
-        $this->assertEquals('translated message', $content['message']);
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(401, $content['code']);
+        $this->assertSame('translated message', $content['message']);
     }
 
     public static function nonHttpStatusCodeProvider(): iterable
@@ -125,20 +110,14 @@ class AuthenticationFailureHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject&Request
      */
     protected function getRequest()
     {
-        return $this
-            ->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(Request::class);
     }
 
-    /**
-     * @return AuthenticationException
-     */
-    protected function getAuthenticationException()
+    protected function getAuthenticationException(): AuthenticationException
     {
         return new AuthenticationException();
     }

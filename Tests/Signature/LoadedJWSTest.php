@@ -16,7 +16,7 @@ final class LoadedJWSTest extends TestCase
 {
     use ForwardCompatTestCaseTrait;
 
-    private $goodPayload;
+    private ?array $goodPayload = null;
 
     /**
      * {@inheritdoc}
@@ -127,7 +127,7 @@ final class LoadedJWSTest extends TestCase
     public function testIsNotExpiredDaySavingTransition()
     {
         // 2020-10-25 00:16:13 UTC+0
-        $timestamp = 1603584973;
+        $timestamp = 1_603_584_973;
         ClockMock::withClockMock($timestamp);
 
         $dstPayload = [

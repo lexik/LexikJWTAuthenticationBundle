@@ -30,24 +30,6 @@ interface JWTTokenManagerInterface
     public function decode(TokenInterface $token);
 
     /**
-     * Sets the field used as identifier to load an user from a JWT payload.
-     *
-     * @param string $field
-     *
-     * @deprecated since 2.15, use {@see UserInterface::getUserIdentifier()} instead
-     */
-    public function setUserIdentityField($field);
-
-    /**
-     * Returns the field used as identifier to load an user from a JWT payload.
-     *
-     * @return string
-     *
-     * @deprecated since 2.15, use {@see UserInterface::getUserIdentifier()} instead
-     */
-    public function getUserIdentityField();
-
-    /**
      * Returns the claim used as identifier to load an user from a JWT payload.
      *
      * @return string
