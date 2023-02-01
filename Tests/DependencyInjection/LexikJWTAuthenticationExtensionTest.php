@@ -25,7 +25,6 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('lexik_jwt_authentication.key_loader.raw'),
-                'openssl',
                 '%lexik_jwt_authentication.encoder.signature_algorithm%',
                 '%lexik_jwt_authentication.token_ttl%',
                 '%lexik_jwt_authentication.clock_skew%',

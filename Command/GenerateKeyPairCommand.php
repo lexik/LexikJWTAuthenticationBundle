@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;
@@ -14,9 +15,11 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * @author Beno!t POLASZEK <bpolaszek@gmail.com>
  */
-#[AsCommand(name: 'lexik:jwt:generate-keypair', description: 'Generate public/private keys for use in your application.')]
+#[AsCommand(name: self::NAME, description: 'Generate public/private keys for use in your application.')]
 final class GenerateKeyPairCommand extends Command
 {
+    private const NAME = 'lexik:jwt:generate-keypair';
+
     private const ACCEPTED_ALGORITHMS = [
         'RS256',
         'RS384',
@@ -29,49 +32,29 @@ final class GenerateKeyPairCommand extends Command
         'ES512',
     ];
 
-    /**
-     * @deprecated
-     */
-    protected static $defaultName = 'lexik:jwt:generate-keypair';
+    private Filesystem $filesystem;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private ?string $secretKey;
 
-    /**
-     * @var string|null
-     */
-    private $secretKey;
+    private ?string $publicKey;
 
-    /**
-     * @var string|null
-     */
-    private $publicKey;
+    private ?string $passphrase;
 
-    /**
-     * @var string|null
-     */
-    private $passphrase;
-
-    /**
-     * @var string
-     */
-    private $algorithm;
+    private string $algorithm;
 
     public function __construct(Filesystem $filesystem, ?string $secretKey, ?string $publicKey, ?string $passphrase, string $algorithm)
     {
-        parent::__construct();
         $this->filesystem = $filesystem;
         $this->secretKey = $secretKey;
         $this->publicKey = $publicKey;
         $this->passphrase = $passphrase;
         $this->algorithm = $algorithm;
+
+        parent::__construct();
     }
 
     protected function configure(): void
     {
-        $this->setDescription('Generate public/private keys for use in your application.');
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not update key files.');
         $this->addOption('skip-if-exists', null, InputOption::VALUE_NONE, 'Do not update key files if they already exist.');
         $this->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite key files if they already exist.');
@@ -84,7 +67,7 @@ final class GenerateKeyPairCommand extends Command
         if (!in_array($this->algorithm, self::ACCEPTED_ALGORITHMS, true)) {
             $io->error(sprintf('Cannot generate key pair with the provided algorithm `%s`.', $this->algorithm));
 
-            return 1;
+            return Command::FAILURE;
         }
 
         [$secretKey, $publicKey] = $this->generateKeyPair($this->passphrase);
@@ -98,11 +81,11 @@ final class GenerateKeyPairCommand extends Command
             $io->writeln(sprintf('Update your public key in <info>%s</info>:', $this->publicKey));
             $io->writeln($publicKey);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
-        if (!$this->secretKey || !$this->publicKey) {
-            throw new LogicException(sprintf('The "lexik_jwt_authentication.secret_key" and "lexik_jwt_authentication.public_key" config options must not be empty for using the "%s" command.', self::$defaultName));
+        if (null === $this->secretKey || null === $this->publicKey) {
+            throw new LogicException(sprintf('The "lexik_jwt_authentication.secret_key" and "lexik_jwt_authentication.public_key" config options must not be empty for using the "%s" command.', self::NAME));
         }
 
         $alreadyExists = $this->filesystem->exists($this->secretKey) || $this->filesystem->exists($this->publicKey);
@@ -110,22 +93,22 @@ final class GenerateKeyPairCommand extends Command
         if ($alreadyExists) {
             try {
                 $this->handleExistingKeys($input);
-            } catch (\RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 if (0 === $e->getCode()) {
                     $io->comment($e->getMessage());
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
 
                 $io->error($e->getMessage());
 
-                return 1;
+                return Command::FAILURE;
             }
 
             if (!$io->confirm('You are about to replace your existing keys. Are you sure you wish to continue?')) {
                 $io->comment('Your action was canceled.');
 
-                return 0;
+                return Command::SUCCESS;
             }
         }
 
@@ -134,43 +117,43 @@ final class GenerateKeyPairCommand extends Command
 
         $io->success('Done!');
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function handleExistingKeys(InputInterface $input): void
     {
         if (true === $input->getOption('skip-if-exists') && true === $input->getOption('overwrite')) {
-            throw new \RuntimeException('Both options `--skip-if-exists` and `--overwrite` cannot be combined.', 1);
+            throw new RuntimeException('Both options `--skip-if-exists` and `--overwrite` cannot be combined.', 1);
         }
 
         if (true === $input->getOption('skip-if-exists')) {
-            throw new \RuntimeException('Your key files already exist, they won\'t be overriden.', 0);
+            throw new RuntimeException('Your key files already exist, they won\'t be overriden.', 0);
         }
 
         if (false === $input->getOption('overwrite')) {
-            throw new \RuntimeException('Your keys already exist. Use the `--overwrite` option to force regeneration.', 1);
+            throw new RuntimeException('Your keys already exist. Use the `--overwrite` option to force regeneration.', 1);
         }
     }
 
-    private function generateKeyPair($passphrase): array
+    private function generateKeyPair(?string $passphrase): array
     {
         $config = $this->buildOpenSSLConfiguration();
 
         $resource = \openssl_pkey_new($config);
         if (false === $resource) {
-            throw new \RuntimeException(\openssl_error_string());
+            throw new RuntimeException(\openssl_error_string());
         }
 
         $success = \openssl_pkey_export($resource, $privateKey, $passphrase);
 
         if (false === $success) {
-            throw new \RuntimeException(\openssl_error_string());
+            throw new RuntimeException(\openssl_error_string());
         }
 
         $publicKeyData = \openssl_pkey_get_details($resource);
 
         if (false === $publicKeyData) {
-            throw new \RuntimeException(\openssl_error_string());
+            throw new RuntimeException(\openssl_error_string());
         }
 
         $publicKey = $publicKeyData['key'];

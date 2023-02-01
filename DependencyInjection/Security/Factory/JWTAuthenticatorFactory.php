@@ -16,14 +16,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
 {
     /**
-     * @throws \LogicException
-     */
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
-    {
-        throw new \LogicException('This method is implemented for BC purpose and should never be called.');
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getPriority(): int
@@ -39,9 +31,6 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
         return 'jwt';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addConfiguration(NodeDefinition $node)
     {
         $node

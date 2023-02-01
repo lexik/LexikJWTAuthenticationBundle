@@ -9,10 +9,6 @@
             <argument type="service" id="lexik_jwt_authentication.encoder"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%lexik_jwt_authentication.user_id_claim%</argument>
-            <call method="setUserIdentityField">
-                <argument>%lexik_jwt_authentication.user_identity_field%</argument>
-                <argument>false</argument>
-            </call>
         </service>
 
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface" alias="lexik_jwt_authentication.jwt_manager" />

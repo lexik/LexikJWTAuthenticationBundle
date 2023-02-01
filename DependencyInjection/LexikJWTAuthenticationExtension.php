@@ -33,28 +33,12 @@ class LexikJWTAuthenticationExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        if (method_exists(Alias::class, 'getDeprecation')) {
-            $loader->load('deprecated_51.xml');
-        } else {
-            $loader->load('deprecated.xml');
-        }
         $loader->load('jwt_manager.xml');
         $loader->load('key_loader.xml');
         $loader->load('lcobucci.xml');
         $loader->load('response_interceptor.xml');
         $loader->load('token_authenticator.xml');
         $loader->load('token_extractor.xml');
-        $loader->load('guard_authenticator.xml');
-
-        if (isset($config['private_key_path'])) {
-            $config['secret_key'] = $config['private_key_path'];
-            $container->setParameter('lexik_jwt_authentication.private_key_path', $config['secret_key']);
-        }
-
-        if (isset($config['public_key_path'])) {
-            $config['public_key'] = $config['public_key_path'];
-            $container->setParameter('lexik_jwt_authentication.public_key_path', $config['public_key']);
-        }
 
         if (empty($config['public_key']) && empty($config['secret_key'])) {
             $e = new InvalidConfigurationException('You must either configure a "public_key" or a "secret_key".');
@@ -66,11 +50,9 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.pass_phrase', $config['pass_phrase']);
         $container->setParameter('lexik_jwt_authentication.token_ttl', $config['token_ttl']);
         $container->setParameter('lexik_jwt_authentication.clock_skew', $config['clock_skew']);
-        $container->setParameter('lexik_jwt_authentication.user_identity_field', $config['user_identity_field']);
         $container->setParameter('lexik_jwt_authentication.allow_no_expiration', $config['allow_no_expiration']);
+        $container->setParameter('lexik_jwt_authentication.user_id_claim', $config['user_id_claim']);
 
-        $user_id_claim = $config['user_id_claim'] ?: $config['user_identity_field'];
-        $container->setParameter('lexik_jwt_authentication.user_id_claim', $user_id_claim);
         $encoderConfig = $config['encoder'];
 
         $container->setAlias('lexik_jwt_authentication.encoder', new Alias($encoderConfig['service'], true));
@@ -153,7 +135,7 @@ class LexikJWTAuthenticationExtension extends Extension
         }
     }
 
-    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
+    private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
     {
         $map = [];
 

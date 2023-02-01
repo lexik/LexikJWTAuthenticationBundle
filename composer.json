@@ -37,7 +37,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=8.1",
         "ext-openssl": "*",
         "lcobucci/clock": "^1.2|^2.0|^3.0",
         "lcobucci/jwt": "^3.4|^4.1|^5.0",
@@ -62,10 +62,6 @@
         "symfony/phpunit-bridge": "^5.4|^6.0",
         "symfony/var-dumper": "^5.4|^6.0",
         "symfony/yaml": "^5.4|^6.0"
-    },
-    "conflict": {
-        "symfony/console": "<4.4",
-        "symfony/security-http": "<=5.3"
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",

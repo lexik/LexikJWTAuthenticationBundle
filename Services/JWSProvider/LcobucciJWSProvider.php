@@ -14,20 +14,16 @@ use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Hmac\Sha384;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\Builder as JWTBuilder;
 use Lcobucci\JWT\Token\Parser as JWTParser;
-use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
-use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 
@@ -38,44 +34,23 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
  */
 class LcobucciJWSProvider implements JWSProviderInterface
 {
-    /**
-     * @var KeyLoaderInterface
-     */
-    private $keyLoader;
+    private KeyLoaderInterface $keyLoader;
 
-    /**
-     * @var Clock
-     */
-    private $clock;
+    private Clock $clock;
 
-    /**
-     * @var Signer
-     */
-    private $signer;
+    private Signer $signer;
 
-    /**
-     * @var int|null
-     */
-    private $ttl;
+    private ?int $ttl;
 
-    /**
-     * @var int|null
-     */
-    private $clockSkew;
+    private ?int $clockSkew;
 
-    /**
-     * @var bool
-     */
-    private $allowNoExpiration;
+    private bool $allowNoExpiration;
 
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
+    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
     {
-        if ('openssl' !== $cryptoEngine) {
-            throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', self::class));
-        }
         if (null === $clock) {
             $clock = new SystemClock(new \DateTimeZone('UTC'));
         }
@@ -108,14 +83,14 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
 
-        $jws = $jws->issuedAt(!$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
+        $jws->issuedAt(!$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
 
         if (null !== $this->ttl || isset($payload['exp'])) {
             $exp = $payload['exp'] ?? $now + $this->ttl;
             unset($payload['exp']);
 
             if ($exp) {
-                $jws = $jws->expiresAt(!$exp instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$exp}") : $exp);
+                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : (new \DateTimeImmutable("@$exp")));
             }
         }
 
@@ -147,9 +122,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function load($token)
     {
         if (class_exists(JWTParser::class)) {
-            $jws = (new JWTParser(new JoseEncoder()))->parse((string) $token);
+            $jws = (new JWTParser(new JoseEncoder()))->parse($token);
         } else {
-            $jws = (new Parser())->parse((string) $token);
+            $jws = (new Parser())->parse($token);
         }
 
         $payload = [];
@@ -160,18 +135,16 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $payload[$name] = $value;
         }
 
-        $jws = new LoadedJWS(
+        return new LoadedJWS(
             $payload,
             $this->verify($jws),
             false == $this->allowNoExpiration,
             $jws->headers()->all(),
             $this->clockSkew
         );
-
-        return $jws;
     }
 
-    private function getSignerForAlgorithm($signatureAlgorithm)
+    private function getSignerForAlgorithm($signatureAlgorithm): Signer
     {
         $signerMap = [
             'HS256' => Sha256::class,
@@ -198,30 +171,18 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new $signerClass();
     }
 
-    private function getSignedToken(Builder $jws)
+    private function getSignedToken(Builder $jws): string
     {
-        if (class_exists(InMemory::class)) {
-            $key = InMemory::plainText($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
-        } else {
-            $key = new Key($this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
-        }
+        $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
 
         $token = $jws->getToken($this->signer, $key);
-
-        if (!$token instanceof Plain) {
-            return (string) $token;
-        }
 
         return $token->toString();
     }
 
-    private function verify(Token $jwt)
+    private function verify(Token $jwt): bool
     {
-        if (class_exists(InMemory::class)) {
-            $key = InMemory::plainText($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
-        } else {
-            $key = new Key($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
-        }
+        $key = InMemory::plainText($this->signer instanceof Hmac ? $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE) : $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC));
 
         $validator = new Validator();
         $classValidator = class_exists(LooseValidAt::class) ? LooseValidAt::class : ValidAt::class;
@@ -253,7 +214,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return false;
     }
 
-    private function addStandardClaims(Builder $builder, array &$payload): Builder
+    private function addStandardClaims(Builder $builder, array &$payload): void
     {
         $mutatorMap = [
             RegisteredClaims::AUDIENCE => 'permittedFor',

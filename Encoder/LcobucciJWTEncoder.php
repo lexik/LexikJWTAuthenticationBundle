@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
+use Exception;
+use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
@@ -13,10 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterfa
  */
 class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderInterface
 {
-    /**
-     * @var JWSProviderInterface
-     */
-    protected $jwsProvider;
+    protected JWSProviderInterface $jwsProvider;
 
     public function __construct(JWSProviderInterface $jwsProvider)
     {
@@ -30,7 +29,7 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
     {
         try {
             $jws = $this->jwsProvider->create($payload, $header);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new JWTEncodeFailureException(JWTEncodeFailureException::INVALID_CONFIG, 'An error occurred while trying to encode the JWT token. Please verify your configuration (private key/passphrase)', $e, $payload);
         }
 
@@ -48,7 +47,7 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
     {
         try {
             $jws = $this->jwsProvider->load($token);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid JWT Token', $e);
         }
 

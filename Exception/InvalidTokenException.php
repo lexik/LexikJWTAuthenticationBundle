@@ -13,10 +13,8 @@ class InvalidTokenException extends AuthenticationException
 {
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'Invalid JWT Token';
     }

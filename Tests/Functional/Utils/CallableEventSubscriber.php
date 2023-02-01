@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils;
 
+use Closure;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
@@ -14,9 +15,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CallableEventSubscriber implements EventSubscriberInterface
 {
-    private static $listeners = [];
+    private static array $listeners = [];
 
-    private static $eventClassMap = [
+    private static array $eventClassMap = [
         Events::JWT_CREATED => JWTCreatedEvent::class,
         Events::JWT_DECODED => JWTDecodedEvent::class,
         Events::JWT_INVALID => JWTInvalidEvent::class,
@@ -57,7 +58,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($listener instanceof \Closure) {
+        if ($listener instanceof Closure) {
             return $listener($event);
         }
 

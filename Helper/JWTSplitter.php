@@ -11,32 +11,18 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Helper;
  */
 class JWTSplitter
 {
-    /**
-     * @var string
-     */
-    private $header;
+    private string $header;
 
-    /**
-     * @var string
-     */
-    private $payload;
+    private string $payload;
 
-    /**
-     * @var string
-     */
-    private $signature;
+    private string $signature;
 
     public function __construct(string $jwt)
     {
         [$this->header, $this->payload, $this->signature] = explode('.', $jwt);
     }
 
-    /**
-     * @param array $parts
-     *
-     * @return string
-     */
-    public function getParts($parts = [])
+    public function getParts(array $parts = []): string
     {
         if (!$parts) {
             return "$this->header.$this->payload.$this->signature";

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class InvalidPayloadException extends AuthenticationException
 {
-    private $invalidKey;
+    private string $invalidKey;
 
     /**
      * @param string $invalidKey The key that cannot be found in the payload
@@ -23,10 +23,8 @@ class InvalidPayloadException extends AuthenticationException
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return sprintf('Unable to find key "%s" in the token payload.', $this->invalidKey);
     }

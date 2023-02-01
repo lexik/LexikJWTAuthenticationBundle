@@ -23,6 +23,6 @@ class CheckConfigCommandTest extends TestCase
         $tester = new CommandTester($app->find('lexik:jwt:check-config'));
 
         $this->assertSame(0, $tester->execute([]));
-        $this->{method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains'}('The configuration seems correct.', $tester->getDisplay());
+        $this->assertStringContainsString('The configuration seems correct.', $tester->getDisplay());
     }
 }

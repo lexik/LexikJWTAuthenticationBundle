@@ -11,12 +11,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 
 class Autowired
 {
-    private $jwtManager;
-    private $jwtEncoder;
-    private $tokenExtractor;
-    private $jwsProvider;
-    private $authenticationSuccessHandler;
-    private $authenticationFailureHandler;
+    private JWTTokenManagerInterface $jwtManager;
+    private JWTEncoderInterface $jwtEncoder;
+    private TokenExtractorInterface $tokenExtractor;
+    private JWSProviderInterface $jwsProvider;
+    private AuthenticationSuccessHandler $authenticationSuccessHandler;
+    private AuthenticationFailureHandler $authenticationFailureHandler;
 
     public function __construct(
         JWTTokenManagerInterface $jwtManager,

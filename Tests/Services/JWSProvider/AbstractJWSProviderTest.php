@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
+use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -79,7 +80,7 @@ vwIDAQAB
             ->willReturn('foobar');
 
         $payload = ['username' => 'chalasr', 'iat' => time()];
-        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
 
@@ -100,14 +101,14 @@ vwIDAQAB
             ->with('public')
             ->willReturn(static::$publicKey);
 
-        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'RS384', 3600, 0);
         $loadedJWS = $jwsProvider->load($jwt);
         $this->assertInstanceOf(LoadedJWS::class, $loadedJWS);
 
         $payload = $loadedJWS->getPayload();
-        $this->assertTrue(isset($payload['exp']));
-        $this->assertTrue(isset($payload['iat']));
-        $this->assertTrue(isset($payload['username']));
+        $this->assertArrayHasKey('exp', $payload);
+        $this->assertArrayHasKey('iat', $payload);
+        $this->assertArrayHasKey('username', $payload);
     }
 
     public function testAllowEmptyTtl()
@@ -129,7 +130,7 @@ vwIDAQAB
                 static::$privateKey,
                 static::$publicKey
             );
-        $provider = new static::$providerClass($keyLoader, 'openssl', 'RS256', null, 0, true);
+        $provider = new static::$providerClass($keyLoader, 'RS256', null, 0, true);
         $jws = $provider->create(['username' => 'chalasr']);
 
         $this->assertInstanceOf(CreatedJWS::class, $jws);
@@ -146,10 +147,10 @@ vwIDAQAB
 
     public function testInvalidsignatureAlgorithm()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The algorithm "wrongAlgorithm" is not supported');
 
-        new static::$providerClass($this->getKeyLoaderMock(), 'openssl', 'wrongAlgorithm', 3600, 0);
+        new static::$providerClass($this->getKeyLoaderMock(), 'wrongAlgorithm', 3600, 0);
     }
 
     public function testCreateWithExtraStandardClaims()
@@ -166,7 +167,7 @@ vwIDAQAB
             ->willReturn('foobar');
 
         $payload = ['username' => 'chalasr'];
-        $jwsProvider = new static::$providerClass($keyLoaderMock, 'openssl', 'RS384', 3600, 0);
+        $jwsProvider = new static::$providerClass($keyLoaderMock, 'RS384', 3600, 0);
 
         $this->assertInstanceOf(CreatedJWS::class, $created = $jwsProvider->create($payload));
         $this->assertNotEmpty($created->getToken());
@@ -174,9 +175,6 @@ vwIDAQAB
 
     protected function getKeyLoaderMock()
     {
-        return $this
-            ->getMockBuilder(static::$keyLoaderClass)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(static::$keyLoaderClass);
     }
 }

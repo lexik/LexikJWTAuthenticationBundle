@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Security\Fact
 
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
+use ReflectionClass;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\UserProvider\UserProviderFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -37,9 +38,7 @@ final class JWTUserFactory implements UserProviderFactoryInterface
                     ->cannotBeEmpty()
                     ->defaultValue(JWTUser::class)
                     ->validate()
-                        ->ifTrue(function ($class) {
-                            return !(new \ReflectionClass($class))->implementsInterface(JWTUserInterface::class);
-                        })
+                        ->ifTrue(fn ($class) => !(new ReflectionClass($class))->implementsInterface(JWTUserInterface::class))
                         ->thenInvalid('The %s class must implement ' . JWTUserInterface::class . ' for using the "lexik_jwt" user provider.')
                     ->end()
                 ->end()
