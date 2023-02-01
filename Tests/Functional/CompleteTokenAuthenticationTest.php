@@ -16,9 +16,9 @@ use Symfony\Component\Security\Core\User\InMemoryUser;
  */
 class CompleteTokenAuthenticationTest extends TestCase
 {
-    protected function doSetUp()
+    protected function setUp(): void
     {
-        parent::doSetUp();
+        parent::setUp();
 
         static::$client = static::createClient();
     }

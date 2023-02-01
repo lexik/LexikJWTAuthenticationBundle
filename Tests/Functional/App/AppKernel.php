@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\App;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
@@ -13,9 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
-/**
- * AppKernel.
- */
 class AppKernel extends Kernel
 {
     private string $encoder;
@@ -24,13 +21,10 @@ class AppKernel extends Kernel
 
     private $signatureAlgorithm;
 
-    private $testCase;
-
-    public function __construct($environment, $debug, $testCase = null)
+    public function __construct($environment, $debug)
     {
         parent::__construct($environment, $debug);
 
-        $this->testCase = $testCase;
         $this->encoder = getenv('ENCODER') ?: 'default';
         $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
         $this->signatureAlgorithm = getenv('ALGORITHM');
@@ -131,10 +125,6 @@ class AppKernel extends Kernel
                 'session' => $sessionConfig
             ]);
         });
-
-        if ($this->testCase && file_exists(__DIR__ . '/config/' . $this->testCase . '/config.yml')) {
-            $loader->load(__DIR__ . '/config/' . $this->testCase . '/config.yml');
-        }
 
         $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider));
 

@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -118,7 +119,7 @@ class JWTManagerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&JWTPostAuthenticationToken
+     * @return MockObject&JWTPostAuthenticationToken
      */
     protected function getJWTUserTokenMock()
     {
@@ -133,7 +134,7 @@ class JWTManagerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&JWTEncoderInterface
+     * @return MockObject&JWTEncoderInterface
      */
     protected function getJWTEncoderMock()
     {
@@ -141,7 +142,7 @@ class JWTManagerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&EventDispatcherInterface
+     * @return MockObject&EventDispatcherInterface
      */
     protected function getEventDispatcherMock()
     {

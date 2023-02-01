@@ -4,7 +4,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\KeyLoader;
 
 use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\ForwardCompatTestCaseTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,13 +13,13 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractTestKeyLoader extends TestCase
 {
-    use ForwardCompatTestCaseTrait;
+    protected ?KeyLoaderInterface $keyLoader = null;
 
-    protected KeyLoaderInterface $keyLoader;
-
-    public function doSetUp()
+    protected function setUp(): void
     {
         $this->removeKeysIfExist();
+
+        parent::setUp();
     }
 
     public function testLoadKeyFromWrongType()
@@ -31,7 +30,7 @@ abstract class AbstractTestKeyLoader extends TestCase
         $this->keyLoader->loadKey('wrongType');
     }
 
-    public function doTearDown()
+    protected function tearDown(): void
     {
         $this->removeKeysIfExist();
     }
