@@ -149,7 +149,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     {
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());
         if (null !== $this->translator) {
-            $errorMessage = $this->translator->trans($exception->getMessageKey(), $exception->getMessageData());
+            $errorMessage = $this->translator->trans($exception->getMessageKey(), $exception->getMessageData(), 'security');
         }
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 

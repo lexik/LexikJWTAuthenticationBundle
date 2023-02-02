@@ -168,7 +168,7 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
     {
         $errorMessage = strtr($authException->getMessageKey(), $authException->getMessageData());
         if (null !== $this->translator) {
-            $errorMessage = $this->translator->trans($authException->getMessageKey(), $authException->getMessageData());
+            $errorMessage = $this->translator->trans($authException->getMessageKey(), $authException->getMessageData(), 'security');
         }
         $response = new JWTAuthenticationFailureResponse($errorMessage);
 
