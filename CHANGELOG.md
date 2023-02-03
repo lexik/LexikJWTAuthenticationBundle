@@ -1,7 +1,20 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.16.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.17.0
+
+
+## [2.17.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.16) (2022-03-02)
+
+* bug [\#1110](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1110) Use the Security domain for translated messages ([jderusse](https://github.com/jderusse))
+* bug [\#1105](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1105) Fix creation of dynamic property ([SpartakusMd](https://github.com/SpartakusMd))
+* feature [\#1098](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1098) Add API Platform compatibility ([vincentchalamon](https://github.com/vincentchalamon))
+* bug [\#1096](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1096) Test under Symfony 6.2 / PHP 8.2 ([chalasr](https://github.com/chalasr))
+* feature [\#1092](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1092) allow environment variables for `remove_token_from_body_when_cookies_used` ([usu](https://github.com/usu))
+* bug [\#1067](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1067) Fixes TypeError in JWTManager ([magikid](https://github.com/magikid))
+* feature [\#1072](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1072) Inject Clock in LcobucciJWSProvider ([dbrumann](https://github.com/dbrumann))
+* bug [\#1069](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1069) Improve user_identity_field deprecation message ([lobodol](https://github.com/lobodol))
+* feature [\#1046](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1046) try to invalidate realpath cache if keypair loading failed ([lobodol](https://github.com/lobodol))
 
 ## [2.16.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.16) (2022-06-12)
 
