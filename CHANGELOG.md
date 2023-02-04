@@ -4,7 +4,7 @@ CHANGELOG
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.17.0
 
 
-## [2.17.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.16) (2022-03-02)
+## [2.17.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.17) (2023-03-02)
 
 * bug [\#1110](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1110) Use the Security domain for translated messages ([jderusse](https://github.com/jderusse))
 * bug [\#1105](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1105) Fix creation of dynamic property ([SpartakusMd](https://github.com/SpartakusMd))
