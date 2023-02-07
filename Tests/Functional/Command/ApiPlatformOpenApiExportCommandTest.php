@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Command;
 
-use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -12,7 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @author Vincent Chalamon <vincentchalamon@gmail.com>
  *
- * @requires function ApiPlatformBundle::build
+ * @requires function ApiPlatform\Symfony\Bundle\ApiPlatformBundle::build
  */
 class ApiPlatformOpenApiExportCommandTest extends TestCase
 {
@@ -43,10 +42,7 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
   "paths": {
     "/login_check": {
       "post": {
-        "deprecated": false,
-        "description": "",
         "operationId": "login_check_post",
-        "parameters": [],
         "requestBody": {
           "description": "The login data",
           "required": true,
@@ -55,18 +51,30 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
               "schema": {
                 "type": "object",
                 "properties": {
-                  "_username": {
+                  "email": {
                     "nullable": false,
                     "type": "string"
                   },
-                  "_password": {
-                    "nullable": false,
-                    "type": "string"
+                  "security": {
+                    "type": "object",
+                    "properties": {
+                      "credentials": {
+                          "type": "object",
+                          "properties": {
+                              "password": {
+                                "nullable": false,
+                                "type": "string"
+                              }
+                          },
+                          "required": ["password"]
+                      }
+                    },
+                    "required": ["credentials"]
                   }
                 },
                 "required": [
-                  "_username",
-                  "_password"
+                  "email",
+                  "security"
                 ]
               }
             }

@@ -145,11 +145,12 @@ Configure application routing
     api_login_check:
         path: /api/login_check
 
-Enable API Platform compatibility
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+API Platform compatibility
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To enable the `API Platform <https://api-platform.com/>`__ compatibility, add the
-``lexik_jwt_authentication.api_platform.check_path`` configuration option as following:
+If `API Platform <https://api-platform.com/>`__ is detected, the integration will be done with your security configuration.
+
+If you wish to change some parameters, you can do it with this configuration:
 
 .. code-block:: yaml
 
@@ -158,6 +159,8 @@ To enable the `API Platform <https://api-platform.com/>`__ compatibility, add th
        # ...
        api_platform:
            check_path: /api/login_check
+           username_path: email
+           password_path: security.credentials.password
 
 Usage
 -----

@@ -119,6 +119,8 @@ class AppKernel extends Kernel
                 $container->prependExtensionConfig('lexik_jwt_authentication', [
                     'api_platform' => [
                         'check_path' => '/login_check',
+                        'username_path' => 'email',
+                        'password_path' => 'security.credentials.password',
                     ],
                 ]);
                 $router['resource'] = '%kernel.root_dir%/config/routing_api_platform.yml';
