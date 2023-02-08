@@ -4,7 +4,7 @@ Getting started
 Prerequisites
 -------------
 
-This bundle requires Symfony 4.4+ and the openssl extension.
+This bundle requires Symfony 5.4+ and the openssl extension.
 
 **Protip:** Though the bundle doesn't enforce you to do so, it is highly
 recommended to use HTTPS.
@@ -79,43 +79,11 @@ Configure application security
     ``main`` exists, put it after ``api``, otherwise you will encounter
     ``/api/login_check`` route not found.
 
-Symfony versions prior to 5.3
-.............................
-
 .. code-block:: yaml
 
     # config/packages/security.yaml
     security:
-        # ...
-
-        firewalls:
-            login:
-                pattern: ^/api/login
-                stateless: true
-                json_login:
-                    check_path: /api/login_check # or api_login_check as defined in config/routes.yaml
-                    success_handler: lexik_jwt_authentication.handler.authentication_success
-                    failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
-            api:
-                pattern:   ^/api
-                stateless: true
-                guard:
-                    authenticators:
-                        - lexik_jwt_authentication.jwt_token_authenticator
-
-        access_control:
-            - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-
-Symfony 5.3 and higher
-......................
-
-.. code-block:: yaml
-
-    # config/packages/security.yaml
-    security:
-        enable_authenticator_manager: true
+        enable_authenticator_manager: true # Only for Symfony 5.4
         # ...
 
         firewalls:
@@ -235,7 +203,7 @@ case you can check
 Working with CORS requests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is more of a Symfony2 related topic, but see :doc:`Working with CORS requests </4-cors-requests>`
+This is more of a Symfony related topic, but see :doc:`Working with CORS requests </4-cors-requests>`
 document to get a quick explanation on handling CORS requests.
 
 Impersonation

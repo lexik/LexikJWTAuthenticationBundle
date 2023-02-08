@@ -198,13 +198,11 @@ namely "JavaScript/front-end should never have access to the full JWT".
 Security configuration
 ----------------------
 
-For Symfony 5.3 and higher, use the ``jwt`` authenticator:
-
 .. code-block:: yaml
 
     # config/packages/security.yaml
     security:
-        enable_authenticator_manager: true
+        enable_authenticator_manager: true # Only for Symfony 5.4
         firewalls:
             api:
                 # ...
@@ -215,18 +213,6 @@ For Symfony 5.3 and higher, use the ``jwt`` authenticator:
             #        provider: null  (you can put provider here or just ignore this config)
             #        authenticator: lexik_jwt_authentication.security.jwt_authenticator (default jwt authenticator)
             # ...
-
-For Symfony versions prior to 5.3, use the Guard authenticator:
-
-.. code-block:: yaml
-
-    firewalls:
-        # ...
-        api:
-            # ...
-            guard:
-                authenticators:
-                    - 'lexik_jwt_authentication.jwt_token_authenticator'
 
 Authenticator
 .............
