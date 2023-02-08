@@ -1,8 +1,13 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.17.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.18.0
 
+
+## [2.18.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.18) (2023-08-02)
+
+* bug [\#1109](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1109) Replaced deprecated ValidAt() with LooseValidAt() ([carcabot](https://github.com/carcabot))
+* feature [\#1112](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1112) Better API Platform and json_login compatibility ([alanpoulain](https://github.com/alanpoulain))
 
 ## [2.17.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.17) (2023-03-02)
 
