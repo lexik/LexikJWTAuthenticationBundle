@@ -56,10 +56,6 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
             ->replaceArgument(3, new Reference($userProviderId))
         ;
 
-        // Compile-time parameter removed by RemoveLegacyAuthenticatorPass
-        // Stop setting it when guard support gets removed (aka when removing Symfony<5.3 support)
-        $container->setParameter('lexik_jwt_authentication.authenticator_manager_enabled', true);
-
         return $authenticatorId;
     }
 }

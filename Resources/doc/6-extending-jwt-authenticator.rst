@@ -1,10 +1,8 @@
 Extending Authenticator
 =======================
 
-The ``JWTTokenAuthenticator`` (Symfony < 5.3) or ``JWTAuthenticator`` (Symfony >= 5.3)
-class is responsible of authenticating JWT tokens. It is used through the
-``lexik_jwt_authentication.security.guard.jwt_token_authenticator`` (Symfony < 5.3)
-or ``lexik_jwt_authentication.security.jwt_authenticator`` (Symfony >= 5.3)
+The ``JWTAuthenticator`` class is responsible of authenticating JWT tokens.
+It is used through the ``lexik_jwt_authentication.security.jwt_authenticator``
 abstract service which can be customized in the most flexible but still
 structured way to do it: *creating your own authenticators by extending
 the service*, so you can manage various security contexts in the same
@@ -14,45 +12,6 @@ application.
 
 Creating your own Authenticator
 -------------------------------
-
-For Symfony versions prior to 5.3
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    namespace App\Security\Guard;
-
-    use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator as BaseAuthenticator;
-
-    class JWTTokenAuthenticator extends BaseAuthenticator
-    {
-        // Your own logic
-    }
-
-.. code-block:: yaml
-
-    # config/services.yaml
-    services:
-        app.jwt_token_authenticator:
-            class: App\Security\Guard\JWTTokenAuthenticator
-            parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
-
-.. code-block:: yaml
-
-    # config/packages/security.yaml
-    security:
-        # ...
-        firewalls:
-            # ...
-            api:
-                pattern:   ^/api
-                stateless: true
-                guard:
-                    authenticators:
-                        - app.jwt_token_authenticator
-
-For Symfony 5.3 and higher
-~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: php
 
