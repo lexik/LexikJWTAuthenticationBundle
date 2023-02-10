@@ -18,7 +18,7 @@ class GetTokenTest extends TestCase
     public function testGetToken()
     {
         static::$client = static::createClient();
-        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
 
         $response = static::$client->getResponse();
 
@@ -45,8 +45,8 @@ class GetTokenTest extends TestCase
             $payloadTested->payload = $e->getPayload();
         });
 
-        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->getToken(static::$client->getResponse())]);
+        static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
+        static::$client->jsonRequest('GET', '/api/secured', [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->getToken(static::$client->getResponse())]);
 
         $this->assertArrayHasKey('added_data', $payloadTested->payload, 'The payload should contains a "added_data" claim.');
         $this->assertSame('still visible after the event', $payloadTested->payload['added_data'], 'The "added_data" claim should be equal to "still visible after the event".');
@@ -62,7 +62,7 @@ class GetTokenTest extends TestCase
             $e->setHeader($e->getHeader() + ['foo' => 'bar']);
         });
 
-        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
 
         $decoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $payload = $decoder->decode($token = $this->getToken(static::$client->getResponse()));
@@ -83,7 +83,7 @@ class GetTokenTest extends TestCase
     public function testGetTokenFromInvalidCredentials()
     {
         static::$client = static::createClient();
-        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'wrong']);
+        static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'wrong']);
 
         $response = static::$client->getResponse();
 
