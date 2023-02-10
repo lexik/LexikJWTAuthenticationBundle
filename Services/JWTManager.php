@@ -55,7 +55,7 @@ class JWTManager implements JWTTokenManagerInterface
      *
      * @throws JWTEncodeFailureException
      */
-    public function createFromPayload(UserInterface $user, array $payload): string
+    public function createFromPayload(UserInterface $user, array $payload = []): string
     {
         $payload = array_merge(['roles' => $user->getRoles()], $payload);
         $this->addUserIdentityToPayload($user, $payload);

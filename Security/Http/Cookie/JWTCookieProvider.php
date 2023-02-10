@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Helper\JWTSplitter;
-use LogicException;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
@@ -41,11 +40,11 @@ final class JWTCookieProvider
     public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = []): Cookie
     {
         if (!$name && !$this->defaultName) {
-            throw new LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
+            throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
         }
 
         if (!$expiresAt && null === $this->defaultLifetime) {
-            throw new LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
+            throw new \LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
         }
 
         $jwtParts = new JWTSplitter($jwt);

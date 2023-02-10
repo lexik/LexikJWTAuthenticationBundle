@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
 
-use LogicException;
-use ReflectionClass;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -31,7 +29,7 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
     public function loadUserByUsername(string $username): UserInterface
     {
         // to be removed at the same time as symfony 5.4 support
-        throw new LogicException('This method is implemented for BC purpose and should never be called.');
+        throw new \LogicException('This method is implemented for BC purpose and should never be called.');
     }
 
     /**
@@ -60,7 +58,7 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
      */
     public function supportsClass($class): bool
     {
-        return $class === $this->class || (new ReflectionClass($class))->implementsInterface(JWTUserInterface::class);
+        return $class === $this->class || (new \ReflectionClass($class))->implementsInterface(JWTUserInterface::class);
     }
 
     public function refreshUser(UserInterface $user): UserInterface

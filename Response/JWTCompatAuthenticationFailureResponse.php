@@ -2,10 +2,14 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Response;
 
-use ReflectionMethod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-if ((new ReflectionMethod(JsonResponse::class, 'setData'))->hasReturnType()) {
+/**
+ * The "AND" in the if statement is a temporary fix for the following issue:
+ * https://github.com/lexik/LexikJWTAuthenticationBundle/issues/944
+ * https://github.com/vimeo/psalm/issues/7923
+ */
+if ((new \ReflectionMethod(JsonResponse::class, 'setData'))->hasReturnType()) {
     eval('
         namespace Lexik\Bundle\JWTAuthenticationBundle\Response;
         

@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Command;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -19,7 +18,7 @@ class GenerateTokenCommandTest extends TestCase
 
     public function testRunWithoutSpecifiedProviderAndMoreThanOneConfigured()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The "--user-class" option must be passed as there is more than 1 configured user provider.');
 
         $tester = new CommandTester((new Application($this->bootKernel()))->get('lexik:jwt:generate-token'));

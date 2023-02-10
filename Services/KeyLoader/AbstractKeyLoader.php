@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 
-use RuntimeException;
-
 /**
  * Abstract class for key loaders.
  *
@@ -50,7 +48,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
 
         foreach ($this->additionalPublicKeys as $key) {
             if (!$key || !is_file($key) || !is_readable($key)) {
-                throw new RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
+                throw new \RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
             }
 
             $rawKey = @file_get_contents($key);
@@ -76,7 +74,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
                 return null;
             }
 
-            throw new RuntimeException(sprintf('Signature key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.signature_key" configuration key?', $key));
+            throw new \RuntimeException(sprintf('Signature key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.signature_key" configuration key?', $key));
         }
 
         $rawKey = @file_get_contents($key);

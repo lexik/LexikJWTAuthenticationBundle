@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils;
 
-use Closure;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
@@ -58,7 +57,7 @@ class CallableEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($listener instanceof Closure) {
+        if ($listener instanceof \Closure) {
             return $listener($event);
         }
 

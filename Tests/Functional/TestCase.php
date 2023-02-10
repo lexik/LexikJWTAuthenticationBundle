@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use LogicException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -19,7 +18,7 @@ abstract class TestCase extends WebTestCase
         $token ??= self::getAuthenticatedToken();
 
         if (null === $token) {
-            throw new LogicException('Unable to create an authenticated client from a null JWT token');
+            throw new \LogicException('Unable to create an authenticated client from a null JWT token');
         }
 
         $client->setServerParameter('HTTP_AUTHORIZATION', sprintf('Bearer %s', $token));
@@ -41,7 +40,7 @@ abstract class TestCase extends WebTestCase
                 return $cookies[0]->getValue();
             }
 
-            throw new LogicException('Unable to get a JWT Token through the "/login_check" route.');
+            throw new \LogicException('Unable to get a JWT Token through the "/login_check" route.');
         }
 
         return $responseBody['token'];
