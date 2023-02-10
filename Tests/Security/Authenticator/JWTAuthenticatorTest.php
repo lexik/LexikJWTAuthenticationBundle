@@ -19,7 +19,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAut
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -306,7 +305,7 @@ class JWTAuthenticatorTest extends TestCase
             $this->getUserProviderMock()
         );
 
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
 
         $authenticator->authenticate($this->getRequestMock());
     }

@@ -28,7 +28,7 @@ return static function (RectorConfig $rectorConfig): void {
         PHPUnitSetList::REMOVE_MOCKS,
         PHPUnitSetList::PHPUNIT_YIELD_DATA_PROVIDER,
     ]);
-    $rectorConfig->phpVersion(PhpVersion::PHP_74);
+    $rectorConfig->phpVersion(PhpVersion::PHP_81);
     $rectorConfig->importShortClasses(false);
     $rectorConfig->importNames();
     $rectorConfig->bootstrapFiles([

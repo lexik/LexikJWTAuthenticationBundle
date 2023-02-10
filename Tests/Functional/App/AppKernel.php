@@ -75,19 +75,12 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/config_router_utf8.yml');
 
-        // 5.3+ session config
-        if (class_exists(UserNotFoundException::class)) {
-            $sessionConfig = [
-                'storage_factory_id' => 'session.storage.factory.mock_file',
-            ];
-        } else {
-            $sessionConfig = [
-                'handler_id' => null,
-                'cookie_secure' => 'auto',
-                'cookie_samesite' => 'lax',
-                'storage_id' => 'session.storage.mock_file',
-            ];
-        }
+        $sessionConfig = [
+            'handler_id' => null,
+            'cookie_secure' => 'auto',
+            'cookie_samesite' => 'lax',
+            'storage_factory_id' => 'session.storage.factory.mock_file',
+        ];
 
         if (!class_exists(Security::class)) {
             $loader->load(function (ContainerBuilder $container) {

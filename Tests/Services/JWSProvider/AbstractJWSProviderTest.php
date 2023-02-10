@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\JWSProvider;
 
-use InvalidArgumentException;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
@@ -147,7 +146,7 @@ vwIDAQAB
 
     public function testInvalidsignatureAlgorithm()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The algorithm "wrongAlgorithm" is not supported');
 
         new static::$providerClass($this->getKeyLoaderMock(), 'wrongAlgorithm', 3600, 0);

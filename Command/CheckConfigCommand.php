@@ -10,11 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Nicolas Cabot <n.cabot@lexik.fr>
- *
- * @final
  */
 #[AsCommand(name: 'lexik:jwt:check-config', description: 'Checks that the bundle is properly configured.')]
-class CheckConfigCommand extends Command
+final class CheckConfigCommand extends Command
 {
     private KeyLoaderInterface $keyLoader;
 

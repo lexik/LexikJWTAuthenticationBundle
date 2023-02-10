@@ -19,7 +19,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAut
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
-use LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -84,7 +83,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     {
         $token = $this->getTokenExtractor()->extract($request);
         if ($token === false) {
-            throw new LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
+            throw new \LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
         }
 
         try {

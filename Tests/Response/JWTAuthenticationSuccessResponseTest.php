@@ -38,6 +38,6 @@ final class JWTAuthenticationSuccessResponseTest extends TestCase
 
         // Test that the previous method call has no effect on the original body
         $this->assertEquals(json_encode($replacementData), $response->getContent());
-        $this->assertObjectNotHasAttribute('token', json_decode($response->getContent(), null));
+        $this->assertFalse(property_exists(json_decode($response->getContent()), 'token'));
     }
 }

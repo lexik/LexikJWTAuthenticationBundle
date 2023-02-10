@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
-use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\LogicException;
@@ -93,7 +92,7 @@ final class GenerateKeyPairCommand extends Command
         if ($alreadyExists) {
             try {
                 $this->handleExistingKeys($input);
-            } catch (RuntimeException $e) {
+            } catch (\RuntimeException $e) {
                 if (0 === $e->getCode()) {
                     $io->comment($e->getMessage());
 
@@ -123,15 +122,15 @@ final class GenerateKeyPairCommand extends Command
     private function handleExistingKeys(InputInterface $input): void
     {
         if (true === $input->getOption('skip-if-exists') && true === $input->getOption('overwrite')) {
-            throw new RuntimeException('Both options `--skip-if-exists` and `--overwrite` cannot be combined.', 1);
+            throw new \RuntimeException('Both options `--skip-if-exists` and `--overwrite` cannot be combined.', 1);
         }
 
         if (true === $input->getOption('skip-if-exists')) {
-            throw new RuntimeException('Your key files already exist, they won\'t be overriden.', 0);
+            throw new \RuntimeException('Your key files already exist, they won\'t be overriden.', 0);
         }
 
         if (false === $input->getOption('overwrite')) {
-            throw new RuntimeException('Your keys already exist. Use the `--overwrite` option to force regeneration.', 1);
+            throw new \RuntimeException('Your keys already exist. Use the `--overwrite` option to force regeneration.', 1);
         }
     }
 
@@ -141,19 +140,19 @@ final class GenerateKeyPairCommand extends Command
 
         $resource = \openssl_pkey_new($config);
         if (false === $resource) {
-            throw new RuntimeException(\openssl_error_string());
+            throw new \RuntimeException(\openssl_error_string());
         }
 
         $success = \openssl_pkey_export($resource, $privateKey, $passphrase);
 
         if (false === $success) {
-            throw new RuntimeException(\openssl_error_string());
+            throw new \RuntimeException(\openssl_error_string());
         }
 
         $publicKeyData = \openssl_pkey_get_details($resource);
 
         if (false === $publicKeyData) {
-            throw new RuntimeException(\openssl_error_string());
+            throw new \RuntimeException(\openssl_error_string());
         }
 
         $publicKey = $publicKeyData['key'];

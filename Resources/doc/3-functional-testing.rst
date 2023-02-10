@@ -41,16 +41,13 @@ Create an authenticated client:
     protected function createAuthenticatedClient($username = 'user', $password = 'password')
     {
         $client = static::createClient();
-        $client->request(
+        $client->jsonRequest(
           'POST',
           '/api/login_check',
-          [],
-          [],
-          ['CONTENT_TYPE' => 'application/json'],
-          json_encode([
-            '_username' => $username,
-            '_password' => $password,
-          ])
+          [
+            'username' => $username,
+            'password' => $password,
+          ]
         );
 
         $data = json_decode($client->getResponse()->getContent(), true);
@@ -66,7 +63,7 @@ Create an authenticated client:
     public function testGetPages()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/pages');
+        $client->jsonRequest('GET', '/api/pages');
         // ...
     }
 

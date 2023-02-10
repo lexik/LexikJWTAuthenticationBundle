@@ -2,9 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Closure;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser;
-use ReflectionProperty;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 
@@ -97,10 +95,10 @@ class CompleteTokenAuthenticationTest extends TestCase
         $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $idClaim = static::$kernel->getContainer()->getParameter('lexik_jwt_authentication.user_id_claim');
 
-        $r = new ReflectionProperty($encoder !== null ? get_class($encoder) : self::class, 'jwsProvider');
+        $r = new \ReflectionProperty($encoder !== null ? get_class($encoder) : self::class, 'jwsProvider');
         $r->setAccessible(true);
         $jwsProvider = $r->getValue($encoder);
-        Closure::bind(function () {
+        \Closure::bind(function () {
             $this->ttl = null;
             $this->allowNoExpiration = true;
         }, $jwsProvider, get_class($jwsProvider))->__invoke();

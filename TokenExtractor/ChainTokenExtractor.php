@@ -2,11 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor;
 
-use Closure;
-use IteratorAggregate;
-use ReturnTypeWillChange;
 use Symfony\Component\HttpFoundation\Request;
-use Traversable;
 
 /**
  * ChainTokenExtractor is the class responsible of extracting a JWT token
@@ -17,7 +13,7 @@ use Traversable;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class ChainTokenExtractor implements IteratorAggregate, TokenExtractorInterface
+class ChainTokenExtractor implements \IteratorAggregate, TokenExtractorInterface
 {
     private array $map;
 
@@ -41,7 +37,7 @@ class ChainTokenExtractor implements IteratorAggregate, TokenExtractorInterface
     *
     * @return bool True in case of success, false otherwise
     */
-    public function removeExtractor(Closure $filter)
+    public function removeExtractor(\Closure $filter)
     {
         $filtered = array_filter($this->map, $filter);
 
@@ -83,9 +79,9 @@ class ChainTokenExtractor implements IteratorAggregate, TokenExtractorInterface
     /**
      * Iterates over the mapped token extractors while generating them.
      *
-     * @return Traversable<int, TokenExtractorInterface>
+     * @return \Traversable<int, TokenExtractorInterface>
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         foreach ($this->map as $extractor) {

@@ -4,7 +4,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Command;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateKeyPairCommand;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
-use LogicException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -12,7 +11,7 @@ class GenerateKeyPairCommandTest extends TestCase
 {
     public function testCannotGenerateKeysWhenPathsAreNull()
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('The "lexik_jwt_authentication.secret_key" and "lexik_jwt_authentication.public_key" config options must not be empty for using the "lexik:jwt:generate-keypair" command.');
 
         $command = new GenerateKeyPairCommand(new Filesystem(), null, null, null, 'RS512');
