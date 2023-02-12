@@ -43,7 +43,7 @@ abstract class TestCase extends WebTestCase
     {
         $client = static::$client ?: static::createClient();
 
-        $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        $client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
         $response = $client->getResponse();
         $responseBody = json_decode($response->getContent(), true);
 

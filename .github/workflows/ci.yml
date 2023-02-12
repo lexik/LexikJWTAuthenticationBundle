@@ -13,8 +13,8 @@ jobs:
             matrix:
                 include:
                     # Lowest Deps
-                    - php: 7.1
-                      symfony: 4.4.*
+                    - php: 7.2
+                      symfony: 5.4.*
                       composer-flags: '--prefer-stable --prefer-lowest'
                       can-fail: false
                     # LTS with latest stable PHP

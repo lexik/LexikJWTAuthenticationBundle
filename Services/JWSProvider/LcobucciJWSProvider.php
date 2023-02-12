@@ -23,6 +23,7 @@ use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
 use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
@@ -259,10 +260,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         $validator = new Validator();
+        $classValidator = class_exists(LooseValidAt::class) ? LooseValidAt::class : ValidAt::class;
 
         $isValid = $validator->validate(
             $jwt,
-            new LooseValidAt($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
+            new $classValidator($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
             new SignedWith($this->signer, $key)
         );
 
@@ -275,7 +277,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         foreach ($publicKeys as $key) {
             $isValid = $validator->validate(
                 $jwt,
-                new LooseValidAt($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
+                new $classValidator($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
                 new SignedWith($this->signer, InMemory::plainText($key))
             );
 
