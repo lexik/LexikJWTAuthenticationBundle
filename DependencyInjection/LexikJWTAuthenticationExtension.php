@@ -99,7 +99,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
-        $tokenExtractors = self::createTokenExtractors($container, $config['token_extractors']);
+        $tokenExtractors = $this->createTokenExtractors($container, $config['token_extractors']);
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
@@ -144,11 +144,11 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
         }
 
-        if (!class_exists(ApiPlatformBundle::class) && (isset($config['api_platform']['check_path']) || isset($config['api_platform']['username_path']) || isset($config['api_platform']['password_path']))) {
-            throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
-        }
+        if ($this->isConfigEnabled($container, $config['api_platform'])) {
+            if (!class_exists(ApiPlatformBundle::class)) {
+                throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
+            }
 
-        if (class_exists(ApiPlatformBundle::class)) {
             $loader->load('api_platform.xml');
 
             $container
@@ -159,11 +159,11 @@ class LexikJWTAuthenticationExtension extends Extension
         }
     }
 
-    private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
+    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
     {
         $map = [];
 
-        if ($tokenExtractorsConfig['authorization_header']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['authorization_header'])) {
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor';
             $container
                 ->getDefinition($authorizationHeaderExtractorId)
@@ -173,7 +173,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($authorizationHeaderExtractorId);
         }
 
-        if ($tokenExtractorsConfig['query_parameter']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['query_parameter'])) {
             $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor';
             $container
                 ->getDefinition($queryParameterExtractorId)
@@ -182,7 +182,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($queryParameterExtractorId);
         }
 
-        if ($tokenExtractorsConfig['cookie']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor';
             $container
                 ->getDefinition($cookieExtractorId)
@@ -191,7 +191,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($cookieExtractorId);
         }
 
-        if ($tokenExtractorsConfig['split_cookie']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['split_cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.split_cookie_extractor';
             $container
                 ->getDefinition($cookieExtractorId)
