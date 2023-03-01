@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by LaYoance at 2023-02-22T12:29:33Z
+
+Thanks !
+
+Inside the Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator
+
+Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface does not exists anymore since SF 6.0
+You should use directly Symfony\Component\Security\Http\Authenticator\Passport\Passport instead
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-22T12:38:39Z
+
+@LaYoance Yes but it's only used for the compatibility of `createAuthenticatedToken` method. This is not a problem in this configuration, but if we change it, it will break the compatibility with the interface.
+
+And this method will be removed in the near future because it is depreciated.
+
+---------------------------------------------------------------------------
+
+by LaYoance at 2023-02-22T13:04:58Z
+
+Well, I understand that.
+
+An old class in our project was using it. I've updated it on my side to match the new one.
+
+Thanks
