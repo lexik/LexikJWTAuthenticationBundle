@@ -59,7 +59,7 @@ class CompleteTokenAuthenticationTest extends TestCase
 
     public function testAccessSecuredRouteWithInvalidToken($token = 'dummy')
     {
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => "Bearer $token"]);
+        static::$client->jsonRequest('GET', '/api/secured', [], ['HTTP_AUTHORIZATION' => "Bearer $token"]);
 
         $response = static::$client->getResponse();
 
@@ -129,6 +129,6 @@ class CompleteTokenAuthenticationTest extends TestCase
 
     protected function accessSecuredRoute()
     {
-        static::$client->request('GET', '/api/secured');
+        static::$client->jsonRequest('GET', '/api/secured');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle;
 
+use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\ApiPlatformOpenApiPass;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\DeprecateLegacyGuardAuthenticatorPass;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\RegisterLegacyGuardAuthenticatorPass;
 use Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler\WireGenerateTokenCommandPass;
@@ -25,12 +26,13 @@ class LexikJWTAuthenticationBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
         $container->addCompilerPass(new WireGenerateTokenCommandPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
         $container->addCompilerPass(new DeprecateLegacyGuardAuthenticatorPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
+        $container->addCompilerPass(new ApiPlatformOpenApiPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 0);
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
@@ -38,13 +40,5 @@ class LexikJWTAuthenticationBundle extends Bundle
         $extension->addUserProviderFactory(new JWTUserFactory());
 
         $extension->addAuthenticatorFactory(new JWTAuthenticatorFactory());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function registerCommands(Application $application)
-    {
-        // noop
     }
 }

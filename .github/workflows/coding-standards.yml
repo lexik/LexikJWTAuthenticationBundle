@@ -36,4 +36,3 @@ jobs:
             - name: CONDING STANDARDS (RECTOR)
               run: |
                   vendor/bin/rector process --ansi --dry-run --xdebug
-

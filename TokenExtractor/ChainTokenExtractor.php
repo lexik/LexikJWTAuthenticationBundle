@@ -36,8 +36,7 @@ class ChainTokenExtractor implements \IteratorAggregate, TokenExtractorInterface
     /**
     * Removes a token extractor from the map.
     *
-     * @param \Closure $filter A function taking an extractor as argument,
-                      used to find the extractor to remove,
+    * @param \Closure $filter A function taking an extractor as argument, used to find the extractor to remove.
     *
     * @return bool True in case of success, false otherwise
     */

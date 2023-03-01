@@ -26,7 +26,7 @@ class LexikJWTAuthenticationExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -144,15 +144,18 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
         }
 
-        if (isset($config['api_platform']['check_path'])) {
-            if (!class_exists(ApiPlatformBundle::class)) {
-                throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
-            }
+        if (!class_exists(ApiPlatformBundle::class) && (isset($config['api_platform']['check_path']) || isset($config['api_platform']['username_path']) || isset($config['api_platform']['password_path']))) {
+            throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
+        }
 
+        if (class_exists(ApiPlatformBundle::class)) {
             $loader->load('api_platform.xml');
+
             $container
                 ->getDefinition('lexik_jwt_authentication.api_platform.openapi.factory')
-                ->replaceArgument(1, $config['api_platform']['check_path']);
+                ->replaceArgument(1, $config['api_platform']['check_path'] ?? null)
+                ->replaceArgument(2, $config['api_platform']['username_path'] ?? null)
+                ->replaceArgument(3, $config['api_platform']['password_path'] ?? null);
         }
     }
 

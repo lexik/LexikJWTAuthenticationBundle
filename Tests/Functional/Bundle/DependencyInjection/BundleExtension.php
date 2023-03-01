@@ -12,7 +12,7 @@ class BundleExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // Annotation must be disabled since this bundle doesn't use Doctrine
         // The framework allows enabling/disabling them only since symfony 3.2 where
@@ -29,7 +29,7 @@ class BundleExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
     }
 }

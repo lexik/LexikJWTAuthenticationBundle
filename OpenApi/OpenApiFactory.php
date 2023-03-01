@@ -25,11 +25,15 @@ class OpenApiFactory implements OpenApiFactoryInterface
     private $decorated;
 
     private $checkPath;
+    private $usernamePath;
+    private $passwordPath;
 
-    public function __construct(OpenApiFactoryInterface $decorated, string $checkPath)
+    public function __construct(OpenApiFactoryInterface $decorated, string $checkPath, string $usernamePath, string $passwordPath)
     {
         $this->decorated = $decorated;
         $this->checkPath = $checkPath;
+        $this->usernamePath = $usernamePath;
+        $this->passwordPath = $passwordPath;
     }
 
     /**
@@ -41,7 +45,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         $openApi
             ->getPaths()
-            ->addPath($this->checkPath, (new PathItem())->withPost((new Operation())
+            ->addPath($this->checkPath, (new PathItem())->withPost(
+                (new Operation())
                 ->withOperationId('login_check_post')
                 ->withTags(['Login Check'])
                 ->withResponses([
@@ -65,22 +70,14 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     ],
                 ])
                 ->withSummary('Creates a user token.')
-                ->withRequestBody((new RequestBody())
+                ->withRequestBody(
+                    (new RequestBody())
                     ->withDescription('The login data')
                     ->withContent(new \ArrayObject([
                         'application/json' => new MediaType(new \ArrayObject(new \ArrayObject([
                             'type' => 'object',
-                            'properties' => [
-                                '_username' => [
-                                    'type' => 'string',
-                                    'nullable' => false,
-                                ],
-                                '_password' => [
-                                    'type' => 'string',
-                                    'nullable' => false,
-                                ],
-                            ],
-                            'required' => ['_username', '_password'],
+                            'properties' => $properties = array_merge_recursive($this->getJsonSchemaFromPathParts(explode('.', $this->usernamePath)), $this->getJsonSchemaFromPathParts(explode('.', $this->passwordPath))),
+                            'required' => array_keys($properties),
                         ]))),
                     ]))
                     ->withRequired(true)
@@ -88,5 +85,29 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ));
 
         return $openApi;
+    }
+
+    private function getJsonSchemaFromPathParts(array $pathParts): array
+    {
+        $jsonSchema = [];
+
+        if (count($pathParts) === 1) {
+            $jsonSchema[array_shift($pathParts)] = [
+                'type' => 'string',
+                'nullable' => false,
+            ];
+
+            return $jsonSchema;
+        }
+
+        $pathPart = array_shift($pathParts);
+        $properties = $this->getJsonSchemaFromPathParts($pathParts);
+        $jsonSchema[$pathPart] = [
+            'type' => 'object',
+            'properties' => $properties,
+            'required' => array_keys($properties),
+        ];
+
+        return $jsonSchema;
     }
 }

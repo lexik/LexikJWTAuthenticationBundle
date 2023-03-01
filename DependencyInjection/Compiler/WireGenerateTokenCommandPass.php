@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class WireGenerateTokenCommandPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('lexik_jwt_authentication.generate_token_command') || !$container->hasDefinition('security.context_listener')) {
             return;
