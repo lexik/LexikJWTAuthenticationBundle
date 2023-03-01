@@ -27,7 +27,7 @@ class LexikJWTAuthenticationBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
@@ -58,13 +58,5 @@ class LexikJWTAuthenticationBundle extends Bundle
         if (method_exists($extension, 'addSecurityListenerFactory')) {
             $extension->addSecurityListenerFactory(new JWTFactory(false)); // BC 1.x, to be removed in 3.0
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function registerCommands(Application $application)
-    {
-        // noop
     }
 }
