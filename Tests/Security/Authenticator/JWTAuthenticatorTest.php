@@ -40,7 +40,7 @@ class JWTAuthenticatorTest extends TestCase
 
         $userStub = new InMemoryUser('lexik', 'password', $userRoles);
 
-        $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
+        $jwtManager = $this->getJWTManagerMock($userIdClaim);
         $jwtManager
             ->method('parse')
             ->willReturn(['sub' => 'lexik']);
@@ -70,7 +70,7 @@ class JWTAuthenticatorTest extends TestCase
 
         $userStub = new InMemoryUser('1', 'password', $userRoles);
 
-        $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
+        $jwtManager = $this->getJWTManagerMock($userIdClaim);
         $jwtManager
             ->method('parse')
             ->willReturn(['sub' => 1]);
@@ -310,16 +310,10 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
+    private function getJWTManagerMock($userIdClaim = null)
     {
         $jwtManager = $this->createMock(DummyJWTManager::class);
 
-        if (null !== $userIdentityField) {
-            $jwtManager
-                ->expects($this->once())
-                ->method('getUserIdentityField')
-                ->willReturn($userIdentityField);
-        }
         if (null !== $userIdClaim) {
             $jwtManager
                 ->expects($this->once())
