@@ -9,8 +9,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 
 $r = new \ReflectionMethod(AuthenticatorInterface::class, 'authenticate');
 
-if ($r->hasReturnType() && Passport::class === $r->getReturnType()->getName()) {
-    eval('
+if (!trait_exists(ForwardCompatAuthenticatorTrait::class)) {
+    if ($r->hasReturnType() && Passport::class === $r->getReturnType()->getName()) {
+        eval('
         namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator;
         
         use Symfony\Component\HttpFoundation\Request;
@@ -27,15 +28,16 @@ if ($r->hasReturnType() && Passport::class === $r->getReturnType()->getName()) {
             }
         }
     ');
-} else {
-    /**
-     * @internal
-     */
-    trait ForwardCompatAuthenticatorTrait
-    {
-        public function authenticate(Request $request): PassportInterface
+    } else {
+        /**
+         * @internal
+         */
+        trait ForwardCompatAuthenticatorTrait
         {
-            return $this->doAuthenticate($request);
+            public function authenticate(Request $request): PassportInterface
+            {
+                return $this->doAuthenticate($request);
+            }
         }
     }
 }
