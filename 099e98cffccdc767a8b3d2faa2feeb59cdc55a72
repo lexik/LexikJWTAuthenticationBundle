@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-03-01T19:22:59Z
+
+Humm lcobucci/jwt need php:^8; Maybe we can do this for version 3?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-03-03T08:50:06Z
+
+How hard is it to support both v3 and v5? Ideally we'd let composer do its resolution job
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-03-03T13:23:28Z
+
+@chalasr Actually, no, it's okay 😅
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-03-04T14:29:51Z
+
+Awesome!
