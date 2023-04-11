@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by alanpoulain at 2023-02-21T07:51:02Z
+
+Couldn't we add an enabled parameter (false by default, but true in the recipe)? It's too bad to give up this behavior.
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-21T08:17:34Z
+
+@alanpoulain I can modify to add `canEnabled()` in the configuration but having it true in the recipe without APIP installed may break the bundle out of the box
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-21T08:20:38Z
+
+But it could be set to true with a prepend in the APIP extension, no ?
+
+---------------------------------------------------------------------------
+
+by alanpoulain at 2023-02-21T08:23:53Z
+
+Having it to true should not prevent the detection of API Platform. This parameter is only to disable the integration if needed and prevent the BC break.
+Doing it with a prepend in API Platform would be a BC break too.
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-21T09:16:01Z
+
+@alanpoulain should be good now
+@chalasr the CI "Tests / PHP 8.2 - Sf 6.3" should be fix in https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1120
+
+---------------------------------------------------------------------------
+
+by jonag at 2023-02-27T08:32:39Z
+
+Thank you for your PR, it should fix the issue described in #1118. Personally I'm fine with both options (enabled ou disabled by default) since (in my case at least) it doesn't "break" my application but just add a new (non-working and wrongly documented) operation. I don't mind having to disable it manually.
