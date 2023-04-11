@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Amegatron at 2023-04-10T07:55:54Z
+
+I still wonder, why there is need for `eval`. It seems to be OK to have just normal Trait declarations. Instead, eval indeed may cause problems with different kinds of static analysis and caching.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-04-10T14:22:31Z
+
+The reason is that the v2 of this package supports a wide range of PHP versions including legacy ones that do not support some type declarations. Using `eval` is the only way to make php skip interpreting it and avoid ending up with a fatal error.
