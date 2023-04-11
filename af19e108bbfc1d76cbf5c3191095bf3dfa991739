@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2023-04-01T15:30:08Z
+
+Would you mind adding a testcase covering this change ? Happy to provide some guidance if needed
+
+---------------------------------------------------------------------------
+
+by koftikes at 2023-04-03T07:35:32Z
+
+Yes, please.
+What exactly test case you want to see?
+in issue 1083(https://github.com/lexik/LexikJWTAuthenticationBundle/issues/1083) exist example.
+
+---------------------------------------------------------------------------
+
+by koftikes at 2023-04-06T08:09:41Z
+
+@chalasr Hello. Any additional info?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-04-11T12:20:29Z
+
+The patch looks good, I'll add the test on my own. Thanks a lot @koftikes
