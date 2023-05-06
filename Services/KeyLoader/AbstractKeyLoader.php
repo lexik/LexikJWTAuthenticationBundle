@@ -11,10 +11,10 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
  */
 abstract class AbstractKeyLoader implements KeyLoaderInterface
 {
-    private $signingKey;
-    private $publicKey;
-    private $passphrase;
-    private $additionalPublicKeys;
+    private ?string $signingKey;
+    private ?string $publicKey;
+    private ?string $passphrase;
+    private array $additionalPublicKeys;
 
     public function __construct(?string $signingKey = null, ?string $publicKey = null, ?string $passphrase = null, array $additionalPublicKeys = [])
     {
@@ -27,17 +27,17 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getPassphrase()
+    public function getPassphrase(): ?string
     {
         return $this->passphrase;
     }
 
-    public function getSigningKey()
+    public function getSigningKey(): ?string
     {
         return $this->signingKey && is_file($this->signingKey) ? $this->readKey(self::TYPE_PRIVATE) : $this->signingKey;
     }
 
-    public function getPublicKey()
+    public function getPublicKey(): ?string
     {
         return $this->publicKey && is_file($this->publicKey) ? $this->readKey(self::TYPE_PUBLIC) : $this->publicKey;
     }
@@ -51,16 +51,12 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
                 throw new \RuntimeException(sprintf('Additional public key "%s" does not exist or is not readable. Did you correctly set the "lexik_jwt_authentication.additional_public_keys" configuration key?', $key));
             }
 
-            $rawKey = $key;
+            $rawKey = @file_get_contents($key);
 
-            if (is_file($key)) {
-                $rawKey = @file_get_contents($key);
-
-                if (false === $rawKey) {
-                    // Try invalidating the realpath cache
-                    clearstatcache(true, $key);
-                    $rawKey = file_get_contents($key);
-                }
+            if (false === $rawKey) {
+                // Try invalidating the realpath cache
+                clearstatcache(true, $key);
+                $rawKey = file_get_contents($key);
             }
             $contents[] = $rawKey;
         }
@@ -68,30 +64,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
         return $contents;
     }
 
-    /**
-     * @param string $type One of "public" or "private"
-     *
-     * @return string The path of the key, an empty string if not a valid path
-     *
-     * @throws \InvalidArgumentException If the given type is not valid
-     * @throws \InvalidArgumentException If the given type is not valid
-     */
-    protected function getKeyPath($type)
-    {
-        if (!in_array($type, [self::TYPE_PUBLIC, self::TYPE_PRIVATE])) {
-            throw new \InvalidArgumentException(sprintf('The key type must be "public" or "private", "%s" given.', $type));
-        }
-
-        $path = self::TYPE_PUBLIC === $type ? $this->publicKey : $this->signingKey;
-
-        if (!is_file($path) || !is_readable($path)) {
-            throw new \RuntimeException(sprintf('%s key is not a file or is not readable.', ucfirst($type)));
-        }
-
-        return $path;
-    }
-
-    private function readKey($type)
+    private function readKey($type): ?string
     {
         $isPublic = self::TYPE_PUBLIC === $type;
         $key = $isPublic ? $this->publicKey : $this->signingKey;

@@ -30,22 +30,6 @@ To work, the provider just needs a few lines of configuration:
 
 Then, use it on your JWT protected firewall:
 
-Symfony versions prior to 5.3
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: yaml
-
-    # config/packages/security.yaml
-    security:
-        firewalls:
-            api:
-                provider: jwt
-                guard:
-                    # ...
-
-Symfony 5.3 and higher
-~~~~~~~~~~~~~~~~~~~~~~
-
 .. code-block:: yaml
 
     # config/packages/security.yaml

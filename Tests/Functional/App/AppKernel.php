@@ -1,10 +1,9 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\App;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -14,24 +13,18 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
-/**
- * AppKernel.
- */
 class AppKernel extends Kernel
 {
-    private $encoder;
+    private string $encoder;
 
-    private $userProvider;
+    private string $userProvider;
 
     private $signatureAlgorithm;
 
-    private $testCase;
-
-    public function __construct($environment, $debug, $testCase = null)
+    public function __construct($environment, $debug)
     {
         parent::__construct($environment, $debug);
 
-        $this->testCase = $testCase;
         $this->encoder = getenv('ENCODER') ?: 'default';
         $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
         $this->signatureAlgorithm = getenv('ALGORITHM');
@@ -46,7 +39,6 @@ class AppKernel extends Kernel
             new FrameworkBundle(),
             new SecurityBundle(),
             new LexikJWTAuthenticationBundle(),
-            new Bundle(),
         ];
         if (class_exists(ApiPlatformBundle::class)) {
             $bundles[] = new ApiPlatformBundle();
@@ -83,19 +75,12 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/config_router_utf8.yml');
 
-        // 5.3+ session config
-        if (class_exists(UserNotFoundException::class)) {
-            $sessionConfig = [
-                'storage_factory_id' => 'session.storage.factory.mock_file',
-            ];
-        } else {
-            $sessionConfig = [
-                'handler_id' => null,
-                'cookie_secure' => 'auto',
-                'cookie_samesite' => 'lax',
-                'storage_id' => 'session.storage.mock_file',
-            ];
-        }
+        $sessionConfig = [
+            'handler_id' => null,
+            'cookie_secure' => 'auto',
+            'cookie_samesite' => 'lax',
+            'storage_factory_id' => 'session.storage.factory.mock_file',
+        ];
 
         if (!class_exists(Security::class)) {
             $loader->load(function (ContainerBuilder $container) {
@@ -134,11 +119,7 @@ class AppKernel extends Kernel
             ]);
         });
 
-        if ($this->testCase && file_exists(__DIR__ . '/config/' . $this->testCase . '/config.yml')) {
-            $loader->load(__DIR__ . '/config/' . $this->testCase . '/config.yml');
-        }
-
-        $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider . (class_exists(UserNotFoundException::class) ? '' : '_legacy')));
+        $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider));
 
         if ($this->signatureAlgorithm && file_exists($file = __DIR__ . sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
             $loader->load($file);

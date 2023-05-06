@@ -14,9 +14,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CallableEventSubscriber implements EventSubscriberInterface
 {
-    private static $listeners = [];
+    private static array $listeners = [];
 
-    private static $eventClassMap = [
+    private static array $eventClassMap = [
         Events::JWT_CREATED => JWTCreatedEvent::class,
         Events::JWT_DECODED => JWTDecodedEvent::class,
         Events::JWT_INVALID => JWTInvalidEvent::class,

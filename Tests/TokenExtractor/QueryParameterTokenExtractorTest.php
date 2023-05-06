@@ -24,6 +24,6 @@ class QueryParameterTokenExtractorTest extends TestCase
         $this->assertFalse($extractor->extract($request));
 
         $request = new Request(['bearer' => 'testtoken']);
-        $this->assertEquals('testtoken', $extractor->extract($request));
+        $this->assertSame('testtoken', $extractor->extract($request));
     }
 }

@@ -18,30 +18,19 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\PayloadAwareUserProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/** @requires PHP >= 7.2 */
 class JWTAuthenticatorTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (!class_exists(UserNotFoundException::class)) {
-            $this->markTestSkipped('This test suite only concerns the new Symfony 5.3 authentication system.');
-        }
-    }
-
     public function testAuthenticate()
     {
         $userIdClaim = 'sub';
@@ -49,9 +38,9 @@ class JWTAuthenticatorTest extends TestCase
         $rawToken = 'token';
         $userRoles = ['ROLE_USER'];
 
-        $userStub = new AdvancedUserStub('lexik', 'password', 'user@gmail.com', $userRoles);
+        $userStub = new InMemoryUser('lexik', 'password', $userRoles);
 
-        $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
+        $jwtManager = $this->getJWTManagerMock($userIdClaim);
         $jwtManager
             ->method('parse')
             ->willReturn(['sub' => 'lexik']);
@@ -79,9 +68,9 @@ class JWTAuthenticatorTest extends TestCase
         $rawToken = 'token';
         $userRoles = ['ROLE_USER'];
 
-        $userStub = new AdvancedUserStub(1, 'password', 'user@gmail.com', $userRoles);
+        $userStub = new InMemoryUser('1', 'password', $userRoles);
 
-        $jwtManager = $this->getJWTManagerMock(null, $userIdClaim);
+        $jwtManager = $this->getJWTManagerMock($userIdClaim);
         $jwtManager
             ->method('parse')
             ->willReturn(['sub' => 1]);
@@ -106,7 +95,7 @@ class JWTAuthenticatorTest extends TestCase
     {
         $jwtManager = $this->getJWTManagerMock();
         $jwtManager->method('parse')
-            ->will($this->throwException(new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token')));
+            ->willThrowException(new JWTDecodeFailureException(JWTDecodeFailureException::EXPIRED_TOKEN, 'Expired JWT Token'));
 
         $this->expectException(ExpiredTokenException::class);
 
@@ -297,11 +286,7 @@ class JWTAuthenticatorTest extends TestCase
             ->withConsecutive(['token', null], ['payload', null])
             ->willReturnOnConsecutiveCalls('dummytoken', ['claim' => 'val']);
 
-        if (method_exists(FormLoginAuthenticator::class, 'createToken')) {
-            $token = $authenticator->createToken($passport, 'dummy');
-        } else {
-            $token = $authenticator->createAuthenticatedToken($passport, 'dummy');
-        }
+        $token = $authenticator->createToken($passport, 'dummy');
 
         $this->assertInstanceOf(JWTPostAuthenticationToken::class, $token);
         $this->assertSame('dummytoken', $token->getCredentials());
@@ -325,18 +310,10 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
-    private function getJWTManagerMock($userIdentityField = null, $userIdClaim = null)
+    private function getJWTManagerMock($userIdClaim = null)
     {
-        $jwtManager = $this->getMockBuilder(DummyJWTManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $jwtManager = $this->createMock(DummyJWTManager::class);
 
-        if (null !== $userIdentityField) {
-            $jwtManager
-                ->expects($this->once())
-                ->method('getUserIdentityField')
-                ->willReturn($userIdentityField);
-        }
         if (null !== $userIdClaim) {
             $jwtManager
                 ->expects($this->once())
@@ -349,16 +326,12 @@ class JWTAuthenticatorTest extends TestCase
 
     private function getEventDispatcherMock()
     {
-        return $this->getMockBuilder(EventDispatcherInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(EventDispatcherInterface::class);
     }
 
     private function getTokenExtractorMock($returnValue = null)
     {
-        $extractor = $this->getMockBuilder(TokenExtractorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $extractor = $this->createMock(TokenExtractorInterface::class);
 
         if (null !== $returnValue) {
             $extractor
@@ -372,23 +345,17 @@ class JWTAuthenticatorTest extends TestCase
 
     private function getRequestMock()
     {
-        return $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(Request::class);
     }
 
     private function getUserProviderMock()
     {
-        return $this->getMockBuilder(DummyUserProvider::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(DummyUserProvider::class);
     }
 
     private function getTranslatorMock()
     {
-        return $this->getMockBuilder(TranslatorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(TranslatorInterface::class);
     }
 
     private function expectEvent($eventName, $event, $dispatcher)
@@ -399,11 +366,15 @@ class JWTAuthenticatorTest extends TestCase
 
 abstract class DummyUserProvider implements UserProviderInterface, PayloadAwareUserProviderInterface
 {
+    public function loadUserByUsername(string $username): UserInterface
+    {
+    }
+
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
     }
 
-    public function loadUserByIdentifierAndPayload(string $identifier): UserInterface
+    public function loadUserByIdentifierAndPayload(string $identifier, array $payload): UserInterface
     {
     }
 }

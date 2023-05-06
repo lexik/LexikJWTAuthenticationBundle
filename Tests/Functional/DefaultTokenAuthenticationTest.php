@@ -13,14 +13,14 @@ class DefaultTokenAuthenticationTest extends CompleteTokenAuthenticationTest
     {
         $response = parent::testAccessSecuredRouteWithoutToken();
 
-        $this->assertEquals('JWT Token not found', $response['message']);
+        $this->assertSame('JWT Token not found', $response['message']);
     }
 
     public function testAccessSecuredRouteWithInvalidToken($token = 'dummy')
     {
         $response = parent::testAccessSecuredRouteWithInvalidToken($token);
 
-        $this->assertEquals('Invalid JWT Token', $response['message']);
+        $this->assertSame('Invalid JWT Token', $response['message']);
     }
 
     /**

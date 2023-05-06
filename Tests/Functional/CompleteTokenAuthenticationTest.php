@@ -5,7 +5,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\InMemoryUser;
-use Symfony\Component\Security\Core\User\User;
 
 /**
  * Base class for classes testing the different cases of authentication via
@@ -15,9 +14,9 @@ use Symfony\Component\Security\Core\User\User;
  */
 class CompleteTokenAuthenticationTest extends TestCase
 {
-    protected function doSetUp()
+    protected function setUp(): void
     {
-        parent::doSetUp();
+        parent::setUp();
 
         static::$client = static::createClient();
     }
@@ -37,10 +36,8 @@ class CompleteTokenAuthenticationTest extends TestCase
 
         if ('lexik_jwt' === static::$kernel->getUserProvider()) {
             $this->assertSame(JWTUser::class, $content['class']);
-        } elseif (class_exists(InMemoryUser::class)) {
-            $this->assertSame(InMemoryUser::class, $content['class']);
         } else {
-            $this->assertSame(User::class, $content['class']);
+            $this->assertSame(InMemoryUser::class, $content['class']);
         }
 
         return $content;
@@ -98,7 +95,7 @@ class CompleteTokenAuthenticationTest extends TestCase
         $encoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder');
         $idClaim = static::$kernel->getContainer()->getParameter('lexik_jwt_authentication.user_id_claim');
 
-        $r = new \ReflectionProperty(get_class($encoder), 'jwsProvider');
+        $r = new \ReflectionProperty($encoder !== null ? get_class($encoder) : self::class, 'jwsProvider');
         $r->setAccessible(true);
         $jwsProvider = $r->getValue($encoder);
         \Closure::bind(function () {

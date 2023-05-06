@@ -4,17 +4,17 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Security\Http\Authenticatio
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie\JWTCookieProvider;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\InMemoryUser;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -36,11 +36,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->onAuthenticationSuccess($request, $token);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
-        $this->assertEquals('secrettoken', $content['token']);
+        $this->assertSame('secrettoken', $content['token']);
     }
 
     public function testHandleAuthenticationSuccess()
@@ -49,11 +49,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->handleAuthenticationSuccess($this->getUser());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
-        $this->assertEquals('secrettoken', $content['token']);
+        $this->assertSame('secrettoken', $content['token']);
     }
 
     public function testHandleAuthenticationSuccessWithGivenJWT()
@@ -62,11 +62,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->handleAuthenticationSuccess($this->getUser(), 'jwt');
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
-        $this->assertEquals('jwt', $content['token']);
+        $this->assertSame('jwt', $content['token']);
     }
 
     public function testOnAuthenticationSuccessSetCookie()
@@ -113,66 +113,54 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject&Request
      */
     protected function getRequest()
     {
-        $request = $this
-            ->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $request;
+        return $this->createMock(Request::class);
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject&JWTPostAuthenticationToken
      */
     protected function getToken()
     {
-        $token = $this
-            ->getMockBuilder(JWTUserToken::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $token = $this->createMock(JWTPostAuthenticationToken::class);
 
         $token
-            ->expects($this->any())
             ->method('getUser')
-            ->will($this->returnValue($this->getUser()));
+            ->willReturn($this->getUser());
 
         return $token;
     }
 
     private function getUser(): UserInterface
     {
-        if (class_exists(InMemoryUser::class)) {
-            return new InMemoryUser('username', 'password');
-        }
-
-        return new User('username', 'password');
+        return new InMemoryUser('username', 'password');
     }
 
-    private function getJWTManager($token = null)
+    /**
+     * @return MockObject&JWTManager
+     */
+    private function getJWTManager(string $token = null)
     {
-        $jwtManager = $this->getMockBuilder(JWTManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $jwtManager = $this->createMock(JWTManager::class);
 
         if (null !== $token) {
             $jwtManager
-                ->expects($this->any())
                 ->method('create')
-                ->will($this->returnValue($token));
+                ->willReturn($token);
         }
 
         return $jwtManager;
     }
 
+    /**
+     * @return MockObject&EventDispatcher
+     */
     private function getDispatcher()
     {
-        $dispatcher = $this->getMockBuilder(EventDispatcher::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dispatcher = $this->createMock(EventDispatcher::class);
 
         $dispatcher
             ->expects($this->once())

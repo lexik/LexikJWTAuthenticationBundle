@@ -46,7 +46,6 @@ Full default configuration
         public_key: ~
         pass_phrase: ~
         token_ttl: 3600 # token TTL in seconds, defaults to 1 hour
-        user_identity_field: username # key under which the user identity will be stored in the token payload
         clock_skew: 0
         allow_no_expiration: false # set to true to allow tokens without exp claim
 
@@ -108,8 +107,7 @@ To create your own encoder service, see the
 signature_algorithm
 ...................
 
-One of the algorithms supported by the default encoder for the
-configured `crypto engine <#crypto_engine>`__.
+One of the encryption algorithms supported by the default encoder service.
 
 -  HS256, HS384, HS512 (HMAC)
 -  RS256, RS384, RS512 (RSA)
@@ -200,13 +198,11 @@ namely "JavaScript/front-end should never have access to the full JWT".
 Security configuration
 ----------------------
 
-For Symfony 5.3 and higher, use the ``jwt`` authenticator:
-
 .. code-block:: yaml
 
     # config/packages/security.yaml
     security:
-        enable_authenticator_manager: true
+        enable_authenticator_manager: true # Only for Symfony 5.4
         firewalls:
             api:
                 # ...
@@ -217,18 +213,6 @@ For Symfony 5.3 and higher, use the ``jwt`` authenticator:
             #        provider: null  (you can put provider here or just ignore this config)
             #        authenticator: lexik_jwt_authentication.security.jwt_authenticator (default jwt authenticator)
             # ...
-
-For Symfony versions prior to 5.3, use the Guard authenticator:
-
-.. code-block:: yaml
-
-    firewalls:
-        # ...
-        api:
-            # ...
-            guard:
-                authenticators:
-                    - 'lexik_jwt_authentication.jwt_token_authenticator'
 
 Authenticator
 .............

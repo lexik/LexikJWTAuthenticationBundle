@@ -11,28 +11,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 final class JWTUserProvider implements PayloadAwareUserProviderInterface
 {
-    private $class;
+    private string $class;
 
-    private $cache = [];
+    private array $cache = [];
 
     /**
      * @param string $class The {@link JWTUserInterface} implementation FQCN for which to provide instances
      */
-    public function __construct($class)
+    public function __construct(string $class)
     {
         $this->class = $class;
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @param array $payload The JWT payload from which to create an instance
-     *
-     * @return UserInterface
+     * To be removed at the same time as symfony 5.4 support.
      */
-    public function loadUserByUsername($username, array $payload = [])
+    public function loadUserByUsername(string $username): UserInterface
     {
-        return $this->loadUserByUsernameAndPayload($username, $payload);
+        // to be removed at the same time as symfony 5.4 support
+        throw new \LogicException('This method is implemented for BC purpose and should never be called.');
     }
 
     /**
@@ -45,29 +42,15 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
         return $this->loadUserByIdentifierAndPayload($identifier, $payload);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsernameAndPayload(string $username, array $payload): UserInterface
+    public function loadUserByIdentifierAndPayload(string $identifier, array $payload): UserInterface
     {
-        if (isset($this->cache[$username])) {
-            return $this->cache[$username];
+        if (isset($this->cache[$identifier])) {
+            return $this->cache[$identifier];
         }
 
         $class = $this->class;
 
-        return $this->cache[$username] = $class::createFromPayload($username, $payload);
-    }
-
-    public function loadUserByIdentifierAndPayload(string $userIdentifier, array $payload): UserInterface
-    {
-        if (isset($this->cache[$userIdentifier])) {
-            return $this->cache[$userIdentifier];
-        }
-
-        $class = $this->class;
-
-        return $this->cache[$userIdentifier] = $class::createFromPayload($userIdentifier, $payload);
+        return $this->cache[$identifier] = $class::createFromPayload($identifier, $payload);
     }
 
     /**

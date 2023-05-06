@@ -16,14 +16,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
 {
     /**
-     * @throws \LogicException
-     */
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
-    {
-        throw new \LogicException('This method is implemented for BC purpose and should never be called.');
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getPriority(): int
@@ -39,10 +31,7 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
         return 'jwt';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addConfiguration(NodeDefinition $node)
+    public function addConfiguration(NodeDefinition $node): void
     {
         $node
             ->children()
@@ -66,10 +55,6 @@ class JWTAuthenticatorFactory implements AuthenticatorFactoryInterface
             ->setDefinition($authenticatorId, new ChildDefinition($config['authenticator']))
             ->replaceArgument(3, new Reference($userProviderId))
         ;
-
-        // Compile-time parameter removed by RemoveLegacyAuthenticatorPass
-        // Stop setting it when guard support gets removed (aka when removing Symfony<5.3 support)
-        $container->setParameter('lexik_jwt_authentication.authenticator_manager_enabled', true);
 
         return $authenticatorId;
     }

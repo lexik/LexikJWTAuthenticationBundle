@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * https://github.com/lexik/LexikJWTAuthenticationBundle/issues/944
  * https://github.com/vimeo/psalm/issues/7923
  */
-if (80000 <= \PHP_VERSION_ID and (new \ReflectionMethod(JsonResponse::class, 'setData'))->hasReturnType()) {
+if ((new \ReflectionMethod(JsonResponse::class, 'setData'))->hasReturnType()) {
     eval('
         namespace Lexik\Bundle\JWTAuthenticationBundle\Response;
         

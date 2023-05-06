@@ -44,9 +44,7 @@ class ChainTokenExtractorTest extends TestCase
         $custom = $this->getTokenExtractorMock(null);
 
         $extractor->addExtractor($custom);
-        $result = $extractor->removeExtractor(function (TokenExtractorInterface $extractor) use ($custom) {
-            return $extractor === $custom;
-        });
+        $result = $extractor->removeExtractor(fn (TokenExtractorInterface $extractor) => $extractor === $custom);
 
         $this->assertTrue($result, 'removeExtractor returns true in case of success, false otherwise');
         $this->assertFalse($extractor->getIterator()->valid(), 'The token extractor should have been removed so the map should be empty');
@@ -54,7 +52,7 @@ class ChainTokenExtractorTest extends TestCase
 
     public function testExtract()
     {
-        $this->assertEquals('dummy', (new ChainTokenExtractor($this->getTokenExtractorMap([false, false, 'dummy'])))->extract(new Request()));
+        $this->assertSame('dummy', (new ChainTokenExtractor($this->getTokenExtractorMap([false, false, 'dummy'])))->extract(new Request()));
     }
 
     public function testClearMap()
@@ -67,10 +65,7 @@ class ChainTokenExtractorTest extends TestCase
 
     private function getTokenExtractorMock($returnValue)
     {
-        $extractor = $this
-            ->getMockBuilder(TokenExtractorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $extractor = $this->createMock(TokenExtractorInterface::class);
 
         if ($returnValue) {
             $extractor

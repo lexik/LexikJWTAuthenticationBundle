@@ -10,22 +10,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Nicolas Cabot <n.cabot@lexik.fr>
- *
- * @final
  */
 #[AsCommand(name: 'lexik:jwt:check-config', description: 'Checks that the bundle is properly configured.')]
-class CheckConfigCommand extends Command
+final class CheckConfigCommand extends Command
 {
-    /**
-     * @deprecated
-     */
-    protected static $defaultName = 'lexik:jwt:check-config';
+    private KeyLoaderInterface $keyLoader;
 
-    private $keyLoader;
+    private string $signatureAlgorithm;
 
-    private $signatureAlgorithm;
-
-    public function __construct(KeyLoaderInterface $keyLoader, $signatureAlgorithm)
+    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm)
     {
         $this->keyLoader = $keyLoader;
         $this->signatureAlgorithm = $signatureAlgorithm;
@@ -36,34 +29,22 @@ class CheckConfigCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
-    {
-        $this
-            ->setName(static::$defaultName)
-            ->setDescription('Checks JWT configuration');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);
             // No public key for HMAC
-            if (false === strpos($this->signatureAlgorithm, 'HS')) {
+            if (!str_contains($this->signatureAlgorithm, 'HS')) {
                 $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
             }
         } catch (\RuntimeException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln('<info>The configuration seems correct.</info>');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

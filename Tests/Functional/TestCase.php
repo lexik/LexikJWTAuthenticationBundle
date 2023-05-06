@@ -4,31 +4,18 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * TestCase.
  */
 abstract class TestCase extends WebTestCase
 {
-    use ForwardCompatTestCaseTrait;
-
     protected static $client;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected static function createKernel(array $options = []): KernelInterface
-    {
-        require_once __DIR__ . '/app/AppKernel.php';
-
-        return new AppKernel('test', true, $options['test_case'] ?? null);
-    }
 
     protected static function createAuthenticatedClient($token = null)
     {
         $client = static::$client ?: static::createClient();
-        $token = $token ?? self::getAuthenticatedToken();
+        $token ??= self::getAuthenticatedToken();
 
         if (null === $token) {
             throw new \LogicException('Unable to create an authenticated client from a null JWT token');
@@ -62,9 +49,15 @@ abstract class TestCase extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    protected function doSetUp()
+    protected function setUp(): void
     {
         $fs = new Filesystem();
         $fs->remove(sys_get_temp_dir() . '/LexikJWTAuthenticationBundle/');
+    }
+
+    protected function tearDown(): void
+    {
+        static::ensureKernelShutdown();
+        static::$kernel = null;
     }
 }

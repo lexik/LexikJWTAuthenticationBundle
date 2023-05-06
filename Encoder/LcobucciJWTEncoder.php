@@ -13,10 +13,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterfa
  */
 class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderInterface
 {
-    /**
-     * @var JWSProviderInterface
-     */
-    protected $jwsProvider;
+    protected JWSProviderInterface $jwsProvider;
 
     public function __construct(JWSProviderInterface $jwsProvider)
     {

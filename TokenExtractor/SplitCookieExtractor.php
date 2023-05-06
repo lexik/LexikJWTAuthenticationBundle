@@ -11,15 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SplitCookieExtractor implements TokenExtractorInterface
 {
-    /**
-     * @var array
-     */
-    private $cookies;
+    private array $cookies;
 
-    /**
-     * @param array $cookies
-     */
-    public function __construct($cookies)
+    public function __construct(array $cookies)
     {
         $this->cookies = $cookies;
     }

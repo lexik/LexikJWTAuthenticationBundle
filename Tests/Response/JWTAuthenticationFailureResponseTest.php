@@ -37,7 +37,7 @@ final class JWTAuthenticationFailureResponseTest extends TestCase
         $newMessage = 'new message';
         $response->setMessage($newMessage);
 
-        $responseBody = json_decode($response->getContent());
+        $responseBody = json_decode($response->getContent(), null);
 
         $this->assertSame($response->getStatusCode(), $responseBody->code);
         $this->assertSame($newMessage, $response->getMessage());

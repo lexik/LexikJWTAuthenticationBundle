@@ -10,14 +10,14 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 final class JWTCookieProvider
 {
-    private $defaultName;
-    private $defaultLifetime;
-    private $defaultSameSite;
-    private $defaultPath;
-    private $defaultDomain;
-    private $defaultSecure;
-    private $defaultHttpOnly;
-    private $defaultSplit;
+    private ?string $defaultName;
+    private ?int $defaultLifetime;
+    private ?string $defaultSameSite;
+    private ?string $defaultPath;
+    private ?string $defaultDomain;
+    private bool $defaultSecure;
+    private bool $defaultHttpOnly;
+    private array $defaultSplit;
 
     public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [])
     {

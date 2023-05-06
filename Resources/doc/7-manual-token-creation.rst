@@ -17,7 +17,7 @@ directly:
 
     class ApiController extends Controller
     {
-        public function getTokenUser(UserInterface $user, JWTTokenManagerInterface $JWTManager)
+        public function getTokenUser(UserInterface $user, JWTTokenManagerInterface $JWTManager): JsonResponse
         {
             // ...
 
@@ -35,18 +35,26 @@ your login form:
 
 .. code-block:: php
 
-    public function fooAction(UserInterface $user)
-    {
-        $authenticationSuccessHandler = $this->container->get('lexik_jwt_authentication.handler.authentication_success');
+    namespace App\Controller;
 
-        return $authenticationSuccessHandler->handleAuthenticationSuccess($user);
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Symfony\Component\HttpFoundation\JsonResponse;
+    use Symfony\Component\Security\Core\User\UserInterface;
+    use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+
+    class FooController extends Controller
+    {
+        public function fooAction(AuthenticationSuccessHandler $authenticationSuccessHandler): JsonResponse
+        {
+            $user = ...; // Fetch user
+
+            return $authenticationSuccessHandler->handleAuthenticationSuccess($user);
+        }
     }
 
 You can also pass an existing JWT to the ``handleAuthenticationSuccess``
 method:
 
 .. code-block:: php
-
-    $jwt = $this->container->get('lexik_jwt_authentication.jwt_manager')->create($user);
 
     return $authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwt);

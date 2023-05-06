@@ -17,11 +17,11 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
  */
 class SubscribedTokenAuthenticationTest extends CompleteTokenAuthenticationTest
 {
-    private static $subscriber;
+    private static ?object $subscriber = null;
 
-    protected function doSetUp()
+    protected function setUp(): void
     {
-        parent::doSetUp();
+        parent::setUp();
 
         self::$subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
     }

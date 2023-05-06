@@ -9,8 +9,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Exception;
  */
 class JWTFailureException extends \Exception
 {
-    private $reason;
-    private $payload;
+    private string $reason;
+    private ?array $payload;
 
     public function __construct(string $reason, string $message, \Throwable $previous = null, array $payload = null)
     {
@@ -20,12 +20,12 @@ class JWTFailureException extends \Exception
         parent::__construct($message, 0, $previous);
     }
 
-    public function getReason()
+    public function getReason(): string
     {
         return $this->reason;
     }
 
-    public function getPayload()
+    public function getPayload(): ?array
     {
         return $this->payload;
     }

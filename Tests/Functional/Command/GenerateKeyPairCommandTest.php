@@ -59,7 +59,7 @@ class GenerateKeyPairCommandTest extends TestCase
         $this->assertSame($payload, $decryptedData);*/
     }
 
-    public function providePassphrase()
+    public static function providePassphrase()
     {
         yield ['RS256', null];
         yield ['RS384', null];

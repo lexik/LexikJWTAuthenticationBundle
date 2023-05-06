@@ -12,7 +12,6 @@
         <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface" alias="lexik_jwt_authentication.jws_provider.lcobucci" />
         <service id="lexik_jwt_authentication.jws_provider.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider" public="false">
             <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
-            <argument>%lexik_jwt_authentication.encoder.crypto_engine%</argument>
             <argument>%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
             <argument>%lexik_jwt_authentication.token_ttl%</argument>
             <argument>%lexik_jwt_authentication.clock_skew%</argument>
