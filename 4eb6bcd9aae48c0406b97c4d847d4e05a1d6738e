@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2023-01-28T12:26:42Z
+
+Great, thanks. Don't hesitate to tell me if you want some help regarding the test setup or anything, happy to do so.
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-01-29T17:24:50Z
+
+@chalasr A merge of the 2.x into the 3.x would be nice to start. I'll let you know afterwards
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-01-30T09:55:47Z
+
+@maxhelias done in https://github.com/lexik/LexikJWTAuthenticationBundle/commit/3711d6fbe403606620c626dcb7211294fb1f776e
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-02T18:41:01Z
+
+Thanks @chalasr !
+
+It's difficult to fix the CI without cleaning the code base for symfony > 5.4. I can do it here and I can increase the compatibility with php too. Like  > 8.1 ? WDYT ?
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-02-03T14:57:14Z
+
+Yes, please go ahead :) Requiring PHP 8.1+ and Symfony 6.2+ is fine to me
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-10T14:49:56Z
+
+@chalasr it's ready for a review 😄
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-02-13T08:05:53Z
+
+@chalasr can you merge 2.x into 3.x that i rework this PR. Thanks
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-03-01T15:40:55Z
+
+@maxhelias done, rebase unlocked!
+
+---------------------------------------------------------------------------
+
+by maxhelias at 2023-03-01T19:21:39Z
+
+Thanks @chalasr ! Everything is good, I would like to have a first review. All that's left is to make the file UPGRADE-3.x.md
