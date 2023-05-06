@@ -3,6 +3,13 @@ CHANGELOG
 
 For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.0
 
+## [2.19.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.0) (2023-06-05)
+
+* bug [\#1119](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1119) Fix API Platform integration ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1120](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1120) Remove deprecation symfony 6.3 ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1133](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1133) Fixed issue with option user_id_claim ([@koftikes](https://github.com/koftikes))
+* bug [\#1134](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1134) Fix ForwardCompatAuthenticatorTrait with OPCache preload ([@elavrom](https://github.com/elavrom))
+* feature [\#1125](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1125) Allow lcobucci/jwt v5 ([@maxhelias](https://github.com/maxhelias))
 
 ## [2.18.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.18.1) (2023-13-02)
 
