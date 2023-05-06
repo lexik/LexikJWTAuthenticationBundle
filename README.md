@@ -56,7 +56,7 @@ If you or your company use this package, please consider [sponsoring its mainten
 Upgrading from 1.x
 -------------------
 
-Please see the [UPGRADE](UPGRADE-2.0.rst) file.
+Please see the [UPGRADE](UPGRADE-2.0.md) file.
 
 Credits
 -------
