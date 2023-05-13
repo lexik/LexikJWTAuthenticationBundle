@@ -40,7 +40,7 @@ class GenerateTokenCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(static::$defaultName)
@@ -91,7 +91,7 @@ class GenerateTokenCommand extends Command
         }
 
         $payload = [];
-        
+
         if (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
             $payload['exp'] = 0;
         } elseif (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {

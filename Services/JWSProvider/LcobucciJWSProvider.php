@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
+use Lcobucci\Clock\Clock;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -20,6 +21,7 @@ use Lcobucci\JWT\Token\Builder as JWTBuilder;
 use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Token\RegisteredClaims;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
@@ -42,6 +44,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $keyLoader;
 
     /**
+     * @var Clock
+     */
+    private $clock;
+
+    /**
      * @var Signer
      */
     private $signer;
@@ -62,25 +69,23 @@ class LcobucciJWSProvider implements JWSProviderInterface
     private $allowNoExpiration;
 
     /**
-     * @var bool
-     */
-    private $useDateObjects;
-
-    /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false)
+    public function __construct(KeyLoaderInterface $keyLoader, string $cryptoEngine, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
     {
         if ('openssl' !== $cryptoEngine) {
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', self::class));
         }
+        if (null === $clock) {
+            $clock = new SystemClock(new \DateTimeZone('UTC'));
+        }
 
         $this->keyLoader = $keyLoader;
+        $this->clock = $clock;
         $this->signer = $this->getSignerForAlgorithm($signatureAlgorithm);
         $this->ttl = $ttl;
         $this->clockSkew = $clockSkew;
         $this->allowNoExpiration = $allowNoExpiration;
-        $this->useDateObjects = method_exists(Token::class, 'payload') || class_exists(Plain::class);  // exists only on lcobucci/jwt 3.4+
     }
 
     /**
@@ -95,7 +100,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         foreach ($header as $k => $v) {
-            $jws->withHeader($k, $v);
+            $jws = $jws->withHeader($k, $v);
         }
 
         $now = time();
@@ -103,28 +108,28 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
 
-        $jws->issuedAt($this->useDateObjects && !$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
+        $jws = $jws->issuedAt(!$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
 
         if (null !== $this->ttl || isset($payload['exp'])) {
             $exp = $payload['exp'] ?? $now + $this->ttl;
             unset($payload['exp']);
 
             if ($exp) {
-                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : ($this->useDateObjects ? new \DateTimeImmutable("@$exp") : $exp));
+                $jws = $jws->expiresAt(!$exp instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$exp}") : $exp);
             }
         }
 
         if (isset($payload['sub'])) {
-            $jws->relatedTo($payload['sub']);
+            $jws = $jws->relatedTo($payload['sub']);
             unset($payload['sub']);
         }
 
         if (interface_exists(RegisteredClaims::class)) {
-            $this->addStandardClaims($jws, $payload);
+            $jws = $this->addStandardClaims($jws, $payload);
         }
 
         foreach ($payload as $name => $value) {
-            $jws->withClaim($name, $value);
+            $jws = $jws->withClaim($name, $value);
         }
 
         $e = $token = null;
@@ -148,25 +153,18 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         $payload = [];
-
-        if (!$this->useDateObjects) {
-            foreach ($jws->getClaims() as $claim) {
-                $payload[$claim->getName()] = $claim->getValue();
+        foreach ($jws->claims()->all() as $name => $value) {
+            if ($value instanceof \DateTimeInterface) {
+                $value = $value->getTimestamp();
             }
-        } else {
-            foreach ($jws->claims()->all() as $name => $value) {
-                if ($value instanceof \DateTimeInterface) {
-                    $value = $value->getTimestamp();
-                }
-                $payload[$name] = $value;
-            }
+            $payload[$name] = $value;
         }
 
         $jws = new LoadedJWS(
             $payload,
             $this->verify($jws),
             false == $this->allowNoExpiration,
-            $this->useDateObjects ? $jws->headers()->all() : $jws->getHeaders(),
+            $jws->headers()->all(),
             $this->clockSkew
         );
 
@@ -219,41 +217,18 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function verify(Token $jwt)
     {
-        if (!$this->useDateObjects) {
-            if (!$jwt->validate(new ValidationData(time() + $this->clockSkew))) {
-                return false;
-            }
-
-            if ($this->signer instanceof Hmac) {
-                return $jwt->verify(
-                    $this->signer,
-                    $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE)
-                );
-            }
-
-            if (!empty($keys = $this->keyLoader->getAdditionalPublicKeys())) {
-                foreach ($keys as $key) {
-                    if ($jwt->verify($this->signer, $key)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        }
-
         if (class_exists(InMemory::class)) {
             $key = InMemory::plainText($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
         } else {
             $key = new Key($this->signer instanceof Hmac ? $this->keyLoader->loadKey(RawKeyLoader::TYPE_PRIVATE) : $this->keyLoader->loadKey(RawKeyLoader::TYPE_PUBLIC));
         }
 
-        $clock = SystemClock::fromUTC();
         $validator = new Validator();
+        $classValidator = class_exists(LooseValidAt::class) ? LooseValidAt::class : ValidAt::class;
 
         $isValid = $validator->validate(
             $jwt,
-            new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+            new $classValidator($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
             new SignedWith($this->signer, $key)
         );
 
@@ -266,7 +241,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         foreach ($publicKeys as $key) {
             $isValid = $validator->validate(
                 $jwt,
-                new ValidAt($clock, new \DateInterval("PT{$this->clockSkew}S")),
+                new $classValidator($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
                 new SignedWith($this->signer, InMemory::plainText($key))
             );
 
@@ -278,7 +253,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return false;
     }
 
-    private function addStandardClaims(Builder $builder, array &$payload)
+    private function addStandardClaims(Builder $builder, array &$payload): Builder
     {
         $mutatorMap = [
             RegisteredClaims::AUDIENCE => 'permittedFor',
@@ -300,7 +275,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
                 continue;
             }
 
-            $builder->{$mutator}($value);
+            $builder = $builder->{$mutator}($value);
         }
+
+        return $builder;
     }
 }

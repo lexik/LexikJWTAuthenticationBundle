@@ -2,8 +2,6 @@ imports:
   - { resource: base_security.yml }
 
 security:
-    enable_authenticator_manager: true
-
     password_hashers:
         Symfony\Component\Security\Core\User\UserInterface: plaintext
 
@@ -12,8 +10,8 @@ security:
             pattern:  ^/login
             stateless: true
             provider: in_memory
-            form_login:
-                check_path: /login_check
+            json_login:
+                check_path: login_check
                 require_previous_session: false
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure

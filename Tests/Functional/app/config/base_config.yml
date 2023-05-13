@@ -1,6 +1,7 @@
 framework:
     secret: test
     test: ~
+    http_method_override: false
 
 services:
     lexik_jwt_authentication.test.jwt_event_subscriber:

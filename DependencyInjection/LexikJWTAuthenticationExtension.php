@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -10,6 +11,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -24,7 +26,7 @@ class LexikJWTAuthenticationExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -97,15 +99,15 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
-        $tokenExtractors = self::createTokenExtractors($container, $config['token_extractors']);
+        $tokenExtractors = $this->createTokenExtractors($container, $config['token_extractors']);
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
 
-        if (false === $config['remove_token_from_body_when_cookies_used']) {
+        if (isset($config['remove_token_from_body_when_cookies_used'])) {
             $container
                 ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
-                ->replaceArgument(3, false);
+                ->replaceArgument(3, $config['remove_token_from_body_when_cookies_used']);
         }
 
         if ($config['set_cookies']) {
@@ -141,13 +143,27 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(3, $config['pass_phrase'])
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
         }
+
+        if ($this->isConfigEnabled($container, $config['api_platform'])) {
+            if (!class_exists(ApiPlatformBundle::class)) {
+                throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
+            }
+
+            $loader->load('api_platform.xml');
+
+            $container
+                ->getDefinition('lexik_jwt_authentication.api_platform.openapi.factory')
+                ->replaceArgument(1, $config['api_platform']['check_path'] ?? null)
+                ->replaceArgument(2, $config['api_platform']['username_path'] ?? null)
+                ->replaceArgument(3, $config['api_platform']['password_path'] ?? null);
+        }
     }
 
-    private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig)
+    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
     {
         $map = [];
 
-        if ($tokenExtractorsConfig['authorization_header']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['authorization_header'])) {
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor';
             $container
                 ->getDefinition($authorizationHeaderExtractorId)
@@ -157,7 +173,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($authorizationHeaderExtractorId);
         }
 
-        if ($tokenExtractorsConfig['query_parameter']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['query_parameter'])) {
             $queryParameterExtractorId = 'lexik_jwt_authentication.extractor.query_parameter_extractor';
             $container
                 ->getDefinition($queryParameterExtractorId)
@@ -166,7 +182,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($queryParameterExtractorId);
         }
 
-        if ($tokenExtractorsConfig['cookie']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor';
             $container
                 ->getDefinition($cookieExtractorId)
@@ -175,7 +191,7 @@ class LexikJWTAuthenticationExtension extends Extension
             $map[] = new Reference($cookieExtractorId);
         }
 
-        if ($tokenExtractorsConfig['split_cookie']['enabled']) {
+        if ($this->isConfigEnabled($container, $tokenExtractorsConfig['split_cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.split_cookie_extractor';
             $container
                 ->getDefinition($cookieExtractorId)

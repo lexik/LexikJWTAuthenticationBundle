@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
  */
 class DeprecateLegacyGuardAuthenticatorPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasParameter('lexik_jwt_authentication.authenticator_manager_enabled') || !$container->getParameter('lexik_jwt_authentication.authenticator_manager_enabled')) {
             return;

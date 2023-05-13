@@ -2,12 +2,13 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -41,15 +42,20 @@ class AppKernel extends Kernel
      */
     public function registerBundles(): array
     {
-        return [
+        $bundles = [
             new FrameworkBundle(),
             new SecurityBundle(),
             new LexikJWTAuthenticationBundle(),
             new Bundle(),
         ];
+        if (class_exists(ApiPlatformBundle::class)) {
+            $bundles[] = new ApiPlatformBundle();
+        }
+
+        return $bundles;
     }
 
-    public function getRootDir()
+    public function getRootDir(): string
     {
         return __DIR__;
     }
@@ -73,7 +79,7 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__ . '/config/config_router_utf8.yml');
 
@@ -91,12 +97,39 @@ class AppKernel extends Kernel
             ];
         }
 
-        $loader->load(function (ContainerBuilder $container) use ($sessionConfig) {
+        if (!class_exists(Security::class)) {
+            $loader->load(function (ContainerBuilder $container) {
+                $container->prependExtensionConfig('security', [
+                    'enable_authenticator_manager' => true,
+                ]);
+            });
+        }
+
+        $router = [
+            'resource' => '%kernel.root_dir%/config/routing.yml',
+            'utf8' => true,
+        ];
+        if (class_exists(ApiPlatformBundle::class)) {
+            $loader->load(function (ContainerBuilder $container) use (&$router) {
+                $container->prependExtensionConfig('api_platform', [
+                    'title' => 'LexikJWTAuthenticationBundle',
+                    'description' => 'API Platform integration in LexikJWTAuthenticationBundle',
+                    'version' => '1.0.0',
+                ]);
+                $container->prependExtensionConfig('lexik_jwt_authentication', [
+                    'api_platform' => [
+                        'check_path' => '/login_check',
+                        'username_path' => 'email',
+                        'password_path' => 'security.credentials.password',
+                    ],
+                ]);
+                $router['resource'] = '%kernel.root_dir%/config/routing_api_platform.yml';
+            });
+        }
+
+        $loader->load(function (ContainerBuilder $container) use ($router, $sessionConfig) {
             $container->prependExtensionConfig('framework', [
-                'router' => [
-                    'resource' => '%kernel.root_dir%/config/routing.yml',
-                    'utf8' => true,
-                ],
+                'router' => $router,
                 'session' => $sessionConfig
             ]);
         });
@@ -126,7 +159,7 @@ class AppKernel extends Kernel
         return $this->encoder;
     }
 
-    protected function build(ContainerBuilder $container)
+    protected function build(ContainerBuilder $container): void
     {
         $container->register('logger', NullLogger::class);
 

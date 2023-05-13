@@ -15,27 +15,31 @@ jobs:
             matrix:
                 include:
                     # Lowest Deps
-                    - php: 7.1
-                      symfony: 4.4.*
+                    - php: 7.2
+                      symfony: 5.4.*
                       composer-flags: '--prefer-stable --prefer-lowest'
                       can-fail: false
                     # LTS with latest stable PHP
-                    - php: 8.1
+                    - php: 8.2
                       symfony: 5.4.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
-                    # Stable Symfony branches
-                    - php: 7.4
-                      symfony: 4.4.*
-                      composer-flags: '--prefer-stable'
-                      can-fail: false
-                    - php: 8.0
+                      # Stable Symfony branches
+                    - php: 8.2
                       symfony: 6.0.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                    - php: 8.2
+                      symfony: 6.1.*
+                      composer-flags: '--prefer-stable'
+                      can-fail: false
+                    - php: 8.2
+                      symfony: 6.2.*
+                      composer-flags: '--prefer-stable'
+                      can-fail: false
                     # Development Symfony branches
-                    - php: 8.1
-                      symfony: 6.1.*@dev
+                    - php: 8.2
+                      symfony: 6.3.*@dev
                       composer-flags: ''
                       can-fail: false
 
@@ -43,12 +47,12 @@ jobs:
 
         steps:
             - name: "Checkout"
-              uses: "actions/checkout@v2"
+              uses: "actions/checkout@v3"
               with:
                   fetch-depth: 2
 
             - name: "Cache Composer packages"
-              uses: "actions/cache@v2"
+              uses: "actions/cache@v3"
               with:
                   path: "~/.composer/cache"
                   key: "php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles('composer.json') }}-flags-${{ matrix.composer-flags }}"
@@ -61,12 +65,16 @@ jobs:
                   tools: "composer:v2,flex"
 
             - name: "Set Composer stability"
-              if: "matrix.symfony == '6.1.*@dev'"
+              if: "matrix.symfony == '6.3.*@dev'"
               run: "composer config minimum-stability dev"
 
             - name: "Remove symfony/security-guard"
-              if: "matrix.symfony == '6.0.*' || matrix.symfony == '6.1.*@dev'"
+              if: "matrix.symfony == '6.0.*' || matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
               run: "composer remove --dev --no-update symfony/security-guard"
+
+            - name: "Install api-platform/core"
+              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
+              run: "composer require --dev --no-update api-platform/core:^3.0"
 
             - name: "Install dependencies"
               run: "composer update ${{ matrix.composer-flags }} --prefer-dist"

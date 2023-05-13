@@ -41,7 +41,7 @@ Github Issues are dedicated to bug reports and feature requests.
 Contributing
 ------------
 
-See the [CONTRIBUTING](CONTRIBUTING.rst) file.
+See the [CONTRIBUTING](CONTRIBUTING.md) file.
 
 
 Sponsoring
@@ -56,7 +56,7 @@ If you or your company use this package, please consider [sponsoring its mainten
 Upgrading from 1.x
 -------------------
 
-Please see the [UPGRADE](UPGRADE-2.0.rst) file.
+Please see the [UPGRADE](UPGRADE-2.0.md) file.
 
 Credits
 -------

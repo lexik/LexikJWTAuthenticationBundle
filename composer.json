@@ -39,7 +39,8 @@
     "require": {
         "php": ">=7.1",
         "ext-openssl": "*",
-        "lcobucci/jwt": "^3.4|^4.0",
+        "lcobucci/clock": "^1.2|^2.0|^3.0",
+        "lcobucci/jwt": "^3.4|^4.1|^5.0",
         "namshi/jose": "^7.2",
         "symfony/config": "^4.4|^5.3|^6.0",
         "symfony/dependency-injection": "^4.4|^5.3|^6.0",
@@ -49,14 +50,12 @@
         "symfony/http-kernel": "^4.4|^5.3|^6.0",
         "symfony/property-access": "^4.4|^5.3|^6.0",
         "symfony/security-bundle": "^4.4|^5.3|^6.0",
-        "symfony/security-core": "^4.4|^5.3|^6.0",
-        "symfony/security-http": "^4.4|^5.3|^6.0",
         "symfony/translation-contracts": "^1.0|^2.0|^3.0"
     },
     "require-dev": {
-        "symfony/browser-kit": "^4.4|^5.3|^6.0",
+        "symfony/browser-kit": "^5.4|^6.0",
         "symfony/console": "^4.4|^5.3|^6.0",
-        "symfony/dom-crawler": "^4.4|^5.3|^6.0",
+        "symfony/dom-crawler": "^5.4|^6.0",
         "symfony/filesystem": "^4.4|^5.3|^6.0",
         "symfony/framework-bundle": "^4.4|^5.3|^6.0",
         "symfony/phpunit-bridge": "^4.4|^5.3|^6.0",

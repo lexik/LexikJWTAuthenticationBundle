@@ -1,7 +1,36 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.16.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.0
+
+## [2.19.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.0) (2023-06-05)
+
+* bug [\#1119](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1119) Fix API Platform integration ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1120](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1120) Remove deprecation symfony 6.3 ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1133](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1133) Fixed issue with option user_id_claim ([@koftikes](https://github.com/koftikes))
+* bug [\#1134](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1134) Fix ForwardCompatAuthenticatorTrait with OPCache preload ([@elavrom](https://github.com/elavrom))
+* feature [\#1125](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1125) Allow lcobucci/jwt v5 ([@maxhelias](https://github.com/maxhelias))
+
+## [2.18.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.18.1) (2023-13-02)
+
+* bug [\#1115](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1115) Fix compatibility with lcobucci v3.4 ([maxhelias](https://github.com/maxhelias))
+
+## [2.18.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.18) (2023-08-02)
+
+* bug [\#1109](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1109) Replaced deprecated ValidAt() with LooseValidAt() ([carcabot](https://github.com/carcabot))
+* feature [\#1112](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1112) Better API Platform and json_login compatibility ([alanpoulain](https://github.com/alanpoulain))
+
+## [2.17.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.17) (2023-03-02)
+
+* bug [\#1110](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1110) Use the Security domain for translated messages ([jderusse](https://github.com/jderusse))
+* bug [\#1105](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1105) Fix creation of dynamic property ([SpartakusMd](https://github.com/SpartakusMd))
+* feature [\#1098](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1098) Add API Platform compatibility ([vincentchalamon](https://github.com/vincentchalamon))
+* bug [\#1096](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1096) Test under Symfony 6.2 / PHP 8.2 ([chalasr](https://github.com/chalasr))
+* feature [\#1092](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1092) allow environment variables for `remove_token_from_body_when_cookies_used` ([usu](https://github.com/usu))
+* bug [\#1067](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1067) Fixes TypeError in JWTManager ([magikid](https://github.com/magikid))
+* feature [\#1072](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1072) Inject Clock in LcobucciJWSProvider ([dbrumann](https://github.com/dbrumann))
+* bug [\#1069](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1069) Improve user_identity_field deprecation message ([lobodol](https://github.com/lobodol))
+* feature [\#1046](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1046) try to invalidate realpath cache if keypair loading failed ([lobodol](https://github.com/lobodol))
 
 ## [2.16.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.16) (2022-06-12)
 

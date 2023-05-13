@@ -145,6 +145,23 @@ Configure application routing
     api_login_check:
         path: /api/login_check
 
+API Platform compatibility
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If `API Platform <https://api-platform.com/>`__ is detected, the integration will be done with your security configuration.
+
+If you wish to change some parameters, you can do it with this configuration:
+
+.. code-block:: yaml
+
+   # config/packages/lexik_jwt_authentication.yaml
+   lexik_jwt_authentication:
+       # ...
+       api_platform:
+           check_path: /api/login_check
+           username_path: email
+           password_path: security.credentials.password
+
 Usage
 -----
 
@@ -213,7 +230,7 @@ the authentication process to obtain a new token.
 
 Maybe you want to use a **refresh token** to renew your JWT. In this
 case you can check
-`JWTRefreshTokenBundle <https://github.com/gesdinet/JWTRefreshTokenBundle>`__.
+`JWTRefreshTokenBundle <https://github.com/markitosgv/JWTRefreshTokenBundle>`__.
 
 Working with CORS requests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

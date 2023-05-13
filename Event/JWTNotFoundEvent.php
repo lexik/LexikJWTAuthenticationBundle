@@ -16,8 +16,6 @@ class JWTNotFoundEvent extends AuthenticationFailureEvent implements JWTFailureE
 {
     public function __construct(AuthenticationException $exception = null, Response $response = null, Request $request = null)
     {
-        $this->exception = $exception;
-        $this->response = $response;
-        $this->request = $request;
+        parent::__construct($exception, $response, $request);
     }
 }

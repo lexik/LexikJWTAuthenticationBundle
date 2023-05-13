@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
+use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -79,7 +80,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('user_identity_field')
-                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, implement "' . UserInterface::class . '::getUserIdentifier()" instead.', '2.16'))
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, use "%path%.user_id_claim" or implement "' . UserInterface::class . '::getUserIdentifier()" instead.', '2.16'))
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()
@@ -112,6 +113,24 @@ class Configuration implements ConfigurationInterface
                             ->arrayNode('split')
                                 ->scalarPrototype()->end()
                             ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('api_platform')
+                    ->canBeEnabled()
+                    ->info('API Platform compatibility: add check_path in OpenAPI documentation.')
+                    ->children()
+                        ->scalarNode('check_path')
+                            ->defaultNull()
+                            ->info('The login check path to add in OpenAPI.')
+                        ->end()
+                        ->scalarNode('username_path')
+                            ->defaultNull()
+                            ->info('The path to the username in the JSON body.')
+                        ->end()
+                        ->scalarNode('password_path')
+                            ->defaultNull()
+                            ->info('The path to the password in the JSON body.')
                         ->end()
                     ->end()
                 ->end()

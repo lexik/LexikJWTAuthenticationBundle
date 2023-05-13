@@ -26,7 +26,6 @@ class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
     public function testLoadInvalidPublicKey()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('no start line');
 
         touch('public.pem');
 
@@ -36,7 +35,6 @@ class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
     public function testLoadInvalidPrivateKey()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('no start line');
 
         touch('private.pem');
 

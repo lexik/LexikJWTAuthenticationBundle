@@ -23,7 +23,7 @@ class AutowiringTest extends TestCase
     public function testAutowiring()
     {
         $container = $this->createContainerBuilder([
-            'framework' => ['secret' => 'test'],
+            'framework' => ['secret' => 'test', 'http_method_override' => false],
             'lexik_jwt_authentication' => [
                 'secret_key' => 'private.pem',
                 'public_key' => 'public.pem',
@@ -51,7 +51,7 @@ class AutowiringTest extends TestCase
     public function testAutowireConfiguredEncoderServiceForInterfaceTypeHint()
     {
         $container = $this->createContainerBuilder([
-            'framework' => ['secret' => 'testing'],
+            'framework' => ['secret' => 'testing', 'http_method_override' => false],
             'lexik_jwt_authentication' => [
                 'secret_key' => 'private.pem',
                 'pass_phrase' => 'testing',

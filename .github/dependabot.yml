@@ -9,11 +9,11 @@ updates:
     open-pull-requests-limit: 20
     allow:
       - dependency-type: all
-    labels: [ "Dependencies" ]
+    labels: [ "dependencies" ]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 20
-    labels: [ "Dependencies" ]
+    labels: [ "dependencies" ]
