@@ -83,11 +83,11 @@
     },
     "scripts": {
         "test": [
-            "vendor/bin/simple-phpunit",
-            "ENCODER=lcobucci vendor/bin/simple-phpunit",
-            "ENCODER=lcobucci ALGORITHM=HS256 vendor/bin/simple-phpunit",
-            "ENCODER=user_id_claim vendor/bin/simple-phpunit",
-            "PROVIDER=lexik_jwt vendor/bin/simple-phpunit"
+            "vendor/bin/simple-phpunit --exclude-group web-token",
+            "ENCODER=lcobucci vendor/bin/simple-phpunit --exclude-group web-token",
+            "ENCODER=lcobucci ALGORITHM=HS256 vendor/bin/simple-phpunit --exclude-group web-token",
+            "ENCODER=user_id_claim vendor/bin/simple-phpunit --exclude-group web-token",
+            "PROVIDER=lexik_jwt vendor/bin/simple-phpunit --exclude-group web-token"
         ]
     }
 }

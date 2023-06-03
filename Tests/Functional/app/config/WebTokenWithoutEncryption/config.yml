@@ -1,0 +1,20 @@
+imports:
+    - { resource: '../base_config.yml' }
+    - { resource: 'services.yml' }
+
+lexik_jwt_authentication:
+    encoder:
+        service: lexik_jwt_authentication.encoder.web_token
+    access_token_issuance:
+        enabled: true
+        signature:
+            algorithm: 'HS256'
+            key: '{"kid":"key_s1","use":"sig","alg":"HS256","kty":"oct","k":"ydYSJsYZAG_eCiher9k4C2fODuYAZ5beELzMgEQ-ErLTb5yUfBaWm1AKbY6RS4cH6nmhxnXAhjSPsClghamYtg"}'
+    access_token_verification:
+        enabled: true
+        signature:
+            header_checkers: []
+            claim_checkers: ['exp_with_clock_skew', 'iat_with_clock_skew', 'nbf_with_clock_skew']
+            mandatory_claims: ['exp', 'iat', 'nbf', 'jti', 'username']
+            allowed_algorithms: ['HS256']
+            keyset: '{"keys":[{"kid":"key_s1","use":"sig","alg":"HS256","kty":"oct","k":"ydYSJsYZAG_eCiher9k4C2fODuYAZ5beELzMgEQ-ErLTb5yUfBaWm1AKbY6RS4cH6nmhxnXAhjSPsClghamYtg"},{"kid":"key_s2","use":"sig","alg":"HS256","kty":"oct","k":"6Htf1ZjUfQiGnOYbibKoozKBbWj57msuAEg4mBm0RM6dQf7_mSBBmjRqTt8D2nr9WMEO8vwALFTZbEupOpsKyg"},{"kid":"key_s3","use":"sig","alg":"HS256","kty":"oct","k":"3TTerIisvwv71DlG_qr_cccyNg-7eor8twfpidWMuUhFQorReec-XOUB4DUoZ8xMufjBpBo3GRfkADOE9Ps3dw"}]}'

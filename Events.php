@@ -81,4 +81,13 @@ final class Events
      * @Event("Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent")
      */
     public const JWT_EXPIRED = 'lexik_jwt_authentication.on_jwt_expired';
+
+    /**
+     * Dispatched before the JWE is computed.
+     * This event allow the JWE header parameters to be changed.
+     * It is only dispatched when using Web-Token
+     *
+     * @Event("Lexik\Bundle\JWTAuthenticationBundle\Event\BeforeJWEComputationEvent")
+     */
+    public const BEFORE_JWE_COMPUTATION = 'lexik_jwt_authentication.before_jwe_computation';
 }

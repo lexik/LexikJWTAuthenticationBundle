@@ -1,0 +1,4 @@
+services:
+    Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Subscriber\AddCriticalHeaderSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }

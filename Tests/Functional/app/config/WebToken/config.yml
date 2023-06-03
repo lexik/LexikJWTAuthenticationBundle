@@ -1,0 +1,31 @@
+imports:
+    - { resource: '../base_config.yml' }
+    - { resource: 'services.yml' }
+
+lexik_jwt_authentication:
+    encoder:
+        service: lexik_jwt_authentication.encoder.web_token
+    access_token_issuance:
+        enabled: true
+        signature:
+            algorithm: 'HS256'
+            key: '{"kid":"key_s1","use":"sig","alg":"HS256","kty":"oct","k":"ydYSJsYZAG_eCiher9k4C2fODuYAZ5beELzMgEQ-ErLTb5yUfBaWm1AKbY6RS4cH6nmhxnXAhjSPsClghamYtg"}'
+        encryption:
+            enabled: true
+            key_encryption_algorithm: 'A256GCMKW'
+            content_encryption_algorithm: 'A256GCM'
+            key: '{"kid":"key_e1","use":"enc","alg":"A256GCMKW","kty":"oct","k":"eKSyjm9jIbCfpiNE2B9KK9Xug7ksCSc_Gqn4-1P4DSkjcSwj72kPhZuijI-mrsPOaXN7yppDnUr6g6wenwg19w"}'
+    access_token_verification:
+        enabled: true
+        signature:
+            header_checkers: []
+            claim_checkers: ['exp_with_clock_skew', 'iat_with_clock_skew', 'nbf_with_clock_skew']
+            mandatory_claims: ['exp', 'iat', 'nbf', 'jti', 'username']
+            allowed_algorithms: ['HS256']
+            keyset: '{"keys":[{"kid":"key_s1","use":"sig","alg":"HS256","kty":"oct","k":"ydYSJsYZAG_eCiher9k4C2fODuYAZ5beELzMgEQ-ErLTb5yUfBaWm1AKbY6RS4cH6nmhxnXAhjSPsClghamYtg"},{"kid":"key_s2","use":"sig","alg":"HS256","kty":"oct","k":"6Htf1ZjUfQiGnOYbibKoozKBbWj57msuAEg4mBm0RM6dQf7_mSBBmjRqTt8D2nr9WMEO8vwALFTZbEupOpsKyg"},{"kid":"key_s3","use":"sig","alg":"HS256","kty":"oct","k":"3TTerIisvwv71DlG_qr_cccyNg-7eor8twfpidWMuUhFQorReec-XOUB4DUoZ8xMufjBpBo3GRfkADOE9Ps3dw"}]}'
+        encryption:
+            enabled: true
+            continue_on_decryption_failure: false
+            allowed_key_encryption_algorithms: ['A256GCMKW']
+            allowed_content_encryption_algorithms: ['A256GCM']
+            keyset: '{"keys":[{"kid":"key_e1","use":"enc","alg":"A256GCMKW","kty":"oct","k":"eKSyjm9jIbCfpiNE2B9KK9Xug7ksCSc_Gqn4-1P4DSkjcSwj72kPhZuijI-mrsPOaXN7yppDnUr6g6wenwg19w"},{"kid":"key_e2","use":"enc","alg":"AES256KW","kty":"oct","k":"aT3-shN-Vc0CaxrhoUOnQ835PxtiaHAahLQCvSFxDsMFjZ_W023qy34Xz_Pnp7W59GNL7vS5o6rUIbq2ZyTj_A"},{"kid":"key_e3","use":"enc","alg":"AES256KW","kty":"oct","k":"NQecRavrBFRs7wOnUUioiQm0-eK-JRz01v40cfsB5-mtEc-0ABK4y_691Zzms9HPpNPRuiDCD_tB7QA543B0jw"}]}'

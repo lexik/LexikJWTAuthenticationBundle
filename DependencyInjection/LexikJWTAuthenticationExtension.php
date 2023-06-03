@@ -6,6 +6,7 @@ use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
@@ -142,6 +143,9 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(2, $config['public_key'])
                 ->replaceArgument(3, $config['pass_phrase'])
                 ->replaceArgument(4, $encoderConfig['signature_algorithm']);
+            if (!$container->hasParameter('kernel.debug') || !$container->getParameter('kernel.debug')) {
+                $container->removeDefinition('lexik_jwt_authentication.migrate_config_command');
+            }
         }
 
         if ($this->isConfigEnabled($container, $config['api_platform'])) {
@@ -157,6 +161,8 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(2, $config['api_platform']['username_path'] ?? null)
                 ->replaceArgument(3, $config['api_platform']['password_path'] ?? null);
         }
+
+        $this->processWithWebTokenConfig($config, $container, $loader);
     }
 
     private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
@@ -201,5 +207,50 @@ class LexikJWTAuthenticationExtension extends Extension
         }
 
         return $map;
+    }
+
+    private function processWithWebTokenConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        if ($config['access_token_issuance']['enabled'] === false && $config['access_token_verification']['enabled'] === false) {
+            return;
+        }
+        $loader->load('web_token.xml');
+        if ($config['access_token_issuance']['enabled'] === true) {
+            $loader->load('web_token_issuance.xml');
+            $accessTokenBuilder = 'lexik_jwt_authentication.access_token_builder';
+            $accessTokenBuilderDefinition = $container->getDefinition($accessTokenBuilder);
+            $accessTokenBuilderDefinition
+                ->replaceArgument(3, $config['access_token_issuance']['signature']['algorithm'])
+                ->replaceArgument(4, $config['access_token_issuance']['signature']['key'])
+            ;
+            if ($config['access_token_issuance']['encryption']['enabled'] === true) {
+                $accessTokenBuilderDefinition
+                    ->replaceArgument(5, $config['access_token_issuance']['encryption']['key_encryption_algorithm'])
+                    ->replaceArgument(6, $config['access_token_issuance']['encryption']['content_encryption_algorithm'])
+                    ->replaceArgument(7, $config['access_token_issuance']['encryption']['key'])
+                ;
+            }
+        }
+        if ($config['access_token_verification']['enabled'] === true) {
+            $loader->load('web_token_verification.xml');
+            $accessTokenLoader = 'lexik_jwt_authentication.access_token_loader';
+            $accessTokenLoaderDefinition = $container->getDefinition($accessTokenLoader);
+            $accessTokenLoaderDefinition
+                ->replaceArgument(3, $config['access_token_verification']['signature']['claim_checkers'])
+                ->replaceArgument(4, $config['access_token_verification']['signature']['header_checkers'])
+                ->replaceArgument(5, $config['access_token_verification']['signature']['mandatory_claims'])
+                ->replaceArgument(6, $config['access_token_verification']['signature']['allowed_algorithms'])
+                ->replaceArgument(7, $config['access_token_verification']['signature']['keyset'])
+            ;
+            if ($config['access_token_verification']['encryption']['enabled'] === true) {
+                $accessTokenLoaderDefinition
+                    ->replaceArgument(8, $config['access_token_verification']['encryption']['continue_on_decryption_failure'])
+                    ->replaceArgument(9, $config['access_token_verification']['encryption']['header_checkers'])
+                    ->replaceArgument(10, $config['access_token_verification']['encryption']['allowed_key_encryption_algorithms'])
+                    ->replaceArgument(11, $config['access_token_verification']['encryption']['allowed_content_encryption_algorithms'])
+                    ->replaceArgument(12, $config['access_token_verification']['encryption']['keyset'])
+                ;
+            }
+        }
     }
 }
