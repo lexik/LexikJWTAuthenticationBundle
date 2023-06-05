@@ -271,7 +271,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             unset($payload[$claim]);
 
             if (\is_array($value)) {
-                \call_user_func_array([$builder, $mutator], $value);
+                $builder = \call_user_func_array([$builder, $mutator], $value);
                 continue;
             }
 
