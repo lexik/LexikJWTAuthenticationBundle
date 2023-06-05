@@ -58,7 +58,7 @@ class GetTokenTest extends TestCase
 
         $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
         $subscriber->setListener(Events::JWT_CREATED, function (JWTCreatedEvent $e) {
-            $e->setData($e->getData() + ['custom' => 'dummy']);
+            $e->setData($e->getData() + ['custom' => 'dummy', 'aud' => ['foo', 'bar']]);
             $e->setHeader($e->getHeader() + ['foo' => 'bar']);
         });
 
@@ -78,6 +78,7 @@ class GetTokenTest extends TestCase
         $jws = $parser->parse($token);
 
         $this->assertArrayHasKey('foo', method_exists($jws, 'headers') ? $jws->headers()->all() : $jws->getHeaders(), 'The payload should contains a custom "foo" header.');
+        $this->assertSame(['foo', 'bar'], $jws->claims()->get('aud'));
     }
 
     public function testGetTokenFromInvalidCredentials()
