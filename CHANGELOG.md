@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.1
+
+## [2.19.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.1) (2023-07-03)
+
+* bug [\#1149](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1149) add description to authentication path ([@Altherius](https://github.com/Altherius))
+* bug [\#1144](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1144) Fix missing array claims BC break in 2.9.0 ([@ostrolucky](https://github.com/ostrolucky))
 
 ## [2.19.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.0) (2023-06-05)
 
