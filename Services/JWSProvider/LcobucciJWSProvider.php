@@ -214,7 +214,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return false;
     }
 
-    private function addStandardClaims(Builder $builder, array &$payload): void
+    private function addStandardClaims(Builder $builder, array &$payload): Builder
     {
         $mutatorMap = [
             RegisteredClaims::AUDIENCE => 'permittedFor',
