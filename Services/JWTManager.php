@@ -132,8 +132,7 @@ class JWTManager implements JWTTokenManagerInterface
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor      = PropertyAccess::createPropertyAccessor();
-        $identityField = $this->userIdClaim ?: $this->userIdentityField;
+        $accessor = PropertyAccess::createPropertyAccessor();
 
         if ($user instanceof InMemoryUser && 'username' === $this->userIdClaim) {
             $payload[$this->userIdClaim] = $accessor->getValue($user, 'userIdentifier');

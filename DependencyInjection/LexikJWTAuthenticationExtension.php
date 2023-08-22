@@ -135,7 +135,7 @@ class LexikJWTAuthenticationExtension extends Extension
         }
     }
 
-    private static function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
+    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
     {
         $map = [];
 
