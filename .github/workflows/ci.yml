@@ -24,14 +24,6 @@ jobs:
                       can-fail: false
                       # Stable Symfony branches
                     - php: 8.2
-                      symfony: 6.0.*
-                      composer-flags: '--prefer-stable'
-                      can-fail: false
-                    - php: 8.2
-                      symfony: 6.1.*
-                      composer-flags: '--prefer-stable'
-                      can-fail: false
-                    - php: 8.2
                       symfony: 6.2.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
