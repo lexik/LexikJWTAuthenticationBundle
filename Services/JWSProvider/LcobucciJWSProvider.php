@@ -2,14 +2,10 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
-use Lcobucci\Clock\Clock;
-use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
-use Lcobucci\JWT\Signer\Ecdsa;
 use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Hmac\Sha384;
@@ -21,11 +17,13 @@ use Lcobucci\JWT\Token\Parser as JWTParser;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\ClockInterface;
 
 /**
  * @final
@@ -36,7 +34,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
 {
     private KeyLoaderInterface $keyLoader;
 
-    private Clock $clock;
+    private ClockInterface $clock;
 
     private Signer $signer;
 
@@ -49,10 +47,10 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
+    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, ClockInterface $clock = null)
     {
         if (null === $clock) {
-            $clock = SystemClock::fromUTC();
+            $clock = new Clock();
         }
 
         $this->keyLoader = $keyLoader;
@@ -66,36 +64,32 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $payload, array $header = [])
+    public function create(array $payload, array $header = []): CreatedJWS
     {
-        if (class_exists(JWTBuilder::class)) {
-            $jws = new JWTBuilder(new JoseEncoder(), ChainedFormatter::default());
-        } else {
-            $jws = new Builder();
-        }
+        $jws = new JWTBuilder(new JoseEncoder(), ChainedFormatter::default());
 
         foreach ($header as $k => $v) {
-            $jws->withHeader($k, $v);
+            $jws = $jws->withHeader($k, $v);
         }
 
-        $now = time();
+        $now = $this->clock->now()->getTimestamp();
 
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
 
-        $jws->issuedAt(!$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
+        $jws = $jws->issuedAt(!$issuedAt instanceof \DateTimeImmutable ? new \DateTimeImmutable("@{$issuedAt}") : $issuedAt);
 
         if (null !== $this->ttl || isset($payload['exp'])) {
             $exp = $payload['exp'] ?? $now + $this->ttl;
             unset($payload['exp']);
 
             if ($exp) {
-                $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : (new \DateTimeImmutable("@$exp")));
+                $jws = $jws->expiresAt($exp instanceof \DateTimeImmutable ? $exp : (new \DateTimeImmutable("@$exp")));
             }
         }
 
         if (isset($payload['sub'])) {
-            $jws->relatedTo($payload['sub']);
+            $jws = $jws->relatedTo($payload['sub']);
             unset($payload['sub']);
         }
 
@@ -104,7 +98,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         foreach ($payload as $name => $value) {
-            $jws->withClaim($name, $value);
+            $jws = $jws->withClaim($name, $value);
         }
 
         $e = $token = null;
@@ -119,13 +113,9 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($token)
+    public function load($token): LoadedJWS
     {
-        if (class_exists(JWTParser::class)) {
-            $jws = (new JWTParser(new JoseEncoder()))->parse($token);
-        } else {
-            $jws = (new Parser())->parse($token);
-        }
+        $jws = (new JWTParser(new JoseEncoder()))->parse($token);
 
         $payload = [];
 
@@ -164,10 +154,6 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         $signerClass = $signerMap[$signatureAlgorithm];
-
-        if (is_subclass_of($signerClass, Ecdsa::class) && method_exists($signerClass, 'create')) {
-            return $signerClass::create();
-        }
 
         return new $signerClass();
     }

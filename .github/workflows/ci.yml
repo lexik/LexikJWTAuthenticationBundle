@@ -53,6 +53,7 @@ jobs:
               with:
                   php-version: "${{ matrix.php }}"
                   tools: "composer:v2,flex"
+                  extensions: sodium
 
             - name: "Set Composer stability"
               if: "matrix.symfony == '6.3.*@dev'"
