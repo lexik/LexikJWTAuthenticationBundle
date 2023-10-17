@@ -247,6 +247,16 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('blocklist_token')
+                    ->addDefaultsIfNotSet()
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('cache')
+                            ->defaultValue('cache.app')
+                            ->info('Storage to track blocked tokens')
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 

@@ -19,3 +19,7 @@ services:
     Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController:
         arguments: ['@security.token_storage']
         public: true
+        tags: ['controller.service_arguments']
+
+    Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\UserProvider:
+        public: true

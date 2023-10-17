@@ -39,11 +39,11 @@ abstract class TestCase extends WebTestCase
         return $client;
     }
 
-    protected static function getAuthenticatedToken()
+    protected static function getAuthenticatedToken(string $username = 'lexik')
     {
         $client = static::$client ?: static::createClient();
 
-        $client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
+        $client->jsonRequest('POST', '/login_check', ['username' => $username, 'password' => 'dummy']);
         $response = $client->getResponse();
         $responseBody = json_decode($response->getContent(), true);
 

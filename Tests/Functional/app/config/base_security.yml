@@ -1,11 +1,16 @@
 security:
     providers:
         in_memory:
+            chain:
+                providers: [ 'lexik_in_memory', 'disabled_user_provider' ]
+        lexik_in_memory:
             memory:
                 users:
                     lexik:
                         password: dummy
                         roles: ROLE_USER
+        disabled_user_provider:
+            id: Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\UserProvider
         jwt:
             lexik_jwt:
                 class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\JWTUser

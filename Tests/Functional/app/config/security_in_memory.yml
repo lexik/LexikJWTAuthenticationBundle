@@ -21,6 +21,8 @@ security:
             lazy: true
             provider: in_memory
             jwt: ~
+            logout:
+                path: app_logout
 
     access_control:
       - { path: ^/login, roles: PUBLIC_ACCESS }

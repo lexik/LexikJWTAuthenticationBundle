@@ -1,0 +1,6 @@
+imports:
+    - { resource: '../base_config.yml' }
+
+lexik_jwt_authentication:
+    blocklist_token:
+        enabled: true
