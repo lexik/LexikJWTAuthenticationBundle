@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -115,6 +116,10 @@ class LexikJWTAuthenticationExtension extends Extension
 
             $cookieProviders = [];
             foreach ($config['set_cookies'] as $name => $attributes) {
+                if ($attributes['partitioned'] && Kernel::VERSION < '6.4') {
+                    throw new \LogicException(sprintf('The `partitioned` option for cookies is only available for Symfony 6.4 and above. You are currently on version %s', Kernel::VERSION));
+                }
+                
                 $container
                     ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
                     ->replaceArgument(0, $name)
@@ -124,7 +129,8 @@ class LexikJWTAuthenticationExtension extends Extension
                     ->replaceArgument(4, $attributes['domain'])
                     ->replaceArgument(5, $attributes['secure'])
                     ->replaceArgument(6, $attributes['httpOnly'])
-                    ->replaceArgument(7, $attributes['split']);
+                    ->replaceArgument(7, $attributes['split'])
+                    ->replaceArgument(8, $attributes['partitioned']);
                 $cookieProviders[] = new Reference($id);
             }
 

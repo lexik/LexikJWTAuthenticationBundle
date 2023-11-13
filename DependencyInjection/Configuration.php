@@ -110,6 +110,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('domain')->defaultNull()->end()
                             ->scalarNode('secure')->defaultTrue()->end()
                             ->scalarNode('httpOnly')->defaultTrue()->end()
+                            ->scalarNode('partitioned')->defaultFalse()->end()
                             ->arrayNode('split')
                                 ->scalarPrototype()->end()
                             ->end()
