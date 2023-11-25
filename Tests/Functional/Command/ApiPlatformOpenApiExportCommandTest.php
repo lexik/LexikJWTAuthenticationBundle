@@ -27,7 +27,7 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
         $this->assertSame(0, $tester->execute([]));
         $this->assertJsonStringEqualsJsonString(<<<JSON
 {
-  "openapi": "3.0.0",
+  "openapi": "3.1.0",
   "info": {
     "description": "API Platform integration in LexikJWTAuthenticationBundle",
     "title": "LexikJWTAuthenticationBundle",

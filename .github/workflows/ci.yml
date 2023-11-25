@@ -35,9 +35,17 @@ jobs:
                       symfony: 6.2.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                    - php: 8.2
+                      symfony: 6.3.*
+                      composer-flags: '--prefer-stable'
+                      can-fail: false
                     # Development Symfony branches
                     - php: 8.2
-                      symfony: 6.3.*@dev
+                      symfony: 6.4.*@dev
+                      composer-flags: ''
+                      can-fail: false
+                    - php: 8.2
+                      symfony: 7.0.*@dev
                       composer-flags: ''
                       can-fail: false
 
@@ -63,15 +71,15 @@ jobs:
                   tools: "composer:v2,flex"
 
             - name: "Set Composer stability"
-              if: "matrix.symfony == '6.3.*@dev'"
+              if: "matrix.symfony == '6.4.*@dev' || matrix.symfony == '7.0.*@dev'"
               run: "composer config minimum-stability dev"
 
             - name: "Remove symfony/security-guard"
-              if: "matrix.symfony == '6.0.*' || matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
+              if: "matrix.symfony == '6.0.*' || matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*' || matrix.symfony == '6.4.*@dev' || matrix.symfony == '7.0.*@dev'"
               run: "composer remove --dev --no-update symfony/security-guard"
 
             - name: "Install api-platform/core"
-              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*@dev'"
+              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*' || matrix.symfony == '6.4.*@dev'"
               run: "composer require --dev --no-update api-platform/core:^3.0"
 
             - name: "Install dependencies"
