@@ -13,7 +13,6 @@ security:
             provider: in_memory
             form_login:
                 check_path: /login_check
-                require_previous_session: false
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 

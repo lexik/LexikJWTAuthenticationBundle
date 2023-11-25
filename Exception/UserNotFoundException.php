@@ -23,7 +23,7 @@ class UserNotFoundException extends AuthenticationException
     /**
      * {@inheritdoc}
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return sprintf('Unable to load an user with property "%s" = "%s". If the user identity has changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $this->userIdentityField, $this->identity);
     }

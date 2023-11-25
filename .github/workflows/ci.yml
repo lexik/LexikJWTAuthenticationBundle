@@ -79,7 +79,7 @@ jobs:
               run: "composer remove --dev --no-update symfony/security-guard"
 
             - name: "Install api-platform/core"
-              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*' || matrix.symfony == '6.4.*@dev' || matrix.symfony == '7.0.*@dev'"
+              if: "matrix.symfony == '6.1.*' || matrix.symfony == '6.2.*' || matrix.symfony == '6.3.*' || matrix.symfony == '6.4.*@dev'"
               run: "composer require --dev --no-update api-platform/core:^3.0"
 
             - name: "Install dependencies"
