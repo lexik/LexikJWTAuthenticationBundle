@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+
+by endroid at 2023-11-21T11:46:43Z
+
+Can this be merged? The CI issues are not related to this update.
+
+---------------------------------------------------------------------------
+
+by DavidGarciaCat at 2023-11-21T15:30:02Z
+
+You need to update the GitHub Actions (CI) process to include the Symfony 7 version.
+
+Otherwise, tests are not being executed by using the expected SF version:
+
+https://github.com/lexik/LexikJWTAuthenticationBundle/blob/2.x/.github/workflows/ci.yml
+
+---------------------------------------------------------------------------
+
+by endroid at 2023-11-22T08:54:30Z
+
+Updated the CI workflows accordingly. Apparently, support for 6.3 was still in dev mode. Do you really want to keep supporting unmaintained Symfony versions like 6.0, 6.1 and 6.2? Would make the CI a lot cleaner if we removed those. Also there are failing PHPUnit jobs unrelated to my changes, can you look into that? I don't see what is exactly going wrong.
+
+Regarding the upgrade to Symfony 7: this fails because of an API Platform incompatibility, maybe we better wait for that PR to be released first.
+
+---------------------------------------------------------------------------
+
+by DavidGarciaCat at 2023-11-22T10:31:20Z
+
+> Updated the CI workflows accordingly. Apparently, support for 6.3 was still in dev mode. Do you really want to keep supporting unmaintained Symfony versions like 6.0, 6.1 and 6.2? Would make the CI a lot cleaner if we removed those. Also there are failing PHPUnit jobs unrelated to my changes, can you look into that? I don't see what is exactly going wrong.
+
+This is something that (probably) the current maintainers will want to review themselves. I ended up in this PR because I posted an Issue requesting SF7 support.
+
+> Regarding the upgrade to Symfony 7: this fails because of an API Platform incompatibility, maybe we better wait for that PR to be released first.
+
+The ones who have permission to merge will decide. I hope it won't take too long to merge this (or another) PR.
+
+---------------------------------------------------------------------------
+
+by endroid at 2023-11-24T15:19:05Z
+
+Anyone with permission to merge had a look at this yet? Symfony 7 is about to be released and I'd like to know if any more effort / changes are needed.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-11-25T13:58:16Z
+
+Sorry for the delay guys.
+I pushed a few changes to fix the broken tests on Symfony 7.0 and skipped installing api-platform there as it is blocking by now, PR welcome to add it again once it is 7.0-ready. And help welcome to actually make it 7.0-ready.
+Also yes, we'll remove support for some of the oldest Symfony we have in an upcoming version, but not right now as I still need to determine if it should be done in the upcoming 3.x rather than 2.x.
