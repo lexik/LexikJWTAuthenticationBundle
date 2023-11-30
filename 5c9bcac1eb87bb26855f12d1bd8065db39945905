@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by EmilePerron at 2023-11-13T20:39:32Z
+
+The CI pipeline errors seem to be unrelated to this PR's changes, and should probably be dealt with in a different PR. I checked other recent PRs and they are all getting this same error, which seems related to an updated dependency.
+
+```diff
+--- Expected
++++ Actual
+@@ @@
+         "title": "LexikJWTAuthenticationBundle",
+         "version": "1.0.0"
+     },
+-    "openapi": "3.0.0",
++    "openapi": "3.1.0",
+     "paths": {
+         "/login_check": {
+             "parameters": [],
+
+/home/runner/work/LexikJWTAuthenticationBundle/LexikJWTAuthenticationBundle/Tests/Functional/Command/ApiPlatformOpenApiExportCommandTest.php:28
+
+FAILURES!
+Tests: 166, Assertions: 483, Failures: 1, Skipped: 22.
+```
+
+---------------------------------------------------------------------------
+
+by EmilePerron at 2023-11-22T19:24:31Z
+
+Hello! Would it be possible to know when we can expect this to be reviewed and/or merged?
+Or if there is anything prevent this from moving forward :)
+
+---------------------------------------------------------------------------
+
+by EmilePerron at 2023-11-28T14:02:19Z
+
+Freshly rebased to get the Symfony 7 tests and the OpenAPI 3.1 update that fixes the CI pipeline errors :)
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-11-29T11:00:56Z
+
+@EmilePerron Awesome. One thing: given the feature can only be used on Symfony 6.4 and higher, should we throw an exception if ones tries to use it with an lower Symfony version? If it makes sense, I'd suggest throwing both from the DI Extension (when setting the option) and the CookieProvider constructor (for potential direct instantiation).
+
+---------------------------------------------------------------------------
+
+by EmilePerron at 2023-11-29T14:12:43Z
+
+> One thing: given the feature can only be used on Symfony 6.4 and higher, should we throw an exception if ones tries to use it with an lower Symfony version? If it makes sense, I'd suggest throwing both from the DI Extension (when setting the option) and the CookieProvider constructor (for potential direct instantiation).
+
+@chalasr Makes sense to me! I just added this in a677b38 :)
