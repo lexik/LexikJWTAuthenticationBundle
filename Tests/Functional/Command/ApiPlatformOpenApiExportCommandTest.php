@@ -118,7 +118,13 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
     "requestBodies": {},
     "responses": {},
     "schemas": {},
-    "securitySchemes": {}
+    "securitySchemes": {
+      "JWT": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
   },
   "security": [],
   "tags": []
