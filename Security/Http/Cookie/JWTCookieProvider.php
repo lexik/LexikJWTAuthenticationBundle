@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Helper\JWTSplitter;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Creates secure JWT cookies.
@@ -18,8 +19,9 @@ final class JWTCookieProvider
     private $defaultSecure;
     private $defaultHttpOnly;
     private $defaultSplit;
+    private $defaultPartitioned;
 
-    public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [])
+    public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [], bool $defaultPartitioned = false)
     {
         $this->defaultName = $defaultName;
         $this->defaultLifetime = $defaultLifetime;
@@ -29,6 +31,11 @@ final class JWTCookieProvider
         $this->defaultSecure = $defaultSecure;
         $this->defaultHttpOnly = $defaultHttpOnly;
         $this->defaultSplit = $defaultSplit;
+        $this->defaultPartitioned = $defaultPartitioned;
+
+        if ($defaultPartitioned && Kernel::VERSION < '6.4') {
+            throw new \LogicException(sprintf('The `partitioned` option for cookies is only available for Symfony 6.4 and above. You are currently on version %s', Kernel::VERSION));
+        }
     }
 
     /**
@@ -37,7 +44,7 @@ final class JWTCookieProvider
      * For each argument (all args except $jwt), if omitted or set to null then the
      * default value defined via the constructor will be used.
      */
-    public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = []): Cookie
+    public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = [], ?bool $partitioned = null): Cookie
     {
         if (!$name && !$this->defaultName) {
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));
@@ -45,6 +52,10 @@ final class JWTCookieProvider
 
         if (!$expiresAt && null === $this->defaultLifetime) {
             throw new \LogicException(sprintf('The cookie expiration time must be provided, either pass it as 3rd argument of %s or set a default lifetime via the constructor.', __METHOD__));
+        }
+
+        if ($partitioned && Kernel::VERSION < '6.4') {
+            throw new \LogicException(sprintf('The `partitioned` option for cookies is only available for Symfony 6.4 and above. You are currently on version %s', Kernel::VERSION));
         }
 
         $jwtParts = new JWTSplitter($jwt);
@@ -63,7 +74,8 @@ final class JWTCookieProvider
             $secure ?: $this->defaultSecure,
             $httpOnly ?: $this->defaultHttpOnly,
             false,
-            $sameSite ?: $this->defaultSameSite
+            $sameSite ?: $this->defaultSameSite,
+            $partitioned ?: $this->defaultPartitioned,
         );
     }
 }
