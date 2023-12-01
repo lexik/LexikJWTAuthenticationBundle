@@ -1,7 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.0
+
+## [2.20.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.0) (2023-12-01)
+
+* feature [\#1041](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1041) WebToken support integration ([@Spomky](https://github.com/Spomky))
+* feature [\#1159](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1159) Added: JWT security scheme to openapi ([@Ninos](https://github.com/Ninos))
+* feature [\#1167](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1167) add support for partitioned cookies ([@EmilePerron](https://github.com/EmilePerron))
+* feature [\#1165](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1165) Support Symfony 7 ([@endroid](https://github.com/endroid), [@chalasr](https://github.com/chalasr))
 
 ## [2.19.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.1) (2023-07-03)
 
