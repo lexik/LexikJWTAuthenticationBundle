@@ -41,10 +41,14 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
      */
     protected static $defaultName = 'lexik:jwt:enable-encryption';
 
+    private ?AlgorithmManagerFactory $algorithmManagerFactory;
+
     public function __construct(
-        private ?AlgorithmManagerFactory $algorithmManagerFactory,
+        ?AlgorithmManagerFactory $algorithmManagerFactory = null
     ) {
         parent::__construct();
+
+        $this->algorithmManagerFactory = $algorithmManagerFactory;
     }
 
     /**
