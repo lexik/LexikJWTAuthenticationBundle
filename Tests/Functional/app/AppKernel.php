@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
+use Jose\Bundle\JoseFramework\JoseFrameworkBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Bundle;
 use Psr\Log\NullLogger;
@@ -48,6 +49,9 @@ class AppKernel extends Kernel
             new LexikJWTAuthenticationBundle(),
             new Bundle(),
         ];
+        if (class_exists(JoseFrameworkBundle::class)) {
+            $bundles[] = new JoseFrameworkBundle();
+        }
         if (class_exists(ApiPlatformBundle::class)) {
             $bundles[] = new ApiPlatformBundle();
         }

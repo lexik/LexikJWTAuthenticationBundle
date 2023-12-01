@@ -11,6 +11,18 @@
             <tag name="console.command" command="lexik:jwt:check-config" />
         </service>
 
+        <service id="lexik_jwt_authentication.migrate_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\MigrateConfigCommand">
+            <argument type="service" id="lexik_jwt_authentication.key_loader" />
+            <argument type="string">%lexik_jwt_authentication.pass_phrase%</argument>
+            <argument type="string">%lexik_jwt_authentication.encoder.signature_algorithm%</argument>
+            <tag name="console.command" command="lexik:jwt:migrate-config" />
+        </service>
+
+        <service id="lexik_jwt_authentication.enable_encryption_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\EnableEncryptionConfigCommand">
+            <argument type="service" id="Jose\Component\Core\AlgorithmManagerFactory" on-invalid="null" />
+            <tag name="console.command" command="lexik:jwt:enable-encryption" />
+        </service>
+
         <service id="lexik_jwt_authentication.generate_token_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateTokenCommand" public="true">
             <argument type="service" id="lexik_jwt_authentication.jwt_manager" />
             <argument type="collection" /> <!-- user providers -->
