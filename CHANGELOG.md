@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.1
+
+## [2.20.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.1) (2023-12-02)
+
+* bug [\#1172](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1172) Removed constructor property promotion to fix compatibility with PHP 7.x ([@webhdx](https://github.com/webhdx))
 
 ## [2.20.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.0) (2023-12-01)
 
