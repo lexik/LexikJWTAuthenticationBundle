@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Encoder;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\WebToken\AccessTokenBuilder;
@@ -31,9 +30,6 @@ final class WebTokenEncoder implements HeaderAwareJWTEncoderInterface
         $this->accessTokenLoader = $accessTokenLoader;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function encode(array $payload, array $header = [])
     {
         if (!$this->accessTokenBuilder) {
@@ -47,9 +43,6 @@ final class WebTokenEncoder implements HeaderAwareJWTEncoderInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decode($token)
     {
         if (!$this->accessTokenLoader) {

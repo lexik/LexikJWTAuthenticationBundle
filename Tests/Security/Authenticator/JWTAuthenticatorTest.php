@@ -69,7 +69,7 @@ class JWTAuthenticatorTest extends TestCase
             $userProvider
         );
 
-        $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
+        $this->assertSame($userStub, $authenticator->authenticate($this->getRequestMock())->getUser());
     }
 
     public function testAuthenticateWithIntegerIdentifier()
@@ -99,7 +99,7 @@ class JWTAuthenticatorTest extends TestCase
             $userProvider
         );
 
-        $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
+        $this->assertSame($userStub, $authenticator->authenticate($this->getRequestMock())->getUser());
     }
 
     public function testAuthenticateWithExpiredTokenThrowsException()

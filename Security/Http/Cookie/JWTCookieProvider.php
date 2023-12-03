@@ -21,7 +21,7 @@ final class JWTCookieProvider
     private $defaultSplit;
     private $defaultPartitioned;
 
-    public function __construct(?string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', ?string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [], bool $defaultPartitioned = false)
+    public function __construct(string $defaultName = null, ?int $defaultLifetime = 0, ?string $defaultSameSite = Cookie::SAMESITE_LAX, ?string $defaultPath = '/', string $defaultDomain = null, bool $defaultSecure = true, bool $defaultHttpOnly = true, array $defaultSplit = [], bool $defaultPartitioned = false)
     {
         $this->defaultName = $defaultName;
         $this->defaultLifetime = $defaultLifetime;
@@ -44,7 +44,7 @@ final class JWTCookieProvider
      * For each argument (all args except $jwt), if omitted or set to null then the
      * default value defined via the constructor will be used.
      */
-    public function createCookie(string $jwt, ?string $name = null, $expiresAt = null, ?string $sameSite = null, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httpOnly = null, array $split = [], ?bool $partitioned = null): Cookie
+    public function createCookie(string $jwt, string $name = null, $expiresAt = null, string $sameSite = null, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null, array $split = [], bool $partitioned = null): Cookie
     {
         if (!$name && !$this->defaultName) {
             throw new \LogicException(sprintf('The cookie name must be provided, either pass it as 2nd argument of %s or set a default name via the constructor.', __METHOD__));

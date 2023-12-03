@@ -11,11 +11,7 @@ use Jose\Component\Core\JWKSet;
 use Jose\Component\Encryption\Algorithm\ContentEncryptionAlgorithm;
 use Jose\Component\Encryption\Algorithm\KeyEncryptionAlgorithm;
 use Jose\Component\Encryption\JWEBuilder;
-use Jose\Component\Encryption\JWELoader;
 use Jose\Component\KeyManagement\JWKFactory;
-use Jose\Component\Signature\JWSBuilder;
-use Jose\Component\Signature\JWSLoader;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Bundle\FrameworkBundle\Command\AbstractConfigCommand;
 use Symfony\Component\Config\Definition\Processor;
@@ -47,16 +43,13 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
     private $algorithmManagerFactory;
 
     public function __construct(
-        ?AlgorithmManagerFactory $algorithmManagerFactory = null
+        AlgorithmManagerFactory $algorithmManagerFactory = null
     ) {
         parent::__construct();
 
         $this->algorithmManagerFactory = $algorithmManagerFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -68,14 +61,9 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
 
     public function isEnabled(): bool
     {
-        return $this->algorithmManagerFactory !== null;
+        return null !== $this->algorithmManagerFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $force = $input->getOption('force');
@@ -87,7 +75,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
         $algorithms = $this->algorithmManagerFactory->all();
         $availableKeyEncryptionAlgorithms = array_map(
             static fn (Algorithm $algorithm): string => $algorithm->name(),
-            array_filter($algorithms, static fn (Algorithm $algorithm): bool => ($algorithm instanceof KeyEncryptionAlgorithm && $algorithm->name() !== 'dir'))
+            array_filter($algorithms, static fn (Algorithm $algorithm): bool => ($algorithm instanceof KeyEncryptionAlgorithm && 'dir' !== $algorithm->name()))
         );
         $availableContentEncryptionAlgorithms = array_map(
             static fn (Algorithm $algorithm): string => $algorithm->name(),
@@ -103,12 +91,14 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
 
         $extension = $this->findExtension('lexik_jwt_authentication');
         $config = $this->getConfiguration($extension);
-        if (!isset($config['encoder']['service']) || $config['encoder']['service'] !== 'lexik_jwt_authentication.encoder.web_token') {
+        if (!isset($config['encoder']['service']) || 'lexik_jwt_authentication.encoder.web_token' !== $config['encoder']['service']) {
             $io->error('Please migrate to WebToken first.');
+
             return self::FAILURE;
         }
         if (!$force && ($config['access_token_issuance']['encryption']['enabled'] || $config['access_token_verification']['encryption']['enabled'])) {
             $io->error('Encryption support is already enabled.');
+
             return self::FAILURE;
         }
 
@@ -162,7 +152,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
         return $keyset
             ->with($this->createOctKey($size, $algorithm)->toPublic())
             ->with($this->createOctKey($size, $algorithm)->toPublic())
-            ;
+        ;
     }
 
     private function withRsaKeys(JWKSet $keyset, string $algorithm): JWKSet
@@ -214,7 +204,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
             ClaimCheckerManager::class => 'web-token/jwt-checker',
             JWEBuilder::class => 'web-token/jwt-encryption',
         ];
-        if ($this->algorithmManagerFactory === null) {
+        if (null === $this->algorithmManagerFactory) {
             throw new \RuntimeException(sprintf('The package "web-token/jwt-bundle" is missing. Please install it for using this migration tool.', $requirement));
         }
         foreach (array_keys($requirements) as $requirement) {
@@ -223,6 +213,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
             }
         }
     }
+
     private function getConfiguration(ExtensionInterface $extension): array
     {
         $container = $this->compileContainer();
@@ -335,7 +326,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
         return [
             'use' => 'enc',
             'alg' => $algorithm,
-            'kid'=> Base64UrlSafe::encodeUnpadded(random_bytes(16))
+            'kid' => Base64UrlSafe::encodeUnpadded(random_bytes(16)),
         ];
     }
 }

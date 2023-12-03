@@ -42,6 +42,7 @@ class LexikJWTAuthenticationExtensionTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @expectedDeprecation Using "lexik_jwt_authentication.encoder.default" as encoder service is deprecated since LexikJWTAuthenticationBundle 2.5, use "lexik_jwt_authentication.encoder.lcobucci" (default) or your own encoder service instead.
      */
     public function testDeprecatedDefaultEncoderService()

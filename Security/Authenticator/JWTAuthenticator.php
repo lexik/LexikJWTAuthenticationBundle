@@ -80,9 +80,6 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
@@ -101,10 +98,10 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * @return Passport
      */
-    public function doAuthenticate(Request $request) /*: Passport */
+    public function doAuthenticate(Request $request) /* : Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
-        if ($token === false) {
+        if (false === $token) {
             throw new \LogicException('Unable to extract a JWT token from the request. Also, make sure to call `supports()` before `authenticate()` to get a proper client error.');
         }
 
@@ -127,7 +124,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
         $passport = new SelfValidatingPassport(
             new UserBadge(
-                (string)$payload[$idClaim],
+                (string) $payload[$idClaim],
                 function ($userIdentifier) use ($payload) {
                     return $this->loadUser($payload, $userIdentifier);
                 }
@@ -205,8 +202,8 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * Loads the user to authenticate.
      *
-     * @param array                 $payload      The token payload
-     * @param string                $identity     The key from which to retrieve the user "identifier"
+     * @param array  $payload  The token payload
+     * @param string $identity The key from which to retrieve the user "identifier"
      */
     protected function loadUser(array $payload, string $identity): UserInterface
     {

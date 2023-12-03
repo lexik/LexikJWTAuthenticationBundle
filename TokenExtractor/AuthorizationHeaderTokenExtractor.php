@@ -31,9 +31,6 @@ class AuthorizationHeaderTokenExtractor implements TokenExtractorInterface
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Request $request)
     {
         if (!$request->headers->has($this->name)) {

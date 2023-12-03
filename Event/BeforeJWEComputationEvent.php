@@ -20,9 +20,6 @@ class BeforeJWEComputationEvent
         $this->header = $header;
     }
 
-    /**
-     * @param mixed $value
-     */
     public function setHeader(string $key, $value): self
     {
         $this->header[$key] = $value;

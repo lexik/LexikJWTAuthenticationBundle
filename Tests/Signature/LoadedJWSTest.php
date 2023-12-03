@@ -18,9 +18,6 @@ final class LoadedJWSTest extends TestCase
 
     private $goodPayload;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doSetUp()
     {
         $this->goodPayload = [

@@ -18,9 +18,6 @@ abstract class AbstractTestKeyLoader extends TestCase
     /** @var KeyLoaderInterface */
     protected $keyLoader;
 
-    /**
-     * {@inheritdoc}
-     */
     public function doSetUp()
     {
         $this->removeKeysIfExist();
@@ -34,9 +31,6 @@ abstract class AbstractTestKeyLoader extends TestCase
         $this->keyLoader->loadKey('wrongType');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function doTearDown()
     {
         $this->removeKeysIfExist();

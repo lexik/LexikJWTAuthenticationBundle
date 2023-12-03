@@ -36,9 +36,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $this->passwordPath = $passwordPath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
@@ -103,7 +100,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
     {
         $jsonSchema = [];
 
-        if (count($pathParts) === 1) {
+        if (1 === count($pathParts)) {
             $jsonSchema[array_shift($pathParts)] = [
                 'type' => 'string',
                 'nullable' => false,

@@ -8,7 +8,6 @@ use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Component\Signature\JWSBuilder;
-use Jose\Component\Signature\JWSLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Bundle\FrameworkBundle\Command\AbstractConfigCommand;
@@ -56,13 +55,10 @@ final class MigrateConfigCommand extends AbstractConfigCommand
     ) {
         parent::__construct();
         $this->keyLoader = $keyLoader;
-        $this->passphrase = $passphrase === '' ? null : $passphrase;
+        $this->passphrase = '' === $passphrase ? null : $passphrase;
         $this->signatureAlgorithm = $signatureAlgorithm;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -71,11 +67,6 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->checkRequirements();
@@ -87,7 +78,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
             $key = $this->getKey();
             $keyset = $this->getKeyset($key, $this->signatureAlgorithm);
         } catch (\RuntimeException $e) {
-            $io->error('An error occurred: ' . $e->getMessage());
+            $io->error('An error occurred: '.$e->getMessage());
 
             return self::FAILURE;
         }
@@ -96,7 +87,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         $config = $this->getConfiguration($extension);
 
         foreach ($config['set_cookies'] as $cookieConfig) {
-            if ($cookieConfig['split'] !== []) {
+            if ([] !== $cookieConfig['split']) {
                 $io->error('Web-Token is not compatible with the cookie split feature. Please disable this option before using this migration tool.');
 
                 return self::FAILURE;
@@ -109,14 +100,14 @@ final class MigrateConfigCommand extends AbstractConfigCommand
             'signature' => [
                 'signature_algorithm' => $this->signatureAlgorithm,
                 'key' => json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-            ]
+            ],
         ];
         $config['access_token_verification'] = [
             'enabled' => true,
             'signature' => [
                 'allowed_signature_algorithms' => [$this->signatureAlgorithm],
                 'keyset' => json_encode($keyset, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-            ]
+            ],
         ];
 
         $io->comment('Please replace the current configuration with the following parameters.');
@@ -151,7 +142,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         return $keyset
             ->with($this->createOctKey($size, $algorithm)->toPublic())
             ->with($this->createOctKey($size, $algorithm)->toPublic())
-            ;
+        ;
     }
 
     private function withRsaKeys(JWKSet $keyset, string $algorithm): JWKSet
@@ -191,6 +182,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
                 $additionalValues
             );
         }
+
         return JWKFactory::createFromKey(
             $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE),
             $this->passphrase,
@@ -213,6 +205,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
             }
         }
     }
+
     private function getConfiguration(ExtensionInterface $extension): array
     {
         $container = $this->compileContainer();
@@ -317,7 +310,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         return [
             'use' => 'sig',
             'alg' => $algorithm,
-            'kid'=> Base64UrlSafe::encodeUnpadded(random_bytes(16))
+            'kid' => Base64UrlSafe::encodeUnpadded(random_bytes(16)),
         ];
     }
 }

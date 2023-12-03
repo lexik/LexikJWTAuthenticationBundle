@@ -33,9 +33,6 @@ class CheckConfigCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -43,11 +40,6 @@ class CheckConfigCommand extends Command
             ->setDescription('Checks JWT configuration');
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
@@ -57,7 +49,7 @@ class CheckConfigCommand extends Command
                 $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC);
             }
         } catch (\RuntimeException $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<error>'.$e->getMessage().'</error>');
 
             return 1;
         }

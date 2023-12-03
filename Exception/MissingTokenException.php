@@ -11,11 +11,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class MissingTokenException extends AuthenticationException
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
     public function getMessageKey(): string
     {
         return 'JWT Token not found';

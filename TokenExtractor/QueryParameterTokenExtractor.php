@@ -24,9 +24,6 @@ class QueryParameterTokenExtractor implements TokenExtractorInterface
         $this->parameterName = $parameterName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Request $request)
     {
         return $request->query->get($this->parameterName, false);

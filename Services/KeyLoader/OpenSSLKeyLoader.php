@@ -14,8 +14,6 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader;
 class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 {
     /**
-     * {@inheritdoc}
-     *
      * @throws \RuntimeException If the key cannot be read
      * @throws \RuntimeException Either the key or the passphrase is not valid
      */
@@ -51,9 +49,6 @@ class OpenSSLKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
         return $key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dumpKey()
     {
         $key = openssl_pkey_get_details($this->loadKey('public'));

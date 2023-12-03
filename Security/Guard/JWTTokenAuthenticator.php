@@ -161,9 +161,6 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
         $errorMessage = strtr($authException->getMessageKey(), $authException->getMessageData());
@@ -185,17 +182,12 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         return $event->getResponse();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         return;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return JWTAuthenticationFailureResponse
      */
     public function start(Request $request, AuthenticationException $authException = null)
@@ -208,17 +200,12 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         return $event->getResponse();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function checkCredentials($credentials, UserInterface $user)
     {
         return true;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws \RuntimeException If there is no pre-authenticated token previously stored
      */
     public function createAuthenticatedToken(UserInterface $user, $providerKey)
@@ -238,9 +225,6 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
         return $authToken;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsRememberMe()
     {
         return false;
@@ -308,7 +292,7 @@ class JWTTokenAuthenticator implements AuthenticatorInterface
                 }
 
                 return $provider->loadUserByUsername($identity);
-            } catch (SecurityUserNotFoundException | UsernameNotFoundException $e) {
+            } catch (SecurityUserNotFoundException|UsernameNotFoundException $e) {
                 // try next one
             }
         }

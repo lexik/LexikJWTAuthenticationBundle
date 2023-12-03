@@ -15,12 +15,9 @@ abstract class TestCase extends WebTestCase
 
     protected static $client;
 
-    /**
-     * {@inheritdoc}
-     */
     protected static function createKernel(array $options = []): KernelInterface
     {
-        require_once __DIR__ . '/app/AppKernel.php';
+        require_once __DIR__.'/app/AppKernel.php';
 
         return new AppKernel('test', true, $options['test_case'] ?? null);
     }
@@ -59,12 +56,9 @@ abstract class TestCase extends WebTestCase
         return $responseBody['token'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doSetUp()
     {
         $fs = new Filesystem();
-        $fs->remove(sys_get_temp_dir() . '/LexikJWTAuthenticationBundle/');
+        $fs->remove(sys_get_temp_dir().'/LexikJWTAuthenticationBundle/');
     }
 }

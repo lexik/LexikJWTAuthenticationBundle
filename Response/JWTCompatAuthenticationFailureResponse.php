@@ -4,7 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Response;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
+/*
  * The "AND" in the if statement is a temporary fix for the following issue:
  * https://github.com/lexik/LexikJWTAuthenticationBundle/issues/944
  * https://github.com/vimeo/psalm/issues/7923
@@ -52,7 +52,7 @@ if (80000 <= \PHP_VERSION_ID and (new \ReflectionMethod(JsonResponse::class, 'se
          */
         public function setData($data = [])
         {
-            return parent::setData((array)$data + ['code' => $this->statusCode, 'message' => $this->getMessage()]);
+            return parent::setData((array) $data + ['code' => $this->statusCode, 'message' => $this->getMessage()]);
         }
     }
 }

@@ -29,9 +29,6 @@ class RawKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
         return $this->getSigningKey();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dumpKey()
     {
         if ($publicKey = $this->getPublicKey()) {

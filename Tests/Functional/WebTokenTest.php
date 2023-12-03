@@ -29,20 +29,21 @@ use Symfony\Component\HttpFoundation\Response;
  * JSON Web Token.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
+ *
  * @group web-token
  */
 class WebTokenTest extends TestCase
 {
     public function testAnEncryptedAccessTokenCanBeComputed()
     {
-        //Given
+        // Given
         static::$client = static::createClient(['test_case' => 'WebToken']);
 
-        //When
+        // When
         static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
         $response = static::$client->getResponse();
 
-        //Then
+        // Then
         $this->assertInstanceOf(JWTAuthenticationSuccessResponse::class, $response);
         $this->assertTrue($response->isSuccessful());
 
@@ -60,7 +61,7 @@ class WebTokenTest extends TestCase
 
     public function testAnAccessTokenCanBeUsedForApiCall()
     {
-        //Given
+        // Given
         static::$client = static::createClient(['test_case' => 'WebToken']);
         $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
         $subscriber->setListener(Events::JWT_DECODED, function (JWTDecodedEvent $e) {
@@ -74,12 +75,12 @@ class WebTokenTest extends TestCase
             $payloadTested->payload = $e->getPayload();
         });
 
-        //When
+        // When
         static::$client->jsonRequest('POST', '/login_check', ['username' => 'lexik', 'password' => 'dummy']);
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $this->getTokenFromResponse(static::$client->getResponse())]);
+        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$this->getTokenFromResponse(static::$client->getResponse())]);
         static::$client->getResponse();
 
-        //Then
+        // Then
         static::assertArrayHasKey('added_data', $payloadTested->payload, 'The payload should contains a "added_data" claim.');
         static::assertSame('still visible after the event', $payloadTested->payload['added_data'], 'The "added_data" claim should be equal to "still visible after the event".');
     }
@@ -89,24 +90,24 @@ class WebTokenTest extends TestCase
      */
     public function testInvalidToken(string $token, string $message)
     {
-        //Given
+        // Given
         static::$client = static::createClient(['test_case' => 'WebToken']);
         $messageTested = new \stdClass();
         $messageTested->messages = [];
         $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
         $subscriber->setListener(Events::JWT_INVALID, function (JWTInvalidEvent $event) use ($messageTested) {
             $e = $event->getException();
-            while ($e !== null) {
+            while (null !== $e) {
                 $messageTested->messages[] = $e->getMessage();
                 $e = $e->getPrevious();
             }
         });
 
-        //When
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $token]);
+        // When
+        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
         $response = static::$client->getResponse();
 
-        //Then
+        // Then
         static::assertContains($message, $messageTested->messages, sprintf('Messages: %s', implode($messageTested->messages)));
         static::assertResponseStatusCodeSame(401, $response);
     }
@@ -119,28 +120,28 @@ class WebTokenTest extends TestCase
         $messageTested->messages = [];
         $subscriber->setListener(Events::JWT_INVALID, function (JWTInvalidEvent $event) use ($messageTested) {
             $e = $event->getException();
-            while ($e !== null) {
+            while (null !== $e) {
                 $messageTested->messages[] = $e->getMessage();
                 $e = $e->getPrevious();
             }
         });
         $time = time();
         $token = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => $time - 1, "nbf" => $time - 1, "exp" => $time + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => $time - 1, 'nbf' => $time - 1, 'exp' => $time + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
         $token = $this->buildJWE(
             $token,
-            ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM', "iat" => $time - 1, "nbf" => $time - 1, "exp" => $time + 3600, 'crit' => ['exp', 'iat', 'nbf', 'foo']],
+            ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM', 'iat' => $time - 1, 'nbf' => $time - 1, 'exp' => $time + 3600, 'crit' => ['exp', 'iat', 'nbf', 'foo']],
             $this->getEncryptionKey()
         );
 
-        //When
-        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $token]);
+        // When
+        static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
         $response = static::$client->getResponse();
 
-        //Then
+        // Then
         static::assertContains('Unable to load and decrypt the token.', $messageTested->messages, sprintf('Messages: %s', implode($messageTested->messages)));
         static::assertResponseStatusCodeSame(401, $response);
     }
@@ -150,11 +151,11 @@ class WebTokenTest extends TestCase
         // Not encrypted token
         yield [
             $this->buildJWS(['username' => 'foo'], ['alg' => 'HS256'], $this->getSignatureKey()),
-            "Invalid token. The token cannot be decrypted.",
+            'Invalid token. The token cannot be decrypted.',
         ];
 
         $validJws = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() - 1, "nbf" => time() - 1, "exp" => time() + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() - 1, 'nbf' => time() - 1, 'exp' => time() + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
@@ -162,37 +163,37 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $validJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A128GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A128GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be decrypted.",
+            'Invalid token. The token cannot be decrypted.',
         ];
         // Unsupported content encryption algorithm "A128GCM"
         yield [
             $this->buildJWE(
                 $validJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A128GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A128GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be decrypted.",
+            'Invalid token. The token cannot be decrypted.',
         ];
         // Unknown key
         yield [
             $this->buildJWE(
                 $validJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getOtherEncryptionKey()
             ),
-            "Invalid token. The token cannot be decrypted.",
+            'Invalid token. The token cannot be decrypted.',
         ];
         // Bad content
         yield [
             $this->buildJWE(
                 'arbitrary data',
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be loaded or the signature cannot be verified.",
+            'Invalid token. The token cannot be loaded or the signature cannot be verified.',
         ];
 
         [$header, $payload] = explode('.', $validJws);
@@ -201,14 +202,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $jwsWithInvalidSignature,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be loaded or the signature cannot be verified.",
+            'Invalid token. The token cannot be loaded or the signature cannot be verified.',
         ];
 
         $jwsWithInvalidAlgorithm = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() - 1, "nbf" => time() - 1, "exp" => time() + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() - 1, 'nbf' => time() - 1, 'exp' => time() + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS512'],
             $this->getSignatureKey()
         );
@@ -216,14 +217,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $jwsWithInvalidAlgorithm,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be loaded or the signature cannot be verified.",
+            'Invalid token. The token cannot be loaded or the signature cannot be verified.',
         ];
 
         $jwsSignedWithOtherKey = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() - 1, "nbf" => time() - 1, "exp" => time() + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() - 1, 'nbf' => time() - 1, 'exp' => time() + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getOtherSignatureKey()
         );
@@ -231,14 +232,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $jwsSignedWithOtherKey,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "Invalid token. The token cannot be loaded or the signature cannot be verified.",
+            'Invalid token. The token cannot be loaded or the signature cannot be verified.',
         ];
 
         $expiredJws = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() - 1, "nbf" => time() - 1, "exp" => time() - 1, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() - 1, 'nbf' => time() - 1, 'exp' => time() - 1, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
@@ -246,14 +247,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $expiredJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "The token expired.",
+            'The token expired.',
         ];
 
         $notYetJws = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() - 1, "nbf" => time() + 1800, "exp" => time() + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() - 1, 'nbf' => time() + 1800, 'exp' => time() + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
@@ -261,14 +262,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $notYetJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "The JWT can not be used yet.",
+            'The JWT can not be used yet.',
         ];
 
         $notBeforeJws = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "iat" => time() + 1800, "nbf" => time() - 1, "exp" => time() + 3600, "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'iat' => time() + 1800, 'nbf' => time() - 1, 'exp' => time() + 3600, 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
@@ -276,14 +277,14 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $notBeforeJws,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "The JWT is issued in the future.",
+            'The JWT is issued in the future.',
         ];
 
         $jwsWithoutMandatoryClaims = $this->buildJWS(
-            ["jti" => "62b9d7514d43b7.68236706", "roles" => ["ROLE_USER"], "username" => "lexik"],
+            ['jti' => '62b9d7514d43b7.68236706', 'roles' => ['ROLE_USER'], 'username' => 'lexik'],
             ['alg' => 'HS256'],
             $this->getSignatureKey()
         );
@@ -291,10 +292,10 @@ class WebTokenTest extends TestCase
         yield [
             $this->buildJWE(
                 $jwsWithoutMandatoryClaims,
-                ["cty" => "JWT", "typ" => "JWT", 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
+                ['cty' => 'JWT', 'typ' => 'JWT', 'alg' => 'A256GCMKW', 'enc' => 'A256GCM'],
                 $this->getEncryptionKey()
             ),
-            "The following claims are mandatory: exp, iat, nbf.",
+            'The following claims are mandatory: exp, iat, nbf.',
         ];
     }
 

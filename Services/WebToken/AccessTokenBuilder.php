@@ -21,9 +21,9 @@ final class AccessTokenBuilder
     private $jwsBuilder;
 
     /**
-     * @var null|JWEBuilder
+     * @var JWEBuilder|null
      */
-    private $jweBuilder = null;
+    private $jweBuilder;
 
     /**
      * @var JWK
@@ -66,7 +66,7 @@ final class AccessTokenBuilder
         ?string $encryptionKey
     ) {
         $this->jwsBuilder = $jwsBuilderFactory->create([$signatureAlgorithm]);
-        if ($jweBuilderFactory !== null && $keyEncryptionAlgorithm !== null && $contentEncryptionAlgorithm !== null) {
+        if (null !== $jweBuilderFactory && null !== $keyEncryptionAlgorithm && null !== $contentEncryptionAlgorithm) {
             $this->jweBuilder = $jweBuilderFactory->create([$keyEncryptionAlgorithm], [$contentEncryptionAlgorithm], []);
         }
         $this->signatureKey = JWK::createFromJson($signatureKey);
@@ -81,7 +81,7 @@ final class AccessTokenBuilder
     {
         $token = $this->buildJWS($header, $claims);
 
-        if ($this->jweBuilder !== null) {
+        if (null !== $this->jweBuilder) {
             $token = $this->buildJWE($claims, $token);
         }
 
@@ -109,9 +109,6 @@ final class AccessTokenBuilder
         return $token;
     }
 
-    /**
-     * @param array<string, mixed> $header
-     */
     private function buildJWE(array $claims, string $payload): string
     {
         $header = [
@@ -136,6 +133,7 @@ final class AccessTokenBuilder
             ->addRecipient($this->encryptionKey)
             ->build()
         ;
+
         return (new JweCompactSerializer())->serialize($jwe);
     }
 }

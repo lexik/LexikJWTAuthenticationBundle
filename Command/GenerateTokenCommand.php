@@ -37,9 +37,6 @@ class GenerateTokenCommand extends Command
         $this->userProviders = $userProviders;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -51,11 +48,6 @@ class GenerateTokenCommand extends Command
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->userProviders instanceof \Countable && 0 === \count($this->userProviders)) {
@@ -102,7 +94,7 @@ class GenerateTokenCommand extends Command
 
         $output->writeln([
             '',
-            '<info>' . $token . '</info>',
+            '<info>'.$token.'</info>',
             '',
         ]);
 

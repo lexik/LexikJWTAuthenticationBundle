@@ -16,7 +16,7 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
     private $passphrase;
     private $additionalPublicKeys;
 
-    public function __construct(?string $signingKey = null, ?string $publicKey = null, ?string $passphrase = null, array $additionalPublicKeys = [])
+    public function __construct(string $signingKey = null, string $publicKey = null, string $passphrase = null, array $additionalPublicKeys = [])
     {
         $this->signingKey = $signingKey;
         $this->publicKey = $publicKey;
@@ -24,9 +24,6 @@ abstract class AbstractKeyLoader implements KeyLoaderInterface
         $this->additionalPublicKeys = $additionalPublicKeys;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPassphrase()
     {
         return $this->passphrase;

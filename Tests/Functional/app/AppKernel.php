@@ -38,9 +38,6 @@ class AppKernel extends Kernel
         $this->signatureAlgorithm = getenv('ALGORITHM');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles(): array
     {
         $bundles = [
@@ -64,28 +61,19 @@ class AppKernel extends Kernel
         return __DIR__;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir() . '/LexikJWTAuthenticationBundle/cache';
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/cache';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLogDir(): string
     {
-        return sys_get_temp_dir() . '/LexikJWTAuthenticationBundle/logs';
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/logs';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__ . '/config/config_router_utf8.yml');
+        $loader->load(__DIR__.'/config/config_router_utf8.yml');
 
         // 5.3+ session config
         if (class_exists(UserNotFoundException::class)) {
@@ -134,23 +122,23 @@ class AppKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) use ($router, $sessionConfig) {
             $container->prependExtensionConfig('framework', [
                 'router' => $router,
-                'session' => $sessionConfig
+                'session' => $sessionConfig,
             ]);
         });
 
-        if ($this->testCase && file_exists(__DIR__ . '/config/' . $this->testCase . '/config.yml')) {
-            $loader->load(__DIR__ . '/config/' . $this->testCase . '/config.yml');
+        if ($this->testCase && file_exists(__DIR__.'/config/'.$this->testCase.'/config.yml')) {
+            $loader->load(__DIR__.'/config/'.$this->testCase.'/config.yml');
         }
 
-        $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider . (class_exists(UserNotFoundException::class) ? '' : '_legacy')));
+        $loader->load(__DIR__.sprintf('/config/security_%s.yml', $this->userProvider.(class_exists(UserNotFoundException::class) ? '' : '_legacy')));
 
-        if ($this->signatureAlgorithm && file_exists($file = __DIR__ . sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
+        if ($this->signatureAlgorithm && file_exists($file = __DIR__.sprintf('/config/config_%s_%s.yml', $this->encoder, strtolower($this->signatureAlgorithm)))) {
             $loader->load($file);
 
             return;
         }
 
-        $loader->load(__DIR__ . sprintf('/config/config_%s.yml', $this->encoder));
+        $loader->load(__DIR__.sprintf('/config/config_%s.yml', $this->encoder));
     }
 
     public function getUserProvider()

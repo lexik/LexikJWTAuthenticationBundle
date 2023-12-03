@@ -2,7 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()->in([__DIR__]);
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         'ordered_imports' => true,

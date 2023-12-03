@@ -25,7 +25,6 @@ use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\Validator;
-use Lcobucci\JWT\ValidationData;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
@@ -88,9 +87,6 @@ class LcobucciJWSProvider implements JWSProviderInterface
         $this->allowNoExpiration = $allowNoExpiration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(array $payload, array $header = [])
     {
         if (class_exists(JWTBuilder::class)) {
@@ -141,9 +137,6 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new CreatedJWS((string) $token, null === $e);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($token)
     {
         if (class_exists(JWTParser::class)) {

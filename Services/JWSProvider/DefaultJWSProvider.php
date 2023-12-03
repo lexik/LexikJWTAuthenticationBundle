@@ -77,9 +77,6 @@ class DefaultJWSProvider implements JWSProviderInterface
         $this->clockSkew = $clockSkew;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function create(array $payload, array $header = [])
     {
         $header['alg'] = $this->signatureAlgorithm;
@@ -100,9 +97,6 @@ class DefaultJWSProvider implements JWSProviderInterface
         return new CreatedJWS($jws->getTokenString(), $jws->isSigned());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($token)
     {
         $jws = JWS::load($token, false, null, $this->cryptoEngine);
