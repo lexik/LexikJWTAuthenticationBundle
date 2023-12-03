@@ -29,12 +29,12 @@ jobs:
                   composer install
                   mkdir -p tools/php-cs-fixer tools/rector
                   composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer --dev
-                  composer require rector/rector -- dev
+                  composer require rector/rector --dev
 
-            - name: CONDING STANDARDS (ECS)
+            - name: CODING STANDARDS (ECS)
               run: |
-                  tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+                  tools/php-cs-fixer/vendor/bin/php-cs-fixer fix .
 
             - name: CONDING STANDARDS (RECTOR)
               run: |
-                  tools/rector/vendor/bin/rector process src --ansi --dry-run --xdebug
+                  tools/rector/vendor/bin/rector process . --ansi --dry-run --xdebug
