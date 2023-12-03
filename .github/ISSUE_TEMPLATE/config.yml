@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support Question
+    url: https://to-be-defined.local
+    about:|
+    We use GitHub issues only to discuss about bugs and new features.
+    For this kind of questions about using the framework or third-party bundles,
+    please contact us for quoting

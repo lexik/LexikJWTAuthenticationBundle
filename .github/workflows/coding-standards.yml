@@ -31,8 +31,8 @@ jobs:
 
             - name: CONDING STANDARDS (ECS)
               run: |
-                  vendor/bin/ecs check
+                  make cs
 
             - name: CONDING STANDARDS (RECTOR)
               run: |
-                  vendor/bin/rector process --ansi --dry-run --xdebug
+                  make rector

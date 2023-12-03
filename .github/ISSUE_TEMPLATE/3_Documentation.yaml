@@ -1,0 +1,10 @@
+name: 📖 Documentation Issue
+description: To report typo or obsolete section in the documentation
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the error you found in the documentation
+    validations:
+      required: true

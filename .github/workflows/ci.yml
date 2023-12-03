@@ -1,8 +1,10 @@
 name: "CI Tests"
 
 on:
-    pull_request:
+    pull_request: null
     push:
+        branches:
+            - "*.x"
 
 jobs:
     tests:
@@ -88,4 +90,4 @@ jobs:
                 SYMFONY_REQUIRE: "${{ matrix.symfony }}"
 
             - name: "Run PHPUnit Tests"
-              run: "composer test"
+              run: make tests
