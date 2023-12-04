@@ -20,9 +20,6 @@ class JWTUser implements JWTUserInterface
         $this->roles = $roles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function createFromPayload($username, array $payload)
     {
         if (isset($payload['roles'])) {
@@ -32,9 +29,6 @@ class JWTUser implements JWTUserInterface
         return new static($username);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUsername(): string
     {
         return $this->getUserIdentifier();
@@ -45,33 +39,21 @@ class JWTUser implements JWTUserInterface
         return $this->userIdentifier;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPassword(): ?string
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSalt(): ?string
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function eraseCredentials(): void
     {
     }

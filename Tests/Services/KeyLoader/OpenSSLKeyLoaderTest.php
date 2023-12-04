@@ -13,9 +13,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\OpenSSLKeyLoader;
  */
 class OpenSSLKeyLoaderTest extends AbstractTestKeyLoader
 {
-    /**
-     * {@inheritdoc}
-     */
     public function doSetUp()
     {
         $this->keyLoader = new OpenSSLKeyLoader('private.pem', 'public.pem', 'foobar');

@@ -25,15 +25,12 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class LexikJWTAuthenticationExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         if (method_exists(Alias::class, 'getDeprecation')) {
             $loader->load('deprecated_51.xml');
@@ -84,7 +81,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setAlias(JWTEncoderInterface::class, 'lexik_jwt_authentication.encoder');
         $container->setAlias(
             'lexik_jwt_authentication.key_loader',
-            new Alias('lexik_jwt_authentication.key_loader.' . ('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
+            new Alias('lexik_jwt_authentication.key_loader.'.('openssl' === $encoderConfig['crypto_engine'] && 'lexik_jwt_authentication.encoder.default' === $encoderConfig['service'] ? $encoderConfig['crypto_engine'] : 'raw'), true)
         );
 
         $container
@@ -120,7 +117,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 if ($attributes['partitioned'] && Kernel::VERSION < '6.4') {
                     throw new \LogicException(sprintf('The `partitioned` option for cookies is only available for Symfony 6.4 and above. You are currently on version %s', Kernel::VERSION));
                 }
-                
+
                 $container
                     ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
                     ->replaceArgument(0, $name)
@@ -217,11 +214,11 @@ class LexikJWTAuthenticationExtension extends Extension
 
     private function processWithWebTokenConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
-        if ($config['access_token_issuance']['enabled'] === false && $config['access_token_verification']['enabled'] === false) {
+        if (false === $config['access_token_issuance']['enabled'] && false === $config['access_token_verification']['enabled']) {
             return;
         }
         $loader->load('web_token.xml');
-        if ($config['access_token_issuance']['enabled'] === true) {
+        if (true === $config['access_token_issuance']['enabled']) {
             $loader->load('web_token_issuance.xml');
             $accessTokenBuilder = 'lexik_jwt_authentication.access_token_builder';
             $accessTokenBuilderDefinition = $container->getDefinition($accessTokenBuilder);
@@ -229,7 +226,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(3, $config['access_token_issuance']['signature']['algorithm'])
                 ->replaceArgument(4, $config['access_token_issuance']['signature']['key'])
             ;
-            if ($config['access_token_issuance']['encryption']['enabled'] === true) {
+            if (true === $config['access_token_issuance']['encryption']['enabled']) {
                 $accessTokenBuilderDefinition
                     ->replaceArgument(5, $config['access_token_issuance']['encryption']['key_encryption_algorithm'])
                     ->replaceArgument(6, $config['access_token_issuance']['encryption']['content_encryption_algorithm'])
@@ -237,7 +234,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ;
             }
         }
-        if ($config['access_token_verification']['enabled'] === true) {
+        if (true === $config['access_token_verification']['enabled']) {
             $loader->load('web_token_verification.xml');
             $accessTokenLoader = 'lexik_jwt_authentication.access_token_loader';
             $accessTokenLoaderDefinition = $container->getDefinition($accessTokenLoader);
@@ -248,7 +245,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 ->replaceArgument(6, $config['access_token_verification']['signature']['allowed_algorithms'])
                 ->replaceArgument(7, $config['access_token_verification']['signature']['keyset'])
             ;
-            if ($config['access_token_verification']['encryption']['enabled'] === true) {
+            if (true === $config['access_token_verification']['encryption']['enabled']) {
                 $accessTokenLoaderDefinition
                     ->replaceArgument(8, $config['access_token_verification']['encryption']['continue_on_decryption_failure'])
                     ->replaceArgument(9, $config['access_token_verification']['encryption']['header_checkers'])

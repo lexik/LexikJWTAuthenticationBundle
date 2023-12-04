@@ -23,9 +23,6 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
         $this->jwsProvider = $jwsProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function encode(array $payload, array $header = [])
     {
         try {
@@ -41,9 +38,6 @@ class LcobucciJWTEncoder implements JWTEncoderInterface, HeaderAwareJWTEncoderIn
         return $jws->getToken();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decode($token)
     {
         try {

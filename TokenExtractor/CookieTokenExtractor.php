@@ -24,9 +24,6 @@ class CookieTokenExtractor implements TokenExtractorInterface
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Request $request)
     {
         return $request->cookies->get($this->name, false);

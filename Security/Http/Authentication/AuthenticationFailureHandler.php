@@ -35,9 +35,6 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());

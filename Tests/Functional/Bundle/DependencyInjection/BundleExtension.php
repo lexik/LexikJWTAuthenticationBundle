@@ -9,9 +9,6 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class BundleExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container): void
     {
         // Annotation must be disabled since this bundle doesn't use Doctrine
@@ -26,9 +23,6 @@ class BundleExtension extends Extension implements PrependExtensionInterface
         $container->prependExtensionConfig('framework', ['annotations' => ['enabled' => false]]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
     }

@@ -2,12 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\WebToken;
 
-use Jose\Bundle\JoseFramework\Services\ClaimCheckerManager;
 use Jose\Bundle\JoseFramework\Services\ClaimCheckerManagerFactory;
-use Jose\Bundle\JoseFramework\Services\HeaderCheckerManager;
-use Jose\Bundle\JoseFramework\Services\JWELoader;
 use Jose\Bundle\JoseFramework\Services\JWELoaderFactory;
-use Jose\Bundle\JoseFramework\Services\JWSLoader;
 use Jose\Bundle\JoseFramework\Services\JWSLoaderFactory;
 use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\MissingMandatoryClaimException;
@@ -36,22 +32,22 @@ final class AccessTokenLoader
     private $continueOnDecryptionFailure;
 
     public function __construct(
-        JWSLoaderFactory            $jwsLoaderFactory,
-        ?JWELoaderFactory           $jweLoaderFactory,
-        ClaimCheckerManagerFactory  $claimCheckerManagerFactory,
-        array                       $claimChecker,
-        array                       $jwsHeaderChecker,
-        array                       $mandatoryClaims,
-        array                       $signatureAlgorithms,
-        string                      $signatureKeyset,
-        ?bool                       $continueOnDecryptionFailure,
-        ?array                      $jweHeaderChecker,
-        ?array                      $keyEncryptionAlgorithms,
-        ?array                      $contentEncryptionAlgorithms,
-        ?string                     $encryptionKeyset
+        JWSLoaderFactory $jwsLoaderFactory,
+        ?JWELoaderFactory $jweLoaderFactory,
+        ClaimCheckerManagerFactory $claimCheckerManagerFactory,
+        array $claimChecker,
+        array $jwsHeaderChecker,
+        array $mandatoryClaims,
+        array $signatureAlgorithms,
+        string $signatureKeyset,
+        ?bool $continueOnDecryptionFailure,
+        ?array $jweHeaderChecker,
+        ?array $keyEncryptionAlgorithms,
+        ?array $contentEncryptionAlgorithms,
+        ?string $encryptionKeyset
     ) {
         $this->jwsLoader = $jwsLoaderFactory->create(['jws_compact'], $signatureAlgorithms, $jwsHeaderChecker);
-        if ($jweLoaderFactory !== null && $keyEncryptionAlgorithms !== null && $contentEncryptionAlgorithms !== null && $jweHeaderChecker !== null) {
+        if (null !== $jweLoaderFactory && null !== $keyEncryptionAlgorithms && null !== $contentEncryptionAlgorithms && null !== $jweHeaderChecker) {
             $this->jweLoader = $jweLoaderFactory->create(['jwe_compact'], $keyEncryptionAlgorithms, $contentEncryptionAlgorithms, [], $jweHeaderChecker);
             $this->continueOnDecryptionFailure = $continueOnDecryptionFailure;
         }
@@ -89,7 +85,7 @@ final class AccessTokenLoader
         } catch (\Throwable $e) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid token. The token cannot be loaded or the signature cannot be verified.');
         }
-        if ($signature !== 0) {
+        if (0 !== $signature) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid token. The token shall contain only one signature.');
         }
 
@@ -116,13 +112,13 @@ final class AccessTokenLoader
         try {
             $jwe = $this->jweLoader->loadAndDecryptWithKeySet($token, $this->encryptionKeyset, $recipient);
         } catch (\Throwable $e) {
-            if ($this->continueOnDecryptionFailure === true) {
+            if (true === $this->continueOnDecryptionFailure) {
                 return $token;
             }
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid token. The token cannot be decrypted.', $e);
         }
         $token = $jwe->getPayload();
-        if (!$token || $recipient !== 0) {
+        if (!$token || 0 !== $recipient) {
             throw new JWTDecodeFailureException(JWTDecodeFailureException::INVALID_TOKEN, 'Invalid token. The token has no valid content.');
         }
 

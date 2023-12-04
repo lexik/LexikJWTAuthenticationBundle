@@ -100,7 +100,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     }
 
     /**
-     * {@inheritdoc}
      * @throws JWTDecodeFailureException
      */
     public function decode(TokenInterface $token)
@@ -119,9 +118,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         return $event->getPayload();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parse(string $jwtToken): array
     {
         $payload = $this->jwtEncoder->decode($jwtToken);
@@ -139,12 +135,10 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
     /**
      * Add user identity to payload, username by default.
      * Override this if you need to identify it by another property.
-     *
-     * @param array &$payload
      */
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
-        $accessor      = PropertyAccess::createPropertyAccessor();
+        $accessor = PropertyAccess::createPropertyAccessor();
         $identityField = $this->userIdClaim ?: $this->userIdentityField;
 
         if ($user instanceof InMemoryUser && 'username' === $identityField) {
@@ -156,9 +150,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $payload[$identityField] = $accessor->getValue($user, $accessor->isReadable($user, $identityField) ? $identityField : 'user_identifier');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdentityField(): string
     {
         if (0 === func_num_args() || func_get_arg(0)) {
@@ -168,9 +159,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         return $this->userIdentityField;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUserIdentityField($field)
     {
         if (1 >= func_num_args() || func_get_arg(1)) {
@@ -180,9 +168,6 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
         $this->userIdentityField = $field;
     }
 
-    /**
-     * @return string
-     */
     public function getUserIdClaim(): ?string
     {
         return $this->userIdClaim;

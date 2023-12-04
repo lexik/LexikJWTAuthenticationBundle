@@ -41,9 +41,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->removeTokenFromBodyWhenCookiesUsed = $removeTokenFromBodyWhenCookiesUsed;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         return $this->handleAuthenticationSuccess($token->getUser());

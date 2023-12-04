@@ -8,12 +8,12 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest]
-                php-versions: ['8.1']
+                php-versions: ['8.2']
         name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   ref: ${{ github.head_ref }}
 
@@ -27,12 +27,14 @@ jobs:
             - name: Install Composer dependencies
               run: |
                   composer install
-                  composer require rector/rector symplify/easy-coding-standard --dev
+                  mkdir -p tools/php-cs-fixer tools/rector
+                  composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer --dev
+                  composer require rector/rector --dev
 
-            - name: CONDING STANDARDS (ECS)
+            - name: CODING STANDARDS (ECS)
               run: |
-                  vendor/bin/ecs check
+                  tools/php-cs-fixer/vendor/bin/php-cs-fixer fix .
 
             - name: CONDING STANDARDS (RECTOR)
               run: |
-                  vendor/bin/rector process --ansi --dry-run --xdebug
+                  tools/rector/vendor/bin/rector process . --ansi --dry-run --xdebug

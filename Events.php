@@ -85,7 +85,7 @@ final class Events
     /**
      * Dispatched before the JWE is computed.
      * This event allow the JWE header parameters to be changed.
-     * It is only dispatched when using Web-Token
+     * It is only dispatched when using Web-Token.
      *
      * @Event("Lexik\Bundle\JWTAuthenticationBundle\Event\BeforeJWEComputationEvent")
      */

@@ -15,18 +15,15 @@ use Symfony\Component\DependencyInjection\Reference;
 trait JWTAuthenticatorFactoryTrait
 {
     /**
-     * @throws \LogicException
-     *
      * @return array
+     *
+     * @throws \LogicException
      */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
         throw new \LogicException('This method is implemented for BC purpose and should never be called.');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPriority(): int
     {
         return -10;
@@ -37,17 +34,11 @@ trait JWTAuthenticatorFactoryTrait
         return 'pre_auth';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getKey(): string
     {
         return 'jwt';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addConfiguration(NodeDefinition $node): void
     {
         $node
@@ -64,9 +55,9 @@ trait JWTAuthenticatorFactoryTrait
 
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId): string
     {
-        $authenticatorId = 'security.authenticator.jwt.' . $firewallName;
+        $authenticatorId = 'security.authenticator.jwt.'.$firewallName;
 
-        $userProviderId = empty($config['provider']) ? $userProviderId : 'security.user.provider.concrete.' . $config['provider'];
+        $userProviderId = empty($config['provider']) ? $userProviderId : 'security.user.provider.concrete.'.$config['provider'];
 
         $container
             ->setDefinition($authenticatorId, new ChildDefinition($config['authenticator']))

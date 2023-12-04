@@ -41,9 +41,6 @@ class JWTUserToken extends JWTCompatUserToken
      */
     protected $providerKey;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(array $roles = [], UserInterface $user = null, $rawToken = null, $firewallName = null)
     {
         parent::__construct($roles);
@@ -69,9 +66,6 @@ class JWTUserToken extends JWTCompatUserToken
         $this->rawToken = $rawToken;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCredentials()
     {
         return $this->rawToken;

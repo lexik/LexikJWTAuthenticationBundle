@@ -119,7 +119,7 @@ class JWTListener
     {
         /** @var TokenExtractorInterface $tokenExtractor */
         foreach ($this->tokenExtractors as $tokenExtractor) {
-            if (($token = $tokenExtractor->extract($request))) {
+            if ($token = $tokenExtractor->extract($request)) {
                 return $token;
             }
         }

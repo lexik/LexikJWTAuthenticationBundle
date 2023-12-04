@@ -19,5 +19,5 @@ interface PayloadAwareUserProviderInterface extends UserProviderInterface
      *
      * @deprecated since 2.12, implement loadUserByIdentifierAndPayload() instead.
      */
-    public function loadUserByUsernameAndPayload(string $username, array $payload)/*: UserInterface*/;
+    public function loadUserByUsernameAndPayload(string $username, array $payload)/* : UserInterface */;
 }

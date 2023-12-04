@@ -29,25 +29,16 @@ final class PreAuthenticationJWTUserToken extends PreAuthenticationGuardToken im
         $this->rawToken = $rawToken;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCredentials()
     {
         return $this->rawToken;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPayload(array $payload)
     {
         $this->payload = $payload;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPayload()
     {
         return $this->payload;

@@ -68,9 +68,6 @@ class JWTProvider implements AuthenticationProviderInterface
         $this->userIdClaim = $userIdClaim;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function authenticate(TokenInterface $token)
     {
         try {
@@ -112,9 +109,6 @@ class JWTProvider implements AuthenticationProviderInterface
         return $this->userProvider->loadUserByUsername($payload[$this->userIdClaim]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(TokenInterface $token)
     {
         return $token instanceof JWTUserToken;
@@ -145,8 +139,6 @@ class JWTProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * @param JWTDecodeFailureException $previous
-     *
      * @return AuthenticationException
      */
     private function createAuthenticationException(JWTDecodeFailureException $previous = null)

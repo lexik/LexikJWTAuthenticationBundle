@@ -24,9 +24,6 @@ class SplitCookieExtractor implements TokenExtractorInterface
         $this->cookies = $cookies;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function extract(Request $request)
     {
         $jwtCookies = [];

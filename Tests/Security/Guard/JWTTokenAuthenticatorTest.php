@@ -30,7 +30,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- *
  * @group legacy
  */
 class JWTTokenAuthenticatorTest extends TestCase
@@ -203,7 +202,7 @@ class JWTTokenAuthenticatorTest extends TestCase
             ))->getUser($decodedToken, $userProvider);
 
             $this->fail(sprintf('Expected exception of type "%s" to be thrown.', class_exists(SecurityUserNotFoundException::class) ? SecurityUserNotFoundException::class : UsernameNotFoundException::class));
-        } catch (SecurityUserNotFoundException | UsernameNotFoundException $e) {
+        } catch (SecurityUserNotFoundException|UsernameNotFoundException $e) {
             if (method_exists($e, 'getUserIdentifier')) {
                 $userIdentifier = $e->getUserIdentifier();
             } else {

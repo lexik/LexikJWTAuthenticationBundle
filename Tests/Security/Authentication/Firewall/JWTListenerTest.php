@@ -113,8 +113,6 @@ class JWTListenerTest extends TestCase
     }
 
     /**
-     * @param mixed $returnValue
-     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getAuthorizationHeaderTokenExtractorMock($returnValue)

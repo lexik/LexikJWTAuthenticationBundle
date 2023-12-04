@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
-use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -17,9 +16,6 @@ class Configuration implements ConfigurationInterface
 {
     public const INVALID_KEY_PATH = "The file %s doesn't exist or is not readable.\nIf the configured encoder doesn't need this to be configured, please don't set this option or leave it null.";
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('lexik_jwt_authentication');
@@ -80,7 +76,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('user_identity_field')
-                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, use "%path%.user_id_claim" or implement "' . UserInterface::class . '::getUserIdentifier()" instead.', '2.16'))
+                    ->setDeprecated(...$this->getDeprecationParameters('The "%path%.%node%" configuration key is deprecated since version 2.16, use "%path%.user_id_claim" or implement "'.UserInterface::class.'::getUserIdentifier()" instead.', '2.16'))
                     ->defaultValue('username')
                     ->cannotBeEmpty()
                 ->end()

@@ -24,9 +24,6 @@ class JWTEntryPoint implements AuthenticationEntryPointInterface
         @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 3.0. Use "%s" instead.', self::class, JWTAuthenticator::class), E_USER_DEPRECATED);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         $response = new JWTAuthenticationFailureResponse();

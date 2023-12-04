@@ -16,9 +16,6 @@ class JWTPostAuthenticationToken extends PostAuthenticationToken
         $this->token = $token;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCredentials(): string
     {
         return $this->token;

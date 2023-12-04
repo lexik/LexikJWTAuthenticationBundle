@@ -6,9 +6,7 @@ use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\PHPUnit\Rector\Class_\AddSeeTestAnnotationRector;
-use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonyLevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
@@ -24,22 +22,22 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importShortClasses(false);
     $rectorConfig->importNames();
     $rectorConfig->bootstrapFiles([
-        __DIR__ . '/vendor/autoload.php',
+        __DIR__.'/vendor/autoload.php',
     ]);
     $rectorConfig->parallel();
     $rectorConfig->paths([__DIR__]);
     $rectorConfig->skip([
         // Path
-        __DIR__ . '/.github',
-        __DIR__ . '/DependencyInjection/Configuration.php',
-        __DIR__ . '/Tests/DependencyInjection/LexikJWTAuthenticationExtensionTest.php',
-        __DIR__ . '/vendor',
+        __DIR__.'/.github',
+        __DIR__.'/DependencyInjection/Configuration.php',
+        __DIR__.'/Tests/DependencyInjection/LexikJWTAuthenticationExtensionTest.php',
+        __DIR__.'/vendor',
 
         // Rules
         AddSeeTestAnnotationRector::class,
         JsonThrowOnErrorRector::class,
         ReturnNeverTypeRector::class => [
-            __DIR__ . '/Security/User/JWTUserProvider.php',
+            __DIR__.'/Security/User/JWTUserProvider.php',
         ],
     ]);
 };

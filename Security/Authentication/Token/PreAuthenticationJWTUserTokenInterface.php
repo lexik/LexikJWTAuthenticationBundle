@@ -11,8 +11,5 @@ interface PreAuthenticationJWTUserTokenInterface extends GuardTokenInterface
      */
     public function setPayload(array $payload);
 
-    /**
-     * @return mixed
-     */
     public function getPayload();
 }

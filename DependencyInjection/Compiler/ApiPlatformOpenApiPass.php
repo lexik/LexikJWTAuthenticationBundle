@@ -18,8 +18,8 @@ class ApiPlatformOpenApiPass implements CompilerPassInterface
         $passwordPath = null;
         $firewalls = $container->getParameter('security.firewalls');
         foreach ($firewalls as $firewallName) {
-            if ($container->hasDefinition('security.authenticator.json_login.' . $firewallName)) {
-                $firewallOptions = $container->getDefinition('security.authenticator.json_login.' . $firewallName)->getArgument(4);
+            if ($container->hasDefinition('security.authenticator.json_login.'.$firewallName)) {
+                $firewallOptions = $container->getDefinition('security.authenticator.json_login.'.$firewallName)->getArgument(4);
                 $checkPath = $firewallOptions['check_path'];
                 $usernamePath = $firewallOptions['username_path'];
                 $passwordPath = $firewallOptions['password_path'];
