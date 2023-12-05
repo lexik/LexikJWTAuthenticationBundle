@@ -14,11 +14,18 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class BlockJWTListener
 {
+    private $jwtManager;
+    private $tokenExtractor;
+    private $tokenManager;
+
     public function __construct(
-        private BlockedTokenManager $tokenManager,
-        private TokenExtractorInterface $tokenExtractor,
-        private JWTTokenManagerInterface $jwtManager,
+        BlockedTokenManager $tokenManager,
+        TokenExtractorInterface $tokenExtractor,
+        JWTTokenManagerInterface $jwtManager,
     ) {
+        $this->tokenManager = $tokenManager;
+        $this->tokenExtractor = $tokenExtractor;
+        $this->jwtManager = $jwtManager;
     }
 
     public function onLoginFailure(LoginFailureEvent $event): void
