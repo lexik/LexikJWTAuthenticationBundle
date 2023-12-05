@@ -31,7 +31,7 @@ jobs:
                   composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer --dev
                   composer require rector/rector --dev
 
-            - name: CODING STANDARDS (ECS)
+            - name: PHP-CS-Fixer
               run: |
                   tools/php-cs-fixer/vendor/bin/php-cs-fixer fix .
 
