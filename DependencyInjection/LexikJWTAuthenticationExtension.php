@@ -101,7 +101,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
-        $tokenExtractors = $this->createTokenExtractors($container, $config['token_extractors']);
+        $tokenExtractors = $this->createTokenExtractors($container, $config);
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
@@ -123,7 +123,7 @@ class LexikJWTAuthenticationExtension extends Extension
 
                 $container
                     ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
-                    ->replaceArgument(0, $attributes['name'] ?? $name)
+                    ->replaceArgument(0, $attributes['customName'] ?? $name)
                     ->replaceArgument(1, $attributes['lifetime'] ?? ($config['token_ttl'] ?: 0))
                     ->replaceArgument(2, $attributes['samesite'])
                     ->replaceArgument(3, $attributes['path'])
@@ -171,9 +171,10 @@ class LexikJWTAuthenticationExtension extends Extension
         $this->processWithWebTokenConfig($config, $container, $loader);
     }
 
-    private function createTokenExtractors(ContainerBuilder $container, array $tokenExtractorsConfig): array
+    private function createTokenExtractors(ContainerBuilder $container, array $config): array
     {
         $map = [];
+        $tokenExtractorsConfig = $config['token_extractors'];
 
         if ($this->isConfigEnabled($container, $tokenExtractorsConfig['authorization_header'])) {
             $authorizationHeaderExtractorId = 'lexik_jwt_authentication.extractor.authorization_header_extractor';
@@ -196,18 +197,23 @@ class LexikJWTAuthenticationExtension extends Extension
 
         if ($this->isConfigEnabled($container, $tokenExtractorsConfig['cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.cookie_extractor';
+            $cookieName = $tokenExtractorsConfig['cookie']['name'];
             $container
                 ->getDefinition($cookieExtractorId)
-                ->replaceArgument(0, $tokenExtractorsConfig['cookie']['name']);
+                ->replaceArgument(0, $config['set_cookies'][$cookieName]['customName'] ?? $cookieName);
 
             $map[] = new Reference($cookieExtractorId);
         }
 
         if ($this->isConfigEnabled($container, $tokenExtractorsConfig['split_cookie'])) {
             $cookieExtractorId = 'lexik_jwt_authentication.extractor.split_cookie_extractor';
+            $cookieNames = array_map(
+                static fn ($cookieName) => $config['set_cookies'][$cookieName]['customName'] ?? $cookieName,
+                $tokenExtractorsConfig['split_cookie']['cookies']
+            );
             $container
                 ->getDefinition($cookieExtractorId)
-                ->replaceArgument(0, $tokenExtractorsConfig['split_cookie']['cookies']);
+                ->replaceArgument(0, $cookieNames);
 
             $map[] = new Reference($cookieExtractorId);
         }
