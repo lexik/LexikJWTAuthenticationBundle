@@ -1,7 +1,11 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.2
+
+## [2.20.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.2) (2023-12-05)
+
+* bug [\#1174](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1174) Fix for PHP <7.4 compatibility ([@fracsi](https://github.com/fracsi))
 
 ## [2.20.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.1) (2023-12-02)
 
