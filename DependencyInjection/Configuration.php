@@ -98,6 +98,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
+                            ->scalarNode('name')->defaultNull()->end()
                             ->scalarNode('lifetime')
                                 ->defaultNull()
                                 ->info('The cookie lifetime. If null, the "token_ttl" option value will be used')
