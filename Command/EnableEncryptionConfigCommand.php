@@ -86,12 +86,20 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
 
         $algorithms = $this->algorithmManagerFactory->all();
         $availableKeyEncryptionAlgorithms = array_map(
-            static fn (Algorithm $algorithm): string => $algorithm->name(),
-            array_filter($algorithms, static fn (Algorithm $algorithm): bool => ($algorithm instanceof KeyEncryptionAlgorithm && $algorithm->name() !== 'dir'))
+            static function (Algorithm $algorithm): string {
+                return $algorithm->name();
+            },
+            array_filter($algorithms, static function (Algorithm $algorithm): bool {
+                return ($algorithm instanceof KeyEncryptionAlgorithm && $algorithm->name() !== 'dir');
+            })
         );
         $availableContentEncryptionAlgorithms = array_map(
-            static fn (Algorithm $algorithm): string => $algorithm->name(),
-            array_filter($algorithms, static fn (Algorithm $algorithm): bool => $algorithm instanceof ContentEncryptionAlgorithm)
+            static function (Algorithm $algorithm): string {
+                return $algorithm->name();
+            },
+            array_filter($algorithms, static function (Algorithm $algorithm): bool {
+                return $algorithm instanceof ContentEncryptionAlgorithm;
+            })
         );
 
         $keyEncryptionAlgorithmAlias = $io->choice('Key Encryption Algorithm', $availableKeyEncryptionAlgorithms);
@@ -215,7 +223,7 @@ final class EnableEncryptionConfigCommand extends AbstractConfigCommand
             JWEBuilder::class => 'web-token/jwt-encryption',
         ];
         if ($this->algorithmManagerFactory === null) {
-            throw new \RuntimeException(sprintf('The package "web-token/jwt-bundle" is missing. Please install it for using this migration tool.', $requirement));
+            throw new \RuntimeException('The package "web-token/jwt-bundle" is missing. Please install it for using this migration tool.');
         }
         foreach (array_keys($requirements) as $requirement) {
             if (!class_exists($requirement)) {

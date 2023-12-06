@@ -75,7 +75,7 @@ final class JWTCookieProvider
             $httpOnly ?: $this->defaultHttpOnly,
             false,
             $sameSite ?: $this->defaultSameSite,
-            $partitioned ?: $this->defaultPartitioned,
+            $partitioned ?: $this->defaultPartitioned
         );
     }
 }
