@@ -9,15 +9,15 @@
             <argument type="service" id="Jose\Bundle\JoseFramework\Services\JWSLoaderFactory" />
             <argument type="service" id="Jose\Bundle\JoseFramework\Services\JWELoaderFactory" on-invalid="null" />
             <argument type="service" id="Jose\Bundle\JoseFramework\Services\ClaimCheckerManagerFactory" />
-            <argument /> <!-- Claim checkers -->
-            <argument /> <!-- JWS header checkers -->
-            <argument /> <!-- Mandatory claims -->
-            <argument /> <!-- Allowed signature algorithms -->
+            <argument type="collection" /> <!-- Claim checkers -->
+            <argument type="collection"/> <!-- JWS header checkers -->
+            <argument type="collection"/> <!-- Mandatory claims -->
+            <argument type="collection" /> <!-- Allowed signature algorithms -->
             <argument /> <!-- Signature keyset -->
             <argument on-invalid="null" /> <!-- Continue on decryption failure -->
-            <argument on-invalid="null" /> <!-- JWE header checkers -->
-            <argument on-invalid="null" /> <!-- Allowed key encryption algorithms -->
-            <argument on-invalid="null" /> <!-- Allowed content encryption algorithms -->
+            <argument type="collection" on-invalid="null" /> <!-- JWE header checkers -->
+            <argument type="collection" on-invalid="null" /> <!-- Allowed key encryption algorithms -->
+            <argument type="collection" on-invalid="null" /> <!-- Allowed content encryption algorithms -->
             <argument on-invalid="null" /> <!-- Encryption keyset -->
         </service>
         <service id="lexik_jwt_authentication.web_token.iat_validator" class="Jose\Component\Checker\IssuedAtChecker" public="false">
