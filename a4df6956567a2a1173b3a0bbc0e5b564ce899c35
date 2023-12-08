@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2023-12-06T10:33:35Z
+
+Would you mind double-checking there is no more similar issues please?
+
+---------------------------------------------------------------------------
+
+by fracsi at 2023-12-06T10:49:43Z
+
+@chalasr Found an another.
+I ran throught the code with PHP 7.2 (min version for Symfony 5.4).
+#1041 and #1167 introduced the incompatibilities.
+
+I have no idea why the checks were green for PHP 7.2 and Symfony 5.4
+
+---------------------------------------------------------------------------
+
+by chalasr at 2023-12-06T16:57:14Z
+
+@fracsi Good question, it seems that build is totally broken despite it doesn't show up as such!
+https://github.com/lexik/LexikJWTAuthenticationBundle/actions/runs/7107317672/job/19348521987
+Gonna look into this asap.
