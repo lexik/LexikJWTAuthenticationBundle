@@ -17,24 +17,29 @@ jobs:
                       symfony: 5.4.*
                       composer-flags: '--prefer-stable --prefer-lowest'
                       can-fail: false
+                      phpunit-version: 8
                     # LTS with latest stable PHP
                     - php: 8.3
                       symfony: 6.4.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                      phpunit-version: 9
                       # Stable Symfony branches
                     - php: 8.2
                       symfony: 6.3.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                      phpunit-version: 9
                     - php: 8.2
                       symfony: 6.4.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                      phpunit-version: 9
                     - php: 8.3
                       symfony: 7.0.*
                       composer-flags: '--prefer-stable'
                       can-fail: false
+                      phpunit-version: 9
 
         name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
 
@@ -72,3 +77,5 @@ jobs:
 
             - name: "Run PHPUnit Tests"
               run: "composer test"
+              env:
+                SYMFONY_PHPUNIT_VERSION: "${{ matrix.phpunit-version }}"
