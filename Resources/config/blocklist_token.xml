@@ -22,9 +22,11 @@
             <tag name="kernel.event_listener" event="lexik_jwt_authentication.on_jwt_authenticated"/>
         </service>
 
-        <service id="lexik_jwt_authentication.blocked_token_manager" class="Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManager">
+        <service id="lexik_jwt_authentication.blocked_token_manager" class="Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedToken\CacheItemPoolBlockedTokenManager">
             <argument type="service" id="lexik_jwt_authentication.blocklist_token.cache"/>
         </service>
+
+        <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManagerInterface" alias="lexik_jwt_authentication.blocked_token_manager" />
 
     </services>
 

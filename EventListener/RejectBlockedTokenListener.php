@@ -5,12 +5,15 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\InvalidTokenException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingClaimException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManagerInterface;
 
 class RejectBlockedTokenListener
 {
-    public function __construct(private BlockedTokenManager $tokenManager)
+    private $blockedTokenManager;
+
+    public function __construct(BlockedTokenManagerInterface $blockedTokenManager)
     {
+        $this->blockedTokenManager = $blockedTokenManager;
     }
 
     /**
@@ -19,7 +22,7 @@ class RejectBlockedTokenListener
     public function __invoke(JWTAuthenticatedEvent $event): void
     {
         try {
-            if ($this->tokenManager->has($event->getPayload())) {
+            if ($this->blockedTokenManager->has($event->getPayload())) {
                 throw new InvalidTokenException('JWT blocked');
             }
         } catch (MissingClaimException) {

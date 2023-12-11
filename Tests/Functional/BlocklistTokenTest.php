@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\CacheItemPoolBlockedTokenManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\UserProvider;
 use Psr\Cache\CacheItemPoolInterface;

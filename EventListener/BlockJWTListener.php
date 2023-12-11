@@ -4,7 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\EventListener;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingClaimException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\CacheItemPoolBlockedTokenManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,16 +15,16 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 class BlockJWTListener
 {
-    private $jwtManager;
+    private $blockedTokenManager;
     private $tokenExtractor;
-    private $tokenManager;
+    private $jwtManager;
 
     public function __construct(
-        BlockedTokenManager $tokenManager,
-        TokenExtractorInterface $tokenExtractor,
-        JWTTokenManagerInterface $jwtManager,
+        BlockedTokenManagerInterface $blockedTokenManager,
+        TokenExtractorInterface      $tokenExtractor,
+        JWTTokenManagerInterface     $jwtManager
     ) {
-        $this->tokenManager = $tokenManager;
+        $this->blockedTokenManager = $blockedTokenManager;
         $this->tokenExtractor = $tokenExtractor;
         $this->jwtManager = $jwtManager;
     }
@@ -58,7 +59,7 @@ class BlockJWTListener
         }
 
         try {
-            $this->tokenManager->add($payload);
+            $this->blockedTokenManager->add($payload);
         } catch (MissingClaimException $e) {
             // We can't block a token missing the claims our system requires, so silently ignore this one
         }

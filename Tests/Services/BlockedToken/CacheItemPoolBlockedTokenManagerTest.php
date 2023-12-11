@@ -1,16 +1,16 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Services\BlockedToken;
 
 use DateTime;
 use DateTimeImmutable;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingClaimException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedToken\CacheItemPoolBlockedTokenManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class BlockedTokenManagerTest extends TestCase
+class CacheItemPoolBlockedTokenManagerTest extends TestCase
 {
     private const JTI = '3de41d11099ed70e23e634eb32c959da';
     private const IAT = 1699455323;
@@ -19,7 +19,7 @@ class BlockedTokenManagerTest extends TestCase
     {
         $this->expectException(MissingClaimException::class);
         $cacheAdapter = new ArrayAdapter();
-        $blockedTokenManager = new BlockedTokenManager($cacheAdapter);
+        $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
         $blockedTokenManager->add(
             [
                 'iat' => self::IAT,
@@ -36,7 +36,7 @@ class BlockedTokenManagerTest extends TestCase
     {
         $this->expectException(MissingClaimException::class);
         $cacheAdapter = new ArrayAdapter();
-        $blockedTokenManager = new BlockedTokenManager($cacheAdapter);
+        $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
         $blockedTokenManager->add(
             [
                 'iat' => self::IAT,
@@ -52,7 +52,7 @@ class BlockedTokenManagerTest extends TestCase
     public function testShouldNotAddPayloadIfItHasExpired()
     {
         $cacheAdapter = new ArrayAdapter();
-        $blockedTokenManager = new BlockedTokenManager($cacheAdapter);
+        $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
         self::assertFalse(
             $blockedTokenManager->add(
                 [
@@ -74,7 +74,7 @@ class BlockedTokenManagerTest extends TestCase
         ClockMock::register(ArrayAdapter::class);
 
         $cacheAdapter = new ArrayAdapter();
-        $blockedTokenManager = new BlockedTokenManager($cacheAdapter);
+        $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
 
         $expirationDateTime = new DateTimeImmutable('2050-01-01 00:00:00');
         self::assertTrue(
@@ -103,7 +103,7 @@ class BlockedTokenManagerTest extends TestCase
     public function testHasToken()
     {
         $cacheAdapter = new ArrayAdapter();
-        $blockedTokenManager = new BlockedTokenManager($cacheAdapter);
+        $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
 
         $expirationDateTime = new DateTimeImmutable('2050-01-01 00:00:00');
         $payload = [

@@ -1,14 +1,15 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Services;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedToken;
 
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingClaimException;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
-class BlockedTokenManager
+class CacheItemPoolBlockedTokenManager implements BlockedTokenManagerInterface
 {
     private $cacheJwt;
 
@@ -17,9 +18,6 @@ class BlockedTokenManager
         $this->cacheJwt = $cacheJwt;
     }
 
-    /**
-     * @throws MissingClaimException if required claims do not exist in the payload
-     */
     public function add(array $payload): bool
     {
         if (!isset($payload['exp'])) {
@@ -48,9 +46,6 @@ class BlockedTokenManager
         return true;
     }
 
-    /**
-     * @throws MissingClaimException if required claims do not exist in the payload
-     */
     public function has(array $payload): bool
     {
         if (!isset($payload['jti'])) {
@@ -60,9 +55,6 @@ class BlockedTokenManager
         return $this->cacheJwt->hasItem($payload['jti']);
     }
 
-    /**
-     * @throws MissingClaimException if required claims do not exist in the payload
-     */
     public function remove(array $payload): void
     {
         if (!isset($payload['jti'])) {
