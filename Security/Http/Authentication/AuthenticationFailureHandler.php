@@ -41,7 +41,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        if($exception->getPrevious() instanceof DisabledException) {
+        if ($exception->getPrevious() instanceof DisabledException) {
             $exception = $exception->getPrevious();
         }
         
