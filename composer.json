@@ -40,7 +40,7 @@
         "php": ">=7.1",
         "ext-openssl": "*",
         "lcobucci/clock": "^1.2|^2.0|^3.0",
-        "lcobucci/jwt": "^3.4|^4.1|^5.0",
+        "lcobucci/jwt": "^3.4.6|^4.1|^5.0",
         "namshi/jose": "^7.2",
         "symfony/config": "^4.4|^5.4|^6.0|^7.0",
         "symfony/dependency-injection": "^4.4|^5.4|^6.0|^7.0",
@@ -58,7 +58,7 @@
         "symfony/dom-crawler": "^5.4|^6.0|^7.0",
         "symfony/filesystem": "^4.4|^5.4|^6.0|^7.0",
         "symfony/framework-bundle": "^4.4|^5.4|^6.0|^7.0",
-        "symfony/phpunit-bridge": "^4.4|^5.4|^6.0|^7.0",
+        "symfony/phpunit-bridge": "^7.0.1",
         "symfony/security-guard": "^4.4|^5.4|^6.0|^7.0",
         "symfony/var-dumper": "^4.4|^5.4|^6.0|^7.0",
         "symfony/yaml": "^4.4|^5.4|^6.0|^7.0"
