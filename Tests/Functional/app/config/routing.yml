@@ -6,3 +6,13 @@ secured:
     path:     /api/secured
     defaults:  { _controller: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController::securedAction }
     methods:  [GET]
+
+app_logout:
+    path: /api/logout
+    defaults:  { _controller: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController::logoutAction }
+    methods: GET
+
+app_logout_custom:
+    path: /api/logout_custom
+    defaults:  { _controller: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller\TestController::logoutCustomAction }
+    methods: GET

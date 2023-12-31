@@ -86,6 +86,11 @@ Full default configuration
         # remove the token from the response body when using cookies
         remove_token_from_body_when_cookies_used: true
 
+        # invalidate the token on logout by storing it in the cache
+        blocklist_token:
+            enabled: true
+            cache: cache.app
+
 Encoder configuration
 ~~~~~~~~~~~~~~~~~~~~~
 

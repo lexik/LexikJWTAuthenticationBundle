@@ -28,6 +28,7 @@ The bulk of the documentation is stored in the [`Resources/doc`](Resources/doc/i
   * [Creating JWT tokens programmatically](Resources/doc/7-manual-token-creation.rst)
   * [A database-less user provider](Resources/doc/8-jwt-user-provider.rst)
   * [Accessing the authenticated JWT token](Resources/doc/9-access-authenticated-jwt-token.rst)
+  * [Invalidate token on logout](Resources/doc/10-invalidate-token-on-logout.rst)
 
 Community Support
 -----------------
