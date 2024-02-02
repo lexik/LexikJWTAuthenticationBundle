@@ -11,7 +11,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 class JWTAuthenticatedEvent extends Event
 {
     protected array $payload;
-
     protected TokenInterface $token;
 
     public function __construct(array $payload, TokenInterface $token)

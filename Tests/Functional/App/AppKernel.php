@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\App;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
+use Jose\Bundle\JoseFramework\JoseFrameworkBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -16,9 +17,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 class AppKernel extends Kernel
 {
     private string $encoder;
-
     private string $userProvider;
-
     private $signatureAlgorithm;
 
     public function __construct($environment, $debug)
@@ -40,6 +39,9 @@ class AppKernel extends Kernel
             new SecurityBundle(),
             new LexikJWTAuthenticationBundle(),
         ];
+        if (class_exists(JoseFrameworkBundle::class)) {
+            $bundles[] = new JoseFrameworkBundle();
+        }
         if (class_exists(ApiPlatformBundle::class)) {
             $bundles[] = new ApiPlatformBundle();
         }

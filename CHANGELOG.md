@@ -1,8 +1,40 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.19.0
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v2.20.3
 
+## [2.20.3](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.3) (2023-12-14)
+
+* bug [\#1184](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1174) Wrong type exception for AccessTokenLoader with certain configuration ([@athanasius-kircher](https://github.com/athanasius-kircher))
+* bug [\#1183](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1174) Fix for PHP <7.4 compatibility ([@fracsi](https://github.com/fracsi))
+
+## [2.20.2](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.2) (2023-12-05)
+
+* bug [\#1174](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1174) Fix for PHP <7.4 compatibility ([@fracsi](https://github.com/fracsi))
+
+## [2.20.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.1) (2023-12-02)
+
+* bug [\#1172](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1172) Removed constructor property promotion to fix compatibility with PHP 7.x ([@webhdx](https://github.com/webhdx))
+
+## [2.20.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.20.0) (2023-12-01)
+
+* feature [\#1041](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1041) WebToken support integration ([@Spomky](https://github.com/Spomky))
+* feature [\#1159](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1159) Added: JWT security scheme to openapi ([@Ninos](https://github.com/Ninos))
+* feature [\#1167](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1167) add support for partitioned cookies ([@EmilePerron](https://github.com/EmilePerron))
+* feature [\#1165](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1165) Support Symfony 7 ([@endroid](https://github.com/endroid), [@chalasr](https://github.com/chalasr))
+
+## [2.19.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.1) (2023-07-03)
+
+* bug [\#1149](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1149) add description to authentication path ([@Altherius](https://github.com/Altherius))
+* bug [\#1144](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1144) Fix missing array claims BC break in 2.9.0 ([@ostrolucky](https://github.com/ostrolucky))
+
+## [2.19.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.19.0) (2023-06-05)
+
+* bug [\#1119](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1119) Fix API Platform integration ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1120](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1120) Remove deprecation symfony 6.3 ([@maxhelias](https://github.com/maxhelias))
+* bug [\#1133](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1133) Fixed issue with option user_id_claim ([@koftikes](https://github.com/koftikes))
+* bug [\#1134](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1134) Fix ForwardCompatAuthenticatorTrait with OPCache preload ([@elavrom](https://github.com/elavrom))
+* feature [\#1125](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1125) Allow lcobucci/jwt v5 ([@maxhelias](https://github.com/maxhelias))
 
 ## [2.18.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.18.1) (2023-13-02)
 

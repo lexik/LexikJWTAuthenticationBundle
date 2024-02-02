@@ -138,6 +138,7 @@ when the cookie token extractor is enabled
     #      domain: null (null means automatically set by symfony)
     #      secure: true (default to true)
     #      httpOnly: true
+    #      partitioned: false
 
 Automatically generating split cookies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,6 +169,7 @@ Keep in mind, that SameSite attribute is **not supported** in
             path: /
             domain: null
             httpOnly: false
+            partitioned: false # Only for Symfony 6.4 or higher
             split:
                 - header
                 - payload
@@ -178,6 +180,7 @@ Keep in mind, that SameSite attribute is **not supported** in
             path: /
             domain: null
             httpOnly: true
+            partitioned: false # Only for Symfony 6.4 or higher
             split:
                 - signature
 

@@ -35,6 +35,15 @@ Register bundle into ``config/bundles.php`` (Flex did it automatically):
 Generate the SSL keys
 ~~~~~~~~~~~~~~~~~~~~~
 
+.. note::
+
+    For the version 2.xx of this bundle, you can use Web-Token_ and generate
+    JSON Web Keys (``JWK``) and JSON Web Keysets (``JWKSet``) instead of
+    PEM encoded keys.
+
+    Please refer to the dedicated page :doc:`Web-Token feature <10-web-token>` for
+    more information.
+
 .. code-block:: terminal
 
     $ php bin/console lexik:jwt:generate-keypair
@@ -243,3 +252,6 @@ The following documents are available:
 -  :doc:`Creating JWT tokens programmatically </7-manual-token-creation>`
 -  :doc:`A database-less user provider </8-jwt-user-provider>`
 -  :doc:`Accessing the authenticated JWT token </9-access-authenticated-jwt-token>`
+-  :doc:`Web-Token feature </10-web-token>`
+
+.. _Web-Token: https://web-token.spomky-labs.com/

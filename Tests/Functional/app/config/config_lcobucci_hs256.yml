@@ -1,0 +1,8 @@
+imports:
+    - { resource: base_config.yml }
+
+lexik_jwt_authentication:
+    secret_key: testingkeylooooooooooooongenough
+    encoder:
+        signature_algorithm: HS256
+        service: lexik_jwt_authentication.encoder.lcobucci

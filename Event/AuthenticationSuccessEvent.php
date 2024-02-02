@@ -14,9 +14,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 class AuthenticationSuccessEvent extends Event
 {
     protected array $data;
-
     protected UserInterface $user;
-
     protected Response $response;
 
     public function __construct(array $data, UserInterface $user, Response $response)

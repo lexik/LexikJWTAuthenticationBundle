@@ -38,13 +38,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     private TokenExtractorInterface $tokenExtractor;
-
     private JWTTokenManagerInterface $jwtManager;
-
     private EventDispatcherInterface $eventDispatcher;
-
     private UserProviderInterface $userProvider;
-
     private ?TranslatorInterface $translator;
 
     public function __construct(

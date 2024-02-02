@@ -1,0 +1,30 @@
+imports:
+  - { resource: base_security.yml }
+
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\UserInterface: plaintext
+
+    firewalls:
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            provider: in_memory
+            form_login:
+                check_path: /login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:  ^/api
+            stateless: true
+            anonymous: false
+            provider: in_memory
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

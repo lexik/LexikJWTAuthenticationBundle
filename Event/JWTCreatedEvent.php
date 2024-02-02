@@ -11,9 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 class JWTCreatedEvent extends Event
 {
     protected array $header;
-
     protected array $data;
-
     protected UserInterface $user;
 
     public function __construct(array $data, UserInterface $user, array $header = [])

@@ -1,0 +1,8 @@
+imports:
+    - { resource: base_config.yml }
+
+lexik_jwt_authentication:
+    secret_key: '%kernel.root_dir%/../config/jwt/private.pem'
+    pass_phrase: testing
+    encoder:
+        service: lexik_jwt_authentication.encoder.lcobucci

@@ -25,9 +25,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class JWTManager implements JWTTokenManagerInterface
 {
     protected JWTEncoderInterface $jwtEncoder;
-
     protected EventDispatcherInterface $dispatcher;
-
     protected string $userIdClaim;
 
     public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, string $userIdClaim)
@@ -133,13 +131,6 @@ class JWTManager implements JWTTokenManagerInterface
     protected function addUserIdentityToPayload(UserInterface $user, array &$payload)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
-
-        if ($user instanceof InMemoryUser && 'username' === $this->userIdClaim) {
-            $payload[$this->userIdClaim] = $accessor->getValue($user, 'userIdentifier');
-
-            return;
-        }
-
         $payload[$this->userIdClaim] = $accessor->getValue($user, $accessor->isReadable($user, $this->userIdClaim) ? $this->userIdClaim : 'user_identifier');
     }
 
