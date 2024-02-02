@@ -37,7 +37,7 @@ jobs:
                   fetch-depth: 2
 
             - name: "Cache Composer packages"
-              uses: "actions/cache@v3"
+              uses: "actions/cache@v4"
               with:
                   path: "~/.composer/cache"
                   key: "php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles('composer.json') }}-flags-${{ matrix.composer-flags }}"
