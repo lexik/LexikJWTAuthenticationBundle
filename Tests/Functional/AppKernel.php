@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\App;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Jose\Bundle\JoseFramework\JoseFrameworkBundle;
@@ -93,7 +93,7 @@ class AppKernel extends Kernel
         }
 
         $router = [
-            'resource' => '%kernel.root_dir%/config/routing.yml',
+            'resource' => '%kernel.project_dir%/Tests/Functional/config/routing.yml',
             'utf8' => true,
         ];
         if (class_exists(ApiPlatformBundle::class)) {
@@ -110,7 +110,7 @@ class AppKernel extends Kernel
                         'password_path' => 'security.credentials.password',
                     ],
                 ]);
-                $router['resource'] = '%kernel.root_dir%/config/routing_api_platform.yml';
+                $router['resource'] = '%kernel.project_dir%/Tests/Functional/config/routing_api_platform.yml';
             });
         }
 
@@ -145,9 +145,5 @@ class AppKernel extends Kernel
     protected function build(ContainerBuilder $container): void
     {
         $container->register('logger', NullLogger::class);
-
-        if (!$container->hasParameter('kernel.root_dir')) {
-            $container->setParameter('kernel.root_dir', $this->getRootDir());
-        }
     }
 }
