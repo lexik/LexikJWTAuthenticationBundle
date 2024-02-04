@@ -13,19 +13,16 @@ jobs:
             matrix:
                 include:
                     # Lowest deps
-                    - php: 8.1
-                      symfony: 5.4.*
+                    - php: 8.2
+                      symfony: 6.4.*
                       can-fail: false
-                    # LTS with latest stable PHP
+                    # LTS with last stable PHP
                     - php: 8.3
                       symfony: 6.4.*
                       can-fail: false
                       # Stable Symfony branches
-                    - php: 8.1
-                      symfony: 6.3.*
-                      can-fail: false
-                    - php: 8.2
-                      symfony: 6.4.*
+                    - php: 8.3
+                      symfony: 7.0.*
                       can-fail: false
 
         name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
@@ -48,11 +45,6 @@ jobs:
               with:
                   php-version: "${{ matrix.php }}"
                   tools: "composer:v2,flex"
-
-            - name: "Remove symfony/security-guard"
-              if: "matrix.symfony == '6.3.*' || matrix.symfony == '6.4.*' || matrix.symfony == '7.0.*'"
-              run: "composer remove --dev --no-update symfony/security-guard"
-
 
             - name: "Require web-token/*"
               run: |
