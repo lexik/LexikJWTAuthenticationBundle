@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Namshi\JOSE\JWS;
+use Symfony\Component\Clock\Clock;
 
 /**
  * JWS Provider, Namshi\JOSE library integration.
@@ -82,13 +83,19 @@ class DefaultJWSProvider implements JWSProviderInterface
      */
     public function create(array $payload, array $header = [])
     {
+        if (class_exists(Clock::class)) {
+            $now = Clock::get()->now()->getTimestamp();
+        } else {
+            $now = time();
+        }
+
         $header['alg'] = $this->signatureAlgorithm;
 
         $jws = new JWS($header, $this->cryptoEngine);
-        $claims = ['iat' => time()];
+        $claims = ['iat' => $now];
 
         if (null !== $this->ttl && !isset($payload['exp'])) {
-            $claims['exp'] = time() + $this->ttl;
+            $claims['exp'] = $now + $this->ttl;
         }
 
         $jws->setPayload($payload + $claims);

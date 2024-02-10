@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
-use Lcobucci\Clock\Clock;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -30,6 +29,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use Symfony\Component\Clock\Clock as SymfonyClock;
+use Psr\Clock\ClockInterface as Clock;
 
 /**
  * @final
@@ -77,7 +78,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
             throw new \InvalidArgumentException(sprintf('The %s provider supports only "openssl" as crypto engine.', self::class));
         }
         if (null === $clock) {
-            $clock = new SystemClock(new \DateTimeZone('UTC'));
+            if (class_exists(SymfonyClock::class)) {
+                $clock = SymfonyClock::get();
+            } else {
+                $clock = new SystemClock(new \DateTimeZone('UTC'));
+            }
         }
 
         $this->keyLoader = $keyLoader;
@@ -103,7 +108,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $jws = $jws->withHeader($k, $v);
         }
 
-        $now = time();
+        $now = $this->clock->now()->getTimestamp();
 
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
