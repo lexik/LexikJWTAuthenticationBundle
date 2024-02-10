@@ -2,6 +2,8 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Signature;
 
+use Symfony\Component\Clock\Clock;
+
 /**
  * Object representation of a JSON Web Signature loaded from an
  * existing JSON Web Token.
@@ -74,7 +76,8 @@ final class LoadedJWS
             return;
         }
 
-        if ($this->clockSkew <= time() - $this->payload['exp']) {
+        $now = Clock::get()->now()->getTimestamp();
+        if ($this->clockSkew <= $now - $this->payload['exp']) {
             $this->state = self::EXPIRED;
         }
     }
@@ -84,7 +87,8 @@ final class LoadedJWS
      */
     private function checkIssuedAt(): void
     {
-        if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > time()) {
+        $now = Clock::get()->now()->getTimestamp();
+        if (isset($this->payload['iat']) && (int) $this->payload['iat'] - $this->clockSkew > $now) {
             $this->state = self::INVALID;
         }
     }

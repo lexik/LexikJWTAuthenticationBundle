@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Subscriber;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class AdditionalAccessTokenClaimsAndHeaderSubscriber implements EventSubscriberInterface
@@ -29,14 +30,15 @@ final class AdditionalAccessTokenClaimsAndHeaderSubscriber implements EventSubsc
 
     public function addClaims(JWTCreatedEvent $event): void
     {
+        $now = Clock::get()->now()->getTimestamp();
         $claims = [
             'jti' => uniqid('', true),
-            'iat' => time(),
-            'nbf' => time(),
+            'iat' => $now,
+            'nbf' => $now,
         ];
         $data = $event->getData();
         if (!array_key_exists('exp', $data) && $this->ttl > 0) {
-            $claims['exp'] = time() + $this->ttl;
+            $claims['exp'] = $now + $this->ttl;
         }
         $event->setData(array_merge($claims, $data));
     }
