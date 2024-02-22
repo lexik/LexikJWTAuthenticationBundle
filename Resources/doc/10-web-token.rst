@@ -15,30 +15,7 @@ To enable this feature, you must install the following dependencies:
 
 .. code-block:: sh
 
-    composer require --no-update web-token/jwt-bundle web-token/jwt-checker web-token/jwt-key-mgmt
-
-    # Please choose one of the following packages. They add algorithms depending on your needs
-    # More details in the next section
-    composer require --no-update web-token/jwt-signature-algorithm-ecdsa:"^3.1.2"
-    composer require --no-update web-token/jwt-signature-algorithm-hmac:"^3.1.2"
-    composer require --no-update web-token/jwt-signature-algorithm-rsa:"^3.1.2"
-    composer require --no-update web-token/jwt-signature-algorithm-eddsa:"^3.1.2"
-
-
-    # If you want to encrypt the tokens, please pick at least
-    # * one key encryption algorithm package
-    # * one content encryption algorithm package
-    #
-    # // KEY ENCRYPTION ALGORITHM \\
-    composer require --no-update web-token/jwt-encryption-algorithm-rsa:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-pbes2:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-ecdh-es:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-dir:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-aeskw:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-aesgcmkw:"^3.1.2"
-    # // CONTENT ENCRYPTION ALGORITHM \\
-    composer require --no-update web-token/jwt-encryption-algorithm-aesgcm:"^3.1.2"
-    composer require --no-update web-token/jwt-encryption-algorithm-aescbc:"^3.1.2"
+    composer require --no-update web-token/jwt-bundle
 
 ## About Algorithms
 
