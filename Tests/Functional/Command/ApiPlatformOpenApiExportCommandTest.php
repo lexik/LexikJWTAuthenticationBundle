@@ -106,9 +106,9 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
         "description": "Creates a user token.",
         "tags": [
           "Login Check"
-        ]
+        ],
+        "security": []
       },
-      "security": [],
       "parameters": []
     }
   },
