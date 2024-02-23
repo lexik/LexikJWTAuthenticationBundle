@@ -108,6 +108,7 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
           "Login Check"
         ]
       },
+      "security": [],
       "parameters": []
     }
   },
