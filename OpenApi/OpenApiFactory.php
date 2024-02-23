@@ -91,6 +91,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     ]))
                     ->withRequired(true)
                 )
+                ->withSecurity([])
             ));
 
         return $openApi;
