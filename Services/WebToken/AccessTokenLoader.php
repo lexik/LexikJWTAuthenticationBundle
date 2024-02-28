@@ -51,7 +51,7 @@ final class AccessTokenLoader
         ?string                     $encryptionKeyset
     ) {
         $this->jwsLoader = $jwsLoaderFactory->create(['jws_compact'], $signatureAlgorithms, $jwsHeaderChecker);
-        if ($jweLoaderFactory !== null && $keyEncryptionAlgorithms !== null && $contentEncryptionAlgorithms !== null && $jweHeaderChecker !== null) {
+        if ($jweLoaderFactory !== null && !empty($keyEncryptionAlgorithms) && !empty($contentEncryptionAlgorithms) && !empty($jweHeaderChecker)) {
             $this->jweLoader = $jweLoaderFactory->create(['jwe_compact'], $keyEncryptionAlgorithms, $contentEncryptionAlgorithms, [], $jweHeaderChecker);
             $this->continueOnDecryptionFailure = $continueOnDecryptionFailure;
         }
