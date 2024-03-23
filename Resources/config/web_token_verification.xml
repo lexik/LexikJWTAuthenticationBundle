@@ -15,9 +15,9 @@
             <argument type="collection" /> <!-- Allowed signature algorithms -->
             <argument /> <!-- Signature keyset -->
             <argument on-invalid="null" /> <!-- Continue on decryption failure -->
-            <argument type="collection" on-invalid="null" /> <!-- JWE header checkers -->
-            <argument type="collection" on-invalid="null" /> <!-- Allowed key encryption algorithms -->
-            <argument type="collection" on-invalid="null" /> <!-- Allowed content encryption algorithms -->
+            <argument type="collection" /> <!-- JWE header checkers -->
+            <argument type="collection" /> <!-- Allowed key encryption algorithms -->
+            <argument type="collection" /> <!-- Allowed content encryption algorithms -->
             <argument on-invalid="null" /> <!-- Encryption keyset -->
         </service>
         <service id="lexik_jwt_authentication.web_token.iat_validator" class="Jose\Component\Checker\IssuedAtChecker" public="false">

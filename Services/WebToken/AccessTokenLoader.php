@@ -52,7 +52,7 @@ final class AccessTokenLoader
     ) {
         $this->jwsLoader = $jwsLoaderFactory->create(['jws_compact'], $signatureAlgorithms, $jwsHeaderChecker);
         if ($jweLoaderFactory !== null && $keyEncryptionAlgorithms !== null && $contentEncryptionAlgorithms !== null && $jweHeaderChecker !== null) {
-            $this->jweLoader = $jweLoaderFactory->create(['jwe_compact'], $keyEncryptionAlgorithms, $contentEncryptionAlgorithms, [], $jweHeaderChecker);
+            $this->jweLoader = $jweLoaderFactory->create(['jwe_compact'], array_merge($keyEncryptionAlgorithms, $contentEncryptionAlgorithms), null, null, $jweHeaderChecker);
             $this->continueOnDecryptionFailure = $continueOnDecryptionFailure;
         }
         $this->signatureKeyset = JWKSet::createFromJson($signatureKeyset);

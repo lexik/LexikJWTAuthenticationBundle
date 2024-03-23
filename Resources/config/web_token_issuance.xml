@@ -11,9 +11,9 @@
             <argument type="service" id="Jose\Bundle\JoseFramework\Services\JWEBuilderFactory" on-invalid="null" />
             <argument /> <!-- Signature algorithm -->
             <argument /> <!-- Signature key -->
-            <argument on-invalid="null" /> <!-- Key encryption algorithm -->
-            <argument on-invalid="null" /> <!-- Content encryption algorithm -->
-            <argument on-invalid="null" /> <!-- Encryption key -->
+            <argument /> <!-- Key encryption algorithm -->
+            <argument /> <!-- Content encryption algorithm -->
+            <argument /> <!-- Encryption key -->
         </service>
     </services>
 </container>

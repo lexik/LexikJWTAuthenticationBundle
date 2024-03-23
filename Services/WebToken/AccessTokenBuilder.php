@@ -67,7 +67,7 @@ final class AccessTokenBuilder
     ) {
         $this->jwsBuilder = $jwsBuilderFactory->create([$signatureAlgorithm]);
         if ($jweBuilderFactory !== null && $keyEncryptionAlgorithm !== null && $contentEncryptionAlgorithm !== null) {
-            $this->jweBuilder = $jweBuilderFactory->create([$keyEncryptionAlgorithm], [$contentEncryptionAlgorithm], []);
+            $this->jweBuilder = $jweBuilderFactory->create([$keyEncryptionAlgorithm, $contentEncryptionAlgorithm]);
         }
         $this->signatureKey = JWK::createFromJson($signatureKey);
         $this->encryptionKey = $encryptionKey ? JWK::createFromJson($encryptionKey) : null;

@@ -48,12 +48,8 @@ jobs:
 
             - name: "Require web-token/*"
               run: |
-                composer require --dev --no-update web-token/jwt-bundle:"^3.0.6"
-                composer require --dev --no-update web-token/jwt-checker:"^3.0.6"
-                composer require --dev --no-update web-token/jwt-key-mgmt:"^3.0.6"
-                composer require --dev --no-update web-token/jwt-signature-algorithm-hmac:"^3.0.6"
-                composer require --dev --no-update web-token/jwt-encryption-algorithm-aesgcm:"^3.0.6"
-                composer require --dev --no-update web-token/jwt-encryption-algorithm-aesgcmkw:"^3.0.6"
+                  composer require --dev --no-update web-token/jwt-bundle:"^3.3.3"
+                  composer require --dev --no-update spomky-labs/aes-key-wrap:"^7.0"
 
             - name: "Install dependencies"
               run: "composer update ${{ matrix.composer-flags }} --prefer-dist --prefer-stable"
