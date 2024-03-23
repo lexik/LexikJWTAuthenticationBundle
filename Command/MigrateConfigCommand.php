@@ -307,7 +307,6 @@ final class MigrateConfigCommand extends AbstractConfigCommand
             case 'HS512':
                 return 512;
             default:
-                dump($algorithm);
                 throw new \LogicException('Unsupported algorithm');
         }
     }

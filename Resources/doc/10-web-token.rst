@@ -15,7 +15,7 @@ To enable this feature, you must install the following dependencies:
 
 .. code-block:: sh
 
-    composer require --no-update web-token/jwt-bundle
+    composer require web-token/jwt-bundle
 
 ## About Algorithms
 

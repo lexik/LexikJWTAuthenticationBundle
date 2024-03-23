@@ -28,7 +28,7 @@ class AppKernel extends Kernel
 
     private $testCase;
 
-    public function __construct($environment, $debug, $testCase = null)
+    public function __construct(string $environment, bool $debug, ?string $testCase = null)
     {
         parent::__construct($environment, $debug);
 
