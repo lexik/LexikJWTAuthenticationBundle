@@ -36,7 +36,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->onAuthenticationSuccess($request, $token);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode(), $response->getContent());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
@@ -49,7 +49,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->handleAuthenticationSuccess($this->getUser());
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode(), $response->getContent());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);
@@ -62,7 +62,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->handleAuthenticationSuccess($this->getUser(), 'jwt');
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode(), $response->getContent());
 
         $content = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('token', $content);

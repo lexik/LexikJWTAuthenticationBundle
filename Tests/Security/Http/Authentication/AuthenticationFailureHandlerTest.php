@@ -33,7 +33,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode(), $response->getContent());
         $this->assertSame(401, $content['code']);
         $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
@@ -52,7 +52,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode(), $response->getContent());
         $this->assertSame(403, $content['code']);
         $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
@@ -75,7 +75,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode(), $response->getContent());
         $this->assertSame(401, $content['code']);
         $this->assertSame($authenticationException->getMessageKey(), $content['message']);
     }
@@ -96,7 +96,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode(), $response->getContent());
         $this->assertSame(401, $content['code']);
         $this->assertSame('translated message', $content['message']);
     }
