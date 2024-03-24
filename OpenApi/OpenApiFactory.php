@@ -43,7 +43,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi
             ->getComponents()->getSecuritySchemes()->offsetSet(
                 'JWT',
-                new \ArrayObject([
+                new \ArrayObject(
+                    [
                         'type' => 'http',
                         'scheme' => 'bearer',
                         'bearerFormat' => 'JWT',

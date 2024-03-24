@@ -151,7 +151,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         return $keyset
             ->with($this->createOctKey($size, $algorithm)->toPublic())
             ->with($this->createOctKey($size, $algorithm)->toPublic())
-            ;
+        ;
     }
 
     private function withRsaKeys(JWKSet $keyset, string $algorithm): JWKSet
@@ -316,7 +316,7 @@ final class MigrateConfigCommand extends AbstractConfigCommand
         return [
             'use' => 'sig',
             'alg' => $algorithm,
-            'kid'=> Base64UrlSafe::encodeUnpadded(random_bytes(16))
+            'kid' => Base64UrlSafe::encodeUnpadded(random_bytes(16))
         ];
     }
 }
