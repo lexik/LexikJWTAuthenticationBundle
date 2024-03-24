@@ -68,7 +68,8 @@
     },
     "suggest": {
         "gesdinet/jwt-refresh-token-bundle": "Implements a refresh token system over Json Web Tokens in Symfony",
-        "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support"
+        "spomky-labs/lexik-jose-bridge": "Provides a JWT Token encoder with encryption support",
+        "symfony/clock": "Allow to test JWT with a shared and expectable clock"
     },
     "autoload": {
         "psr-4": {

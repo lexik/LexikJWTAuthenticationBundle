@@ -6,6 +6,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\ForwardCompatTestCaseTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\MockClock;
 
 /**
  * Tests the CreatedJWS model class.
@@ -128,7 +130,11 @@ final class LoadedJWSTest extends TestCase
     {
         // 2020-10-25 00:16:13 UTC+0
         $timestamp = 1603584973;
-        ClockMock::withClockMock($timestamp);
+        if (class_exists(Clock::class)) {
+            Clock::set(new MockClock("@$timestamp"));
+        } else {
+            ClockMock::withClockMock($timestamp);
+        }
 
         $dstPayload = [
             'username' => 'test',

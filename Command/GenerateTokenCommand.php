@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Command;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -95,7 +96,12 @@ class GenerateTokenCommand extends Command
         if (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) == 0) {
             $payload['exp'] = 0;
         } elseif (null !== $input->getOption('ttl') && ((int) $input->getOption('ttl')) > 0) {
-            $payload['exp'] = time() + $input->getOption('ttl');
+            if (class_exists(Clock::class)) {
+                $now = Clock::get()->now()->getTimestamp();
+            } else {
+                $now = time();
+            }
+            $payload['exp'] = $now + $input->getOption('ttl');
         }
 
         $token = $this->tokenManager->createFromPayload($user, $payload);
