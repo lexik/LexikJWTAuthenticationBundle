@@ -22,7 +22,7 @@ final class JWTAuthenticationSuccessResponseTest extends TestCase
         $expected = ['token' => 'jwt'] + $data;
         $response = new JWTAuthenticationSuccessResponse($expected['token'], $data);
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode(), $response->getContent());
         $this->assertSame(json_encode($expected), $response->getContent());
 
         return $response;

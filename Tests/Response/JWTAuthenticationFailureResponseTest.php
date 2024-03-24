@@ -22,7 +22,7 @@ final class JWTAuthenticationFailureResponseTest extends TestCase
         $response = new JWTAuthenticationFailureResponse($expected['message']);
 
         $this->assertSame($expected['message'], $response->getMessage());
-        $this->assertSame($expected['code'], $response->getStatusCode());
+        $this->assertSame($expected['code'], $response->getStatusCode(), $response->getContent());
         $this->assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
         $this->assertSame(json_encode($expected), $response->getContent());
 
