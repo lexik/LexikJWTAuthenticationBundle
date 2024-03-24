@@ -80,7 +80,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->onAuthenticationSuccess($request, $token);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode(), $response->getContent());
         $this->assertEmpty(json_decode($response->getContent(), true));
 
         $cookie = $response->headers->getCookies()[0];
@@ -100,7 +100,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->onAuthenticationSuccess($request, $token);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode(), $response->getContent());
         $this->assertEmpty(json_decode($response->getContent(), true));
 
         $headerPayloadCookie = $response->headers->getCookies()[0];
