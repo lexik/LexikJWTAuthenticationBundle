@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by Spomky at 2024-03-23T16:21:34Z
+
+I spotted deprecation inconstistencies I need to fix first.
+Stay tuned.
+
+---------------------------------------------------------------------------
+
+by Spomky at 2024-03-23T18:21:13Z
+
+Looks good now.
+Tests pass and no direct deprecation notices.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2024-03-23T18:37:17Z
+
+Whoop whoop 🙌 Thanks!
