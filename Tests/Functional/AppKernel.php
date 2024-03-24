@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\App;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Jose\Bundle\JoseFramework\JoseFrameworkBundle;
@@ -19,11 +19,13 @@ class AppKernel extends Kernel
     private string $encoder;
     private string $userProvider;
     private $signatureAlgorithm;
+    private null|string $testCase;
 
-    public function __construct($environment, $debug)
+    public function __construct(string $environment, bool $debug, null|string $testCase = null)
     {
         parent::__construct($environment, $debug);
 
+        $this->testCase = $testCase;
         $this->encoder = getenv('ENCODER') ?: 'default';
         $this->userProvider = getenv('PROVIDER') ?: 'in_memory';
         $this->signatureAlgorithm = getenv('ALGORITHM');
@@ -93,7 +95,7 @@ class AppKernel extends Kernel
         }
 
         $router = [
-            'resource' => '%kernel.root_dir%/config/routing.yml',
+            'resource' => '%kernel.project_dir%/Tests/Functional/config/routing.yml',
             'utf8' => true,
         ];
         if (class_exists(ApiPlatformBundle::class)) {
@@ -110,7 +112,7 @@ class AppKernel extends Kernel
                         'password_path' => 'security.credentials.password',
                     ],
                 ]);
-                $router['resource'] = '%kernel.root_dir%/config/routing_api_platform.yml';
+                $router['resource'] = '%kernel.project_dir%/Tests/Functional/config/routing_api_platform.yml';
             });
         }
 
@@ -120,6 +122,10 @@ class AppKernel extends Kernel
                 'session' => $sessionConfig
             ]);
         });
+
+        if ($this->testCase && file_exists(__DIR__ . '/config/' . $this->testCase . '/config.yml')) {
+            $loader->load(__DIR__ . '/config/' . $this->testCase . '/config.yml');
+        }
 
         $loader->load(__DIR__ . sprintf('/config/security_%s.yml', $this->userProvider));
 
@@ -145,9 +151,5 @@ class AppKernel extends Kernel
     protected function build(ContainerBuilder $container): void
     {
         $container->register('logger', NullLogger::class);
-
-        if (!$container->hasParameter('kernel.root_dir')) {
-            $container->setParameter('kernel.root_dir', $this->getRootDir());
-        }
     }
 }
