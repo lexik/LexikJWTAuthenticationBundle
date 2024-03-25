@@ -8,6 +8,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,6 +41,10 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        if ($exception->getPrevious() instanceof DisabledException) {
+            $exception = $exception->getPrevious();
+        }
+        
         $errorMessage = strtr($exception->getMessageKey(), $exception->getMessageData());
         $statusCode = self::mapExceptionCodeToStatusCode($exception->getCode());
         if ($this->translator) {
