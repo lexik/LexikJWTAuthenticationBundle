@@ -1,0 +1,58 @@
+---------------------------------------------------------------------------
+
+by mbabker at 2024-04-23T14:21:36Z
+
+I'd make two changes to this:
+
+1) Always use the `ChainEnrichment` as the `lexik_jwt_authentication.payload_enrichment` service, this way the service definition is stable, and makes the next point easier
+2) Make a service tag for these new enricher services and use a compiler pass to get those tagged services and inject them into the chain; these should support priorities so developers can set them in the order they need using an attribute (i.e. `#[Autoconfigure(tags: [['lexik_jwt_authentication.payload_enrichment' => ['priority' => 10]]])]`) or through a service definition (i.e. `<tag name="lexik_jwt_authentication.payload_enrichment" priority="10" />` in XML), and this will let developers easily add enrichments in their apps/bundles without needing to mess with this bundle's service definitions (be it through adding decorators or remapping the enrichment service to another class entirely)
+
+```php
+<?php
+
+namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection\Compiler;
+
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+class CollectPayloadEnrichmentsPass implements CompilerPassInterface
+{
+    use PriorityTaggedServiceTrait;
+
+    public function process(ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('lexik_jwt_authentication.payload_enrichment')) {
+            return;
+        }
+
+        $container->getDefinition('lexik_jwt_authentication.payload_enrichment')
+            ->replaceArgument(0, $this->findAndSortTaggedServices('lexik_jwt_authentication.payload_enrichment', $container));
+    }
+}
+```
+
+With this, I'd then update the service definition for the random JTI enrichment to be this:
+
+```xml
+<service id="lexik_jwt_authentication.payload_enrichment.random_jti_enrichment" class="Lexik\Bundle\JWTAuthenticationBundle\Services\PayloadEnrichment\RandomJtiEnrichment">
+    <tag name="lexik_jwt_authentication.payload_enrichment" priority="0" />
+</service>
+```
+
+And update [this block](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/3785c0f73cdcb52ac2ab18e3a7268e6a86a90b88/DependencyInjection/LexikJWTAuthenticationExtension.php#L173-L177) in the extension to add an else and remove the tag if the blocklist token feature isn't enabled (which matches the way you're redefining the service now to switch from the null enrichment to the random enrichment), so...
+
+```php
+if ($this->isConfigEnabled($container, $config['blocklist_token'])) {
+    // Existing code
+} else {
+    $container->getDefinition('lexik_jwt_authentication.payload_enrichment.random_jti_enrichment')
+        ->clearTag('lexik_jwt_authentication.payload_enrichment');
+}
+```
+
+---------------------------------------------------------------------------
+
+by ldaspt at 2024-04-26T13:26:02Z
+
+@mbabker It's fixed, it's much better, thank you
