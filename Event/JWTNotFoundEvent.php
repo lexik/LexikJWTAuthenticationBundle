@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class JWTNotFoundEvent extends AuthenticationFailureEvent implements JWTFailureEventInterface
 {
-    public function __construct(AuthenticationException $exception = null, Response $response = null, Request $request = null)
+    public function __construct(?AuthenticationException $exception = null, ?Response $response = null, ?Request $request = null)
     {
         parent::__construct($exception, $response, $request);
     }

@@ -142,7 +142,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     /**
      * @return MockObject&JWTManager
      */
-    private function getJWTManager(string $token = null)
+    private function getJWTManager(?string $token = null)
     {
         $jwtManager = $this->createMock(JWTManager::class);
 
