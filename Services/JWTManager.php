@@ -116,7 +116,7 @@ class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
      */
     public function decode(TokenInterface $token)
     {
-        if (!($payload = $this->jwtEncoder->decode($token->getCredentials()))) {
+        if (!($payload = $this->jwtEncoder->decode($token->getAttribute('token') ?? $token->getCredentials()))) {
             return false;
         }
 
