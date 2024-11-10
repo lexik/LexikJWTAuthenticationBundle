@@ -269,7 +269,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
     public function createToken(Passport $passport, string $firewallName): TokenInterface
     {
-        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
+        $jwt = $passport->getAttribute('token');
+        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $jwt);
+        $token->setAttribute('token', $jwt);
 
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
 

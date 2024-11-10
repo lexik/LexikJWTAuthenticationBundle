@@ -22,6 +22,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -281,8 +282,10 @@ class JWTAuthenticatorTest extends TestCase
         $user = $this->createMock(UserInterface::class);
         $user->method('getRoles')->willReturn(['ROLE_USER']);
 
+        $expectedToken = new JWTPostAuthenticationToken($user, 'dummy', ['ROLE_USER'], 'dummytoken');
+        $expectedToken->setAttribute('token', 'dummytoken');
         $dispatcher = $this->getEventDispatcherMock();
-        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], new JWTPostAuthenticationToken($user, 'dummy', ['ROLE_USER'], 'dummytoken'))), Events::JWT_AUTHENTICATED);
+        $dispatcher->expects($this->once())->method('dispatch')->with($this->equalTo(new JWTAuthenticatedEvent(['claim' => 'val'], $expectedToken)), Events::JWT_AUTHENTICATED);
 
         $authenticator = new JWTAuthenticator(
             $this->getJWTManagerMock(),
@@ -305,6 +308,7 @@ class JWTAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(JWTPostAuthenticationToken::class, $token);
         $this->assertSame('dummytoken', $token->getCredentials());
+        $this->assertSame('dummytoken', $token->getAttribute('token'));
     }
 
     public function testParsingAnInvalidTokenThrowsException()
