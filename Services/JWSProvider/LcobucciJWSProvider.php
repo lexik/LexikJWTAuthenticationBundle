@@ -103,7 +103,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $jws = $jws->withHeader($k, $v);
         }
 
-        $now = time();
+        $now = $this->clock->now()->getTimestamp();
 
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);
