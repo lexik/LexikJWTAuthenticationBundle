@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -39,6 +40,29 @@ class AuthenticationFailureHandlerTest extends TestCase
         $this->assertEquals(401, $content['code']);
         $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
     }
+
+    /**
+     * test onAuthenticationFailure method.
+     */
+    public function testOnAuthenticationFailureWithDisabledUser()
+    {
+        $dispatcher = $this
+            ->getMockBuilder(EventDispatcherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $authenticationException = $this->getDisabledException();
+
+        $handler = new AuthenticationFailureHandler($dispatcher);
+        $response = $handler->onAuthenticationFailure($this->getRequest(), $authenticationException);
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertEquals(401, $content['code']);
+        $this->assertEquals($authenticationException->getMessageKey(), $content['message']);
+    }
+
 
     /**
      * test onAuthenticationFailure method.
@@ -141,5 +165,13 @@ class AuthenticationFailureHandlerTest extends TestCase
     protected function getAuthenticationException()
     {
         return new AuthenticationException();
+    }
+
+    /**
+     * @return DisabledException
+     */
+    protected function getDisabledException()
+    {
+        return new DisabledException();
     }
 }
