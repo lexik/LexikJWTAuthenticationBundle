@@ -84,7 +84,7 @@ Configure application security
 
 .. caution::
 
-    Make sure the firewall ``login`` is place before ``api``, and if
+    Make sure the firewall ``login`` is placed before ``api``, and if
     ``main`` exists, put it after ``api``, otherwise you will encounter
     ``/api/login_check`` route not found.
 
