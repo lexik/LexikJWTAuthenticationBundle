@@ -48,7 +48,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         EventDispatcherInterface $eventDispatcher,
         TokenExtractorInterface $tokenExtractor,
         UserProviderInterface $userProvider,
-        TranslatorInterface $translator = null
+        ?TranslatorInterface $translator = null
     ) {
         $this->tokenExtractor = $tokenExtractor;
         $this->jwtManager = $jwtManager;
@@ -60,7 +60,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
     /**
      * {@inheritdoc}
      */
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $exception = new MissingTokenException('JWT Token not found', 0, $authException);
         $event = new JWTNotFoundEvent($exception, new JWTAuthenticationFailureResponse($exception->getMessageKey()), $request);

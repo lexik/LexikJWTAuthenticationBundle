@@ -28,9 +28,9 @@ class JWTManager implements JWTTokenManagerInterface
     protected JWTEncoderInterface $jwtEncoder;
     protected EventDispatcherInterface $dispatcher;
     protected string $userIdClaim;
-    private $payloadEnrichment;
+    private ?PayloadEnrichmentInterface $payloadEnrichment;
 
-    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, string $userIdClaim, PayloadEnrichmentInterface $payloadEnrichment = null)
+    public function __construct(JWTEncoderInterface $encoder, EventDispatcherInterface $dispatcher, string $userIdClaim, ?PayloadEnrichmentInterface $payloadEnrichment = null)
     {
         $this->jwtEncoder = $encoder;
         $this->dispatcher = $dispatcher;

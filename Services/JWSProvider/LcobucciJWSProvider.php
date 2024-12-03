@@ -44,7 +44,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, Clock $clock = null)
+    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, ?Clock $clock = null)
     {
         if (null === $clock) {
             $clock = new SystemClock(new \DateTimeZone('UTC'));
