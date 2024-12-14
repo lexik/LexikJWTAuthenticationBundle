@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by SCIF at 2024-08-18T01:37:22Z
+
+Any chance to review this? This affects fresh installations using web-token.
+
+---------------------------------------------------------------------------
+
+by NeuralClone at 2024-08-18T02:22:43Z
+
+A review for this PR would definitely be greatly appreciated.
+
+In the original issue I opened, I posted a follow-up comment with a workaround that involves adding a compiler pass to your project. Here's a direct link to it in case you missed it:
+
+https://github.com/lexik/LexikJWTAuthenticationBundle/issues/1223#issuecomment-2146627199
+
+It doesn't actually solve the configuration problem, of course. It also assumes that encryption will remain disabled.
+
+But it should let you use the web token services until this PR is reviewed/merged or another solution is implemented.
