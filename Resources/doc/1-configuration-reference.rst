@@ -46,6 +46,7 @@ Full default configuration
         public_key: ~
         pass_phrase: ~
         token_ttl: 3600 # token TTL in seconds, defaults to 1 hour
+        user_id_claim: username
         clock_skew: 0
         allow_no_expiration: false # set to true to allow tokens without exp claim
 
