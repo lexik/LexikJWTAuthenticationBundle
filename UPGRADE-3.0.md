@@ -27,7 +27,7 @@ UPGRADE FROM 3.x to 3.0
 
  * The method `PayloadAwareUserProviderInterface::loadUserByUsernameAndPayload` has been removed.
 
- * BC: The `PayloadAwareUserProviderInterface` interface has a new methods `loadUserByIdentifierAndPayload`.
+ * BC: The `PayloadAwareUserProviderInterface` interface has a new method `loadUserByIdentifierAndPayload`.
 
  * BC: The `JWTTokenManagerInterface` interface have two new methods `createFromPayload` and `parse`.
 
