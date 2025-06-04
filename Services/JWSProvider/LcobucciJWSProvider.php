@@ -2,12 +2,9 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider;
 
-use Lcobucci\Clock\Clock;
-use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Ecdsa;
 use Lcobucci\JWT\Signer\Hmac;
@@ -26,6 +23,8 @@ use Lcobucci\JWT\Validation\Validator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
+use Psr\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 
 /**
  * @final
@@ -35,7 +34,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 class LcobucciJWSProvider implements JWSProviderInterface
 {
     private KeyLoaderInterface $keyLoader;
-    private Clock $clock;
+    private ClockInterface $clock;
     private Signer $signer;
     private ?int $ttl;
     private ?int $clockSkew;
@@ -44,10 +43,10 @@ class LcobucciJWSProvider implements JWSProviderInterface
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
      */
-    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, ?Clock $clock = null)
+    public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, ?ClockInterface $clock = null)
     {
         if (null === $clock) {
-            $clock = new SystemClock(new \DateTimeZone('UTC'));
+            $clock = new NativeClock(new \DateTimeZone('UTC'));
         }
 
         $this->keyLoader = $keyLoader;
