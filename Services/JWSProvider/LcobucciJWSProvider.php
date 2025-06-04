@@ -34,12 +34,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
  */
 class LcobucciJWSProvider implements JWSProviderInterface
 {
-    private KeyLoaderInterface $keyLoader;
-    private Clock $clock;
-    private Signer $signer;
-    private ?int $ttl;
-    private ?int $clockSkew;
-    private bool $allowNoExpiration;
+    protected KeyLoaderInterface $keyLoader;
+    protected Clock $clock;
+    protected Signer $signer;
+    protected ?int $ttl;
+    protected ?int $clockSkew;
+    protected bool $allowNoExpiration;
 
     /**
      * @throws \InvalidArgumentException If the given crypto engine is not supported
@@ -126,7 +126,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         );
     }
 
-    private function getSignerForAlgorithm($signatureAlgorithm): Signer
+    protected function getSignerForAlgorithm($signatureAlgorithm): Signer
     {
         $signerMap = [
             'HS256' => Sha256::class,
@@ -153,7 +153,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return new $signerClass();
     }
 
-    private function getSignedToken(Builder $jws): string
+    protected function getSignedToken(Builder $jws): string
     {
         $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
 
@@ -162,7 +162,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return $token->toString();
     }
 
-    private function verify(Token $jwt): bool
+    protected function verify(Token $jwt): bool
     {
         $key = InMemory::plainText($this->signer instanceof Hmac ? $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE) : $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC));
         $validator = new Validator();
@@ -194,7 +194,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
         return false;
     }
 
-    private function addStandardClaims(Builder $builder, array &$payload): Builder
+    protected function addStandardClaims(Builder $builder, array &$payload): Builder
     {
         $mutatorMap = [
             RegisteredClaims::AUDIENCE => 'permittedFor',
