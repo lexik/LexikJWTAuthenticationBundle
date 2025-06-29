@@ -29,10 +29,10 @@ jobs:
                   composer install
                   composer require rector/rector symplify/easy-coding-standard --dev
 
-            - name: CONDING STANDARDS (ECS)
+            - name: CODING STANDARDS (ECS)
               run: |
                   vendor/bin/ecs check
 
-            - name: CONDING STANDARDS (RECTOR)
+            - name: CODING STANDARDS (RECTOR)
               run: |
                   vendor/bin/rector process --ansi --dry-run --xdebug
