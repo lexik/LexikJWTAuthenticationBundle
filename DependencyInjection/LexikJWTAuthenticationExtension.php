@@ -241,6 +241,14 @@ class LexikJWTAuthenticationExtension extends Extension
                     ->replaceArgument(11, $config['access_token_verification']['encryption']['allowed_content_encryption_algorithms'])
                     ->replaceArgument(12, $config['access_token_verification']['encryption']['keyset'])
                 ;
+            } else {
+                $accessTokenLoaderDefinition
+                    ->replaceArgument(8, null)
+                    ->replaceArgument(9, null)
+                    ->replaceArgument(10, null)
+                    ->replaceArgument(11, null)
+                    ->replaceArgument(12, null)
+                ;
             }
         }
     }
