@@ -5,7 +5,7 @@ LexikJWTAuthenticationBundle
 
 This bundle provides JWT (Json Web Token) authentication for your Symfony API.
 
-It is compatible (and tested) with PHP > 8.2 up to 8.4 and Symfony > 6.4 up to 7.2.
+It is compatible (and tested) with PHP > 8.2 and Symfony > 6.4 up to 8.
 
 Documentation
 -------------
