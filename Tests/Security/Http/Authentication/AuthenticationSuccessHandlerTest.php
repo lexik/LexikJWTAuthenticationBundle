@@ -69,6 +69,21 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('jwt', $content['token']);
     }
 
+    public function testHandleAuthenticationSuccessWithExtraData()
+    {
+        $response = (new AuthenticationSuccessHandler($this->getJWTManager('secrettoken'), $this->getDispatcher()))
+            ->handleAuthenticationSuccess($this->getUser(), null, ['state' => 'foo']);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode(), $response->getContent());
+
+        $content = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('token', $content);
+        $this->assertSame('secrettoken', $content['token']);
+        $this->assertArrayHasKey('state', $content);
+        $this->assertSame('foo', $content['state']);
+    }
+
     public function testOnAuthenticationSuccessSetCookie()
     {
         $request = $this->getRequest();

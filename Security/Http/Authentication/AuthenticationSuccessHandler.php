@@ -48,7 +48,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         return $this->handleAuthenticationSuccess($token->getUser());
     }
 
-    public function handleAuthenticationSuccess(UserInterface $user, $jwt = null): Response
+    public function handleAuthenticationSuccess(UserInterface $user, $jwt = null, array $data = []): Response
     {
         if (null === $jwt) {
             $jwt = $this->jwtManager->create($user);
@@ -59,8 +59,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             $jwtCookies[] = $cookieProvider->createCookie($jwt);
         }
 
-        $response = new JWTAuthenticationSuccessResponse($jwt, [], $jwtCookies);
-        $event = new AuthenticationSuccessEvent(['token' => $jwt], $user, $response);
+        $response = new JWTAuthenticationSuccessResponse($jwt, $data, $jwtCookies);
+        $event = new AuthenticationSuccessEvent(['token' => $jwt] + $data, $user, $response);
 
         $this->dispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);
         $responseData = $event->getData();
