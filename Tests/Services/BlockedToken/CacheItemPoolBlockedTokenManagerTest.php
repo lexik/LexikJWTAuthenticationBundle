@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedToken\CacheItemPoolBloc
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Clock\MockClock;
 
 class CacheItemPoolBlockedTokenManagerTest extends TestCase
 {
@@ -69,11 +70,17 @@ class CacheItemPoolBlockedTokenManagerTest extends TestCase
         self::assertCount(0, iterator_to_array($cacheAdapter->getItems()));
     }
 
-    public function testShouldBlockTokenIfPaylaodHasNotExpired()
+    public function testShouldBlockTokenIfPayloadHasNotExpired()
     {
-        ClockMock::register(ArrayAdapter::class);
-
-        $cacheAdapter = new ArrayAdapter();
+        try {
+            $clock = new MockClock();
+            $cacheAdapter = new ArrayAdapter(clock: $clock);
+        } catch (\Error) {
+            // Below Symfony 7.2, ArrayAdapter has no clock parameter
+            unset($clock);
+            ClockMock::register(ArrayAdapter::class);
+            $cacheAdapter = new ArrayAdapter();
+        }
         $blockedTokenManager = new CacheItemPoolBlockedTokenManager($cacheAdapter);
 
         $expirationDateTime = new DateTimeImmutable('2050-01-01 00:00:00');
@@ -95,9 +102,15 @@ class CacheItemPoolBlockedTokenManagerTest extends TestCase
         self::assertTrue($cacheAdapter->hasItem(self::JTI));
         self::assertNotNull($cacheAdapter->getItem(self::JTI));
 
-        ClockMock::withClockMock(($expirationDateTime->modify('+5 minutes 1 second')->format('U')));
+        if (isset($clock)) {
+            $clock->modify('@' . ($expirationDateTime->modify('+5 minutes 1 second')->format('U')));
+        } else {
+            ClockMock::withClockMock(($expirationDateTime->modify('+5 minutes 1 second')->format('U')));
+        }
         self::assertFalse($cacheAdapter->hasItem(self::JTI), 'The cache item should have expired');
-        ClockMock::withClockMock(false);
+        if (!isset($clock)) {
+            ClockMock::withClockMock(false);
+        }
     }
 
     public function testHasToken()
