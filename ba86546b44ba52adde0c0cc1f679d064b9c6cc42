@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by mateusfmello at 2025-12-01T19:03:43Z
+
+Wouldn't it be better to migrate the [web-token/jwt-bundle](https://github.com/web-token/jwt-bundle) dependency to the repository [web-token/jwt-framework](https://github.com/web-token/jwt-framework)?
+
+This is because it's the main working repository, and [web-token/jwt-bundle](https://github.com/web-token/jwt-bundle) is read-only and currently outdated as it's at version 4.1x, while [web-token/jwt-framework](https://github.com/web-token/jwt-framework) is at version 4.2.x.
+
+---------------------------------------------------------------------------
+
+by mateusfmello at 2025-12-01T19:10:21Z
+
+[web-token/jwt-framework](https://github.com/web-token/jwt-framework) it has supported Symfony 8 since August 5th.
+
+PR: https://github.com/web-token/jwt-framework/pull/628
+
+---------------------------------------------------------------------------
+
+by dt-thomas-durand at 2025-12-02T11:50:05Z
+
+Now that the CI is green, this PR replace #1290 and #1231
+And it closes #1296
+
+---------------------------------------------------------------------------
+
+by mateusfmello at 2025-12-02T12:45:33Z
+
+@chalasr Could you merge the PR and make the version compatible with Symfony 8 available? :smile:
+
+---------------------------------------------------------------------------
+
+by chalasr at 2025-12-02T14:24:50Z
+
+Of course I will!
