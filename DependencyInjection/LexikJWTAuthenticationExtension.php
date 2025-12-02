@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -33,14 +33,14 @@ class LexikJWTAuthenticationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        $loader->load('jwt_manager.xml');
-        $loader->load('key_loader.xml');
-        $loader->load('lcobucci.xml');
-        $loader->load('response_interceptor.xml');
-        $loader->load('token_authenticator.xml');
-        $loader->load('token_extractor.xml');
+        $loader->load('jwt_manager.php');
+        $loader->load('key_loader.php');
+        $loader->load('lcobucci.php');
+        $loader->load('response_interceptor.php');
+        $loader->load('token_authenticator.php');
+        $loader->load('token_extractor.php');
 
         if (empty($config['public_key']) && empty($config['secret_key'])) {
             $e = new InvalidConfigurationException('You must either configure a "public_key" or a "secret_key".');
@@ -89,7 +89,7 @@ class LexikJWTAuthenticationExtension extends Extension
         }
 
         if ($config['set_cookies']) {
-            $loader->load('cookie.xml');
+            $loader->load('cookie.php');
 
             $cookieProviders = [];
             foreach ($config['set_cookies'] as $name => $attributes) {
@@ -117,7 +117,7 @@ class LexikJWTAuthenticationExtension extends Extension
         }
 
         if (class_exists(Application::class)) {
-            $loader->load('console.xml');
+            $loader->load('console.php');
 
             $container
                 ->getDefinition('lexik_jwt_authentication.generate_keypair_command')
@@ -135,7 +135,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 throw new LogicException('API Platform cannot be detected. Try running "composer require api-platform/core".');
             }
 
-            $loader->load('api_platform.xml');
+            $loader->load('api_platform.php');
 
             $container
                 ->getDefinition('lexik_jwt_authentication.api_platform.openapi.factory')
@@ -147,7 +147,7 @@ class LexikJWTAuthenticationExtension extends Extension
         $this->processWithWebTokenConfig($config, $container, $loader);
 
         if ($this->isConfigEnabled($container, $config['blocklist_token'])) {
-            $loader->load('blocklist_token.xml');
+            $loader->load('blocklist_token.php');
             $blockListTokenConfig = $config['blocklist_token'];
             $container->setAlias('lexik_jwt_authentication.blocklist_token.cache', $blockListTokenConfig['cache']);
         } else {
@@ -205,9 +205,9 @@ class LexikJWTAuthenticationExtension extends Extension
         if ($config['access_token_issuance']['enabled'] === false && $config['access_token_verification']['enabled'] === false) {
             return;
         }
-        $loader->load('web_token.xml');
+        $loader->load('web_token.php');
         if ($config['access_token_issuance']['enabled'] === true) {
-            $loader->load('web_token_issuance.xml');
+            $loader->load('web_token_issuance.php');
             $accessTokenBuilder = 'lexik_jwt_authentication.access_token_builder';
             $accessTokenBuilderDefinition = $container->getDefinition($accessTokenBuilder);
             $accessTokenBuilderDefinition
@@ -223,7 +223,7 @@ class LexikJWTAuthenticationExtension extends Extension
             }
         }
         if ($config['access_token_verification']['enabled'] === true) {
-            $loader->load('web_token_verification.xml');
+            $loader->load('web_token_verification.php');
             $accessTokenLoader = 'lexik_jwt_authentication.access_token_loader';
             $accessTokenLoaderDefinition = $container->getDefinition($accessTokenLoader);
             $accessTokenLoaderDefinition
@@ -240,6 +240,14 @@ class LexikJWTAuthenticationExtension extends Extension
                     ->replaceArgument(10, $config['access_token_verification']['encryption']['allowed_key_encryption_algorithms'])
                     ->replaceArgument(11, $config['access_token_verification']['encryption']['allowed_content_encryption_algorithms'])
                     ->replaceArgument(12, $config['access_token_verification']['encryption']['keyset'])
+                ;
+            } else {
+                $accessTokenLoaderDefinition
+                    ->replaceArgument(8, null)
+                    ->replaceArgument(9, null)
+                    ->replaceArgument(10, null)
+                    ->replaceArgument(11, null)
+                    ->replaceArgument(12, null)
                 ;
             }
         }

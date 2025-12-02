@@ -168,6 +168,6 @@ EOF
 
         $this->expectExceptionObject($e);
 
-        $create =  $jwsProvider->create($payload);
+        $create = $jwsProvider->create($payload);
     }
 }

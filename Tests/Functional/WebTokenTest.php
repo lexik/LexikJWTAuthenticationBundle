@@ -4,6 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWK;
+use Jose\Component\Core\Util\Base64UrlSafe;
 use Jose\Component\Encryption\Algorithm\ContentEncryption\A128GCM;
 use Jose\Component\Encryption\Algorithm\ContentEncryption\A256GCM;
 use Jose\Component\Encryption\Algorithm\KeyEncryption\A128GCMKW;
@@ -20,7 +21,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -336,11 +336,19 @@ class WebTokenTest extends TestCase
 
     private function buildJWE(string $payload, array $header, JWK $encryptionKey): string
     {
-        $builder = new JWEBuilder(
-            new AlgorithmManager([new A256GCMKW(), new A128GCMKW()]),
-            new AlgorithmManager([new A256GCM(), new A128GCM()]),
-            new CompressionMethodManager([])
-        );
+        if (!class_exists(CompressionMethodManager::class)) {
+            // Web token 4.x
+            $builder = new JWEBuilder(
+                new AlgorithmManager([new A256GCMKW(), new A128GCMKW(), new A256GCM(), new A128GCM()]),
+            );
+        } else {
+            // Web token 3.x
+            $builder = new JWEBuilder(
+                new AlgorithmManager([new A256GCMKW(), new A128GCMKW()]),
+                new AlgorithmManager([new A256GCM(), new A128GCM()]),
+                new CompressionMethodManager([])
+            );
+        }
         $jwe = $builder
             ->create()
             ->withPayload($payload)

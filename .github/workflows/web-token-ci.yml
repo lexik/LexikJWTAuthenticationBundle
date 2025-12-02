@@ -15,17 +15,21 @@ jobs:
                     # Lowest deps
                     - php: 8.2
                       symfony: 6.4.*
+                      jwt-bundle: 3.3
                       can-fail: false
                     # LTS with last stable PHP
-                    - php: 8.3
+                    - php: 8.4
                       symfony: 6.4.*
+                      jwt-bundle: 3.3
                       can-fail: false
-                      # Stable Symfony branches
-                    - php: 8.3
-                      symfony: 7.1.*
+                    # Stable Symfony branches
+                    - php: 8.4
+                      symfony: 7.4.*
+                      jwt-bundle: 4.0
                       can-fail: false
                     - php: 8.4
-                      symfony: 7.2.*
+                      symfony: 8.0.*
+                      jwt-bundle: 4.1
                       can-fail: false
 
         name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
@@ -51,7 +55,7 @@ jobs:
 
             - name: "Require web-token/*"
               run: |
-                  composer require --dev --no-update web-token/jwt-bundle:"^3.3.3"
+                  composer require --dev --no-update web-token/jwt-bundle:"^${{ matrix.jwt-bundle }}"
                   composer require --dev --no-update spomky-labs/aes-key-wrap:"^7.0"
 
             - name: "Install dependencies"
