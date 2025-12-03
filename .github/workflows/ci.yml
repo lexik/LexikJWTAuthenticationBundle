@@ -27,6 +27,9 @@ jobs:
           - php: 8.4
             symfony: 8.0.*
             can-fail: false
+          - php: 8.5
+            symfony: 8.0.*
+            can-fail: false
 
     name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
 
