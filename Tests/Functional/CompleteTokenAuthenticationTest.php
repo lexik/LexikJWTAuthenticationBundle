@@ -96,7 +96,10 @@ class CompleteTokenAuthenticationTest extends TestCase
         $idClaim = static::$kernel->getContainer()->getParameter('lexik_jwt_authentication.user_id_claim');
 
         $r = new \ReflectionProperty($encoder !== null ? get_class($encoder) : self::class, 'jwsProvider');
-        $r->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $r->setAccessible(true);
+        }
+
         $jwsProvider = $r->getValue($encoder);
         \Closure::bind(function () {
             $this->ttl = null;
