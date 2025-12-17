@@ -83,11 +83,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     (new RequestBody())
                     ->withDescription('The login data')
                     ->withContent(new \ArrayObject([
-                        'application/json' => new MediaType(new \ArrayObject(new \ArrayObject([
+                        'application/json' => new MediaType(new \ArrayObject([
                             'type' => 'object',
                             'properties' => $properties = array_merge_recursive($this->getJsonSchemaFromPathParts(explode('.', $this->usernamePath)), $this->getJsonSchemaFromPathParts(explode('.', $this->passwordPath))),
                             'required' => array_keys($properties),
-                        ]))),
+                        ])),
                     ]))
                     ->withRequired(true)
                 )
