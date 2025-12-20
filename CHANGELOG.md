@@ -1,7 +1,14 @@
 CHANGELOG
 =========
 
-For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v3.1.1
+For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationBundle/compare/v1.0.0...v3.2.0
+
+## [3.2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v3.1.1) (2025-12-20)
+
+* feature [\#1295](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1295) Allow to pass extra data when handling success authentication ([@VincentLanglet](https://github.com/VincentLanglet))
+* feature [\#1303](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1303) Add PHP 8.5 support ([@Chris8934](https://github.com/Chris8934))
+* feature [\#1300](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1300) Support Symfony 8.x & web-token suite 4.x ([@dt-thomas-durand](https://github.com/dt-thomas-durand))
+* feature [\#1278](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1278) Remove lcobucci/clock dependency ([@VincentLanglet](https://github.com/VincentLanglet))
 
 ## [3.1.1](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v3.1.1) (2025-01-06)
 
