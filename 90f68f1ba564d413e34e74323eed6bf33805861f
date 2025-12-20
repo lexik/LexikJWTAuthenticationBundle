@@ -1,0 +1,119 @@
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-11-21T15:05:04Z
+
+Failure seems unrelated.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-12-17T17:00:37Z
+
+Pr is rebased @chalasr
+
+---------------------------------------------------------------------------
+
+by chalasr at 2025-12-17T19:28:39Z
+
+Hi @VincentLanglet, I have to admit I find too bad to deviate from the interface signature, but I'm fine doing it as long as there is no other alternative. Can you confirm there is no?
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-12-17T19:54:29Z
+
+> Hi @VincentLanglet, I have to admit I find too bad to deviate from the interface signature, but I'm fine doing it as long as there is no other alternative. Can you confirm there is no?
+
+Hi, I didn't find any other way currently.
+
+Also, notice the interface is about the
+```
+public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
+```
+method, while I modify the
+```
+public function handleAuthenticationSuccess(UserInterface $user, $jwt = null): Response
+```
+method which is already free from any interface.
+
+The `handleAuthenticationSuccess` was initially created to allow passing a specificy `$jwt` in https://github.com/lexik/LexikJWTAuthenticationBundle/pull/283, therefor adding the `$data` param follow the same philosophy.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2025-12-17T20:00:35Z
+
+Of course, thanks for correcting me. Gonna merge asap and ship it along with Symfony 8 support this week.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-12-17T21:12:57Z
+
+> Of course, thanks for correcting me. Gonna merge asap and ship it along with Symfony 8 support this week.
+
+Thanks.
+
+Feel free to ping me if you need help for Symfony 8 support ; I'm interested in it.
+
+---------------------------------------------------------------------------
+
+by chalasr at 2025-12-17T21:14:32Z
+
+Already done in #1290! Help welcome with PHP 8.5 support though #1303
+
+---------------------------------------------------------------------------
+
+by flohw at 2025-12-18T10:26:04Z
+
+@VincentLanglet I add some data to my token via the `Events::JWT_CREATED` event.
+
+```php
+
+    public function onJWTCreated(JWTCreatedEvent $event): void
+    {
+        $user = $event->getUser();
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $data = $event->getData();
+        $data['profile'] = ['foo' => 'bar'];
+
+        $event->setData($data);
+    }
+```
+
+But maybe that's not what you want?
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-12-18T11:10:43Z
+
+> @VincentLanglet I add some data to my token via the `Events::JWT_CREATED` event.
+>
+> ```
+>     public function onJWTCreated(JWTCreatedEvent $event): void
+>     {
+>         $user = $event->getUser();
+>         if (!$user instanceof User) {
+>             return;
+>         }
+>
+>         $data = $event->getData();
+>         $data['profile'] = ['foo' => 'bar'];
+>
+>         $event->setData($data);
+>     }
+> ```
+>
+> But maybe that's not what you want?
+
+Yes, but this require to know the data to add in your Listener (I already do this some time).
+Here I precised
+
+> Listening the Events::AUTHENTICATION_SUCCESS event to modify the data is not a solution, since the listener won't have the information i want to add to the event data.
+
+And the same issue apply for `Events::JWT_CREATED`.
+
+For my use case I need to add data that only the service calling
+```
+$this->authenticationSuccessHandler->handleAuthenticationSuccess($user)
+```
+knows.
