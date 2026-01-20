@@ -12,6 +12,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\PayloadEnrichmentInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -135,6 +137,56 @@ class JWTManagerTest extends TestCase
 
         $manager = new JWTManager($encoder, $dispatcher, 'username');
         $this->assertSame(['foo' => 'bar'], $manager->decode($this->getJWTUserTokenMock()));
+    }
+
+    /**
+     * test decode a TokenInterface without getCredentials.
+     */
+    public function testDecode_noGetCredentials()
+    {
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher
+            ->expects($this->never())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf(JWTDecodedEvent::class),
+                $this->equalTo(Events::JWT_DECODED)
+            );
+
+        $encoder = $this->getJWTEncoderMock();
+        $encoder
+            ->expects($this->never())
+            ->method('decode')
+            ->willReturn(['foo' => 'bar']);
+
+        $token = new NullToken();
+        $manager = new JWTManager($encoder, $dispatcher, 'username');
+        $this->assertFalse($manager->decode($token));
+    }
+
+    /**
+     * test decode a TokenInterface with getCredentials returning null.
+     */
+    public function testDecode_nullGetCredentials()
+    {
+        $dispatcher = $this->getEventDispatcherMock();
+        $dispatcher
+            ->expects($this->never())
+            ->method('dispatch')
+            ->with(
+                $this->isInstanceOf(JWTDecodedEvent::class),
+                $this->equalTo(Events::JWT_DECODED)
+            );
+
+        $encoder = $this->getJWTEncoderMock();
+        $encoder
+            ->expects($this->never())
+            ->method('decode')
+            ->willReturn(['foo' => 'bar']);
+
+        $token = new TestBrowserToken();
+        $manager = new JWTManager($encoder, $dispatcher, 'username');
+        $this->assertFalse($manager->decode($token));
     }
 
     public function testParse()

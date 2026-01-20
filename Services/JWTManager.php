@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\Token\JWTPostAuthenticationToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\PayloadEnrichment\NullEnrichment;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -98,6 +99,16 @@ class JWTManager implements JWTTokenManagerInterface
      */
     public function decode(TokenInterface $token): array|bool
     {
+        if (!$token instanceof JWTPostAuthenticationToken) {
+            /*
+             * TokenInterface::getCredentials() was deprecated in Symfony 5.4 and removed in Symfony 6.
+             * Because tokens should no longer contain credentials (as they represent authenticated sessions).
+             * https://github.com/symfony/symfony/commit/922c1314bd73f14fb8aa80e62b27b3bca66ee7b0#diff-24aa6aa94d3f4a8aed52d78f81f217b60fd69dccb575357844c1250a61153a34
+             */
+            @trigger_deprecation("lexik/jwt-authentication-bundle", "3.2", "Not passing a JWTPostAuthenticationToken to JWTManager::decode() is deprecated");
+
+            return false;
+        }
         if (!($payload = $this->jwtEncoder->decode($token->getCredentials()))) {
             return false;
         }
