@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by Dean151 at 2024-02-10T10:21:24Z
+
+Sadly, this might be incompatible with:
+- https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1155
+- https://github.com/lexik/LexikJWTAuthenticationBundle/pull/1157
+
+Therefore, I do think the dependency should be flexible in the source, and we could use the one we prefer in the tests so that the end user can rely on whatever psr/clock implementation he prefers
+
+---------------------------------------------------------------------------
+
+by chalasr at 2024-12-14T15:25:37Z
+
+Apologies for being one year late here. I would like to replace lcobucci/clock by symfony/clock and have symfony/clock as dev-dependency. The former requires to add some backward compatibility layers. Once done I'll merge your PR (without the class-exists checks)
+
+---------------------------------------------------------------------------
+
+by Dean151 at 2024-12-16T21:22:54Z
+
+> Apologies for being one year late here. I would like to replace lcobucci/clock by symfony/clock and have symfony/clock as dev-dependency. The former requires to add some backward compatibility layers. Once done I'll merge your PR (without the class-exists checks)
+
+No need to apologize! Open-source isn’t a full-time job, and I truly appreciate the time you spend maintaining, testing, and reviewing. Thank you! 😊
+
+---------------------------------------------------------------------------
+
+by Dean151 at 2026-02-15T18:20:44Z
+
+Hello @chalasr !
+In your own time, of course, just be aware that I rebased my PR to target 3.x branch, and took advantage of the removal of `lcobucci/clock` to simplify the code change.
+
+With my best sentiments!
