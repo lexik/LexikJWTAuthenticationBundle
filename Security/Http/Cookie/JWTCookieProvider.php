@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Cookie;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Helper\JWTSplitter;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -62,7 +63,8 @@ final class JWTCookieProvider
         $jwt = $jwtParts->getParts($split ?: $this->defaultSplit);
 
         if (null === $expiresAt) {
-            $expiresAt = 0 === $this->defaultLifetime ? 0 : (time() + $this->defaultLifetime);
+            $now = Clock::get()->now()->getTimestamp();
+            $expiresAt = 0 === $this->defaultLifetime ? 0 : ($now + $this->defaultLifetime);
         }
 
         return Cookie::create(

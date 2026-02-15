@@ -24,7 +24,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\KeyLoaderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use Psr\Clock\ClockInterface;
-use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Clock\Clock;
 
 /**
  * @final
@@ -46,7 +46,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
     public function __construct(KeyLoaderInterface $keyLoader, string $signatureAlgorithm, ?int $ttl, ?int $clockSkew, bool $allowNoExpiration = false, ?ClockInterface $clock = null)
     {
         if (null === $clock) {
-            $clock = new NativeClock(new \DateTimeZone('UTC'));
+            $clock = Clock::get();
         }
 
         $this->keyLoader = $keyLoader;
@@ -68,7 +68,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             $jws = $jws->withHeader($k, $v);
         }
 
-        $now = time();
+        $now = $this->clock->now()->getTimestamp();
 
         $issuedAt = $payload['iat'] ?? $now;
         unset($payload['iat']);

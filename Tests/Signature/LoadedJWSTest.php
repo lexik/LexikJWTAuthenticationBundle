@@ -4,7 +4,8 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Signature;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\MockClock;
 
 /**
  * Tests the CreatedJWS model class.
@@ -127,7 +128,7 @@ final class LoadedJWSTest extends TestCase
     {
         // 2020-10-25 00:16:13 UTC+0
         $timestamp = 1_603_584_973;
-        ClockMock::withClockMock($timestamp);
+        Clock::set(new MockClock("@$timestamp"));
 
         $dstPayload = [
             'username' => 'test',
