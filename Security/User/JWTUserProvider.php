@@ -3,13 +3,14 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * JWT User provider.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTUserProvider implements PayloadAwareUserProviderInterface
+final class JWTUserProvider implements PayloadAwareUserProviderInterface, ResetInterface
 {
     private string $class;
 
@@ -64,5 +65,10 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface
     public function refreshUser(UserInterface $user): UserInterface
     {
         return $user; // noop
+    }
+
+    public function reset(): void
+    {
+        $this->cache = [];
     }
 }
