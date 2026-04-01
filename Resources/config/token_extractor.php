@@ -40,6 +40,7 @@ return static function (ContainerConfigurator $container) {
 
     $services->set('lexik_jwt_authentication.security.jwt_user_provider', JWTUserProvider::class)
         ->private()
+        ->tag('kernel.reset', ['method' => 'reset'])
         ->args([
             '',
         ]);
