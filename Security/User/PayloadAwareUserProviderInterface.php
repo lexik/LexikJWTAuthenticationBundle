@@ -12,6 +12,8 @@ interface PayloadAwareUserProviderInterface extends UserProviderInterface
      * Loads a user from an identifier and JWT token payload.
      *
      * @throws UserNotFoundException if the user is not found
+     *
+     * @deprecated use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface instead.
      */
     public function loadUserByIdentifierAndPayload(string $identifier, array $payload): UserInterface;
 }
