@@ -155,6 +155,34 @@ EOF
         return $jwsProvider->create($payload)->getToken();
     }
 
+    public function testCreateAndVerifyWithEdDSA(): void
+    {
+        $keypair = sodium_crypto_sign_keypair();
+        $privateKey = base64_encode(sodium_crypto_sign_secretkey($keypair));
+        $publicKey = base64_encode(sodium_crypto_sign_publickey($keypair));
+
+        $keyLoaderMock = $this->getKeyLoaderMock();
+        $keyLoaderMock
+            ->method('loadKey')
+            ->willReturnMap([
+                ['private', $privateKey],
+                ['public', $publicKey],
+            ]);
+
+        $jwsProvider = new LcobucciJWSProvider($keyLoaderMock, 'EdDSA', 3600, 0);
+
+        $created = $jwsProvider->create(['username' => 'foo']);
+        $this->assertInstanceOf(CreatedJWS::class, $created);
+        $this->assertTrue($created->isSigned());
+
+        $loaded = $jwsProvider->load($created->getToken());
+        $this->assertTrue($loaded->isVerified());
+
+        $payload = $loaded->getPayload();
+        $this->assertArrayHasKey('username', $payload);
+        $this->assertEquals('foo', $payload['username']);
+    }
+
     public function testUnSignedToken()
     {
         $keyLoaderMock = $this->getKeyLoaderMock();
