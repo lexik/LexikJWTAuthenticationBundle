@@ -170,4 +170,26 @@ EOF
 
         $create = $jwsProvider->create($payload);
     }
+
+    public function testCreateWithInvalidPassphraseThrowsInvalidArgumentException()
+    {
+        $keyLoaderMock = $this->getKeyLoaderMock();
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('loadKey')
+            ->with('private')
+            ->willReturn(self::$privateKey);
+        $keyLoaderMock
+            ->expects($this->once())
+            ->method('getPassphrase')
+            ->willReturn('wrong-passphrase');
+
+        $jwsProvider = new self::$providerClass($keyLoaderMock, 'RS256', 3600, 0);
+        $payload = ['username' => 'chalasr', 'iat' => time()];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unable to sign the JWT token. Please verify that your passphrase is correct.');
+
+        $jwsProvider->create($payload);
+    }
 }
