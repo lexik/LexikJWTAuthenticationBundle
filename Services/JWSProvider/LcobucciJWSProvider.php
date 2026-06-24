@@ -154,11 +154,20 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function getSignedToken(Builder $jws): string
     {
-        $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
+        $passphrase = $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase();
+	$privateKey = $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);
 
-        $token = $jws->getToken($this->signer, $key);
-
-        return $token->toString();
+	try {
+		$key = InMemory::plainText($privateKey,$passphrase);
+		$token = $jws->getToken($this->signer, $key);
+	} catch (\Throwable $e) {
+		throw new \InvalidArgumentException(
+			'Unable to sign the JWT token. Please verify that your passphrase is correct.',
+			0,
+			$e
+		);
+	}
+	return $token->toString();
     }
 
     private function verify(Token $jwt): bool
