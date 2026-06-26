@@ -22,6 +22,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -31,6 +32,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JWTAuthenticatorTest extends TestCase
 {
+    /**
+     * @group legacy
+     */
     public function testAuthenticate()
     {
         $userIdClaim = 'sub';
@@ -61,6 +65,39 @@ class JWTAuthenticatorTest extends TestCase
         $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
     }
 
+    public function testAuthenticateWithAttributesBasedUserProvider()
+    {
+        $userIdClaim = 'sub';
+        $payload = [$userIdClaim => 'lexik'];
+        $rawToken = 'token';
+        $userRoles = ['ROLE_USER'];
+
+        $userStub = new InMemoryUser('lexik', 'password', $userRoles);
+
+        $jwtManager = $this->getJWTManagerMock($userIdClaim);
+        $jwtManager
+            ->method('parse')
+            ->willReturn(['sub' => 'lexik']);
+
+        $userProvider = $this->getAttributesBasedUserProviderMock();
+        $userProvider
+            ->method('loadUserByIdentifier')
+            ->with($payload['sub'], $payload)
+            ->willReturn($userStub);
+
+        $authenticator = new JWTAuthenticator(
+            $jwtManager,
+            $this->getEventDispatcherMock(),
+            $this->getTokenExtractorMock($rawToken),
+            $userProvider
+        );
+
+        $this->assertSame($userStub, ($authenticator->authenticate($this->getRequestMock()))->getUser());
+    }
+
+    /**
+     * @group legacy
+     */
     public function testAuthenticateWithIntegerIdentifier()
     {
         $userIdClaim = 'sub';
@@ -171,6 +208,9 @@ class JWTAuthenticatorTest extends TestCase
         $authenticator->authenticate($this->getRequestMock());
     }
 
+    /**
+     * @group legacy
+     */
     public function testAuthenticateWithInvalidUserThrowsException()
     {
         $jwtManager = $this->getJWTManagerMock();
@@ -353,6 +393,11 @@ class JWTAuthenticatorTest extends TestCase
         return $this->createMock(DummyUserProvider::class);
     }
 
+    private function getAttributesBasedUserProviderMock()
+    {
+        return $this->createMock(DummyAttributesBasedUserProvider::class);
+    }
+
     private function getTranslatorMock()
     {
         return $this->createMock(TranslatorInterface::class);
@@ -375,6 +420,17 @@ abstract class DummyUserProvider implements UserProviderInterface, PayloadAwareU
     }
 
     public function loadUserByIdentifierAndPayload(string $identifier, array $payload): UserInterface
+    {
+    }
+}
+
+abstract class DummyAttributesBasedUserProvider implements AttributesBasedUserProviderInterface
+{
+    public function loadUserByUsername(string $username): UserInterface
+    {
+    }
+
+    public function loadUserByIdentifier(string $identifier, array $attributes = []): UserInterface
     {
     }
 }

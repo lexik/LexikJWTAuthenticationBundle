@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\User;
 
+use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -10,7 +11,7 @@ use Symfony\Contracts\Service\ResetInterface;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class JWTUserProvider implements PayloadAwareUserProviderInterface, ResetInterface
+final class JWTUserProvider implements AttributesBasedUserProviderInterface, PayloadAwareUserProviderInterface, ResetInterface
 {
     private string $class;
 
@@ -36,11 +37,11 @@ final class JWTUserProvider implements PayloadAwareUserProviderInterface, ResetI
     /**
      * {@inheritdoc}
      *
-     * @param array $payload The JWT payload from which to create an instance
+     * @param array $attributes The JWT payload from which to create an instance
      */
-    public function loadUserByIdentifier(string $identifier, array $payload = []): UserInterface
+    public function loadUserByIdentifier(string $identifier, array $attributes = []): UserInterface
     {
-        return $this->loadUserByIdentifierAndPayload($identifier, $payload);
+        return $this->loadUserByIdentifierAndPayload($identifier, $attributes);
     }
 
     public function loadUserByIdentifierAndPayload(string $identifier, array $payload): UserInterface

@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\AttributesBasedUserProviderInterface;
 use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -182,14 +183,24 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
      */
     protected function loadUser(array $payload, string $identity): UserInterface
     {
+        if ($this->userProvider instanceof AttributesBasedUserProviderInterface) {
+            return $this->userProvider->loadUserByIdentifier($identity, $payload);
+        }
         if ($this->userProvider instanceof PayloadAwareUserProviderInterface) {
+            trigger_deprecation('lexik/jwt-authentication-bundle', '3.3', 'Implementing %s is deprecated, implements %s instead.', PayloadAwareUserProviderInterface::class, AttributesBasedUserProviderInterface::class);
+
             return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
         }
 
         if ($this->userProvider instanceof ChainUserProvider) {
             foreach ($this->userProvider->getProviders() as $provider) {
                 try {
+                    if ($provider instanceof AttributesBasedUserProviderInterface) {
+                        return $provider->loadUserByIdentifier($identity, $payload);
+                    }
                     if ($provider instanceof PayloadAwareUserProviderInterface) {
+                        trigger_deprecation('lexik/jwt-authentication-bundle', '3.3', 'Implementing %s is deprecated, implements %s instead.', PayloadAwareUserProviderInterface::class, AttributesBasedUserProviderInterface::class);
+
                         return $provider->loadUserByIdentifierAndPayload($identity, $payload);
                     }
 
