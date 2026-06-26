@@ -69,9 +69,7 @@ class JWTUser implements JWTUserInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
     }
