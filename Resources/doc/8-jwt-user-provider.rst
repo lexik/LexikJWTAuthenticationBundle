@@ -66,6 +66,9 @@ Sample implementation
 
     namespace App\Security;
 
+    use Symfony\Component\DependencyInjection\Attribute\Exclude;
+
+    #[Exclude]
     final class User implements JWTUserInterface
     {
         // Your own logic
