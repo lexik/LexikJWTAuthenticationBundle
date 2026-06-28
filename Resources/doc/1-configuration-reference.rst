@@ -24,6 +24,29 @@ Using RSA/ECDSA
             - '%kernel.project_dir%/config/jwt/public2.pem'
             - '%kernel.project_dir%/config/jwt/public3.pem'
 
+Using EdDSA (Ed25519)
+~~~~~~~~~~~~~~~~~~~~~
+
+Requires the ``ext-sodium`` PHP extension (bundled since PHP 7.2).
+
+Generate a keypair:
+
+.. code-block:: terminal
+
+    $ php bin/console lexik:jwt:generate-keypair
+
+EdDSA keys are stored as base64-encoded raw bytes (not PEM), so ``pass_phrase`` has no effect.
+
+.. code-block:: yaml
+
+    # config/packages/lexik_jwt_authentication.yaml
+    #...
+    lexik_jwt_authentication:
+        secret_key: '%kernel.project_dir%/config/jwt/private.pem' # base64-encoded Ed25519 secretkey
+        public_key: '%kernel.project_dir%/config/jwt/public.pem'  # base64-encoded Ed25519 publickey
+        encoder:
+            signature_algorithm: EdDSA
+
 Using HMAC
 ~~~~~~~~~~
 

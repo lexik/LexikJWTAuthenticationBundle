@@ -29,6 +29,7 @@ final class GenerateKeyPairCommand extends Command
         'ES256',
         'ES384',
         'ES512',
+        'EdDSA',
     ];
 
     private Filesystem $filesystem;
@@ -136,6 +137,10 @@ final class GenerateKeyPairCommand extends Command
 
     private function generateKeyPair(?string $passphrase): array
     {
+        if ('EdDSA' === $this->algorithm) {
+            return $this->generateEdDSAKeyPair();
+        }
+
         $config = $this->buildOpenSSLConfiguration();
 
         $resource = \openssl_pkey_new($config);
@@ -158,6 +163,20 @@ final class GenerateKeyPairCommand extends Command
         $publicKey = $publicKeyData['key'];
 
         return [$privateKey, $publicKey];
+    }
+
+    private function generateEdDSAKeyPair(): array
+    {
+        if (!\function_exists('sodium_crypto_sign_keypair')) {
+            throw new \RuntimeException('The "sodium" PHP extension is required to generate EdDSA key pairs.');
+        }
+
+        $keypair = \sodium_crypto_sign_keypair();
+
+        return [
+            \base64_encode(\sodium_crypto_sign_secretkey($keypair)),
+            \base64_encode(\sodium_crypto_sign_publickey($keypair)),
+        ];
     }
 
     private function buildOpenSSLConfiguration(): array

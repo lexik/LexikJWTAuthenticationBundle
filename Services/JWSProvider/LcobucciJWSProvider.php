@@ -7,6 +7,7 @@ use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Ecdsa;
+use Lcobucci\JWT\Signer\Eddsa;
 use Lcobucci\JWT\Signer\Hmac;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Hmac\Sha384;
@@ -137,6 +138,7 @@ class LcobucciJWSProvider implements JWSProviderInterface
             'ES256' => Signer\Ecdsa\Sha256::class,
             'ES384' => Signer\Ecdsa\Sha384::class,
             'ES512' => Signer\Ecdsa\Sha512::class,
+            'EdDSA' => Eddsa::class,
         ];
 
         if (!isset($signerMap[$signatureAlgorithm])) {
@@ -154,7 +156,11 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function getSignedToken(Builder $jws): string
     {
-        $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE), $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
+        $privateKeyContent = $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE);
+
+        $key = $this->signer instanceof Eddsa
+            ? InMemory::base64Encoded($privateKeyContent)
+            : InMemory::plainText($privateKeyContent, $this->signer instanceof Hmac ? '' : (string) $this->keyLoader->getPassphrase());
 
         $token = $jws->getToken($this->signer, $key);
 
@@ -163,7 +169,14 @@ class LcobucciJWSProvider implements JWSProviderInterface
 
     private function verify(Token $jwt): bool
     {
-        $key = InMemory::plainText($this->signer instanceof Hmac ? $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE) : $this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC));
+        if ($this->signer instanceof Eddsa) {
+            $key = InMemory::base64Encoded($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC));
+        } elseif ($this->signer instanceof Hmac) {
+            $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PRIVATE));
+        } else {
+            $key = InMemory::plainText($this->keyLoader->loadKey(KeyLoaderInterface::TYPE_PUBLIC));
+        }
+
         $validator = new Validator();
 
         $isValid = $validator->validate(
@@ -178,11 +191,15 @@ class LcobucciJWSProvider implements JWSProviderInterface
         }
 
         // If the key used to verify the token is invalid, and it's not Hmac algorithm, try with additional public keys
-        foreach ($publicKeys as $key) {
+        foreach ($publicKeys as $rawKey) {
+            $additionalKey = $this->signer instanceof Eddsa
+                ? InMemory::base64Encoded($rawKey)
+                : InMemory::plainText($rawKey);
+
             $isValid = $validator->validate(
                 $jwt,
                 new LooseValidAt($this->clock, new \DateInterval("PT{$this->clockSkew}S")),
-                new SignedWith($this->signer, InMemory::plainText($key))
+                new SignedWith($this->signer, $additionalKey)
             );
 
             if ($isValid) {

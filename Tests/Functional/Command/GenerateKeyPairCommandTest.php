@@ -81,6 +81,47 @@ class GenerateKeyPairCommandTest extends TestCase
         yield ['ES512', 'dummy'];
     }
 
+    public function testItGeneratesEdDSAKeyPair(): void
+    {
+        $privateKeyFile = \tempnam(\sys_get_temp_dir(), 'private_');
+        $publicKeyFile = \tempnam(\sys_get_temp_dir(), 'public_');
+
+        \unlink($privateKeyFile);
+        \unlink($publicKeyFile);
+
+        $tester = new CommandTester(
+            new GenerateKeyPairCommand(
+                new Filesystem(),
+                $privateKeyFile,
+                $publicKeyFile,
+                null,
+                'EdDSA'
+            )
+        );
+
+        $returnCode = $tester->execute([], ['interactive' => false]);
+        $this->assertSame(0, $returnCode);
+        $this->assertStringContainsString('Done!', $tester->getDisplay(true));
+
+        $privateKey = \file_get_contents($privateKeyFile);
+        $publicKey = \file_get_contents($publicKeyFile);
+
+        $this->assertNotFalse($privateKey);
+        $this->assertNotFalse($publicKey);
+
+        // EdDSA keys are base64-encoded raw sodium bytes
+        $decodedPrivate = base64_decode($privateKey, true);
+        $decodedPublic = base64_decode($publicKey, true);
+
+        $this->assertNotFalse($decodedPrivate);
+        $this->assertNotFalse($decodedPublic);
+        $this->assertSame(SODIUM_CRYPTO_SIGN_SECRETKEYBYTES, \strlen($decodedPrivate));
+        $this->assertSame(SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES, \strlen($decodedPublic));
+
+        \unlink($privateKeyFile);
+        \unlink($publicKeyFile);
+    }
+
     public function testOverwriteAndSkipCannotBeCombined()
     {
         $privateKeyFile = \tempnam(\sys_get_temp_dir(), 'private_');

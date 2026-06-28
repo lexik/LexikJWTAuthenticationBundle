@@ -40,7 +40,13 @@ class RawKeyLoader extends AbstractKeyLoader implements KeyDumperInterface
 
         $signingKey = $this->getSigningKey();
 
-        // no public key provided, compute it from signing key
+        // Detect EdDSA key: base64-encoded sodium secretkey is exactly SODIUM_CRYPTO_SIGN_SECRETKEYBYTES when decoded
+        $decoded = base64_decode($signingKey, true);
+        if (false !== $decoded && strlen($decoded) === SODIUM_CRYPTO_SIGN_SECRETKEYBYTES) {
+            return base64_encode(sodium_crypto_sign_publickey_from_secretkey($decoded));
+        }
+
+        // no public key provided, compute it from signing key using OpenSSL
         try {
             $publicKey = openssl_pkey_get_details(openssl_pkey_get_private($signingKey, $this->getPassphrase()))['key'];
         } catch (\Throwable $e) {
