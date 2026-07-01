@@ -36,12 +36,12 @@ jobs:
 
         steps:
             - name: "Checkout"
-              uses: "actions/checkout@v6"
+              uses: "actions/checkout@v7"
               with:
                   fetch-depth: 2
 
             - name: "Cache Composer packages"
-              uses: "actions/cache@v5"
+              uses: "actions/cache@v6"
               with:
                   path: "~/.composer/cache"
                   key: "php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles('composer.json') }}-flags-${{ matrix.composer-flags }}"
