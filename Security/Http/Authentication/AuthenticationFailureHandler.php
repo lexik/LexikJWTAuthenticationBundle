@@ -29,7 +29,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     private $translator;
 
-    public function __construct(EventDispatcherInterface $dispatcher, TranslatorInterface $translator = null)
+    public function __construct(EventDispatcherInterface $dispatcher, ?TranslatorInterface $translator = null)
     {
         $this->dispatcher = $dispatcher;
         $this->translator = $translator;
