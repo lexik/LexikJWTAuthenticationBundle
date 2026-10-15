@@ -12,7 +12,7 @@ class JWTFailureException extends \Exception
     private $reason;
     private $payload;
 
-    public function __construct(string $reason, string $message, \Throwable $previous = null, array $payload = null)
+    public function __construct(string $reason, string $message, ?\Throwable $previous = null, ?array $payload = null)
     {
         $this->reason = $reason;
         $this->payload = $payload;
