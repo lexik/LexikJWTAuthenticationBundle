@@ -28,7 +28,7 @@ jobs:
                       jwt-bundle: 4.0
                       can-fail: false
                     - php: 8.4
-                      symfony: 8.0.*
+                      symfony: 8.1.*
                       jwt-bundle: 4.1
                       can-fail: false
 

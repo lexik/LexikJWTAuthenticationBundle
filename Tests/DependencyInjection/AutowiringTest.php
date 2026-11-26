@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Kernel\ServicesBundle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 class AutowiringTest extends TestCase
@@ -103,6 +104,12 @@ class AutowiringTest extends TestCase
             'env(default::SYMFONY_TRUSTED_PROXIES)' => [],
             'env(default::SYMFONY_TRUSTED_HEADERS)' => [],
         ]));
+
+        if (class_exists(ServicesBundle::class)) {
+            $servicesExtension = (new ServicesBundle())->getContainerExtension();
+            $container->registerExtension($servicesExtension);
+            $container->loadFromExtension($servicesExtension->getAlias());
+        }
 
         $container->registerExtension(new SecurityExtension());
         $container->registerExtension(new FrameworkExtension());
