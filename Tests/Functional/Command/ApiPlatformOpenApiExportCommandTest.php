@@ -25,9 +25,13 @@ class ApiPlatformOpenApiExportCommandTest extends TestCase
         $tester = new CommandTester($app->find('api:openapi:export'));
 
         $this->assertSame(0, $tester->execute([]));
+
+        $openApiVersion = json_decode($tester->getDisplay(), true)['openapi'];
+        $this->assertContains($openApiVersion, ['3.1.0', '3.2.0']);
+
         $this->assertJsonStringEqualsJsonString(<<<JSON
 {
-  "openapi": "3.1.0",
+  "openapi": "{$openApiVersion}",
   "info": {
     "description": "API Platform integration in LexikJWTAuthenticationBundle",
     "title": "LexikJWTAuthenticationBundle",
