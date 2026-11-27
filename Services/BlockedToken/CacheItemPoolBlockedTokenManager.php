@@ -8,14 +8,23 @@ use DateTimeZone;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\MissingClaimException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\BlockedTokenManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Clock\ClockInterface;
+use Symfony\Component\Clock\Clock;
 
 class CacheItemPoolBlockedTokenManager implements BlockedTokenManagerInterface
 {
     private $cacheJwt;
 
-    public function __construct(CacheItemPoolInterface $cacheJwt)
+    private ClockInterface $clock;
+
+    public function __construct(CacheItemPoolInterface $cacheJwt, ?ClockInterface $clock = null)
     {
+        if (null === $clock) {
+            $clock = Clock::get();
+        }
+
         $this->cacheJwt = $cacheJwt;
+        $this->clock = $clock;
     }
 
     public function add(array $payload): bool
@@ -25,7 +34,7 @@ class CacheItemPoolBlockedTokenManager implements BlockedTokenManagerInterface
         }
 
         $expiration = new DateTimeImmutable('@' . $payload['exp'], new DateTimeZone('UTC'));
-        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $now = $this->clock->now();
 
         // If the token is already expired, there's no point in adding it to storage
         if ($expiration <= $now) {
